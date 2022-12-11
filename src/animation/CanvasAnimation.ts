@@ -1,5 +1,6 @@
 import Params from "./Params";
 import p5Types from "p5";
+import {camera} from "../camera/CameraParams";
 
 export type paramsType<T extends Params>= {appearTime: number, disappearTime?: number, appearDuration?: number, disappearDuration?: number, object: T}
 
@@ -31,7 +32,7 @@ export default abstract class CanvasAnimation<T extends Params> {
         return this.appearTime
     }
 
-    public draw(p5: p5Types, time: number): void {
+    public draw(p5: p5Types, time: number, camera: camera): void {
         const disappearTime = this.disappearTime || Number.POSITIVE_INFINITY
         const {disappearDuration} = this
         if (this.appearTime >= time) {
@@ -41,6 +42,18 @@ export default abstract class CanvasAnimation<T extends Params> {
             return
         }
         p5.strokeWeight(this.getObject().weight || 1)
+        p5.color(255)
+        //camera.rotation && console.log(camera.rotation)
+        if (camera.rotation) {
+            p5.pop()
+            p5.push()
+            p5.strokeWeight(this.getObject().weight || 1)
+            p5.rotateZ(camera.rotation)
+            p5.translate(0, 0, this.getObject().zIndex)
+        }
+        //p5.pop()
+        // camera.rotation && p5.rotate(camera.rotation)
+        // camera.rotation && console.log(p5.rotationX, p5.rotationY, p5.rotationZ)
         if (this.appearDuration && this.appearDuration >= (time - this.getAppearTime())) {
             let percent = (time - this.getAppearTime())/this.appearDuration
             this.drawAppearedObject(p5, percent)
