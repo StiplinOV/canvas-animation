@@ -2,27 +2,20 @@ import {cameraParams} from "./camera/CameraParams";
 
 export const cameras: cameraParams[] = [{
     startTime: 3000,
+    transformDuration: 500,
     camera: {
-        x: 100,
-        y: 100,
-        zoom: 2
+        x: 500,
+        y: 500,
+        rotation: Math.PI,
+        zoom: 1.5
     }
 }, {
-    startTime: 6000,
-    transformDuration: 1000,
+    startTime: 7000,
+    transformDuration: 500,
     camera: {
-        x: 10,
-        y: 0,
-        zoom: 1,
-        rotation: Math.PI/4
-    }
-}, {
-    startTime: 8000,
-    transformDuration: 1000,
-    camera: {
-        x: 0,
-        y: 0,
-        zoom: 1,
-        rotation: 0
+        x: 200,
+        y: 300,
+        rotation: Math.PI/3,
+        zoom: 0.5
     }
 }]

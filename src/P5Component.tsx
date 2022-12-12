@@ -15,18 +15,21 @@ export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => 
     }
 
     const setup = (p5: p5Types) => {
-        let cnv = p5.createCanvas(canvasWidth, canvasHeight, p5.WEBGL)
+        let cnv = p5.createCanvas(canvasWidth, canvasHeight)
         cnv.position(0, 0)
         cameras.sort((left, right) => left.startTime - right.startTime)
         animations.sort((left, right) => left.getZIndex() - (right.getZIndex() || 0))
-        p5.push()
     }
 
     const draw = (p5: p5Types) => {
         let m = p5.millis() % 12000;
+        const camera = getActualCamera(m)
         p5.background(255)
+        camera.rotation && p5.rotate(camera.rotation)
+        p5.translate(-camera.x*camera.zoom, -camera.y*camera.zoom)
+        p5.scale(camera.zoom)
         animations.forEach(animation => {
-            animation.draw(p5, m, getActualCamera(m))
+            animation.draw(p5, m, camera)
         })
     }
 
@@ -56,10 +59,9 @@ const getActualCamera = (time: number): camera => {
             break;
         }
     }
-    if (actualCameraIndex > 1) {
+    if (actualCameraIndex >= 1) {
         prevCamera = cameras[actualCameraIndex - 1].camera
     }
-//    console.log(actualCameraParamCandidate)
     let transformDuration = actualCameraParamCandidate.transformDuration || 0
     const isInTransform = actualCameraParamCandidate.startTime + transformDuration > time
     const actualCamera = actualCameraParamCandidate.camera
