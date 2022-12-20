@@ -1,9 +1,8 @@
 import Params from "./Params";
 import p5Types from "p5";
-import {camera} from "../camera/CameraParams";
 
 export type paramsType<T extends Params> = {
-    appearTime: number,
+    appearTime?: number,
     disappearTime?: number,
     appearDuration?: number,
     disappearDuration?: number,
@@ -12,10 +11,10 @@ export type paramsType<T extends Params> = {
 
 export default abstract class CanvasAnimation<T extends Params> {
 
-    private readonly appearTime: number
-    private readonly disappearTime?: number
-    private readonly appearDuration?: number
-    private readonly disappearDuration?: number
+    private appearTime?: number
+    private disappearTime?: number
+    private appearDuration?: number
+    private disappearDuration?: number
     private readonly object: T
 
     protected constructor(params: paramsType<T>) {
@@ -35,35 +34,37 @@ export default abstract class CanvasAnimation<T extends Params> {
     }
 
     public getAppearTime(): number {
-        return this.appearTime
+        return this.appearTime || 0
     }
 
-    public draw(p5: p5Types, time: number, camera: camera): void {
-        const disappearTime = this.disappearTime || Number.POSITIVE_INFINITY
-        const {disappearDuration} = this
-        if (this.appearTime >= time) {
-            return
-        }
-        if ((disappearTime + (disappearDuration || 0)) <= time) {
-            return
-        }
-        p5.strokeWeight(this.getObject().weight || 1)
-
-        if (this.appearDuration && this.appearDuration >= (time - this.getAppearTime())) {
-            let percent = (time - this.getAppearTime()) / this.appearDuration
-            this.drawAppearedObject(p5, percent)
-        } else if (disappearDuration && time > disappearTime && (disappearDuration >= (time - disappearTime))) {
-            let percent = (time - disappearTime) / disappearDuration
-            this.drawDisappearedObject(p5, percent)
-        } else {
-            this.drawObject(p5, time)
-        }
+    public setAppearTime(value: number): void {
+        this.appearTime = value
     }
 
-    protected abstract drawAppearedObject(p5: p5Types, percent: number): void
+    protected getAppearDuration(): number {
+        return this.appearDuration || 0
+    }
 
-    protected abstract drawDisappearedObject(p5: p5Types, percent: number): void
+    public getDisappearTime(): number {
+        return this.disappearTime || 0
+    }
 
-    protected abstract drawObject(p5: p5Types, time: number): void
+    public setDisappearAppearTime(value: number): void {
+        this.disappearTime = value
+    }
+
+    protected getDisappearDuration(): number {
+        return this.disappearDuration || 0
+    }
+
+    public setAppearDuration(value: number): void {
+        this.appearDuration = value
+    }
+
+    public setDisappearDuration(value: number): void {
+        this.disappearDuration = value
+    }
+
+    public abstract draw(p5: p5Types, time: number): void
 
 }

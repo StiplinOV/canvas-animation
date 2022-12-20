@@ -1,8 +1,9 @@
 import CircleParams from "./CircleParams";
-import CanvasAnimation, {paramsType} from "../CanvasAnimation";
+import {paramsType} from "../CanvasAnimation";
 import p5Types from "p5";
+import SimpleCanvasAnimation from "../SimpleCanvasAnimation";
 
-export default class CircleCanvasAnimation extends CanvasAnimation<CircleParams> {
+export default class CircleCanvasAnimation extends SimpleCanvasAnimation<CircleParams> {
 
     private readonly appearType?: "clock"
     private readonly disappearType?: "clock"
@@ -32,7 +33,7 @@ export default class CircleCanvasAnimation extends CanvasAnimation<CircleParams>
         }
     }
 
-    protected drawObject(p5: p5Types, time: number): void {
+    public drawObject(p5: p5Types): void {
         p5.circle(this.x(), this.y(), this.diameter())
     }
 

@@ -1,25 +1,23 @@
-import CanvasAnimation, {paramsType} from "../CanvasAnimation";
+import {paramsType} from "../CanvasAnimation";
 import LineParams from "./LineParams";
 import p5Types from "p5";
+import SimpleCanvasAnimation from "../SimpleCanvasAnimation";
 
-export default class LineCanvasAnimation extends CanvasAnimation<LineParams> {
+export default class LineCanvasAnimation extends SimpleCanvasAnimation<LineParams> {
 
     private readonly appearType?: "fromStartToEnd"
     private readonly disappearType?: "fromStartToEnd"
 
     constructor(params: paramsType<LineParams> & {
-        appearTime: number,
-        disappearTime?: number,
         appearType?: "fromStartToEnd",
-        disappearType?: "fromStartToEnd",
-        object: LineParams
+        disappearType?: "fromStartToEnd"
     }) {
         super(params)
         this.appearType = params.appearType
         this.disappearType = params.disappearType
     }
 
-    protected drawObject(p5: p5Types, time: number): void {
+    public drawObject(p5: p5Types): void {
         p5.line(this.startX(), this.startY(), this.endX(), this.endY())
     }
 

@@ -28,9 +28,7 @@ export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => 
         camera.rotation && p5.rotate(camera.rotation)
         p5.translate(-camera.x*camera.zoom, -camera.y*camera.zoom)
         p5.scale(camera.zoom)
-        animations.forEach(animation => {
-            animation.draw(p5, m, camera)
-        })
+        animations.forEach(animation => animation.draw(p5, m))
     }
 
     // @ts-ignore
