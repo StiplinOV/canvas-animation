@@ -70,12 +70,13 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
 
         this.getAllCanvasAnimations().forEach(object => {
             object.setAppearTime(appearTime)
-            object.setDisappearTime(disappearTime)
             object.setAppearDuration(objectAppearDuration)
-            object.setDisappearDuration(objectDisappearDuration)
             appearTime += objectAppearDuration
+        })
+        this.getAllCanvasAnimations().reverse().forEach(object => {
+            object.setDisappearTime(disappearTime)
+            object.setDisappearDuration(objectDisappearDuration)
             disappearTime += objectDisappearDuration
-            console.log(appearTime, disappearTime, objectAppearDuration, objectDisappearDuration)
         })
     }
 
