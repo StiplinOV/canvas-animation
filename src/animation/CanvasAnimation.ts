@@ -45,20 +45,20 @@ export default abstract class CanvasAnimation<T extends Params> {
         return this.appearDuration || 0
     }
 
+    public setAppearDuration(value: number): void {
+        this.appearDuration = value
+    }
+
     public getDisappearTime(): number {
         return this.disappearTime || 0
     }
 
-    public setDisappearAppearTime(value: number): void {
+    public setDisappearTime(value: number): void {
         this.disappearTime = value
     }
 
     protected getDisappearDuration(): number {
         return this.disappearDuration || 0
-    }
-
-    public setAppearDuration(value: number): void {
-        this.appearDuration = value
     }
 
     public setDisappearDuration(value: number): void {

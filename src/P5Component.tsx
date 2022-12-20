@@ -22,7 +22,7 @@ export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => 
     }
 
     const draw = (p5: p5Types) => {
-        let m = p5.millis() % 12000;
+        let m = p5.millis() % 15000;
         const camera = getActualCamera(m)
         p5.background(255)
         camera.rotation && p5.rotate(camera.rotation)

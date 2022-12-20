@@ -23,33 +23,39 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
 
         this.addCanvasAnimation(new LineCanvasAnimation({
             appearType: "fromStartToEnd",
+            disappearType: "fromStartToEnd",
             object: {startPoint: origin, endPoint: {x: origin.x + width, y: origin.y}}
         }))
         this.addCanvasAnimation(new LineCanvasAnimation({
             appearType: "fromStartToEnd",
+            disappearType: "fromStartToEnd",
             object: {startPoint: origin, endPoint: {x: origin.x, y: origin.y - height}}
         }))
         xScale.forEach(value => {
             this.addCanvasAnimation(new CircleCanvasAnimation({
                 appearType: "clock",
+                disappearType: "clock",
                 object: {centerPoint: {x: this.getXForValue(value), y: origin.y}, diameter: axisPointsDiameter}
             }))
         })
         yScale.forEach(value => {
             this.addCanvasAnimation(new CircleCanvasAnimation({
                 appearType: "clock",
+                disappearType: "clock",
                 object: {centerPoint: {x: origin.x, y: this.getYForValue(value)}, diameter: axisPointsDiameter}
             }))
         })
         chartPoints.forEach(point => {
             this.addCanvasAnimation(new CircleCanvasAnimation({
                 appearType: "clock",
+                disappearType: "clock",
                 object: {centerPoint: this.convertScalePointToCoordinate(point), diameter: chartPointsDiameter}
             }))
         })
         chartLines.forEach(line => {
             this.addCanvasAnimation(new LineCanvasAnimation({
                 appearType: "fromStartToEnd",
+                disappearType: "fromStartToEnd",
                 object: {
                     startPoint: this.convertScalePointToCoordinate(line[0]),
                     endPoint: this.convertScalePointToCoordinate(line[1])
@@ -64,11 +70,12 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
 
         this.getAllCanvasAnimations().forEach(object => {
             object.setAppearTime(appearTime)
-            object.setDisappearAppearTime(disappearTime)
+            object.setDisappearTime(disappearTime)
             object.setAppearDuration(objectAppearDuration)
             object.setDisappearDuration(objectDisappearDuration)
             appearTime += objectAppearDuration
-            disappearTime += disappearTime
+            disappearTime += objectDisappearDuration
+            console.log(appearTime, disappearTime, objectAppearDuration, objectDisappearDuration)
         })
     }
 

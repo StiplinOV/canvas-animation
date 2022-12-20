@@ -8,6 +8,8 @@ export const canvasHeight = 800
 export const animations: Array<CanvasAnimation<Params>> = [
     new XYChartCanvasAnimation({
         appearDuration: 4000,
+        disappearDuration: 4000,
+        disappearTime: 10000,
         object: {
             origin: {
                 x: 400,
