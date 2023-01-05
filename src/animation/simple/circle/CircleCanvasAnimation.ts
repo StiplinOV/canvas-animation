@@ -1,5 +1,5 @@
 import CircleParams from "./CircleParams";
-import {paramsType} from "../CanvasAnimation";
+import {paramsType} from "../../CanvasAnimation";
 import p5Types from "p5";
 import SimpleCanvasAnimation from "../SimpleCanvasAnimation";
 

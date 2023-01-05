@@ -67,4 +67,6 @@ export default abstract class CanvasAnimation<T extends Params> {
 
     public abstract draw(p5: p5Types, time: number): void
 
+    public abstract getIncludedObjects(): CanvasAnimation<Params>[]
+
 }

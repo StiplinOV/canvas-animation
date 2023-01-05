@@ -1,14 +1,16 @@
-import {paramsType} from "../CanvasAnimation";
+import CanvasAnimation, {paramsType} from "../../CanvasAnimation";
 import XYChartParams from "./XYChartParams";
-import LineCanvasAnimation from "../line/LineCanvasAnimation";
-import CircleCanvasAnimation from "../circle/CircleCanvasAnimation";
-import {Point} from "../../common/Point";
+import LineCanvasAnimation from "../../simple/line/LineCanvasAnimation";
+import CircleCanvasAnimation from "../../simple/circle/CircleCanvasAnimation";
+import {Point} from "../../../common/Point";
 import ComplexCanvasAnimation from "../ComplexCanvasAnimation";
+import Params from "../../Params";
+import ArrowCanvasAnimation from "../arrow/ArrowCanvasAnimation";
+import p5Types from "p5";
 
 export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYChartParams> {
 
-    constructor(params: paramsType<XYChartParams>) {
-        super(params)
+    protected calculateIncludedObjects(params: paramsType<XYChartParams>, p5: p5Types): CanvasAnimation<Params>[] {
         const {object} = params
         const weight = object.weight || 1
         const {origin} = object
@@ -20,40 +22,31 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
         const chartLines = object.chartLines || []
         const axisPointsDiameter = 2 * weight
         const chartPointsDiameter = 2 * weight
-
-        this.addCanvasAnimation(new LineCanvasAnimation({
-            appearType: "fromStartToEnd",
-            disappearType: "fromStartToEnd",
-            object: {startPoint: origin, endPoint: {x: origin.x + width, y: origin.y}}
-        }))
-        this.addCanvasAnimation(new LineCanvasAnimation({
-            appearType: "fromStartToEnd",
-            disappearType: "fromStartToEnd",
-            object: {startPoint: origin, endPoint: {x: origin.x, y: origin.y - height}}
-        }))
-        xScale.forEach(value => {
-            this.addCanvasAnimation(new CircleCanvasAnimation({
+        return [
+            new ArrowCanvasAnimation(
+                {object: {startPoint: origin, endPoint: {x: origin.x + width, y: origin.y}, endType: "Arrow"}},
+                p5
+            ),
+            new ArrowCanvasAnimation(
+                {object: {startPoint: origin, endPoint: {x: origin.x, y: origin.y - height}, endType: "Arrow"}},
+                p5
+            ),
+            ...xScale.map(value => new CircleCanvasAnimation({
                 appearType: "clock",
                 disappearType: "clock",
                 object: {centerPoint: {x: this.getXForValue(value), y: origin.y}, diameter: axisPointsDiameter}
-            }))
-        })
-        yScale.forEach(value => {
-            this.addCanvasAnimation(new CircleCanvasAnimation({
+            })),
+            ...yScale.map(value => new CircleCanvasAnimation({
                 appearType: "clock",
                 disappearType: "clock",
                 object: {centerPoint: {x: origin.x, y: this.getYForValue(value)}, diameter: axisPointsDiameter}
-            }))
-        })
-        chartPoints.forEach(point => {
-            this.addCanvasAnimation(new CircleCanvasAnimation({
+            })),
+            ...chartPoints.map(point => new CircleCanvasAnimation({
                 appearType: "clock",
                 disappearType: "clock",
                 object: {centerPoint: this.convertScalePointToCoordinate(point), diameter: chartPointsDiameter}
-            }))
-        })
-        chartLines.forEach(line => {
-            this.addCanvasAnimation(new LineCanvasAnimation({
+            })),
+            ...chartLines.map(line => new LineCanvasAnimation({
                 appearType: "fromStartToEnd",
                 disappearType: "fromStartToEnd",
                 object: {
@@ -61,23 +54,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
                     endPoint: this.convertScalePointToCoordinate(line[1])
                 }
             }))
-        })
-
-        const objectAppearDuration = this.getAppearDuration() / this.getNumberOfAllCanvasAnimations()
-        const objectDisappearDuration = this.getDisappearDuration() / this.getNumberOfAllCanvasAnimations()
-        let appearTime = this.getAppearTime()
-        let disappearTime = this.getDisappearTime()
-
-        this.getAllCanvasAnimations().forEach(object => {
-            object.setAppearTime(appearTime)
-            object.setAppearDuration(objectAppearDuration)
-            appearTime += objectAppearDuration
-        })
-        this.getAllCanvasAnimations().reverse().forEach(object => {
-            object.setDisappearTime(disappearTime)
-            object.setDisappearDuration(objectDisappearDuration)
-            disappearTime += objectDisappearDuration
-        })
+        ]
     }
 
     private getXForValue(value: number): number {

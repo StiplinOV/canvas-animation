@@ -1,4 +1,4 @@
-import {paramsType} from "../CanvasAnimation";
+import {paramsType} from "../../CanvasAnimation";
 import LineParams from "./LineParams";
 import p5Types from "p5";
 import SimpleCanvasAnimation from "../SimpleCanvasAnimation";

@@ -1,5 +1,5 @@
-import CanvasAnimation from "./CanvasAnimation";
-import Params from "./Params";
+import CanvasAnimation, {paramsType} from "../CanvasAnimation";
+import Params from "../Params";
 import p5Types from "p5";
 
 export default abstract class SimpleCanvasAnimation<T extends Params> extends CanvasAnimation<T> {
@@ -31,5 +31,9 @@ export default abstract class SimpleCanvasAnimation<T extends Params> extends Ca
     protected abstract drawDisappearedObject(p5: p5Types, percent: number): void
 
     public abstract drawObject(p5: p5Types): void
+
+    public getIncludedObjects(): CanvasAnimation<Params>[] {
+        return [this];
+    }
 
 }
