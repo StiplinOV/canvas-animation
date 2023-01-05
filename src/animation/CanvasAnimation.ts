@@ -1,27 +1,33 @@
 import Params from "./Params";
 import p5Types from "p5";
 
-export type paramsType<T extends Params> = {
+export type paramsType<T extends Params, S extends string, U extends string> = {
     appearTime?: number,
     disappearTime?: number,
     appearDuration?: number,
     disappearDuration?: number,
+    appearType?: S,
+    disappearType?: U,
     object: T
 }
 
-export default abstract class CanvasAnimation<T extends Params> {
+export default abstract class CanvasAnimation<T extends Params, S extends string, U extends string> {
 
     private appearTime?: number
     private disappearTime?: number
+    private appearType?: S
     private appearDuration?: number
     private disappearDuration?: number
+    private disappearType?: U
     private readonly object: T
 
-    protected constructor(params: paramsType<T>) {
+    public constructor(params: paramsType<T, S, U>) {
         this.appearTime = params.appearTime
         this.disappearTime = params.disappearTime
+        this.appearType = params.appearType
         this.appearDuration = params.appearDuration
         this.disappearDuration = params.disappearDuration
+        this.disappearType = params.disappearType
         this.object = params.object
     }
 
@@ -49,6 +55,22 @@ export default abstract class CanvasAnimation<T extends Params> {
         this.appearDuration = value
     }
 
+    public getAppearType(): S | null {
+        return this.appearType || null
+    }
+
+    public setAppearType(value: S) {
+        this.appearType = value;
+    }
+
+    public getDisappearType(): U | null {
+        return this.disappearType || null
+    }
+
+    public setDisappearType(value: U) {
+        this.disappearType = value;
+    }
+
     public getDisappearTime(): number {
         return this.disappearTime || 0
     }
@@ -65,8 +87,12 @@ export default abstract class CanvasAnimation<T extends Params> {
         this.disappearDuration = value
     }
 
+    public abstract getDefaultAppearType(): S
+
+    public abstract getDefaultDisappearType(): U
+
     public abstract draw(p5: p5Types, time: number): void
 
-    public abstract getIncludedObjects(): CanvasAnimation<Params>[]
+    public abstract getIncludedObjects(): CanvasAnimation<Params, string, string>[]
 
 }

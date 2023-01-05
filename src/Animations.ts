@@ -8,11 +8,11 @@ import TextCanvasAnimation from "./animation/simple/text/TextCanvasAnimation";
 export const canvasWidth = 1280
 export const canvasHeight = 800
 
-export const animations: (p5: p5Types) => Array<CanvasAnimation<Params>> = (p5: p5Types) => [
+export const animations: (p5: p5Types) => Array<CanvasAnimation<Params, string, string>> = (p5: p5Types) => [
     new TextCanvasAnimation({
         object: {
             value: "This is some text",
-            position: {x: 0, y: 20},
+            position: {x: 100, y: 100},
             fontSize: 20,
             boxHeight: 100,
             boxWidth: 100
@@ -23,7 +23,6 @@ export const animations: (p5: p5Types) => Array<CanvasAnimation<Params>> = (p5: 
         disappearTime: 5000,
         disappearDuration: 1000,
         disappearType: "letterByLetter"
-
     }),
     new XYChartCanvasAnimation({
         appearDuration: 4000,

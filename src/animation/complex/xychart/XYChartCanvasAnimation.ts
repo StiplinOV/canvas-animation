@@ -10,7 +10,10 @@ import p5Types from "p5";
 
 export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYChartParams> {
 
-    protected calculateIncludedObjects(params: paramsType<XYChartParams>, p5: p5Types): CanvasAnimation<Params>[] {
+    protected calculateIncludedObjects(
+        params: paramsType<XYChartParams, "uniform", "uniform">,
+        p5: p5Types
+    ): CanvasAnimation<Params, string, string>[] {
         const {object} = params
         const weight = object.weight || 1
         const {origin} = object

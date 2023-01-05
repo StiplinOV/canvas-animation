@@ -10,8 +10,11 @@ const arrowBaseWidth = 10
 
 export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<ArrowParams> {
 
-    protected calculateIncludedObjects(params: paramsType<ArrowParams>, p5: p5Types): CanvasAnimation<Params>[] {
-        const result: CanvasAnimation<Params>[] = [
+    protected calculateIncludedObjects(
+        params: paramsType<ArrowParams, "uniform", "uniform">,
+        p5: p5Types
+    ): CanvasAnimation<Params, string, string>[] {
+        const result: CanvasAnimation<Params, string, string>[] = [
             new LineCanvasAnimation({
                 appearType: "fromStartToEnd",
                 disappearType: "fromStartToEnd",
