@@ -6,17 +6,10 @@ import {Point} from "../../../common/Point";
 export default class LineCanvasAnimation extends SimpleCanvasAnimation<LineParams> {
 
     public drawObject(p5: p5Types, percent: number): void {
-        let endX = this.endX() * percent
-        let endY = this.endY() * percent
+        const {startPoint, endPoint} = this.getObject()
+        let endX = (endPoint.x - startPoint.x) * percent
+        let endY = (endPoint.y - startPoint.y) * percent
         p5.line(0, 0, endX, endY)
-    }
-
-    private endX(): number {
-        return this.getObject().endPoint.x - this.getObject().startPoint.x
-    }
-
-    private endY(): number {
-        return this.getObject().endPoint.y - this.getObject().startPoint.y
     }
 
     getOrigin(): Point {

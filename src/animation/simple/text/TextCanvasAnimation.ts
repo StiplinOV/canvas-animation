@@ -9,11 +9,11 @@ export default class TextCanvasAnimation extends SimpleCanvasAnimation<TextParam
         const {boxHeight, boxWidth, fontSize, value, horizontalAlign, verticalAlign} = this.getObject()
         fontSize && p5.textSize(fontSize)
         p5.textAlign(horizontalAlign || p5.LEFT, verticalAlign || p5.BOTTOM)
-        p5.text(value.substring(0, (value.length + 1) * percent), 0, 0, boxHeight || undefined, boxWidth || undefined)
+        p5.text(value.substring(0, (value.length + 1) * percent), 0, 0, boxWidth || undefined, boxHeight || undefined)
     }
 
     getOrigin(): Point {
-        return this.getObject().position;
+        return this.getObject().origin;
     }
 
 }

@@ -3,7 +3,7 @@ import {Point} from "../../../common/Point";
 import { HORIZ_ALIGN, VERT_ALIGN } from "p5";
 
 export default interface TextParams extends Params {
-    position: Point
+    origin: Point
     value: string
     fontSize?: number
     boxWidth?: number,

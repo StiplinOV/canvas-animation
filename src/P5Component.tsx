@@ -18,6 +18,7 @@ export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => 
     const setup = (p5: p5Types) => {
         let cnv = p5.createCanvas(canvasWidth, canvasHeight)
         cnv.position(0, 0)
+        cnv.style("border: 1px solid")
         cameras.sort((left, right) => left.startTime - right.startTime)
         animations(new GeometryHelper(p5)).sort((left, right) => left.getZIndex() - (right.getZIndex() || 0))
     }

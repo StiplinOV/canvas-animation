@@ -35,7 +35,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
             ),
             new TextCanvasAnimation({
                 object: {
-                    position: {x: width / 2, y: 0},
+                    origin: {x: width / 2, y: 10},
                     value: xAxisName,
                     horizontalAlign: geometryHelper.HORIZONTAL_ALIGN_CENTER,
                     verticalAlign: geometryHelper.VERTICAL_ALIGN_TOP
@@ -43,7 +43,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
             }),
             new TextCanvasAnimation({
                 object: {
-                    position: {x: 0, y: -height / 2},
+                    origin: {x: -5, y: -height / 2},
                     rotation: -Math.PI / 2,
                     value: yAxisName,
                     horizontalAlign: geometryHelper.HORIZONTAL_ALIGN_CENTER,
