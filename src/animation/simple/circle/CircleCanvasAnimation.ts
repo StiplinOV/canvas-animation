@@ -13,7 +13,7 @@ export default class CircleCanvasAnimation extends SimpleCanvasAnimation<CircleP
         return this.getObject().diameter
     }
 
-    getRotationAxis(): Point {
+    getOrigin(): Point {
         return this.getObject().centerPoint;
     }
 

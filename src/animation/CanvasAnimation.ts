@@ -1,5 +1,6 @@
 import Params from "./Params";
 import p5Types from "p5";
+import {Point} from "../common/Point";
 
 export type paramsType<T extends Params> = {
     appearTime?: number,
@@ -68,5 +69,7 @@ export default abstract class CanvasAnimation<T extends Params> {
     public abstract draw(p5: p5Types, time: number): void
 
     public abstract getIncludedObjects(): CanvasAnimation<Params>[]
+
+    public abstract getOrigin(): Point
 
 }

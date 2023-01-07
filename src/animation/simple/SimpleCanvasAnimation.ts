@@ -1,7 +1,6 @@
 import CanvasAnimation from "../CanvasAnimation";
 import Params from "../Params";
 import p5Types from "p5";
-import {Point} from "../../common/Point";
 
 export default abstract class SimpleCanvasAnimation<T extends Params>
     extends CanvasAnimation<T> {
@@ -9,7 +8,7 @@ export default abstract class SimpleCanvasAnimation<T extends Params>
     public draw(p5: p5Types, time: number): void {
         const disappearTime = this.getDisappearTime() || Number.POSITIVE_INFINITY
         const disappearDuration = this.getDisappearDuration()
-        const rotationAxis = this.getRotationAxis()
+        const rotationAxis = this.getOrigin()
         if (this.getAppearTime() >= time) {
             return
         }
@@ -35,10 +34,6 @@ export default abstract class SimpleCanvasAnimation<T extends Params>
 
     public getIncludedObjects(): CanvasAnimation<Params>[] {
         return [this];
-    }
-
-    public getRotationAxis(): Point {
-        return {x: 0, y: 0}
     }
 
 }

@@ -1,9 +1,10 @@
 import React from "react";
 import Sketch from "react-p5";
 import p5Types from "p5";
-import {animations, canvasHeight, canvasWidth} from "./Animations";
+import {animations, canvasHeight, canvasWidth, timeDivider} from "./Animations";
 import {camera, cameraParams} from "./camera/CameraParams";
 import {cameras} from "./Cameras";
+import GeometryHelper from "./common/GeometryHelper";
 
 interface ComponentProps {
     //Your component props
@@ -18,17 +19,17 @@ export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => 
         let cnv = p5.createCanvas(canvasWidth, canvasHeight)
         cnv.position(0, 0)
         cameras.sort((left, right) => left.startTime - right.startTime)
-        animations(p5).sort((left, right) => left.getZIndex() - (right.getZIndex() || 0))
+        animations(new GeometryHelper(p5)).sort((left, right) => left.getZIndex() - (right.getZIndex() || 0))
     }
 
     const draw = (p5: p5Types) => {
-        let m = p5.millis() % 15000;
+        let m = p5.millis() % timeDivider;
         const camera = getActualCamera(m)
         p5.background(255)
         camera.rotation && p5.rotate(camera.rotation)
         p5.translate(-camera.x*camera.zoom, -camera.y*camera.zoom)
         p5.scale(camera.zoom)
-        animations(p5).forEach(animation => animation.draw(p5, m))
+        animations(new GeometryHelper(p5)).forEach(animation => animation.draw(p5, m))
     }
 
     // @ts-ignore

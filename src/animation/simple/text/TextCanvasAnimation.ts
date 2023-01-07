@@ -12,7 +12,7 @@ export default class TextCanvasAnimation extends SimpleCanvasAnimation<TextParam
         p5.text(value.substring(0, (value.length + 1) * percent), 0, 0, boxHeight || undefined, boxWidth || undefined)
     }
 
-    getRotationAxis(): Point {
+    getOrigin(): Point {
         return this.getObject().position;
     }
 

@@ -3,53 +3,42 @@ import ComplexCanvasAnimation from "../ComplexCanvasAnimation";
 import CanvasAnimation, {paramsType} from "../../CanvasAnimation";
 import Params from "../../Params";
 import LineCanvasAnimation from "../../simple/line/LineCanvasAnimation";
-import p5Types from "p5";
+import {Point} from "../../../common/Point";
+import GeometryHelper from "../../../common/GeometryHelper";
 
 const arrowBaseLength = 10
 const arrowBaseWidth = 10
 
 export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<ArrowParams> {
 
-    protected calculateIncludedObjects(params: paramsType<ArrowParams>, p5: p5Types): CanvasAnimation<Params>[] {
+    protected calculateIncludedObjects(params: paramsType<ArrowParams>, geometryHelper: GeometryHelper): CanvasAnimation<Params>[] {
+        const relativeEndPoint = geometryHelper.subtractPoints(params.object.endPoint, params.object.startPoint)
         const result: CanvasAnimation<Params>[] = [
             new LineCanvasAnimation({
                 object: {
-                    startPoint: params.object.startPoint,
-                    endPoint: params.object.endPoint,
+                    startPoint: {x: 0, y: 0},
+                    endPoint: relativeEndPoint,
                     weight: params.object.weight,
                     zIndex: params.object.zIndex
                 }
             })
         ]
-
-        let lineVector = p5.createVector(
-            params.object.endPoint.x - params.object.startPoint.x,
-            params.object.endPoint.y - params.object.startPoint.y
-        )
-        let angle = lineVector.heading()
-        let leftArrowSide = p5.createVector(arrowBaseLength, arrowBaseWidth / 2)
-        let rightArrowSide = p5.createVector(arrowBaseLength, -arrowBaseWidth / 2)
-        leftArrowSide.rotate(angle)
-        rightArrowSide.rotate(angle)
+        let angle = geometryHelper.getVectorAngle(relativeEndPoint)
+        let leftArrowSide = geometryHelper.rotateVector({x: arrowBaseLength, y: arrowBaseWidth / 2}, angle)
+        let rightArrowSide = geometryHelper.rotateVector({x: arrowBaseLength, y: -arrowBaseWidth / 2}, angle)
         if (this.getObject().endType === "Arrow") {
             result.push(new LineCanvasAnimation({
                 object: {
-                    startPoint: params.object.endPoint,
-                    endPoint: {
-                        x: params.object.endPoint.x - leftArrowSide.x,
-                        y: params.object.endPoint.y - leftArrowSide.y
-                    },
+                    startPoint: relativeEndPoint,
+                    endPoint: geometryHelper.subtractPoints(relativeEndPoint, leftArrowSide),
                     weight: params.object.weight,
                     zIndex: params.object.zIndex
                 }
             }))
             result.push(new LineCanvasAnimation({
                 object: {
-                    startPoint: params.object.endPoint,
-                    endPoint: {
-                        x: params.object.endPoint.x - rightArrowSide.x,
-                        y: params.object.endPoint.y - rightArrowSide.y
-                    },
+                    startPoint: relativeEndPoint,
+                    endPoint: geometryHelper.subtractPoints(relativeEndPoint, rightArrowSide),
                     weight: params.object.weight,
                     zIndex: params.object.zIndex
                 }
@@ -58,22 +47,16 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<ArrowPa
         if (this.getObject().startType === "Arrow") {
             result.push(new LineCanvasAnimation({
                 object: {
-                    startPoint: params.object.startPoint,
-                    endPoint: {
-                        x: params.object.startPoint.x + leftArrowSide.x,
-                        y: params.object.startPoint.y + leftArrowSide.y
-                    },
+                    startPoint: {x: 0, y: 0},
+                    endPoint: leftArrowSide,
                     weight: params.object.weight,
                     zIndex: params.object.zIndex
                 }
             }))
             result.push(new LineCanvasAnimation({
                 object: {
-                    startPoint: params.object.startPoint,
-                    endPoint: {
-                        x: params.object.startPoint.x + rightArrowSide.x,
-                        y: params.object.startPoint.y + rightArrowSide.y
-                    },
+                    startPoint: {x: 0, y: 0},
+                    endPoint: rightArrowSide,
                     weight: params.object.weight,
                     zIndex: params.object.zIndex
                 }
@@ -81,6 +64,10 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<ArrowPa
         }
 
         return result
+    }
+
+    getOrigin(): Point {
+        return this.getObject().startPoint;
     }
 
 }

@@ -19,7 +19,7 @@ export default class LineCanvasAnimation extends SimpleCanvasAnimation<LineParam
         return this.getObject().endPoint.y - this.getObject().startPoint.y
     }
 
-    getRotationAxis(): Point {
+    getOrigin(): Point {
         return this.getObject().startPoint;
     }
 
