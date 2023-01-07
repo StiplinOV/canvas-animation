@@ -11,10 +11,7 @@ import TextCanvasAnimation from "../../simple/text/TextCanvasAnimation";
 
 export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYChartParams> {
 
-    protected calculateIncludedObjects(
-        params: paramsType<XYChartParams, "uniform", "uniform">,
-        p5: p5Types
-    ): CanvasAnimation<Params, string, string>[] {
+    protected calculateIncludedObjects(params: paramsType<XYChartParams>, p5: p5Types): CanvasAnimation<Params>[] {
         const {object} = params
         const weight = object.weight || 1
         const {origin, height, width} = object
@@ -50,23 +47,15 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
                     verticalAlign: p5.BOTTOM
                 }}),
             ...xScale.map(value => new CircleCanvasAnimation({
-                appearType: "clock",
-                disappearType: "clock",
                 object: {centerPoint: {x: this.getXForValue(value), y: origin.y}, diameter: axisPointsDiameter}
             })),
             ...yScale.map(value => new CircleCanvasAnimation({
-                appearType: "clock",
-                disappearType: "clock",
                 object: {centerPoint: {x: origin.x, y: this.getYForValue(value)}, diameter: axisPointsDiameter}
             })),
             ...chartPoints.map(point => new CircleCanvasAnimation({
-                appearType: "clock",
-                disappearType: "clock",
                 object: {centerPoint: this.convertScalePointToCoordinate(point), diameter: chartPointsDiameter}
             })),
             ...chartLines.map(line => new LineCanvasAnimation({
-                appearType: "fromStartToEnd",
-                disappearType: "fromStartToEnd",
                 object: {
                     startPoint: this.convertScalePointToCoordinate(line[0]),
                     endPoint: this.convertScalePointToCoordinate(line[1])

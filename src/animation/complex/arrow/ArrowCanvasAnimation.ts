@@ -10,14 +10,9 @@ const arrowBaseWidth = 10
 
 export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<ArrowParams> {
 
-    protected calculateIncludedObjects(
-        params: paramsType<ArrowParams, "uniform", "uniform">,
-        p5: p5Types
-    ): CanvasAnimation<Params, string, string>[] {
-        const result: CanvasAnimation<Params, string, string>[] = [
+    protected calculateIncludedObjects(params: paramsType<ArrowParams>, p5: p5Types): CanvasAnimation<Params>[] {
+        const result: CanvasAnimation<Params>[] = [
             new LineCanvasAnimation({
-                appearType: "fromStartToEnd",
-                disappearType: "fromStartToEnd",
                 object: {
                     startPoint: params.object.startPoint,
                     endPoint: params.object.endPoint,
@@ -38,8 +33,6 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<ArrowPa
         rightArrowSide.rotate(angle)
         if (this.getObject().endType === "Arrow") {
             result.push(new LineCanvasAnimation({
-                appearType: "fromStartToEnd",
-                disappearType: "fromStartToEnd",
                 object: {
                     startPoint: params.object.endPoint,
                     endPoint: {
@@ -51,8 +44,6 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<ArrowPa
                 }
             }))
             result.push(new LineCanvasAnimation({
-                appearType: "fromStartToEnd",
-                disappearType: "fromStartToEnd",
                 object: {
                     startPoint: params.object.endPoint,
                     endPoint: {
@@ -66,8 +57,6 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<ArrowPa
         }
         if (this.getObject().startType === "Arrow") {
             result.push(new LineCanvasAnimation({
-                appearType: "fromStartToEnd",
-                disappearType: "fromStartToEnd",
                 object: {
                     startPoint: params.object.startPoint,
                     endPoint: {
@@ -79,8 +68,6 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<ArrowPa
                 }
             }))
             result.push(new LineCanvasAnimation({
-                appearType: "fromStartToEnd",
-                disappearType: "fromStartToEnd",
                 object: {
                     startPoint: params.object.startPoint,
                     endPoint: {

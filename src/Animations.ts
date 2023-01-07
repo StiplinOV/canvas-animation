@@ -9,13 +9,14 @@ import CircleCanvasAnimation from "./animation/simple/circle/CircleCanvasAnimati
 export const canvasWidth = 1280
 export const canvasHeight = 800
 
-export const animations: (p5: p5Types) => Array<CanvasAnimation<Params, string, string>> = (p5: p5Types) => [
+export const animations: (p5: p5Types) => Array<CanvasAnimation<Params>> = (p5: p5Types) => [
     new CircleCanvasAnimation({
         object: {
             diameter: 300,
             weight: 2,
             centerPoint: {x: 300, y: 300}
-        }
+        },
+        appearDuration: 1000
     }),
     new TextCanvasAnimation({
         object: {
@@ -27,10 +28,8 @@ export const animations: (p5: p5Types) => Array<CanvasAnimation<Params, string, 
         },
         appearTime: 1000,
         appearDuration: 1000,
-        appearType: "letterByLetter",
         disappearTime: 5000,
         disappearDuration: 1000,
-        disappearType: "letterByLetter"
     }),
     new XYChartCanvasAnimation({
         appearDuration: 4000,
