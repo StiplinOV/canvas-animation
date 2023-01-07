@@ -1,23 +1,24 @@
 import LineParams from "./LineParams";
 import p5Types from "p5";
 import SimpleCanvasAnimation from "../SimpleCanvasAnimation";
+import {Point} from "../../../common/Point";
 
 export default class LineCanvasAnimation extends SimpleCanvasAnimation<LineParams, "fromStartToEnd", "fromStartToEnd"> {
 
     public drawObject(p5: p5Types): void {
-        p5.line(this.startX(), this.startY(), this.endX(), this.endY())
+        p5.line(0, 0, this.endX(), this.endY())
     }
 
     protected drawAppearedObject(p5: p5Types, percent: number): void {
-        let newEndX = this.startX() + (this.endX() - this.startX()) * percent
-        let newEndY = this.startY() + (this.endY() - this.startY()) * percent
-        p5.line(this.startX(), this.startY(), newEndX, newEndY)
+        let newEndX = this.endX() * percent
+        let newEndY = this.endY() * percent
+        p5.line(0, 0, newEndX, newEndY)
     }
 
     protected drawDisappearedObject(p5: p5Types, percent: number): void {
-        let newStartX = this.startX() + (this.endX() - this.startX()) * percent
-        let newStartY = this.startY() + (this.endY() - this.startY()) * percent
-        p5.line(newStartX, newStartY, this.endX(), this.endY())
+        let newEndX = this.endX() * (1 - percent)
+        let newEndY = this.endY() * (1 - percent)
+        p5.line(0, 0, newEndX, newEndY)
     }
 
     public getDefaultAppearType(): "fromStartToEnd" {
@@ -28,20 +29,16 @@ export default class LineCanvasAnimation extends SimpleCanvasAnimation<LineParam
         return "fromStartToEnd";
     }
 
-    private startX(): number {
-        return this.getObject().startPoint.x
-    }
-
-    private startY(): number {
-        return this.getObject().startPoint.y
-    }
-
     private endX(): number {
-        return this.getObject().endPoint.x
+        return this.getObject().endPoint.x - this.getObject().startPoint.x
     }
 
     private endY(): number {
-        return this.getObject().endPoint.y
+        return this.getObject().endPoint.y - this.getObject().startPoint.y
+    }
+
+    getRotationAxis(): Point {
+        return this.getObject().startPoint;
     }
 
 }

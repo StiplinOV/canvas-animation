@@ -7,6 +7,7 @@ import ComplexCanvasAnimation from "../ComplexCanvasAnimation";
 import Params from "../../Params";
 import ArrowCanvasAnimation from "../arrow/ArrowCanvasAnimation";
 import p5Types from "p5";
+import TextCanvasAnimation from "../../simple/text/TextCanvasAnimation";
 
 export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYChartParams> {
 
@@ -16,15 +17,16 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
     ): CanvasAnimation<Params, string, string>[] {
         const {object} = params
         const weight = object.weight || 1
-        const {origin} = object
-        const {height} = object
-        const {width} = object
+        const {origin, height, width} = object
         const xScale = object.xScale || []
         const yScale = object.yScale || []
+        const xAxisName = object.xAxisName || ""
+        const yAxisName = object.yAxisName || ""
         const chartPoints = object.chartPoints || []
         const chartLines = object.chartLines || []
         const axisPointsDiameter = 2 * weight
         const chartPointsDiameter = 2 * weight
+
         return [
             new ArrowCanvasAnimation(
                 {object: {startPoint: origin, endPoint: {x: origin.x + width, y: origin.y}, endType: "Arrow"}},
@@ -34,6 +36,19 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
                 {object: {startPoint: origin, endPoint: {x: origin.x, y: origin.y - height}, endType: "Arrow"}},
                 p5
             ),
+            new TextCanvasAnimation({object: {
+                    position: {x: origin.x + width/2, y: origin.y},
+                    value: xAxisName,
+                    horizontalAlign: p5.CENTER,
+                    verticalAlign: p5.TOP
+            }}),
+            new TextCanvasAnimation({object: {
+                    position: {x: origin.x, y: origin.y - height/2},
+                    rotation: -Math.PI/2,
+                    value: yAxisName,
+                    horizontalAlign: p5.CENTER,
+                    verticalAlign: p5.BOTTOM
+                }}),
             ...xScale.map(value => new CircleCanvasAnimation({
                 appearType: "clock",
                 disappearType: "clock",
@@ -79,6 +94,5 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
             y: object.origin.y - scalePoint.y * object.height / yScaleMax
         }
     }
-
 
 }

@@ -7,8 +7,8 @@ export const cameras: cameraParams[] = [
     camera: {
         x: 0,
         y: 0,
-        zoom: 2,
-        rotation: Math.PI/8
+        zoom: 1,
+//        rotation: Math.PI/8
     }
 }, {
     startTime: 7000,
@@ -16,8 +16,8 @@ export const cameras: cameraParams[] = [
     camera: {
         x: 0,
         y: 0,
-        zoom: 0.5,
-        rotation: Math.PI/8
+        zoom: 1,
+//        rotation: Math.PI/8
     }
 }
 ]

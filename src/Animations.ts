@@ -4,11 +4,19 @@ import ArrowCanvasAnimation from "./animation/complex/arrow/ArrowCanvasAnimation
 import p5Types from "p5";
 import XYChartCanvasAnimation from "./animation/complex/xychart/XYChartCanvasAnimation";
 import TextCanvasAnimation from "./animation/simple/text/TextCanvasAnimation";
+import CircleCanvasAnimation from "./animation/simple/circle/CircleCanvasAnimation";
 
 export const canvasWidth = 1280
 export const canvasHeight = 800
 
 export const animations: (p5: p5Types) => Array<CanvasAnimation<Params, string, string>> = (p5: p5Types) => [
+    new CircleCanvasAnimation({
+        object: {
+            diameter: 300,
+            weight: 2,
+            centerPoint: {x: 300, y: 300}
+        }
+    }),
     new TextCanvasAnimation({
         object: {
             value: "This is some text",
@@ -35,6 +43,8 @@ export const animations: (p5: p5Types) => Array<CanvasAnimation<Params, string, 
             weight: 4,
             xScale: [1, 50, 100],
             yScale: [1, 2, 3, 4, 5],
+            xAxisName: "X - Axis name",
+            yAxisName: "Y - Axis name",
             chartPoints: [{x: 25, y: 4}, {x: 75, y: 2}, {x: 90, y: 3}],
             chartLines: [[{x: 25, y: 4}, {x: 75, y: 2}], [{x: 75, y: 2}, {x: 90, y: 3}]]
         }
