@@ -15,7 +15,6 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
 
     protected calculateIncludedObjects(params: paramsType<XYChartParams>, geometryHelper: GeometryHelper): CanvasAnimation<Params>[] {
         const {object} = params
-        const weight = object.weight || 1
         const {height, width} = object
         const xScale = object.xScale?.map(value => toScaleType(value)) || []
         const yScale = object.yScale?.map(value => toScaleType(value)) || []
@@ -23,7 +22,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
         const yAxisName = object.yAxisName || ""
         const chartPoints = object.chartPoints || []
         const chartLines = object.chartLines || []
-        const chartPointsDiameter = 2 * weight
+        const chartPointsDiameter = coordinateDashWidth/2
 
         return [
             new ArrowCanvasAnimation(

@@ -41,7 +41,15 @@ export const animations: (geometryHelper: GeometryHelper) => Array<CanvasAnimati
             yAxisName: "Price",
             xAxisName: "Number of day",
             xScale: [0, 1, 2, 3, 4, 5, 6],
-            yScale: [0, 1, 2, 3, 4, 5, 6, 7]
+            yScale: [0, 1, 2, 3, 4, 5, 6, 7],
+            chartPoints: [{x: 1, y: 7}, {x: 2, y: 1}, {x: 3, y: 5}, {x: 4, y: 3}, {x: 5, y: 6}, {x: 6, y: 4}],
+            chartLines: [
+                [{x: 1, y: 7}, {x: 2, y: 1}],
+                [{x: 2, y: 1}, {x: 3, y: 5}],
+                [{x: 3, y: 5}, {x: 4, y: 3}],
+                [{x: 4, y: 3}, {x: 5, y: 6}],
+                [{x: 5, y: 6}, {x: 6, y: 4}]
+            ]
         },
         appearTime: 10000,
         appearDuration: 4000
