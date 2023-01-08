@@ -7,6 +7,7 @@ export type paramsType<T extends Params> = {
     disappearTime?: number,
     appearDuration?: number,
     disappearDuration?: number,
+    selections?: { time: number, duration?: number }[]
     object: T
 }
 
@@ -16,6 +17,7 @@ export default abstract class CanvasAnimation<T extends Params> {
     private disappearTime?: number
     private appearDuration?: number
     private disappearDuration?: number
+    private selections?: { time: number, duration?: number }[]
     private readonly object: T
 
     public constructor(params: paramsType<T>) {
@@ -23,6 +25,7 @@ export default abstract class CanvasAnimation<T extends Params> {
         this.disappearTime = params.disappearTime
         this.appearDuration = params.appearDuration
         this.disappearDuration = params.disappearDuration
+        this.selections = params.selections
         this.object = params.object
     }
 
@@ -66,7 +69,26 @@ export default abstract class CanvasAnimation<T extends Params> {
         this.disappearDuration = value
     }
 
-    public abstract draw(p5: p5Types, time: number): void
+    public draw(p5: p5Types, time: number): void {
+        const selections = this.selections || []
+        let selected = false
+        let selectedPercent = 0
+        for (let i = 0; i < selections.length; i++) {
+            const selection = selections[i]
+            const duration = selection.duration
+            if (time >= selection.time) {
+                selected = !duration || time <= selection.time + duration
+                if (selected) {
+                    selectedPercent = duration ? (time - selection.time)/duration : 1
+                    selectedPercent = 2 * Math.abs(0.5 - Math.abs(selectedPercent - 0.5))
+                    break
+                }
+            }
+        }
+        this.doDraw(p5, time, selected, selectedPercent)
+    }
+
+    public abstract doDraw(p5: p5Types, time: number, selected: boolean, selectedPercent: number): void
 
     public abstract getIncludedObjects(): CanvasAnimation<Params>[]
 

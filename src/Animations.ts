@@ -4,6 +4,7 @@ import GeometryHelper from "./common/GeometryHelper";
 import TextCanvasAnimation from "./animation/simple/text/TextCanvasAnimation";
 import ArrayCanvasAnimation from "./animation/complex/array/ArrayCanvasAnimation";
 import XYChartCanvasAnimation from "./animation/complex/xychart/XYChartCanvasAnimation";
+import RectangleCanvasAnimation from "./animation/simple/rectangle/RectangleCanvasAnimation";
 
 export const canvasWidth = 1280
 export const canvasHeight = 800
@@ -18,7 +19,16 @@ export const animations: (geometryHelper: GeometryHelper) => Array<CanvasAnimati
             verticalAlign: "center",
             fontSize: 70
         },
-        appearDuration: 2000
+        appearDuration: 2000,
+        selections: [{time: 2000, duration: 2000}]
+    }),
+    new RectangleCanvasAnimation({
+        object: {
+            origin: {x: 50, y: 50},
+            width: 50,
+            height: 50
+        },
+        selections: [{time: 0, duration: 1000}]
     }),
     new ArrayCanvasAnimation({
         object: {
@@ -32,6 +42,7 @@ export const animations: (geometryHelper: GeometryHelper) => Array<CanvasAnimati
         },
         appearTime: 5000,
         appearDuration: 4000,
+        selections: [{time: 10000, duration: 1000}]
     }, geometryHelper),
     new XYChartCanvasAnimation({
         object: {
@@ -49,9 +60,11 @@ export const animations: (geometryHelper: GeometryHelper) => Array<CanvasAnimati
                 [{x: 3, y: 5}, {x: 4, y: 3}],
                 [{x: 4, y: 3}, {x: 5, y: 6}],
                 [{x: 5, y: 6}, {x: 6, y: 4}]
-            ]
+            ],
+            weight: 2
         },
         appearTime: 10000,
-        appearDuration: 4000
+        appearDuration: 4000,
+        selections: [{time: 15000, duration: 1000}]
     }, geometryHelper)
 ]

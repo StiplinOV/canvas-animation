@@ -30,12 +30,12 @@ export default abstract class ComplexCanvasAnimation<T extends Params> extends C
 
     protected abstract calculateIncludedObjects(params: paramsType<T>, geometryHelper: GeometryHelper): CanvasAnimation<Params>[]
 
-    draw(p5: p5Types, time: number): void {
+    doDraw(p5: p5Types, time: number, selected: boolean, selectedPercent: number): void {
         const rotationAxis = this.getOrigin()
         p5.push()
         p5.translate(rotationAxis.x, rotationAxis.y)
         p5.rotate(this.getObject().rotation || 0)
-        this.allCanvasAnimations.forEach(p => p.draw(p5, time))
+        this.allCanvasAnimations.forEach(p => p.doDraw(p5, time, selected, selectedPercent))
         p5.pop()
     }
 

@@ -5,7 +5,7 @@ import p5Types from "p5";
 export default abstract class SimpleCanvasAnimation<T extends Params>
     extends CanvasAnimation<T> {
 
-    public draw(p5: p5Types, time: number): void {
+    public doDraw(p5: p5Types, time: number, selected: boolean, selectedPercent: number): void {
         const disappearTime = this.getDisappearTime() || Number.POSITIVE_INFINITY
         const disappearDuration = this.getDisappearDuration()
         const rotationAxis = this.getOrigin()
@@ -16,7 +16,6 @@ export default abstract class SimpleCanvasAnimation<T extends Params>
             return
         }
         p5.strokeWeight(this.getObject().weight || 1)
-
         p5.push()
         p5.translate(rotationAxis.x, rotationAxis.y)
         p5.rotate(this.getObject().rotation || 0)
@@ -26,11 +25,12 @@ export default abstract class SimpleCanvasAnimation<T extends Params>
         } else if (disappearDuration && time > disappearTime && (disappearDuration >= (time - disappearTime))) {
             percent = 1 - ((time - disappearTime) / disappearDuration)
         }
-        this.drawObject(p5, percent)
+        p5.fill(p5.color(255 + (200 - 255) * selectedPercent))
+        this.drawObject(p5, percent, selectedPercent)
         p5.pop()
     }
 
-    public abstract drawObject(p5: p5Types, percent: number): void
+    public abstract drawObject(p5: p5Types, percent: number, selectedPercent: number): void
 
     public getIncludedObjects(): CanvasAnimation<Params>[] {
         return [this];
