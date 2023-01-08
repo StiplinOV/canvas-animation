@@ -31,35 +31,40 @@ export default abstract class ComplexCanvasAnimation<T extends Params, U> extend
         this.initialized = true
     }
 
-    doDraw(p5: p5Types, time: number, selectedPercent: number, selection: complexCanvasAnimationSelectionType<U>): void {
+    doDraw(p5: p5Types, time: number, selectedPercentParam: number, selection: complexCanvasAnimationSelectionType<U>): void {
         if (!this.initialized) {
             this.initialize()
         }
         const rotationAxis = this.getOrigin()
         const flattenIncludedObjects = this.getFlattenIncludedObjects()
+        const flattenIncludedObjectsToBeSelected = this.getFlattenIncludedObjects(selection?.selector)
         const selectionType = selection?.type || "together"
         p5.push()
         p5.translate(rotationAxis.x, rotationAxis.y)
         p5.rotate(this.getObject().rotation || 0)
 
         if (selectionType === "together") {
-            flattenIncludedObjects.forEach(o => o.doDraw(p5, time, selectedPercent, null))
+            flattenIncludedObjects.forEach(o => {
+                const selectedPercent = flattenIncludedObjectsToBeSelected.includes(o) ? selectedPercentParam : 0
+                o.doDraw(p5, time, selectedPercent, null)
+            })
         } else {
-            const currentObjectWithPercent = flattenIncludedObjects.length * selectedPercent
+            const currentObjectWithPercent = flattenIncludedObjectsToBeSelected.length * selectedPercentParam
             const nearerLowerIndexOfObject = Math.floor(currentObjectWithPercent)
             const percentOfDrawing = currentObjectWithPercent - nearerLowerIndexOfObject
-            flattenIncludedObjects.forEach((object, index) => {
-                const percent = index === nearerLowerIndexOfObject ? percentOfDrawing : 1
-                object.doDraw(p5, time, percent, null)
+            const selectedObject = flattenIncludedObjectsToBeSelected[nearerLowerIndexOfObject]
+            flattenIncludedObjects.forEach(object => {
+                const selectedPercent = selectedObject === object ? percentOfDrawing : 0
+                object.doDraw(p5, time, selectedPercent, null)
             })
         }
 
         p5.pop()
     }
 
-    private getFlattenIncludedObjects(): CanvasAnimation<Params>[] {
+    private getFlattenIncludedObjects(selector?: U): CanvasAnimation<Params>[] {
         let includedObjects: CanvasAnimation<Params>[] = []
-        let flattenIncludedObject = this.getIncludedObjects()
+        let flattenIncludedObject = this.getIncludedObjects(selector)
         while (includedObjects.length !== flattenIncludedObject.length) {
             includedObjects = flattenIncludedObject
             flattenIncludedObject = includedObjects.flatMap(o => o.getIncludedObjects())
@@ -67,6 +72,6 @@ export default abstract class ComplexCanvasAnimation<T extends Params, U> extend
         return includedObjects
     }
 
-    public abstract getIncludedObjects(): CanvasAnimation<Params>[]
+    public abstract getIncludedObjects(selector?: U): CanvasAnimation<Params>[]
 
 }

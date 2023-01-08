@@ -10,7 +10,7 @@ import GeometryHelper from "../../../common/GeometryHelper";
 import Params from "../../Params";
 
 const coordinateDashWidth = 20
-type selectorType = { points: "all", lines: "all" }
+type selectorType = { points?: "all", lines?: "all" }
 
 export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYChartParams, selectorType> {
 
@@ -133,7 +133,13 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
         }
     }
 
-    getIncludedObjects(): CanvasAnimation<Params>[] {
+    getIncludedObjects(selector?: selectorType): CanvasAnimation<Params>[] {
+        if (selector) {
+            const result: CanvasAnimation<Params>[] = []
+            selector.lines === "all" && result.push(...this.chartLines)
+            selector.points === "all" && result.push(...this.chartPoints)
+            return result
+        }
         return [
             this.xArrow,
             this.yArrow,
