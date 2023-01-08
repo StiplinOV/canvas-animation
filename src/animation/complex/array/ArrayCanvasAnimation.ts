@@ -7,7 +7,7 @@ import {Point} from "../../../common/Point";
 import TextCanvasAnimation from "../../simple/text/TextCanvasAnimation";
 import RectangleCanvasAnimation from "../../simple/rectangle/RectangleCanvasAnimation";
 
-export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<ArrayParams> {
+export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<ArrayParams, {}> {
 
     protected calculateIncludedObjects(
         params: paramsType<ArrayParams>,
@@ -31,7 +31,7 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<ArrayPa
             result.push(new TextCanvasAnimation({
                 object: {
                     value: title,
-                    origin: {x: width/2, y: partShift},
+                    origin: {x: width / 2, y: partShift},
                     fontSize: partHeight,
                     horizontalAlign: geometryHelper.HORIZONTAL_ALIGN_CENTER,
                     verticalAlign: geometryHelper.VERTICAL_ALIGN_TOP
@@ -62,7 +62,10 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<ArrayPa
             result.push(new TextCanvasAnimation({
                 object: {
                     value: String(index + (firstIndex || 0)),
-                    origin: {x: index * (arrayRectangleWidth + partHeight) + arrayRectangleWidth / 2, y: partShift + partHeight * 4},
+                    origin: {
+                        x: index * (arrayRectangleWidth + partHeight) + arrayRectangleWidth / 2,
+                        y: partShift + partHeight * 4
+                    },
                     horizontalAlign: geometryHelper.HORIZONTAL_ALIGN_CENTER,
                 }
             }))
@@ -72,8 +75,8 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<ArrayPa
             result.push(new TextCanvasAnimation({
                 object: {
                     value: indexTitle,
-                    origin: {x: width/2, y: partShift},
-                    fontSize: partHeight/2,
+                    origin: {x: width / 2, y: partShift},
+                    fontSize: partHeight / 2,
                     horizontalAlign: geometryHelper.HORIZONTAL_ALIGN_CENTER,
                 }
             }))

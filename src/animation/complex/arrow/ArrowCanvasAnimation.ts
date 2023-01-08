@@ -9,7 +9,7 @@ import GeometryHelper from "../../../common/GeometryHelper";
 const arrowBaseLength = 10
 const arrowBaseWidth = 10
 
-export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<ArrowParams> {
+export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<ArrowParams, {}> {
 
     protected calculateIncludedObjects(params: paramsType<ArrowParams>, geometryHelper: GeometryHelper): CanvasAnimation<Params>[] {
         const relativeEndPoint = geometryHelper.subtractPoints(params.object.endPoint, params.object.startPoint)

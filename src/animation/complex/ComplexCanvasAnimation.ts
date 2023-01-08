@@ -1,13 +1,18 @@
-import CanvasAnimation, {paramsType} from "../CanvasAnimation";
+import CanvasAnimation, {paramsType, selectionType} from "../CanvasAnimation";
 import Params from "../Params";
 import p5Types from "p5";
 import GeometryHelper from "../../common/GeometryHelper";
 
-export default abstract class ComplexCanvasAnimation<T extends Params> extends CanvasAnimation<T> {
+export interface complexCanvasAnimationSelectionType<T> extends selectionType {
+    type: "together" | "sequentially",
+    selector?: T
+}
+
+export default abstract class ComplexCanvasAnimation<T extends Params, U> extends CanvasAnimation<T, complexCanvasAnimationSelectionType<U>> {
 
     private allCanvasAnimations: CanvasAnimation<Params>[] = []
 
-    constructor(params: paramsType<T>, geometryHelper: GeometryHelper) {
+    constructor(params: paramsType<T, complexCanvasAnimationSelectionType<U>>, geometryHelper: GeometryHelper) {
         super(params)
         this.calculateIncludedObjects(params, geometryHelper).forEach(o => this.addCanvasAnimation(o))
 
@@ -28,14 +33,21 @@ export default abstract class ComplexCanvasAnimation<T extends Params> extends C
         })
     }
 
+    //А тут что? Параметризация?
     protected abstract calculateIncludedObjects(params: paramsType<T>, geometryHelper: GeometryHelper): CanvasAnimation<Params>[]
 
-    doDraw(p5: p5Types, time: number, selected: boolean, selectedPercent: number): void {
+    doDraw(p5: p5Types, time: number, selectedPercent: number, selection: complexCanvasAnimationSelectionType<U>): void {
         const rotationAxis = this.getOrigin()
         p5.push()
         p5.translate(rotationAxis.x, rotationAxis.y)
         p5.rotate(this.getObject().rotation || 0)
-        this.allCanvasAnimations.forEach(p => p.doDraw(p5, time, selected, selectedPercent))
+        /*
+            Еще можно сделать облако тегов:
+
+            может как то тут сделать финт ушами
+            Если применён селектор то надо как то вернуть селектед персент
+         */
+        this.allCanvasAnimations.forEach(p => p.doDraw(p5, time, selectedPercent, null))
         p5.pop()
     }
 

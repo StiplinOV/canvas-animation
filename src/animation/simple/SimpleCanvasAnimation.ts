@@ -5,7 +5,7 @@ import p5Types from "p5";
 export default abstract class SimpleCanvasAnimation<T extends Params>
     extends CanvasAnimation<T> {
 
-    public doDraw(p5: p5Types, time: number, selected: boolean, selectedPercent: number): void {
+    public doDraw(p5: p5Types, time: number, selectedPercent: number): void {
         const disappearTime = this.getDisappearTime() || Number.POSITIVE_INFINITY
         const disappearDuration = this.getDisappearDuration()
         const rotationAxis = this.getOrigin()

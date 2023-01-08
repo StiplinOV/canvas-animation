@@ -2,25 +2,27 @@ import Params from "./Params";
 import p5Types from "p5";
 import {Point} from "../common/Point";
 
-export type paramsType<T extends Params> = {
+export interface selectionType { time: number, duration?: number }
+
+export type paramsType<T extends Params, U extends selectionType = selectionType> = {
     appearTime?: number,
     disappearTime?: number,
     appearDuration?: number,
     disappearDuration?: number,
-    selections?: { time: number, duration?: number }[]
+    selections?: U[]
     object: T
 }
 
-export default abstract class CanvasAnimation<T extends Params> {
+export default abstract class CanvasAnimation<T extends Params, U extends selectionType = selectionType> {
 
     private appearTime?: number
     private disappearTime?: number
     private appearDuration?: number
     private disappearDuration?: number
-    private selections?: { time: number, duration?: number }[]
+    private readonly selections?: U[]
     private readonly object: T
 
-    public constructor(params: paramsType<T>) {
+    public constructor(params: paramsType<T, U>) {
         this.appearTime = params.appearTime
         this.disappearTime = params.disappearTime
         this.appearDuration = params.appearDuration
@@ -73,22 +75,24 @@ export default abstract class CanvasAnimation<T extends Params> {
         const selections = this.selections || []
         let selected = false
         let selectedPercent = 0
+        let selection = null
         for (let i = 0; i < selections.length; i++) {
-            const selection = selections[i]
-            const duration = selection.duration
-            if (time >= selection.time) {
-                selected = !duration || time <= selection.time + duration
+            const currentSelection = selections[i]
+            const duration = currentSelection.duration
+            if (time >= currentSelection.time) {
+                selected = !duration || time <= currentSelection.time + duration
                 if (selected) {
-                    selectedPercent = duration ? (time - selection.time)/duration : 1
+                    selectedPercent = duration ? (time - currentSelection.time) / duration : 1
                     selectedPercent = 2 * Math.abs(0.5 - Math.abs(selectedPercent - 0.5))
+                    selection = currentSelection
                     break
                 }
             }
         }
-        this.doDraw(p5, time, selected, selectedPercent)
+        this.doDraw(p5, time, selectedPercent, selection)
     }
 
-    public abstract doDraw(p5: p5Types, time: number, selected: boolean, selectedPercent: number): void
+    public abstract doDraw(p5: p5Types, time: number, selectedPercent: number, selection: U | null): void
 
     public abstract getIncludedObjects(): CanvasAnimation<Params>[]
 

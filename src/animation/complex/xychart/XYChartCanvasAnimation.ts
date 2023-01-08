@@ -11,7 +11,7 @@ import GeometryHelper from "../../../common/GeometryHelper";
 
 const coordinateDashWidth = 20
 
-export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYChartParams> {
+export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYChartParams, { points: "all", lines: "all" }> {
 
     protected calculateIncludedObjects(params: paramsType<XYChartParams>, geometryHelper: GeometryHelper): CanvasAnimation<Params>[] {
         const {object} = params
@@ -22,7 +22,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
         const yAxisName = object.yAxisName || ""
         const chartPoints = object.chartPoints || []
         const chartLines = object.chartLines || []
-        const chartPointsDiameter = coordinateDashWidth/2
+        const chartPointsDiameter = coordinateDashWidth / 2
 
         return [
             new ArrowCanvasAnimation(
