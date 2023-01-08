@@ -1,19 +1,22 @@
 import ArrayParams from "./ArrayParams";
-import ComplexCanvasAnimation from "../ComplexCanvasAnimation";
+import ComplexCanvasAnimation, {complexCanvasAnimationSelectionType} from "../ComplexCanvasAnimation";
 import CanvasAnimation, {paramsType} from "../../CanvasAnimation";
 import GeometryHelper from "../../../common/GeometryHelper";
-import Params from "../../Params";
 import {Point} from "../../../common/Point";
 import TextCanvasAnimation from "../../simple/text/TextCanvasAnimation";
 import RectangleCanvasAnimation from "../../simple/rectangle/RectangleCanvasAnimation";
+import Params from "../../Params";
 
 export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<ArrayParams, {}> {
 
-    protected calculateIncludedObjects(
-        params: paramsType<ArrayParams>,
-        geometryHelper: GeometryHelper
-    ): CanvasAnimation<Params>[] {
-        const result: CanvasAnimation<Params>[] = []
+    private title?: TextCanvasAnimation
+    private arrayCells: RectangleCanvasAnimation[] = []
+    private arrayValues: TextCanvasAnimation[] = []
+    private arrayIndices: TextCanvasAnimation[] = []
+    private indicesTitle?: TextCanvasAnimation
+
+    constructor(params: paramsType<ArrayParams, complexCanvasAnimationSelectionType<{}>>, geometryHelper: GeometryHelper) {
+        super(params);
         const {title, value, indexTitle, height, firstIndex} = this.getObject()
         let numberOfParts = 5
         if (title) {
@@ -28,7 +31,7 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<ArrayPa
         const arrayRectangleWidth = (width - (value.length - 1) * partHeight) / value.length
         let partShift = 0
         if (title) {
-            result.push(new TextCanvasAnimation({
+            this.title = new TextCanvasAnimation({
                 object: {
                     value: title,
                     origin: {x: width / 2, y: partShift},
@@ -36,11 +39,11 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<ArrayPa
                     horizontalAlign: geometryHelper.HORIZONTAL_ALIGN_CENTER,
                     verticalAlign: geometryHelper.VERTICAL_ALIGN_TOP
                 }
-            }))
+            })
             partShift += partHeight * 2
         }
         value.forEach((value, index) => {
-            result.push(new RectangleCanvasAnimation({
+            this.arrayCells.push(new RectangleCanvasAnimation({
                 object: {
                     origin: {x: index * (arrayRectangleWidth + partHeight), y: partShift},
                     width: arrayRectangleWidth,
@@ -48,7 +51,7 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<ArrayPa
                     cornerRadius: 20
                 }
             }))
-            result.push(new TextCanvasAnimation({
+            this.arrayValues.push(new TextCanvasAnimation({
                 object: {
                     value: value,
                     origin: {
@@ -59,7 +62,7 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<ArrayPa
                     horizontalAlign: geometryHelper.HORIZONTAL_ALIGN_CENTER,
                 }
             }))
-            result.push(new TextCanvasAnimation({
+            this.arrayIndices.push(new TextCanvasAnimation({
                 object: {
                     value: String(index + (firstIndex || 0)),
                     origin: {
@@ -72,16 +75,24 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<ArrayPa
         })
         partShift += partHeight * 5
         if (indexTitle) {
-            result.push(new TextCanvasAnimation({
+            this.indicesTitle = new TextCanvasAnimation({
                 object: {
                     value: indexTitle,
                     origin: {x: width / 2, y: partShift},
                     fontSize: partHeight / 2,
                     horizontalAlign: geometryHelper.HORIZONTAL_ALIGN_CENTER,
                 }
-            }))
+            })
         }
+    }
 
+    getIncludedObjects(): CanvasAnimation<Params>[] {
+        const result: CanvasAnimation<Params>[] = []
+        this.title && result.push(this.title)
+        result.push(...this.arrayCells)
+        result.push(...this.arrayValues)
+        result.push(...this.arrayIndices)
+        this.indicesTitle && result.push(this.indicesTitle)
         return result;
     }
 
