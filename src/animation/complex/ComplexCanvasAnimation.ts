@@ -36,16 +36,24 @@ export default abstract class ComplexCanvasAnimation<T extends Params, U> extend
             this.initialize()
         }
         const rotationAxis = this.getOrigin()
+        const flattenIncludedObjects = this.getFlattenIncludedObjects()
+        const selectionType = selection?.type || "together"
         p5.push()
         p5.translate(rotationAxis.x, rotationAxis.y)
         p5.rotate(this.getObject().rotation || 0)
-        /*
-            Еще можно сделать облако тегов:
 
-            может как то тут сделать финт ушами
-            Если применён селектор то надо как то вернуть селектед персент
-         */
-        this.getFlattenIncludedObjects().forEach(p => p.doDraw(p5, time, selectedPercent, null))
+        if (selectionType === "together") {
+            flattenIncludedObjects.forEach(o => o.doDraw(p5, time, selectedPercent, null))
+        } else {
+            const currentObjectWithPercent = flattenIncludedObjects.length * selectedPercent
+            const nearerLowerIndexOfObject = Math.floor(currentObjectWithPercent)
+            const percentOfDrawing = currentObjectWithPercent - nearerLowerIndexOfObject
+            flattenIncludedObjects.forEach((object, index) => {
+                const percent = index === nearerLowerIndexOfObject ? percentOfDrawing : 1
+                object.doDraw(p5, time, percent, null)
+            })
+        }
+
         p5.pop()
     }
 

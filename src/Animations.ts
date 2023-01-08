@@ -42,7 +42,7 @@ export const animations: (geometryHelper: GeometryHelper) => Array<CanvasAnimati
         },
         appearTime: 5000,
         appearDuration: 4000,
-        selections: [{time: 10000, duration: 1000, type: "sequentially", selector: {}}]
+        selections: [{time: 10000, duration: 5000, type: "together", selector: {}}]
     }, geometryHelper),
     new XYChartCanvasAnimation({
         object: {
@@ -65,6 +65,6 @@ export const animations: (geometryHelper: GeometryHelper) => Array<CanvasAnimati
         },
         appearTime: 10000,
         appearDuration: 4000,
-        selections: [{time: 15000, duration: 1000, type: "sequentially"}]
+        selections: [{time: 15000, duration: 5000, type: "sequentially"}]
     }, geometryHelper)
 ]

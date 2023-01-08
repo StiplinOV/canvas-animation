@@ -83,7 +83,6 @@ export default abstract class CanvasAnimation<T extends Params, U extends select
                 selected = !duration || time <= currentSelection.time + duration
                 if (selected) {
                     selectedPercent = duration ? (time - currentSelection.time) / duration : 1
-                    selectedPercent = 2 * Math.abs(0.5 - Math.abs(selectedPercent - 0.5))
                     selection = currentSelection
                     break
                 }
