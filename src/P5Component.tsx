@@ -24,13 +24,14 @@ export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => 
     }
 
     const draw = (p5: p5Types) => {
-        let m = p5.millis() % timeDivider;
-        const camera = getActualCamera(m)
+        const millis = p5.millis() % timeDivider;
+        const camera = getActualCamera(millis)
+        const zoom = camera.zoom || 1
         p5.background(255)
         camera.rotation && p5.rotate(camera.rotation)
-        p5.translate(-camera.x*camera.zoom, -camera.y*camera.zoom)
-        p5.scale(camera.zoom)
-        animations(new GeometryHelper(p5)).forEach(animation => animation.draw(p5, m))
+        p5.translate(-camera.x * zoom, -camera.y * zoom)
+        p5.scale(zoom)
+        animations(new GeometryHelper(p5)).forEach(animation => animation.draw(p5, millis))
     }
 
     // @ts-ignore
@@ -65,15 +66,16 @@ const getActualCamera = (time: number): camera => {
     let transformDuration = actualCameraParamCandidate.transformDuration || 0
     const isInTransform = actualCameraParamCandidate.startTime + transformDuration > time
     const actualCamera = actualCameraParamCandidate.camera
+    const actualZoom = actualCamera.zoom || 1
     if (isInTransform) {
         const prevX = prevCamera.x
         const prevY = prevCamera.y
-        const prevZoom = prevCamera.zoom
+        const prevZoom = prevCamera.zoom || 1
         const prevRotation = prevCamera.rotation || 0
         const transformPercent = (time - actualCameraParamCandidate.startTime) / transformDuration
         let x = prevX + (actualCamera.x - prevX) * transformPercent
         let y = prevY + (actualCamera.y - prevY) * transformPercent
-        let zoom = prevZoom + (actualCamera.zoom - prevZoom) * transformPercent
+        let zoom = prevZoom + (actualZoom - prevZoom) * transformPercent
         let rotation = prevRotation + ((actualCamera.rotation || 0) - prevRotation) * transformPercent
         return {x, y, zoom, rotation}
     }

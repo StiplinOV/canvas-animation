@@ -8,4 +8,5 @@ export default interface ArrayParams extends Params {
     width?: number
     title?: string
     indexTitle?: string
+    firstIndex?: number
 }

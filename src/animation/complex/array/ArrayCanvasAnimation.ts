@@ -13,19 +13,8 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<ArrayPa
         params: paramsType<ArrayParams>,
         geometryHelper: GeometryHelper
     ): CanvasAnimation<Params>[] {
-        //Делим массив на 5 частей по вертикали
-        /*
-        gap x1
-        заголовок х1
-        gap x1
-        массив х3
-        gap x1
-        индексы х1
-        gap x1
-        заголовок индексов x1
-         */
         const result: CanvasAnimation<Params>[] = []
-        const {title, value, indexTitle, height} = this.getObject()
+        const {title, value, indexTitle, height, firstIndex} = this.getObject()
         let numberOfParts = 5
         if (title) {
             numberOfParts += 3
@@ -72,7 +61,7 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<ArrayPa
             }))
             result.push(new TextCanvasAnimation({
                 object: {
-                    value: String(index),
+                    value: String(index + (firstIndex || 0)),
                     origin: {x: index * (arrayRectangleWidth + partHeight) + arrayRectangleWidth / 2, y: partShift + partHeight * 4},
                     horizontalAlign: geometryHelper.HORIZONTAL_ALIGN_CENTER,
                 }
@@ -96,6 +85,5 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<ArrayPa
     getOrigin(): Point {
         return this.getObject().origin;
     }
-
 
 }

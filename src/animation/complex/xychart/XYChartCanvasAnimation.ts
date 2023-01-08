@@ -1,5 +1,5 @@
 import CanvasAnimation, {paramsType} from "../../CanvasAnimation";
-import XYChartParams from "./XYChartParams";
+import XYChartParams, {scaleType, toScaleType} from "./XYChartParams";
 import LineCanvasAnimation from "../../simple/line/LineCanvasAnimation";
 import CircleCanvasAnimation from "../../simple/circle/CircleCanvasAnimation";
 import {Point} from "../../../common/Point";
@@ -9,19 +9,20 @@ import ArrowCanvasAnimation from "../arrow/ArrowCanvasAnimation";
 import TextCanvasAnimation from "../../simple/text/TextCanvasAnimation";
 import GeometryHelper from "../../../common/GeometryHelper";
 
+const coordinateDashWidth = 20
+
 export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYChartParams> {
 
     protected calculateIncludedObjects(params: paramsType<XYChartParams>, geometryHelper: GeometryHelper): CanvasAnimation<Params>[] {
         const {object} = params
         const weight = object.weight || 1
         const {height, width} = object
-        const xScale = object.xScale || []
-        const yScale = object.yScale || []
+        const xScale = object.xScale?.map(value => toScaleType(value)) || []
+        const yScale = object.yScale?.map(value => toScaleType(value)) || []
         const xAxisName = object.xAxisName || ""
         const yAxisName = object.yAxisName || ""
         const chartPoints = object.chartPoints || []
         const chartLines = object.chartLines || []
-        const axisPointsDiameter = 2 * weight
         const chartPointsDiameter = 2 * weight
 
         return [
@@ -35,27 +36,61 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
             ),
             new TextCanvasAnimation({
                 object: {
-                    origin: {x: width / 2, y: 10},
+                    origin: {x: width / 2, y: coordinateDashWidth * 2},
                     value: xAxisName,
+                    fontSize: 20,
                     horizontalAlign: geometryHelper.HORIZONTAL_ALIGN_CENTER,
                     verticalAlign: geometryHelper.VERTICAL_ALIGN_TOP
                 }
             }),
             new TextCanvasAnimation({
                 object: {
-                    origin: {x: -5, y: -height / 2},
+                    origin: {x: -coordinateDashWidth * 2, y: -height / 2},
                     rotation: -Math.PI / 2,
                     value: yAxisName,
+                    fontSize: 20,
                     horizontalAlign: geometryHelper.HORIZONTAL_ALIGN_CENTER,
                     verticalAlign: geometryHelper.VERTICAL_ALIGN_BOTTOM
                 }
             }),
-            ...xScale.map(value => new CircleCanvasAnimation({
-                object: {centerPoint: {x: this.getXForValue(value), y: 0}, diameter: axisPointsDiameter}
-            })),
-            ...yScale.map(value => new CircleCanvasAnimation({
-                object: {centerPoint: {x: 0, y: this.getYForValue(value)}, diameter: axisPointsDiameter}
-            })),
+            ...xScale.flatMap(value => {
+                const x = this.getXForValue(value)
+                return [
+                    new LineCanvasAnimation({
+                        object: {
+                            startPoint: {x: x, y: -coordinateDashWidth / 2},
+                            endPoint: {x: x, y: coordinateDashWidth / 2}
+                        }
+                    }),
+                    new TextCanvasAnimation({
+                        object: {
+                            origin: {x: x, y: Number(coordinateDashWidth)},
+                            value: value.value,
+                            verticalAlign: geometryHelper.VERTICAL_ALIGN_TOP,
+                            horizontalAlign: geometryHelper.HORIZONTAL_ALIGN_CENTER
+                        }
+                    })
+                ]
+            }),
+            ...yScale.flatMap(value => {
+                const y = this.getYForValue(value)
+                return [
+                    new LineCanvasAnimation({
+                        object: {
+                            startPoint: {x: -coordinateDashWidth / 2, y: y},
+                            endPoint: {x: coordinateDashWidth / 2, y: y}
+                        }
+                    }),
+                    new TextCanvasAnimation({
+                        object: {
+                            origin: {x: -Number(coordinateDashWidth), y: y},
+                            value: value.value,
+                            verticalAlign: geometryHelper.VERTICAL_ALIGN_CENTER,
+                            horizontalAlign: geometryHelper.HORIZONTAL_ALIGN_CENTER
+                        }
+                    })
+                ]
+            }),
             ...chartPoints.map(point => new CircleCanvasAnimation({
                 object: {centerPoint: this.convertScalePointToCoordinate(point), diameter: chartPointsDiameter}
             })),
@@ -68,20 +103,24 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
         ]
     }
 
-    private getXForValue(value: number): number {
-        return this.convertScalePointToCoordinate({x: value, y: 0}).x
+    private getXForValue(scaleValue: scaleType): number {
+        return this.convertScalePointToCoordinate({x: scaleValue.position, y: 0}).x
     }
 
-    private getYForValue(value: number): number {
-        return this.convertScalePointToCoordinate({x: 0, y: value}).y
+    private getYForValue(scaleValue: scaleType): number {
+        return this.convertScalePointToCoordinate({x: 0, y: scaleValue.position}).y
     }
 
     private convertScalePointToCoordinate(scalePoint: Point): Point {
         const object = this.getObject()
-        const xScale = object.xScale || []
-        const yScale = object.yScale || []
-        const xScaleMax = xScale.length > 0 ? xScale[xScale.length - 1] + xScale[0] : 0
-        const yScaleMax = yScale.length > 0 ? yScale[yScale.length - 1] + yScale[0] : 0
+        const xScale = object.xScale?.map(value => toScaleType(value)) || []
+        const yScale = object.yScale?.map(value => toScaleType(value)) || []
+        const lastXScaleValue = xScale[xScale.length - 1].position
+        const lastYScaleValue = yScale[yScale.length - 1].position
+        const averageXGap = lastXScaleValue / xScale.length
+        const averageYGap = lastYScaleValue / yScale.length
+        const xScaleMax = xScale.length > 0 ? (lastXScaleValue + averageXGap) : 0
+        const yScaleMax = yScale.length > 0 ? (lastYScaleValue + averageYGap) : 0
         return {
             x: scalePoint.x * object.width / xScaleMax,
             y: -scalePoint.y * object.height / yScaleMax

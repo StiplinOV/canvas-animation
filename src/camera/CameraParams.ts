@@ -1,7 +1,7 @@
 export type camera = {
     x: number
     y: number
-    zoom: number
+    zoom?: number
     rotation?: number
 }
 
