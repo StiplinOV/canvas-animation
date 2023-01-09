@@ -38,11 +38,11 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
         const chartPointsDiameter = coordinateDashWidth / 2
 
         this.xArrow = new ArrowCanvasAnimation(
-            {object: {startPoint: {x: 0, y: 0}, endPoint: {x: width, y: 0}, endType: "Arrow"}},
+            {object: {origin: {x: 0, y: 0}, endPoint: {x: width, y: 0}, endType: "Arrow"}},
             geometryHelper
         )
         this.yArrow = new ArrowCanvasAnimation(
-            {object: {startPoint: {x: 0, y: 0}, endPoint: {x: 0, y: -height}, endType: "Arrow"}},
+            {object: {origin: {x: 0, y: 0}, endPoint: {x: 0, y: -height}, endType: "Arrow"}},
             geometryHelper
         )
         this.xText = new TextCanvasAnimation({
@@ -68,7 +68,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
             const x = this.getXForValue(value)
             this.xScaleLines.push(new LineCanvasAnimation({
                 object: {
-                    startPoint: {x: x, y: -coordinateDashWidth / 2},
+                    origin: {x: x, y: -coordinateDashWidth / 2},
                     endPoint: {x: x, y: coordinateDashWidth / 2}
                 }
             }))
@@ -85,7 +85,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
             const y = this.getYForValue(value)
             this.yScaleLines.push(new LineCanvasAnimation({
                 object: {
-                    startPoint: {x: -coordinateDashWidth / 2, y: y},
+                    origin: {x: -coordinateDashWidth / 2, y: y},
                     endPoint: {x: coordinateDashWidth / 2, y: y}
                 }
             }))
@@ -99,11 +99,11 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
             }))
         })
         chartPoints.forEach(point => this.chartPoints.push(new CircleCanvasAnimation({
-            object: {centerPoint: this.convertScalePointToCoordinate(point), diameter: chartPointsDiameter}
+            object: {origin: this.convertScalePointToCoordinate(point), diameter: chartPointsDiameter}
         })))
         chartLines.forEach(line => this.chartLines.push(new LineCanvasAnimation({
             object: {
-                startPoint: this.convertScalePointToCoordinate(line[0]),
+                origin: this.convertScalePointToCoordinate(line[0]),
                 endPoint: this.convertScalePointToCoordinate(line[1])
             }
         })))
@@ -152,10 +152,6 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
             ...this.chartPoints,
             ...this.chartLines,
         ]
-    }
-
-    getOrigin(): Point {
-        return this.getObject().origin;
     }
 
 }

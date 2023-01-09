@@ -1,7 +1,6 @@
 import CircleParams from "./CircleParams";
 import p5Types from "p5";
 import SimpleCanvasAnimation from "../SimpleCanvasAnimation";
-import {Point} from "../../../common/Point";
 
 export default class CircleCanvasAnimation extends SimpleCanvasAnimation<CircleParams> {
 
@@ -11,10 +10,6 @@ export default class CircleCanvasAnimation extends SimpleCanvasAnimation<CircleP
 
     private diameter(): number {
         return this.getObject().diameter
-    }
-
-    getOrigin(): Point {
-        return this.getObject().centerPoint;
     }
 
 }

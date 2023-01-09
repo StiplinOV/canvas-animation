@@ -2,7 +2,6 @@ import ArrayParams from "./ArrayParams";
 import ComplexCanvasAnimation, {complexCanvasAnimationSelectionType} from "../ComplexCanvasAnimation";
 import CanvasAnimation, {paramsType} from "../../CanvasAnimation";
 import GeometryHelper from "../../../common/GeometryHelper";
-import {Point} from "../../../common/Point";
 import TextCanvasAnimation from "../../simple/text/TextCanvasAnimation";
 import RectangleCanvasAnimation from "../../simple/rectangle/RectangleCanvasAnimation";
 import Params from "../../Params";
@@ -94,10 +93,6 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<ArrayPa
         result.push(...this.arrayIndices)
         this.indicesTitle && result.push(this.indicesTitle)
         return result;
-    }
-
-    getOrigin(): Point {
-        return this.getObject().origin;
     }
 
 }

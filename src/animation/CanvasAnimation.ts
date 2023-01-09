@@ -95,6 +95,8 @@ export default abstract class CanvasAnimation<T extends Params, U extends select
 
     public abstract getIncludedObjects(): CanvasAnimation<Params>[]
 
-    public abstract getOrigin(): Point
+    public getOrigin(): Point {
+        return this.getObject().origin;
+    }
 
 }
