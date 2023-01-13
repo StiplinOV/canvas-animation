@@ -35,6 +35,10 @@ export default abstract class CanvasAnimation<T extends Params, U extends select
         return this.object
     }
 
+    protected getObjectWeight(): number {
+        return this.getObject().weight || 1
+    }
+
     public getZIndex(): number {
         return this.object.zIndex || 0
     }

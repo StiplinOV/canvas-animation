@@ -36,7 +36,7 @@ export default abstract class ComplexCanvasAnimation<T extends Params, U> extend
             this.initialize()
         }
         const rotationAxis = this.getOrigin()
-        const flattenIncludedObjects = this.getFlattenIncludedObjects()
+        const flattenIncludedObjects = this.getFlattenIncludedObjects().sort((l, r) => l.getZIndex() - r.getZIndex())
         const flattenIncludedObjectsToBeSelected = this.getFlattenIncludedObjects(selection?.selector)
         const selectionType = selection?.type || "together"
         p5.push()

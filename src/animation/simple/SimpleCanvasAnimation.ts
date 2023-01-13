@@ -9,14 +9,14 @@ export default abstract class SimpleCanvasAnimation<T extends Params>
         const disappearTime = this.getDisappearTime() || Number.POSITIVE_INFINITY
         const disappearDuration = this.getDisappearDuration()
         const rotationAxis = this.getOrigin()
-            //        const fadeInFadeOutPercent = convertPercentToFadeInFadeOut(selectedPercent)
+
         if (this.getAppearTime() >= time) {
             return
         }
         if ((disappearTime + (disappearDuration || 0)) <= time) {
             return
         }
-        p5.strokeWeight(this.getObject().weight || 1)
+        p5.strokeWeight(this.getObjectWeight())
         p5.push()
         p5.translate(rotationAxis.x, rotationAxis.y)
         p5.rotate(this.getObject().rotation || 0)

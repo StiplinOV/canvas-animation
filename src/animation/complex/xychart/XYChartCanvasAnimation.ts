@@ -109,7 +109,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
             }
             const pointCoordinate = this.convertPointToCoordinate(curPoint)
             this.chartPoints.push(new CircleCanvasAnimation({
-                object: {origin: pointCoordinate, diameter: chartPointsDiameter, weight: 2}
+                object: {origin: pointCoordinate, diameter: chartPointsDiameter, weight: 2, zIndex: 2}
             }))
             this.chartPointsValues.push(new TextCanvasAnimation({
                 object: {
