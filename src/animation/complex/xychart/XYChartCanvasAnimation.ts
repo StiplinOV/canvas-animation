@@ -1,5 +1,5 @@
 import CanvasAnimation, {paramsType} from "../../CanvasAnimation";
-import XYChartParams, {scaleType, toScaleType} from "./XYChartParams";
+import XYChartParams, {scaleType, toChartPointType, toScaleType} from "./XYChartParams";
 import LineCanvasAnimation from "../../simple/line/LineCanvasAnimation";
 import CircleCanvasAnimation from "../../simple/circle/CircleCanvasAnimation";
 import {Point} from "../../../common/Point";
@@ -10,7 +10,7 @@ import GeometryHelper from "../../../common/GeometryHelper";
 import Params from "../../Params";
 
 const coordinateDashWidth = 20
-type selectorType = { points?: "all", lines?: "all" }
+type selectorType = { points?: "all" | number[], lines?: "all" }
 
 export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYChartParams, selectorType> {
 
@@ -23,6 +23,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
     private xScaleAxisValues: TextCanvasAnimation[] = []
     private yScaleAxisValues: TextCanvasAnimation[] = []
     private chartPoints: CircleCanvasAnimation[] = []
+    private chartPointsValues: TextCanvasAnimation[] = []
     private chartLines: LineCanvasAnimation[] = []
 
     constructor(params: paramsType<XYChartParams, complexCanvasAnimationSelectionType<selectorType>>, geometryHelper: GeometryHelper) {
@@ -33,16 +34,16 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
         const yScale = object.yScale?.map(value => toScaleType(value)) || []
         const xAxisName = object.xAxisName || ""
         const yAxisName = object.yAxisName || ""
-        const chartPoints = object.chartPoints || []
+        const chartPoints = object.chartPoints?.map(value => toChartPointType(value)) || []
         const chartLines = object.chartLines || []
         const chartPointsDiameter = coordinateDashWidth / 2
 
         this.xArrow = new ArrowCanvasAnimation(
-            {object: {origin: {x: 0, y: 0}, endPoint: {x: width, y: 0}, endType: "Arrow"}},
+            {object: {origin: {x: 0, y: 0}, endPoint: {x: width, y: 0}, endType: "Arrow", weight: 2}},
             geometryHelper
         )
         this.yArrow = new ArrowCanvasAnimation(
-            {object: {origin: {x: 0, y: 0}, endPoint: {x: 0, y: -height}, endType: "Arrow"}},
+            {object: {origin: {x: 0, y: 0}, endPoint: {x: 0, y: -height}, endType: "Arrow", weight: 2}},
             geometryHelper
         )
         this.xText = new TextCanvasAnimation({
@@ -98,26 +99,46 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
                 }
             }))
         })
-        chartPoints.forEach(point => this.chartPoints.push(new CircleCanvasAnimation({
-            object: {origin: this.convertScalePointToCoordinate(point), diameter: chartPointsDiameter}
-        })))
+        chartPoints.forEach((value, index) => {
+            const curPoint = value.point
+            const prevPoint = index > 0 ? chartPoints[index - 1].point : curPoint
+            const nextPoint = index < chartPoints.length - 1 ? chartPoints[index + 1].point : curPoint
+            let textPosition: "above" | "below" = "below"
+            if (curPoint.y >= prevPoint.y && curPoint.y >= nextPoint.y) {
+                textPosition = "above"
+            }
+            const pointCoordinate = this.convertPointToCoordinate(curPoint)
+            this.chartPoints.push(new CircleCanvasAnimation({
+                object: {origin: pointCoordinate, diameter: chartPointsDiameter, weight: 2}
+            }))
+            this.chartPointsValues.push(new TextCanvasAnimation({
+                object: {
+                    origin: {x: pointCoordinate.x, y: pointCoordinate.y + (textPosition === "below" ? 10 : -10)},
+                    value: value.text,
+                    horizontalAlign: "center",
+                    verticalAlign: textPosition === "below" ?  "top" : "bottom",
+                    fontSize: 15
+                }
+            }))
+        })
         chartLines.forEach(line => this.chartLines.push(new LineCanvasAnimation({
             object: {
-                origin: this.convertScalePointToCoordinate(line[0]),
-                endPoint: this.convertScalePointToCoordinate(line[1])
+                origin: this.convertPointToCoordinate(line[0]),
+                endPoint: this.convertPointToCoordinate(line[1]),
+                weight: 3
             }
         })))
     }
 
     private getXForValue(scaleValue: scaleType): number {
-        return this.convertScalePointToCoordinate({x: scaleValue.position, y: 0}).x
+        return this.convertPointToCoordinate({x: scaleValue.position, y: 0}).x
     }
 
     private getYForValue(scaleValue: scaleType): number {
-        return this.convertScalePointToCoordinate({x: 0, y: scaleValue.position}).y
+        return this.convertPointToCoordinate({x: 0, y: scaleValue.position}).y
     }
 
-    private convertScalePointToCoordinate(scalePoint: Point): Point {
+    private convertPointToCoordinate(point: Point): Point {
         const object = this.getObject()
         const xScale = object.xScale?.map(value => toScaleType(value)) || []
         const yScale = object.yScale?.map(value => toScaleType(value)) || []
@@ -128,8 +149,8 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
         const xScaleMax = xScale.length > 0 ? (lastXScaleValue + averageXGap) : 0
         const yScaleMax = yScale.length > 0 ? (lastYScaleValue + averageYGap) : 0
         return {
-            x: scalePoint.x * object.width / xScaleMax,
-            y: -scalePoint.y * object.height / yScaleMax
+            x: point.x * object.width / xScaleMax,
+            y: -point.y * object.height / yScaleMax
         }
     }
 
@@ -137,7 +158,13 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
         if (selector) {
             const result: CanvasAnimation<Params>[] = []
             selector.lines === "all" && result.push(...this.chartLines)
-            selector.points === "all" && result.push(...this.chartPoints)
+            if (selector.points) {
+                if (selector.points === "all") {
+                    result.push(...this.chartPoints)
+                } else {
+                    selector.points.forEach(pointIndex => result.push(this.chartPoints[pointIndex]))
+                }
+            }
             return result
         }
         return [
@@ -150,6 +177,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
             ...this.xScaleAxisValues,
             ...this.yScaleAxisValues,
             ...this.chartPoints,
+            ...this.chartPointsValues,
             ...this.chartLines,
         ]
     }

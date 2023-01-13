@@ -3,7 +3,7 @@ import Params from "../Params";
 import p5Types from "p5";
 
 export interface complexCanvasAnimationSelectionType<T> extends selectionType {
-    type: "together" | "sequentially",
+    type?: "together" | "sequentially",
     selector?: T
 }
 

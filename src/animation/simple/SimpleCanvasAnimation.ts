@@ -1,7 +1,6 @@
 import CanvasAnimation from "../CanvasAnimation";
 import Params from "../Params";
 import p5Types from "p5";
-import {convertPercentToFadeInFadeOut} from "../../common/Utils";
 
 export default abstract class SimpleCanvasAnimation<T extends Params>
     extends CanvasAnimation<T> {
@@ -10,7 +9,7 @@ export default abstract class SimpleCanvasAnimation<T extends Params>
         const disappearTime = this.getDisappearTime() || Number.POSITIVE_INFINITY
         const disappearDuration = this.getDisappearDuration()
         const rotationAxis = this.getOrigin()
-        const fadeInFadeOutPercent = convertPercentToFadeInFadeOut(selectedPercent)
+            //        const fadeInFadeOutPercent = convertPercentToFadeInFadeOut(selectedPercent)
         if (this.getAppearTime() >= time) {
             return
         }
@@ -27,8 +26,7 @@ export default abstract class SimpleCanvasAnimation<T extends Params>
         } else if (disappearDuration && time > disappearTime && (disappearDuration >= (time - disappearTime))) {
             percent = 1 - ((time - disappearTime) / disappearDuration)
         }
-        p5.fill(p5.color(255 + (200 - 255) * fadeInFadeOutPercent))
-        this.drawObject(p5, percent, fadeInFadeOutPercent)
+        this.drawObject(p5, percent, selectedPercent)
         p5.pop()
     }
 

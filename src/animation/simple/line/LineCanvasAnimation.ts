@@ -8,7 +8,6 @@ export default class LineCanvasAnimation extends SimpleCanvasAnimation<LineParam
         const {origin, endPoint} = this.getObject()
         let endX = (endPoint.x - origin.x) * percent
         let endY = (endPoint.y - origin.y) * percent
-        p5.stroke(p5.color(0 + (200 - 0) * selectedPercent))
         p5.line(0, 0, endX, endY)
     }
 
