@@ -37,32 +37,20 @@ export default abstract class CanvasAnimation<T extends Params, U extends select
         this.object = params.object
     }
 
-    public getAppearTime(): number {
-        return this.appearanceParam.appearTime || 0
+    public getAppearanceParam(): appearanceParamType {
+        return this.appearanceParam
     }
 
     public setAppearTime(value: number): void {
         this.appearanceParam.appearTime = value
     }
 
-    protected getAppearDuration(): number {
-        return this.appearanceParam.appearDuration || 0
-    }
-
     public setAppearDuration(value: number): void {
         this.appearanceParam.appearDuration = value
     }
 
-    public getDisappearTime(): number {
-        return this.appearanceParam.disappearTime || 0
-    }
-
     public setDisappearTime(value: number): void {
         this.appearanceParam.disappearTime = value
-    }
-
-    protected getDisappearDuration(): number {
-        return this.appearanceParam.disappearDuration || 0
     }
 
     public setDisappearDuration(value: number): void {

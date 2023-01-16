@@ -59,10 +59,9 @@ export default abstract class ComplexCanvasAnimation<T extends Params, U> extend
             includedObjects = flattenIncludedObject
             flattenIncludedObject = includedObjects.flatMap(o => o.object.getIncludedObjects(o.object.calculateObjectToBeDraw(time, p5), o.selected))
         }
-        const objectAppearDuration = this.getAppearDuration() / includedObjects.length
-        const objectDisappearDuration = this.getDisappearDuration() / includedObjects.length
-        let appearTime = this.getAppearTime()
-        let disappearTime = this.getDisappearTime()
+        let {appearTime, appearDuration, disappearTime, disappearDuration} = this.getAppearanceParam()
+        const objectAppearDuration = appearDuration / includedObjects.length
+        const objectDisappearDuration = disappearDuration / includedObjects.length
 
         includedObjects.forEach(o => {
             o.object.setAppearTime(appearTime)

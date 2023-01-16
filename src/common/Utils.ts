@@ -39,7 +39,7 @@ export const needAppearObject = (time: number, appearanceParam: appearanceParamT
     if (appearanceParam.appearTime >= time) {
         return false
     }
-    return (appearanceParam.disappearTime + (appearanceParam.disappearDuration)) > time;
+    return appearanceParam.disappearTime + appearanceParam.disappearDuration > time;
 }
 export const toAppearancePercent = (time: number, appearanceParam: appearanceParamType): number => {
     const {appearTime, appearDuration, disappearTime, disappearDuration} = appearanceParam
