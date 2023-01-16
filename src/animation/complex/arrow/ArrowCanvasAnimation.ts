@@ -2,7 +2,7 @@ import ArrowParams from "./ArrowParams";
 import ComplexCanvasAnimation, {complexCanvasAnimationSelectionType, objectInfo} from "../ComplexCanvasAnimation";
 import LineCanvasAnimation from "../../simple/line/LineCanvasAnimation";
 import p5Types from "p5";
-import {calculatePointPercentValue} from "../../../common/Utils";
+import {calculatePointPercentValue, subtractPoints} from "../../../common/Utils";
 
 const arrowBaseLength = 10
 const arrowBaseWidth = 10
@@ -11,7 +11,7 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<ArrowPa
 
     getIncludedObjects(object: ArrowParams, selector?: complexCanvasAnimationSelectionType<{}> | boolean): objectInfo[] {
         const geometryHelper = this.getGeometryHelper()
-        const relativeEndPoint = geometryHelper.subtractPoints(object.endPoint, object.origin)
+        const relativeEndPoint = subtractPoints(object.endPoint, object.origin)
         const startArrowLines: LineCanvasAnimation[] = []
         const endArrowLines: LineCanvasAnimation[] = []
         const line = new LineCanvasAnimation({
@@ -29,7 +29,7 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<ArrowPa
             endArrowLines.push(new LineCanvasAnimation({
                 object: {
                     origin: relativeEndPoint,
-                    endPoint: geometryHelper.subtractPoints(relativeEndPoint, leftArrowSide),
+                    endPoint: subtractPoints(relativeEndPoint, leftArrowSide),
                     weight: object.weight,
                     zIndex: object.zIndex
                 }
@@ -37,7 +37,7 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<ArrowPa
             endArrowLines.push(new LineCanvasAnimation({
                 object: {
                     origin: relativeEndPoint,
-                    endPoint: geometryHelper.subtractPoints(relativeEndPoint, rightArrowSide),
+                    endPoint: subtractPoints(relativeEndPoint, rightArrowSide),
                     weight: object.weight,
                     zIndex: object.zIndex
                 }

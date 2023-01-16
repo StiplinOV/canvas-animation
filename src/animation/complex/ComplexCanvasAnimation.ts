@@ -11,8 +11,6 @@ export interface complexCanvasAnimationSelectionType<T> extends selectionType {
 }
 
 export default abstract class ComplexCanvasAnimation<T extends Params, U> extends CanvasAnimation<T, complexCanvasAnimationSelectionType<U>> {
-    //
-    // private initialized: boolean = false
 
     private readonly geometryHelper: GeometryHelper
 
@@ -26,9 +24,6 @@ export default abstract class ComplexCanvasAnimation<T extends Params, U> extend
     }
 
     doDraw(p5: p5Types, object: T, time: number, selectedPercentParam: number, selection: complexCanvasAnimationSelectionType<U> | null): void {
-        // if (!this.initialized) {
-        //     this.initialize(p5, object, time)
-        // }
         const rotationAxis = object.origin
         const flattenIncludedObjectsInfo = this.getFlattenIncludedObjects(p5, object, time, selection?.selector)
         const flattenIncludedObjects = flattenIncludedObjectsInfo.map(o => o.object).sort((l, r) => l.getZIndex(time, p5) - r.getZIndex(time, p5))
@@ -57,26 +52,6 @@ export default abstract class ComplexCanvasAnimation<T extends Params, U> extend
         p5.pop()
     }
 
-    // private initialize(p5: p5Types, object: T, time: number): void {
-    //     const includedObjects = this.getFlattenIncludedObjects(p5, object, time)
-    //     const objectAppearDuration = this.getAppearDuration() / includedObjects.length
-    //     const objectDisappearDuration = this.getDisappearDuration() / includedObjects.length
-    //     let appearTime = this.getAppearTime()
-    //     let disappearTime = this.getDisappearTime()
-    //
-    //     includedObjects.forEach(object => {
-    //         object.setAppearTime(appearTime)
-    //         object.setAppearDuration(objectAppearDuration)
-    //         appearTime += objectAppearDuration
-    //     })
-    //     includedObjects.reverse().forEach(object => {
-    //         object.setDisappearTime(disappearTime)
-    //         object.setDisappearDuration(objectDisappearDuration)
-    //         disappearTime += objectDisappearDuration
-    //     })
-    //     //this.initialized = true
-    // }
-
     private getFlattenIncludedObjects(p5: p5Types, object: T, time: number, selector?: U): objectInfo[] {
         let includedObjects: objectInfo[] = []
         let flattenIncludedObject = this.getIncludedObjects(object, selector)
@@ -84,7 +59,6 @@ export default abstract class ComplexCanvasAnimation<T extends Params, U> extend
             includedObjects = flattenIncludedObject
             flattenIncludedObject = includedObjects.flatMap(o => o.object.getIncludedObjects(o.object.calculateObjectToBeDraw(time, p5), o.selected))
         }
-        //const includedObjects = this.getFlattenIncludedObjects(p5, object, time)
         const objectAppearDuration = this.getAppearDuration() / includedObjects.length
         const objectDisappearDuration = this.getDisappearDuration() / includedObjects.length
         let appearTime = this.getAppearTime()

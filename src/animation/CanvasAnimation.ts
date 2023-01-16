@@ -116,6 +116,9 @@ export default abstract class CanvasAnimation<T extends Params, U extends select
             if (transformationObject.rotation) {
                 result.rotation = calculatePercentValue(result.rotation || 0, transformationObject.rotation, percent)
             }
+            if (transformationObject.offset) {
+                result.offset = calculatePointPercentValue(result.offset || {x: 0, y: 0}, transformationObject.offset, percent)
+            }
             result = this.mergeWithTransformation(result, transformationObject, percent, p5)
         })
         return result

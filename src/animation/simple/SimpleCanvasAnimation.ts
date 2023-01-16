@@ -1,12 +1,14 @@
 import CanvasAnimation from "../CanvasAnimation";
 import Params from "../Params";
 import p5Types from "p5";
+import {addPoints, subtractPoints} from "../../common/Utils";
 
 export default abstract class SimpleCanvasAnimation<T extends Params> extends CanvasAnimation<T> {
 
     public doDraw(p5: p5Types, object: T, time: number, selectedPercent: number): void {
         const disappearTime = this.getDisappearTime() || Number.POSITIVE_INFINITY
         const disappearDuration = this.getDisappearDuration()
+        const offset = object.offset || {x: 0, y: 0}
         const rotationAxis = object.origin
         if (this.getAppearTime() >= time) {
             return
@@ -18,6 +20,7 @@ export default abstract class SimpleCanvasAnimation<T extends Params> extends Ca
         p5.push()
         p5.translate(rotationAxis.x, rotationAxis.y)
         p5.rotate(object.rotation || 0)
+        p5.translate(offset.x, offset.y)
         let percent = 1
         if (this.getAppearDuration() && this.getAppearDuration() >= (time - this.getAppearTime())) {
             percent = (time - this.getAppearTime()) / this.getAppearDuration()
