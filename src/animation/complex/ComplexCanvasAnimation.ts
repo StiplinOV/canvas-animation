@@ -64,13 +64,11 @@ export default abstract class ComplexCanvasAnimation<T extends Params, U> extend
         const objectDisappearDuration = disappearDuration / includedObjects.length
 
         includedObjects.forEach(o => {
-            o.object.setAppearTime(appearTime)
-            o.object.setAppearDuration(objectAppearDuration)
+            o.object.setAppearanceParam({appearTime, appearDuration: objectAppearDuration})
             appearTime += objectAppearDuration
         })
         includedObjects.reverse().forEach(o => {
-            o.object.setDisappearTime(disappearTime)
-            o.object.setDisappearDuration(objectDisappearDuration)
+            o.object.setAppearanceParam({disappearTime, disappearDuration: objectDisappearDuration})
             disappearTime += objectDisappearDuration
         })
         includedObjects.reverse()
