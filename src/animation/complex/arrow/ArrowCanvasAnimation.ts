@@ -1,73 +1,77 @@
 import ArrowParams from "./ArrowParams";
-import ComplexCanvasAnimation, {complexCanvasAnimationSelectionType} from "../ComplexCanvasAnimation";
-import CanvasAnimation, {paramsType} from "../../CanvasAnimation";
-import Params from "../../Params";
+import ComplexCanvasAnimation, {complexCanvasAnimationSelectionType, objectInfo} from "../ComplexCanvasAnimation";
 import LineCanvasAnimation from "../../simple/line/LineCanvasAnimation";
-import GeometryHelper from "../../../common/GeometryHelper";
+import p5Types from "p5";
+import {calculatePointPercentValue} from "../../../common/Utils";
 
 const arrowBaseLength = 10
 const arrowBaseWidth = 10
 
 export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<ArrowParams, {}> {
 
-    private line: LineCanvasAnimation
-    private startArrowLines: LineCanvasAnimation[] = []
-    private endArrowLines: LineCanvasAnimation[] = []
-
-    constructor(params: paramsType<ArrowParams, complexCanvasAnimationSelectionType<{}>>, geometryHelper: GeometryHelper) {
-        super(params)
-        const relativeEndPoint = geometryHelper.subtractPoints(params.object.endPoint, params.object.origin)
-        this.line = new LineCanvasAnimation({
+    getIncludedObjects(object: ArrowParams, selector?: complexCanvasAnimationSelectionType<{}> | boolean): objectInfo[] {
+        const geometryHelper = this.getGeometryHelper()
+        const relativeEndPoint = geometryHelper.subtractPoints(object.endPoint, object.origin)
+        const startArrowLines: LineCanvasAnimation[] = []
+        const endArrowLines: LineCanvasAnimation[] = []
+        const line = new LineCanvasAnimation({
             object: {
                 origin: {x: 0, y: 0},
                 endPoint: relativeEndPoint,
-                weight: params.object.weight,
-                zIndex: params.object.zIndex
+                weight: object.weight,
+                zIndex: object.zIndex
             }
         })
         let angle = geometryHelper.getVectorAngle(relativeEndPoint)
         let leftArrowSide = geometryHelper.rotateVector({x: arrowBaseLength, y: arrowBaseWidth / 2}, angle)
         let rightArrowSide = geometryHelper.rotateVector({x: arrowBaseLength, y: -arrowBaseWidth / 2}, angle)
-        if (this.getObject().endType === "Arrow") {
-            this.endArrowLines.push(new LineCanvasAnimation({
+        if (object.endType === "Arrow") {
+            endArrowLines.push(new LineCanvasAnimation({
                 object: {
                     origin: relativeEndPoint,
                     endPoint: geometryHelper.subtractPoints(relativeEndPoint, leftArrowSide),
-                    weight: params.object.weight,
-                    zIndex: params.object.zIndex
+                    weight: object.weight,
+                    zIndex: object.zIndex
                 }
             }))
-            this.endArrowLines.push(new LineCanvasAnimation({
+            endArrowLines.push(new LineCanvasAnimation({
                 object: {
                     origin: relativeEndPoint,
                     endPoint: geometryHelper.subtractPoints(relativeEndPoint, rightArrowSide),
-                    weight: params.object.weight,
-                    zIndex: params.object.zIndex
+                    weight: object.weight,
+                    zIndex: object.zIndex
                 }
             }))
         }
-        if (this.getObject().startType === "Arrow") {
-            this.startArrowLines.push(new LineCanvasAnimation({
+        if (object.startType === "Arrow") {
+            startArrowLines.push(new LineCanvasAnimation({
                 object: {
                     origin: {x: 0, y: 0},
                     endPoint: leftArrowSide,
-                    weight: params.object.weight,
-                    zIndex: params.object.zIndex
+                    weight: object.weight,
+                    zIndex: object.zIndex
                 }
             }))
-            this.startArrowLines.push(new LineCanvasAnimation({
+            startArrowLines.push(new LineCanvasAnimation({
                 object: {
                     origin: {x: 0, y: 0},
                     endPoint: rightArrowSide,
-                    weight: params.object.weight,
-                    zIndex: params.object.zIndex
+                    weight: object.weight,
+                    zIndex: object.zIndex
                 }
             }))
         }
+        return [line, ...startArrowLines, ...endArrowLines].map(r => ({object: r, selected: Boolean(selector)}));
     }
 
-    getIncludedObjects(): CanvasAnimation<Params>[] {
-        return [this.line, ...this.startArrowLines, ...this.endArrowLines];
+    mergeWithTransformation(obj: ArrowParams, transform: Partial<ArrowParams>, perc: number, p5: p5Types): ArrowParams {
+        let {endPoint, startType, endType} = obj
+        return {
+            ...obj,
+            endPoint: transform.endPoint ? calculatePointPercentValue(endPoint, transform.endPoint, perc) : endPoint,
+            startType: transform.startType ? (perc >= 0.5 ? startType : transform.startType) : startType,
+            endType: transform.endType ? (perc >= 0.5 ? endType : transform.endType) : endType
+        }
     }
 
 }

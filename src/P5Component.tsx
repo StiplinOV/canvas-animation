@@ -20,7 +20,7 @@ export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => 
         cnv.position(0, 0)
         cnv.style("border: 1px solid")
         cameras.sort((left, right) => left.startTime - right.startTime)
-        animations(new GeometryHelper(p5)).sort((left, right) => left.getZIndex() - right.getZIndex())
+        animations(new GeometryHelper(p5)).sort((left, right) => left.getZIndex(0, p5) - right.getZIndex(0, p5))
     }
 
     const draw = (p5: p5Types) => {
@@ -32,7 +32,7 @@ export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => 
         p5.translate(-camera.x * zoom, -camera.y * zoom)
         p5.scale(zoom)
         animations(new GeometryHelper(p5))
-            .sort((left, right) => left.getZIndex() - right.getZIndex())
+            .sort((left, right) => left.getZIndex(millis, p5) - right.getZIndex(millis, p5))
             .forEach(animation => animation.draw(p5, millis))
     }
 

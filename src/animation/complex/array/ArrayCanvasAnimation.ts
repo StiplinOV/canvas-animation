@@ -1,36 +1,23 @@
 import ArrayParams from "./ArrayParams";
-import ComplexCanvasAnimation, {complexCanvasAnimationSelectionType} from "../ComplexCanvasAnimation";
-import CanvasAnimation, {paramsType} from "../../CanvasAnimation";
-import GeometryHelper from "../../../common/GeometryHelper";
+import ComplexCanvasAnimation, {complexCanvasAnimationSelectionType, objectInfo} from "../ComplexCanvasAnimation";
+import CanvasAnimation from "../../CanvasAnimation";
 import TextCanvasAnimation from "../../simple/text/TextCanvasAnimation";
 import RectangleCanvasAnimation from "../../simple/rectangle/RectangleCanvasAnimation";
 import Params from "../../Params";
+import {calculateArrayPercentValue, calculatePercentValue, calculateTextPercentValue} from "../../../common/Utils";
 
 export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<ArrayParams, {}> {
 
-    private title?: TextCanvasAnimation
-    private arrayCells: RectangleCanvasAnimation[] = []
-    private arrayValues: TextCanvasAnimation[] = []
-    private arrayIndices: TextCanvasAnimation[] = []
-    private indicesTitle?: TextCanvasAnimation
-
-    constructor(params: paramsType<ArrayParams, complexCanvasAnimationSelectionType<{}>>, geometryHelper: GeometryHelper) {
-        super(params);
-        const {title, value, indexTitle, height, firstIndex} = this.getObject()
-        let numberOfParts = 5
-        if (title) {
-            numberOfParts += 3
-        }
-        if (indexTitle) {
-            numberOfParts += 2
-        }
-        const partHeight = height / numberOfParts
-        const arrayHeight = partHeight * 3
-        const width = this.getObject().width || (value.length * arrayHeight + (value.length - 1) * partHeight)
+    getIncludedObjects(object: ArrayParams, selector?: complexCanvasAnimationSelectionType<{}> | boolean): objectInfo[] {
+        const result: CanvasAnimation<Params>[] = []
+        const geometryHelper = this.getGeometryHelper()
+        const {title, value, indexTitle, firstIndex} = object
+        const partHeight = this.calculatePartHeight(object)
+        const width = this.calculateWidth(object)
         const arrayRectangleWidth = (width - (value.length - 1) * partHeight) / value.length
         let partShift = 0
         if (title) {
-            this.title = new TextCanvasAnimation({
+            result.push(new TextCanvasAnimation({
                 object: {
                     value: title,
                     origin: {x: width / 2, y: partShift},
@@ -38,11 +25,11 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<ArrayPa
                     horizontalAlign: geometryHelper.HORIZONTAL_ALIGN_CENTER,
                     verticalAlign: geometryHelper.VERTICAL_ALIGN_TOP
                 }
-            })
+            }))
             partShift += partHeight * 2
         }
         value.forEach((value, index) => {
-            this.arrayCells.push(new RectangleCanvasAnimation({
+            result.push(new RectangleCanvasAnimation({
                 object: {
                     origin: {x: index * (arrayRectangleWidth + partHeight), y: partShift},
                     width: arrayRectangleWidth,
@@ -50,7 +37,7 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<ArrayPa
                     cornerRadius: 20
                 }
             }))
-            this.arrayValues.push(new TextCanvasAnimation({
+            result.push(new TextCanvasAnimation({
                 object: {
                     value: value,
                     origin: {
@@ -59,9 +46,10 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<ArrayPa
                     },
                     fontSize: partHeight,
                     horizontalAlign: geometryHelper.HORIZONTAL_ALIGN_CENTER,
+                    zIndex: 1
                 }
             }))
-            this.arrayIndices.push(new TextCanvasAnimation({
+            result.push(new TextCanvasAnimation({
                 object: {
                     value: String(index + (firstIndex || 0)),
                     origin: {
@@ -74,25 +62,54 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<ArrayPa
         })
         partShift += partHeight * 5
         if (indexTitle) {
-            this.indicesTitle = new TextCanvasAnimation({
+            result.push(new TextCanvasAnimation({
                 object: {
                     value: indexTitle,
                     origin: {x: width / 2, y: partShift},
                     fontSize: partHeight / 2,
                     horizontalAlign: geometryHelper.HORIZONTAL_ALIGN_CENTER,
                 }
-            })
+            }))
         }
+
+        return result.map(r => ({object: r, selected: Boolean(selector)}));
     }
 
-    getIncludedObjects(): CanvasAnimation<Params>[] {
-        const result: CanvasAnimation<Params>[] = []
-        this.title && result.push(this.title)
-        result.push(...this.arrayCells)
-        result.push(...this.arrayValues)
-        result.push(...this.arrayIndices)
-        this.indicesTitle && result.push(this.indicesTitle)
-        return result;
+    private calculateWidth(object: ArrayParams): number {
+        const {value} = object
+        const partHeight = this.calculatePartHeight(object)
+        const arrayHeight = partHeight * 3
+        return object.width || (value.length * arrayHeight + (value.length - 1) * partHeight)
+    }
+
+    private calculatePartHeight(object: ArrayParams): number {
+        const {title, indexTitle, height} = object
+        let numberOfParts = 5
+        if (title) {
+            numberOfParts += 3
+        }
+        if (indexTitle) {
+            numberOfParts += 2
+        }
+        return height / numberOfParts
+    }
+
+    public mergeWithTransformation(o: ArrayParams, t: Partial<ArrayParams>, p: number, p5: import("p5")): ArrayParams {
+        let {value, width, height, title, indexTitle, firstIndex} = o
+        value ||= []
+        width ||= this.calculateWidth(o)
+        title ||= ""
+        indexTitle ||= ""
+        firstIndex ||= 0
+        return {
+            ...o,
+            value: t.value ? calculateArrayPercentValue(value, t.value, p) : value,
+            width: t.width ? calculatePercentValue(width, t.width, p) : width,
+            height: t.height ? calculatePercentValue(height, t.height, p) : height,
+            title: t.title ? calculateTextPercentValue(title, t.title, p) : title,
+            indexTitle: t.indexTitle ? calculateTextPercentValue(indexTitle, t.indexTitle, p) : indexTitle,
+            firstIndex: t.firstIndex ? Math.floor(calculatePercentValue(firstIndex, t.firstIndex, p)) : firstIndex
+        };
     }
 
 }

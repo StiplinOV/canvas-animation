@@ -55,10 +55,10 @@ export const animations: (geometryHelper: GeometryHelper) => Array<CanvasAnimati
             yScale: [0, 1, 2, 3, 4, 5, 6, 7],
             chartPoints: [
                 {x: 1, y: 7},
-                {point: {x: 2, y: 1}, text: "Buy"},
+                {x: 2, y: 1},
                 {x: 3, y: 5},
                 {x: 4, y: 3},
-                {point: {x: 5, y: 6}, text: "Sell"},
+                {x: 5, y: 6},
                 {x: 6, y: 4}
             ],
             chartLines: [
@@ -68,13 +68,27 @@ export const animations: (geometryHelper: GeometryHelper) => Array<CanvasAnimati
                 [{x: 4, y: 3}, {x: 5, y: 6}],
                 [{x: 5, y: 6}, {x: 6, y: 4}]
             ],
-            weight: 2
+            weight: 2.
         },
         appearTime: 10000,
         appearDuration: 4000,
         selections: [
             {time: 15000, duration: 5000, type: "sequentially", selector: {points: "all"}},
             {time: 25000, duration: 1000, selector: {points: [1]}}
-        ]
+        ],
+        // transformations: [{
+        //     appearTime: 15000,
+        //     appearDuration: 5000,
+        //     object: {
+        //         chartPoints: [
+        //             {x: 1, y: 7},
+        //             {point: {x: 2, y: 1}, text: "Buy"},
+        //             {x: 3, y: 5},
+        //             {x: 4, y: 3},
+        //             {point: {x: 5, y: 6}, text: "Sell"},
+        //             {x: 6, y: 4}
+        //         ]
+        //     }
+        // }]
     }, geometryHelper)
 ]
