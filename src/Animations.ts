@@ -1,5 +1,4 @@
 import CanvasAnimation from "./animation/CanvasAnimation";
-import Params from "./animation/Params";
 import GeometryHelper from "./common/GeometryHelper";
 import TextCanvasAnimation from "./animation/simple/text/TextCanvasAnimation";
 import ArrayCanvasAnimation from "./animation/complex/array/ArrayCanvasAnimation";
@@ -10,7 +9,7 @@ export const canvasWidth = 1280
 export const canvasHeight = 800
 export const timeDivider = 1000000
 
-export const animations: (geometryHelper: GeometryHelper) => Array<CanvasAnimation<Params>> = (geometryHelper: GeometryHelper) => [
+export const animations: (geometryHelper: GeometryHelper) => Array<CanvasAnimation<{}>> = (geometryHelper: GeometryHelper) => [
     new TextCanvasAnimation({
         object: {
             value: "Best Time to Buy and Sell Stock",

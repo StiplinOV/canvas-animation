@@ -1,15 +1,20 @@
-import ArrowParams from "./ArrowParams";
 import ComplexCanvasAnimation, {complexCanvasAnimationSelectionType, objectInfo} from "../ComplexCanvasAnimation";
-import LineCanvasAnimation from "../../simple/line/LineCanvasAnimation";
+import LineCanvasAnimation, {lineParamsType} from "../../simple/line/LineCanvasAnimation";
 import p5Types from "p5";
 import {calculatePointPercentValue, subtractPoints} from "../../../common/Utils";
+import {objectParamsType} from "../../CanvasAnimation";
 
 const arrowBaseLength = 10
 const arrowBaseWidth = 10
 
-export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<ArrowParams, {}> {
+type arrowParamsType = lineParamsType & {
+    startType?: "Arrow"
+    endType?: "Arrow"
+}
 
-    getIncludedObjects(object: ArrowParams, selector?: complexCanvasAnimationSelectionType<{}> | boolean): objectInfo[] {
+export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowParamsType, {}> {
+
+    getIncludedObjects(object: objectParamsType<arrowParamsType>, selector?: complexCanvasAnimationSelectionType<{}> | boolean): objectInfo[] {
         const geometryHelper = this.getGeometryHelper()
         const relativeEndPoint = subtractPoints(object.endPoint, object.origin)
         const startArrowLines: LineCanvasAnimation[] = []
@@ -64,13 +69,12 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<ArrowPa
         return [line, ...startArrowLines, ...endArrowLines].map(r => ({object: r, selected: Boolean(selector)}));
     }
 
-    mergeWithTransformation(obj: ArrowParams, transform: Partial<ArrowParams>, perc: number, p5: p5Types): ArrowParams {
+    mergeWithTransformation(obj: objectParamsType<arrowParamsType>, trans: Partial<arrowParamsType>, perc: number, p5: p5Types): arrowParamsType {
         let {endPoint, startType, endType} = obj
         return {
-            ...obj,
-            endPoint: transform.endPoint ? calculatePointPercentValue(endPoint, transform.endPoint, perc) : endPoint,
-            startType: transform.startType ? (perc >= 0.5 ? startType : transform.startType) : startType,
-            endType: transform.endType ? (perc >= 0.5 ? endType : transform.endType) : endType
+            endPoint: trans.endPoint ? calculatePointPercentValue(endPoint, trans.endPoint, perc) : endPoint,
+            startType: trans.startType ? (perc >= 0.5 ? startType : trans.startType) : startType,
+            endType: trans.endType ? (perc >= 0.5 ? endType : trans.endType) : endType
         }
     }
 

@@ -1,21 +1,36 @@
-import CanvasAnimation from "../../CanvasAnimation";
-import XYChartParams, {scaleType, toChartPointType, toScaleType} from "./XYChartParams";
 import LineCanvasAnimation from "../../simple/line/LineCanvasAnimation";
 import CircleCanvasAnimation from "../../simple/circle/CircleCanvasAnimation";
 import {Point} from "../../../common/Point";
 import ComplexCanvasAnimation, {objectInfo} from "../ComplexCanvasAnimation";
 import ArrowCanvasAnimation from "../arrow/ArrowCanvasAnimation";
 import TextCanvasAnimation from "../../simple/text/TextCanvasAnimation";
-import Params from "../../Params";
 import p5Types from "p5";
 import {calculateArrayPercentValue, calculatePercentValue, calculateTextPercentValue} from "../../../common/Utils";
+import {objectParamsType} from "../../CanvasAnimation";
 
 const coordinateDashWidth = 20
+const toScaleType = (value: scaleType | number): scaleType =>
+    typeof value === "number" ? {position: value, value: String(value)} : value
+const toChartPointType = (value: chartPointType | Point): chartPointType =>
+    "point" in value ? value : {point: value, text: ""}
+
+type scaleType = { position: number, value: string }
+type chartPointType = { point: Point, text: string }
+type xyChartParamsType = {
+    width: number
+    height: number
+    xScale?: (scaleType | number)[]
+    yScale?: (scaleType | number)[]
+    xAxisName?: string
+    yAxisName?: string
+    chartPoints?: (chartPointType | Point)[]
+    chartLines?: [Point, Point][]
+}
 type selectorType = { points?: "all" | number[], lines?: "all" }
 
-export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYChartParams, selectorType> {
+export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyChartParamsType, selectorType> {
 
-    getIncludedObjects(object: XYChartParams, selector?: selectorType | boolean): objectInfo[] {
+    getIncludedObjects(object: objectParamsType<xyChartParamsType>, selector?: selectorType | boolean): objectInfo[] {
         const {height, width} = object
         const xScale = object.xScale?.map(value => toScaleType(value)) || []
         const yScale = object.yScale?.map(value => toScaleType(value)) || []
@@ -178,15 +193,15 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
         return result
     }
 
-    private getXForValue(object: XYChartParams, scaleValue: scaleType): number {
+    private getXForValue(object: xyChartParamsType, scaleValue: scaleType): number {
         return this.convertPointToCoordinate(object, {x: scaleValue.position, y: 0}).x
     }
 
-    private getYForValue(object: XYChartParams, scaleValue: scaleType): number {
+    private getYForValue(object: xyChartParamsType, scaleValue: scaleType): number {
         return this.convertPointToCoordinate(object, {x: 0, y: scaleValue.position}).y
     }
 
-    private convertPointToCoordinate(object: XYChartParams, point: Point): Point {
+    private convertPointToCoordinate(object: xyChartParamsType, point: Point): Point {
         const xScale = object.xScale?.map(value => toScaleType(value)) || []
         const yScale = object.yScale?.map(value => toScaleType(value)) || []
         const lastXScaleValue = xScale[xScale.length - 1].position
@@ -201,7 +216,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
         }
     }
 
-    mergeWithTransformation(obj: XYChartParams, t: Partial<XYChartParams>, p: number, p5: p5Types): XYChartParams {
+    mergeWithTransformation(obj: objectParamsType<xyChartParamsType>, t: Partial<xyChartParamsType>, p: number, p5: p5Types): xyChartParamsType {
         let {width, height, xScale, yScale, xAxisName, yAxisName, chartPoints, chartLines} = obj
         xScale ||= []
         yScale ||= []
@@ -210,7 +225,6 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<XYCha
         chartPoints ||= []
         chartLines ||= []
         return {
-            ...obj,
             width: t.width ? calculatePercentValue(width, t.width, p) : width,
             height: t.height ? calculatePercentValue(height, t.height, p) : height,
             xScale: t.xScale ? calculateArrayPercentValue(xScale, t.xScale, p) : xScale,

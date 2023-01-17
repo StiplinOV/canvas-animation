@@ -1,12 +1,21 @@
-import Params from "./Params";
 import p5Types from "p5";
 import {
     appearanceParamType,
-    calculatePercentValue, calculatePointPercentValue,
+    calculatePercentValue,
+    calculatePointPercentValue,
     needAppearObject,
     toAppearanceParamType,
     toAppearancePercent
 } from "../common/Utils";
+import {Point} from "../common/Point";
+
+export type objectParamsType<T extends {} = {}> = {
+    weight?: number
+    zIndex?: number
+    rotation?: number
+    offset?: Point
+    origin: Point
+} & T
 
 export interface selectionType {
     time: number,
@@ -14,21 +23,21 @@ export interface selectionType {
 }
 
 type transformationType<T> = {
-    object: Partial<T>
+    object: Partial<objectParamsType<T>>
 } & Partial<appearanceParamType>
 
-export type paramsType<T extends Params, U extends selectionType = selectionType> = {
+export type paramsType<T extends {}, U extends selectionType = selectionType> = {
     transformations?: transformationType<T>[]
     selections?: U[]
-    object: T
+    object: objectParamsType<T>
 } & Partial<appearanceParamType>
 
-export default abstract class CanvasAnimation<T extends Params, U extends selectionType = selectionType> {
+export default abstract class CanvasAnimation<T extends {}, U extends selectionType = selectionType> {
 
     private appearanceParam: appearanceParamType
     private readonly transformations?: transformationType<T>[]
     private readonly selections?: U[]
-    private readonly object: T
+    private readonly object: objectParamsType<T>
 
     public constructor(params: paramsType<T, U>) {
         this.appearanceParam = toAppearanceParamType(params)
@@ -73,7 +82,7 @@ export default abstract class CanvasAnimation<T extends Params, U extends select
         return this.calculateObjectToBeDraw(time, p5).zIndex || 0
     }
 
-    public calculateObjectToBeDraw(time: number, p5: p5Types): T {
+    public calculateObjectToBeDraw(time: number, p5: p5Types): objectParamsType<T> {
         const sourceObject = this.object
         let result = {
             ...sourceObject
@@ -96,17 +105,23 @@ export default abstract class CanvasAnimation<T extends Params, U extends select
                 result.rotation = calculatePercentValue(result.rotation || 0, transformationObject.rotation, percent)
             }
             if (transformationObject.offset) {
-                result.offset = calculatePointPercentValue(result.offset || {x: 0, y: 0}, transformationObject.offset, percent)
+                result.offset = calculatePointPercentValue(result.offset || {
+                    x: 0,
+                    y: 0
+                }, transformationObject.offset, percent)
             }
-            result = this.mergeWithTransformation(result, transformationObject, percent, p5)
+            result = {
+                ...result,
+                ...this.mergeWithTransformation(result, transformationObject, percent, p5)
+            }
         })
         return result
     }
 
-    public abstract mergeWithTransformation(obj: T, transform: Partial<T>, percent: number, p5: p5Types): T
+    public abstract mergeWithTransformation(obj: T, trans: Partial<T>, perc: number, p5: p5Types): T
 
-    public abstract doDraw(p5: p5Types, object: T, time: number, selectedPercent: number, selection: U | null): void
+    public abstract doDraw(p5: p5Types, object: objectParamsType<T>, time: number, selectedPercent: number, selection: U | null): void
 
-    public abstract getIncludedObjects(object: T, selected?: boolean): { object: CanvasAnimation<Params>, selected: boolean }[]
+    public abstract getIncludedObjects(object: objectParamsType<T>, selected?: boolean): { object: CanvasAnimation<{}>, selected: boolean }[]
 
 }

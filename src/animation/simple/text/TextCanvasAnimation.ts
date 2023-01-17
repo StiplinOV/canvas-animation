@@ -1,11 +1,20 @@
-import TextParams from "./TextParams";
-import p5Types from "p5";
+import p5Types, {HORIZ_ALIGN, VERT_ALIGN} from "p5";
 import SimpleCanvasAnimation from "../SimpleCanvasAnimation";
 import {calculatePercentValue, calculateTextPercentValue} from "../../../common/Utils";
+import {objectParamsType} from "../../CanvasAnimation";
 
-export default class TextCanvasAnimation extends SimpleCanvasAnimation<TextParams> {
+type textParamsType = {
+    value: string
+    fontSize?: number
+    boxWidth?: number,
+    boxHeight?: number,
+    horizontalAlign?: HORIZ_ALIGN,
+    verticalAlign?: VERT_ALIGN
+}
 
-    public drawObject(p5: p5Types, object: TextParams, percent: number, selectedPercent: number): void {
+export default class TextCanvasAnimation extends SimpleCanvasAnimation<textParamsType> {
+
+    public drawObject(p5: p5Types, object: objectParamsType<textParamsType>, percent: number, selectedPercent: number): void {
         const {boxHeight, boxWidth, fontSize, value, horizontalAlign, verticalAlign} = object
         const textSize = fontSize || p5.textSize()
         p5.textSize(textSize)
@@ -13,28 +22,17 @@ export default class TextCanvasAnimation extends SimpleCanvasAnimation<TextParam
         p5.text(value.substring(0, (value.length + 1) * percent), 0, 0, boxWidth || undefined, boxHeight || undefined)
     }
 
-    mergeWithTransformation(object: TextParams, transformObject: Partial<TextParams>, percent: number, p5: p5Types): TextParams {
-        let {value, fontSize, boxWidth, boxHeight, horizontalAlign, verticalAlign} = object
+    mergeWithTransformation(obj: textParamsType, trans: Partial<textParamsType>, perc: number, p5: p5Types): textParamsType {
+        let {fontSize, boxWidth, boxHeight} = obj
         fontSize ||= p5.textSize()
-        const toFontSize = transformObject.fontSize
-        const toBoxWidth = transformObject.boxWidth
-        const toBoxHeight = transformObject.boxHeight
-        const toHorizontalAlign = transformObject.horizontalAlign
-        const toVerticalAlign = transformObject.verticalAlign
-        value = transformObject.value ? calculateTextPercentValue(value, transformObject.value, percent) : value
-        fontSize = toFontSize ? calculatePercentValue(fontSize, toFontSize, percent) : fontSize
-        boxWidth = boxWidth && toBoxWidth ? calculatePercentValue(boxWidth, toBoxWidth, percent) : boxWidth
-        boxHeight = boxHeight && toBoxHeight ? calculatePercentValue(boxHeight, toBoxHeight, percent) : boxHeight
-        horizontalAlign = (toHorizontalAlign && percent >= 0.5) ? toHorizontalAlign : horizontalAlign
-        verticalAlign = (toVerticalAlign && percent >= 0.5) ? toVerticalAlign : verticalAlign
+        boxHeight = boxHeight && trans.boxHeight ? calculatePercentValue(boxHeight, trans.boxHeight, perc) : boxHeight
         return {
-            ...object,
-            value,
-            fontSize,
-            boxWidth,
+            value: trans.value ? calculateTextPercentValue(obj.value, trans.value, perc) : obj.value,
+            fontSize: trans.fontSize ? calculatePercentValue(fontSize, trans.fontSize, perc) : fontSize,
+            boxWidth: boxWidth && trans.boxWidth ? calculatePercentValue(boxWidth, trans.boxWidth, perc) : boxWidth,
             boxHeight,
-            horizontalAlign,
-            verticalAlign
+            horizontalAlign: (trans.horizontalAlign && perc >= 0.5) ? trans.horizontalAlign : obj.horizontalAlign,
+            verticalAlign: (trans.verticalAlign && perc >= 0.5) ? trans.verticalAlign : obj.verticalAlign
         }
     }
 }

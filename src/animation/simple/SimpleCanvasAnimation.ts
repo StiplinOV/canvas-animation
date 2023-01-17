@@ -1,11 +1,10 @@
-import CanvasAnimation from "../CanvasAnimation";
-import Params from "../Params";
+import CanvasAnimation, {objectParamsType} from "../CanvasAnimation";
 import p5Types from "p5";
 import {needAppearObject, toAppearancePercent} from "../../common/Utils";
 
-export default abstract class SimpleCanvasAnimation<T extends Params> extends CanvasAnimation<T> {
+export default abstract class SimpleCanvasAnimation<T extends {}> extends CanvasAnimation<T> {
 
-    public doDraw(p5: p5Types, object: T, time: number, selectedPercent: number): void {
+    public doDraw(p5: p5Types, object: objectParamsType<T>, time: number, selectedPercent: number): void {
         const offset = object.offset || {x: 0, y: 0}
         const rotationAxis = object.origin
 
@@ -21,9 +20,9 @@ export default abstract class SimpleCanvasAnimation<T extends Params> extends Ca
         p5.pop()
     }
 
-    public abstract drawObject(p5: p5Types, object: T, percent: number, selectedPercent: number): void
+    public abstract drawObject(p5: p5Types, object: objectParamsType<T>, percent: number, selectedPercent: number): void
 
-    public getIncludedObjects(object: T, selected?: boolean): { object: CanvasAnimation<Params>, selected: boolean }[] {
+    public getIncludedObjects(object: objectParamsType<T>, selected?: boolean): { object: CanvasAnimation<{}>, selected: boolean }[] {
         return [{object: this, selected: selected || false}];
     }
 

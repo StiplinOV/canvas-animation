@@ -1,16 +1,15 @@
-import CanvasAnimation, {paramsType, selectionType} from "../CanvasAnimation";
-import Params from "../Params";
+import CanvasAnimation, {objectParamsType, paramsType, selectionType} from "../CanvasAnimation";
 import p5Types from "p5";
 import GeometryHelper from "../../common/GeometryHelper";
 
-export type objectInfo = { object: CanvasAnimation<Params>, selected: boolean }
+export type objectInfo = { object: CanvasAnimation<{}>, selected: boolean }
 
 export interface complexCanvasAnimationSelectionType<T> extends selectionType {
     type?: "together" | "sequentially",
     selector?: T
 }
 
-export default abstract class ComplexCanvasAnimation<T extends Params, U> extends CanvasAnimation<T, complexCanvasAnimationSelectionType<U>> {
+export default abstract class ComplexCanvasAnimation<T extends {}, U> extends CanvasAnimation<T, complexCanvasAnimationSelectionType<U>> {
 
     private readonly geometryHelper: GeometryHelper
 
@@ -23,7 +22,7 @@ export default abstract class ComplexCanvasAnimation<T extends Params, U> extend
         return this.geometryHelper
     }
 
-    doDraw(p5: p5Types, object: T, time: number, selectedPercentParam: number, selection: complexCanvasAnimationSelectionType<U> | null): void {
+    doDraw(p5: p5Types, object: objectParamsType<T>, time: number, selectedPercentParam: number, selection: complexCanvasAnimationSelectionType<U> | null): void {
         const rotationAxis = object.origin
         const flattenIncludedObjectsInfo = this.getFlattenIncludedObjects(p5, object, time, selection?.selector)
         const flattenIncludedObjects = flattenIncludedObjectsInfo.map(o => o.object).sort((l, r) => l.getZIndex(time, p5) - r.getZIndex(time, p5))
@@ -52,7 +51,7 @@ export default abstract class ComplexCanvasAnimation<T extends Params, U> extend
         p5.pop()
     }
 
-    private getFlattenIncludedObjects(p5: p5Types, object: T, time: number, selector?: U): objectInfo[] {
+    private getFlattenIncludedObjects(p5: p5Types, object: objectParamsType<T>, time: number, selector?: U): objectInfo[] {
         let includedObjects: objectInfo[] = []
         let flattenIncludedObject = this.getIncludedObjects(object, selector)
         while (includedObjects.length !== flattenIncludedObject.length) {
@@ -75,6 +74,6 @@ export default abstract class ComplexCanvasAnimation<T extends Params, U> extend
         return includedObjects
     }
 
-    public abstract getIncludedObjects(object: T, selector?: U | boolean): objectInfo[]
+    public abstract getIncludedObjects(object: objectParamsType<T>, selector?: U | boolean): objectInfo[]
 
 }

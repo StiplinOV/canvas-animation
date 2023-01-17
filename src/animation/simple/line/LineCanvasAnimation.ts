@@ -1,25 +1,28 @@
-import LineParams from "./LineParams";
 import p5Types from "p5";
 import SimpleCanvasAnimation from "../SimpleCanvasAnimation";
 import {calculatePointPercentValue} from "../../../common/Utils";
+import {Point} from "../../../common/Point";
+import {objectParamsType} from "../../CanvasAnimation";
 
-export default class LineCanvasAnimation extends SimpleCanvasAnimation<LineParams> {
+export type lineParamsType = { endPoint: Point }
 
-    public drawObject(p5: p5Types, object: LineParams, percent: number, selectedPercent: number): void {
+export default class LineCanvasAnimation extends SimpleCanvasAnimation<lineParamsType> {
+
+    public drawObject(
+        p5: p5Types,
+        object: objectParamsType<lineParamsType>,
+        percent: number,
+        selectedPercent: number
+    ): void {
         const {origin, endPoint} = object
         let endX = (endPoint.x - origin.x) * percent
         let endY = (endPoint.y - origin.y) * percent
         p5.line(0, 0, endX, endY)
     }
 
-    mergeWithTransformation(object: LineParams, transformObject: Partial<LineParams>, percent: number): LineParams {
-        let {endPoint} = object
-        if (transformObject.endPoint) {
-            endPoint = calculatePointPercentValue(object.endPoint, endPoint, percent)
-        }
+    mergeWithTransformation(obj: objectParamsType<lineParamsType>, trans: Partial<lineParamsType>, perc: number): lineParamsType {
         return {
-            ...object,
-            endPoint
+            endPoint: trans.endPoint ? calculatePointPercentValue(obj.endPoint, trans.endPoint, perc) : obj.endPoint
         }
     }
 
