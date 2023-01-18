@@ -227,4 +227,21 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
         };
     }
 
+    protected convertSelectorToDiscriminatorRegexp(selector: selectorType): RegExp {
+        if (!selector.lines && !selector.points) {
+            return /.*/
+        }
+        let result = []
+        if (selector.lines === "all") {
+            result.push("chartLine.*")
+        }
+        if (selector.points === "all") {
+            result.push("chartPoint.*")
+        }
+        if (Array.isArray(selector.points)) {
+            selector.points.forEach(p => result.push("chartPoint " + p))
+        }
+        return new RegExp(result.map(r => "(" + r + ")").join("|"))
+    }
+
 }

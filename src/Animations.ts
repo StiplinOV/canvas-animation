@@ -1,6 +1,5 @@
 import CanvasAnimation from "./animation/CanvasAnimation";
 import p5Types from "p5";
-import ArrowCanvasAnimation from "./animation/complex/arrow/ArrowCanvasAnimation";
 import XYChartCanvasAnimation from "./animation/complex/xychart/XYChartCanvasAnimation";
 
 export const canvasWidth = 1280
@@ -126,8 +125,8 @@ export const animations: (p5: p5Types) => Array<CanvasAnimation<{}>> = (p5: p5Ty
 //        appearTime: 10000,
         appearDuration: 4000,
         selections: [
-            {time: 15000, duration: 5000, type: "sequentially", selector: {points: "all"}},
-            {time: 25000, duration: 1000, selector: {points: [1]}}
+            {time: 5000, duration: 5000, type: "sequentially", selector: {points: "all"}},
+            {time: 15000, duration: 1000, selector: {points: [1]}}
         ],
         transformations: [{
             appearTime: 5000,
@@ -135,16 +134,11 @@ export const animations: (p5: p5Types) => Array<CanvasAnimation<{}>> = (p5: p5Ty
             object: {
                 chartPoints: [
                     {x: 1, y: 7},
-                    //{point: {x: 2, y: 1}, text: "Buy"},
+                    {point: {x: 2, y: 1}, text: "Buy"},
                     {x: 3, y: 5},
                     {x: 4, y: 3},
-                    //{point: {x: 5, y: 6}, text: "Sell"},
+                    {point: {x: 5, y: 6}, text: "Sell"},
                     {x: 6, y: 4}
-                ],
-                chartLines: [
-                    [{x: 1, y: 7}, {x: 3, y: 5}],
-                    [{x: 3, y: 5}, {x: 4, y: 3}],
-                    [{x: 4, y: 3}, {x: 6, y: 4}]
                 ],
             }
         }]

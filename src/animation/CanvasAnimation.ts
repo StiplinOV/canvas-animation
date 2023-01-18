@@ -45,13 +45,13 @@ export default abstract class CanvasAnimation<T extends {}, U extends selectionT
 
     private appearanceParam: appearanceParamType
     private readonly transformations: transformationType<T>[]
-    private readonly selections?: U[]
+    private readonly selections: U[]
     private readonly object: objectParamsType<T>
 
     public constructor(params: paramsType<T, U>) {
         const transformations = params.transformations || []
         this.appearanceParam = toAppearanceParamType(params)
-        this.selections = params.selections
+        this.selections = params.selections || []
         this.transformations = transformations.map(t => transformationParamToTransformation(t))
         this.object = params.object
     }
@@ -67,27 +67,31 @@ export default abstract class CanvasAnimation<T extends {}, U extends selectionT
         })
     }
 
-    public abstract draw(p5: p5Types, time: number): void
-
-    public calculateSelectionInfo(time: number): selectionInfoType<U> {
-        const selections = this.selections || []
-        let selected = false
-        let percent = 0
-        let selection = null
-        for (let i = 0; i < selections.length; i++) {
-            const currentSelection = selections[i]
-            const duration = currentSelection.duration
-            if (time >= currentSelection.time) {
-                selected = !duration || time <= currentSelection.time + duration
-                if (selected) {
-                    percent = duration ? (time - currentSelection.time) / duration : 1
-                    selection = currentSelection
-                    break
-                }
-            }
-        }
-        return {selection, percent}
+    protected getSelections(): U[] {
+        return this.selections
     }
+
+    public addSelection(selection: U): void {
+        this.selections.push(selection)
+    }
+
+    public draw(p5: p5Types, time: number): void {
+        const object = this.calculateObjectParamsInTime(time, p5)
+        const offset = object.offset || {x: 0, y: 0}
+        const rotationAxis = object.origin
+
+        if (!needAppearObject(time, this.getAppearanceParam())) {
+            return
+        }
+        p5.push()
+        p5.translate(rotationAxis.x, rotationAxis.y)
+        p5.rotate(object.rotation || 0)
+        p5.translate(offset.x, offset.y)
+        this.doDraw(p5, time)
+        p5.pop()
+    }
+
+    protected abstract doDraw(p5: p5Types, time: number): void
 
     public getZIndex(time: number, p5: p5Types): number {
         return this.calculateObjectParamsInTime(time, p5).zIndex || 0
