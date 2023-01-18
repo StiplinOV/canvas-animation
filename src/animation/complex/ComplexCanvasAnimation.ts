@@ -7,6 +7,9 @@ export interface complexCanvasAnimationSelectionType<T> extends selectionType {
     selector?: T
 }
 
+export type includedAnimationsType = Map<string, SimpleCanvasAnimation<{}>>
+type animationSourceToTargetType = { source: SimpleCanvasAnimation<{}>, target: SimpleCanvasAnimation<{}> }
+
 export default abstract class ComplexCanvasAnimation<T extends {}, U> extends CanvasAnimation<T, complexCanvasAnimationSelectionType<U>> {
 
     public readonly p5: p5Types
@@ -36,7 +39,7 @@ export default abstract class ComplexCanvasAnimation<T extends {}, U> extends Ca
         const {appearTime, appearDuration, disappearTime, disappearDuration} = this.getAppearanceParam()
         const objectOnAppearance = this.calculateObjectParamsInTime(appearTime, this.p5)
         const animationsOnAppearance = this.getIncludedAnimationsByParameters(objectOnAppearance)
-        const appearedObjectAppearDuration = appearDuration / animationsOnAppearance.length
+        const appearedObjectAppearDuration = appearDuration / animationsOnAppearance.size
         let appearedObjectAppearTime = appearTime
 
         animationsOnAppearance.forEach(a => {
@@ -49,14 +52,12 @@ export default abstract class ComplexCanvasAnimation<T extends {}, U> extends Ca
             const objectOnTransform = this.calculateObjectParamsInTime(t.appearTime, this.p5, 1)
             const animationsOnTransform = this.getIncludedAnimationsByParameters(objectOnTransform)
             const transformDuration = t.appearDuration
-            const {added, deleted, unchangedSource, unchangedTarget} = this.getAnimationsSetDifference(
-                prevAnimationSet,
-                animationsOnTransform
-            )
-            // console.log(this.getAnimationsSetDifference(
-            //     prevAnimationSet,
-            //     animationsOnTransform
-            // ))
+            const {
+                added,
+                deleted,
+                changedSourceToTarget
+            } = this.getAnimationsSetDifference(prevAnimationSet, animationsOnTransform)
+
             if (added.length > 0) {
                 const addedAppearDuration = transformDuration / added.length
                 let addedAppearTime = t.appearTime
@@ -77,53 +78,21 @@ export default abstract class ComplexCanvasAnimation<T extends {}, U> extends Ca
                     deletedDisappearTime += deletedDisappearDuration
                 })
             }
-            const sourceGroups = this.groupSimpleObjectsByType(unchangedSource)
-            const targetGroups = this.groupSimpleObjectsByType(unchangedTarget)
-            const sources: SimpleCanvasAnimation<{}>[] = []
-            const targets: SimpleCanvasAnimation<{}>[] = []
-
-            sourceGroups.forEach((sourceGroup, key) => {
-                const targetGroup = targetGroups.get(key)
-                targetGroup && sourceGroup.forEach((source, index) => {
-
-
-                    const target = targetGroup[index]
-                    if (JSON.stringify(source.getObject()) !== JSON.stringify(target.getObject())) {
-                        sources.push(source)
-                        targets.push(target)
-                    }
-                })
-            })
 
             let sourceToTargetAppearTime = t.appearTime
-            const sourceToTargetAppearDuration = transformDuration/(sources.length * 2)
-//            console.log(sources.length)
-            sources.forEach((source, index) => {
-                source.appendTransformation({
+            const sourceToTargetAppearDuration = transformDuration / (changedSourceToTarget.size * 2)
+            changedSourceToTarget.forEach((value, key) => {
+                value.source.appendTransformation({
                     appearTime: sourceToTargetAppearTime,
                     appearDuration: sourceToTargetAppearDuration,
-                    object: targets[index].getObject()
+                    object: value.target.getObject()
                 })
                 sourceToTargetAppearTime += 2 * sourceToTargetAppearDuration
-                animationsOnTransform[animationsOnTransform.indexOf(targets[index])] = source
+                animationsOnTransform.set(key, value.source)
             })
-            // sourceGroups.forEach((sourceGroup, key) => {
-            //     const targetGroup = targetGroups.get(key)
-            //     targetGroup && sourceGroup.forEach((source, index) => {
-            //         const target = targetGroup[index]
-            //        // console.log(source.getObject(), " => ", target.getObject())
-            //         source.appendTransformation({
-            //             appearTime: sourceToTargetAppearTime,
-            //             appearDuration: sourceToTargetAppearDuration,
-            //             object: target.getObject()
-            //         })
-            //         sourceToTargetAppearTime += sourceToTargetAppearDuration
-            //         animationsOnTransform[animationsOnTransform.indexOf(target)] = source
-            //     })
-            // })
             prevAnimationSet = animationsOnTransform
         })
-        const disappearedObjectDisappearDuration = disappearDuration / prevAnimationSet.length
+        const disappearedObjectDisappearDuration = disappearDuration / prevAnimationSet.size
         let disappearedObjectDisappearTime = disappearTime
 
         prevAnimationSet.forEach(o => {
@@ -136,93 +105,29 @@ export default abstract class ComplexCanvasAnimation<T extends {}, U> extends Ca
         return result
     }
 
-    private getAnimationsSetDifference(left: SimpleCanvasAnimation<{}>[], right: SimpleCanvasAnimation<{}>[]): {
+    private getAnimationsSetDifference(left: includedAnimationsType, right: includedAnimationsType): {
         added: SimpleCanvasAnimation<{}>[],
         deleted: SimpleCanvasAnimation<{}>[],
-        unchangedSource: SimpleCanvasAnimation<{}>[],
-        unchangedTarget: SimpleCanvasAnimation<{}>[]
+        changedSourceToTarget: Map<string, animationSourceToTargetType>
     } {
         const added: SimpleCanvasAnimation<{}>[] = []
         const deleted: SimpleCanvasAnimation<{}>[] = []
-        const unchangedSource: SimpleCanvasAnimation<{}>[] = []
-        const unchangedTarget: SimpleCanvasAnimation<{}>[] = []
+        const changedSourceToTarget: Map<string, animationSourceToTargetType> = new Map<string, animationSourceToTargetType>()
 
-        const leftGroup = this.groupSimpleObjectsByType(left)
-        const rightGroup = this.groupSimpleObjectsByType(right)
-
-        leftGroup.forEach((leftValue, key) => {
-            const rightValue = rightGroup.get(key)
-
-            const leftValueRemaining: SimpleCanvasAnimation<{}>[] = []
-            const rightValueRemaining: SimpleCanvasAnimation<{}>[] = []
-
+        right.forEach((value, key) => !left.has(key) && added.push(value))
+        left.forEach((value, key) => {
+            const rightValue = right.get(key)
             if (rightValue) {
-                let i = 0, j = 0;
-                while(i < leftValue.length && j < rightValue.length){
-                    const leftValueElement = leftValue[i]
-                    const rightValueElement = rightValue[j]
-                    const leftValueElementString = JSON.stringify(leftValueElement.getObject())
-                    const rightValueElementString = JSON.stringify(rightValueElement.getObject())
-//                    console.log(leftValueElementString, rightValueElementString, leftValueElementString.localeCompare(rightValueElementString))
-
-                    if (leftValueElementString.localeCompare(rightValueElementString) === 0) {
-                        unchangedSource.push(leftValueElement)
-                        unchangedTarget.push(rightValueElement)
-                        i++; j++
-                    } else if (leftValueElementString.localeCompare(rightValueElementString) > 0) {
-                        rightValueRemaining.push(rightValueElement)
-                        j++;
-                    } else {
-                        leftValueRemaining.push(leftValueElement)
-                        i++;
-                    }
-                }
-                while (i < leftValue.length) {
-                    leftValueRemaining.push(leftValue[i])
-                    i++;
-                }
-                while (j < rightValue.length) {
-                    rightValueRemaining.push(rightValue[j])
-                    j++;
-                }
-                // console.log(leftValueRemaining)
-                // console.log(rightValueRemaining)
-                // console.log(unchangedSource)
-
-                if (leftValueRemaining.length === rightValueRemaining.length) {
-                    unchangedSource.push(...leftValueRemaining)
-                    unchangedTarget.push(...rightValueRemaining)
-                } else if (leftValueRemaining.length > rightValueRemaining.length) {
-                    unchangedSource.push(...leftValueRemaining.slice(0, rightValueRemaining.length))
-                    unchangedTarget.push(...rightValueRemaining)
-                    deleted.push(...leftValueRemaining.slice(rightValueRemaining.length, leftValueRemaining.length))
-                } else {
-                    unchangedSource.push(...leftValueRemaining)
-                    unchangedTarget.push(...rightValueRemaining.slice(0, leftValueRemaining.length))
-                    added.push(...rightValueRemaining.slice(leftValueRemaining.length, rightValueRemaining.length))
+                if (JSON.stringify(value.getObject()) !== JSON.stringify(rightValue.getObject())) {
+                    changedSourceToTarget.set(key, {source: value, target: rightValue})
                 }
             } else {
-                deleted.push(...leftValueRemaining)
+                deleted.push(value)
             }
         })
-        rightGroup.forEach((value, key) => !leftGroup.get(key) && added.push(...value))
-
-        return {
-            added, deleted, unchangedSource, unchangedTarget
-        }
+        return {added, deleted, changedSourceToTarget}
     }
 
-    private groupSimpleObjectsByType(objs: SimpleCanvasAnimation<{}>[]): Map<string, SimpleCanvasAnimation<{}>[]> {
-        const result = new Map<string, SimpleCanvasAnimation<{}>[]>()
-        objs.forEach(o => {
-            const arr = result.get(o.constructor.name) || []
-            arr.push(o)
-            result.set(o.constructor.name, arr)
-        })
-        result.forEach((value, key) => result.set(key, value.sort((l,r) => JSON.stringify(l.getObject()).localeCompare(JSON.stringify(r.getObject())))))
-        return result
-    }
-
-    public abstract getIncludedAnimationsByParameters(object: objectParamsType<T>): SimpleCanvasAnimation<{}>[]
+    public abstract getIncludedAnimationsByParameters(object: objectParamsType<T>): includedAnimationsType
 
 }

@@ -1,4 +1,4 @@
-import ComplexCanvasAnimation from "../ComplexCanvasAnimation";
+import ComplexCanvasAnimation, {includedAnimationsType} from "../ComplexCanvasAnimation";
 import LineCanvasAnimation, {lineParamsType} from "../../simple/line/LineCanvasAnimation";
 import p5Types from "p5";
 import {calculatePointPercentValue, getVectorAngle, rotateVector, subtractPoints} from "../../../common/Utils";
@@ -15,23 +15,23 @@ export type arrowParamsType = lineParamsType & {
 
 export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowParamsType, {}> {
 
-    public getIncludedAnimationsByParameters(object: objectParamsType<arrowParamsType>): SimpleCanvasAnimation<{}>[] {
+    public getIncludedAnimationsByParameters(object: objectParamsType<arrowParamsType>): includedAnimationsType {
+        const result = new Map<string, SimpleCanvasAnimation<{}>>()
         const relativeEndPoint = subtractPoints(object.endPoint, object.origin)
-        const startArrowLines: LineCanvasAnimation[] = []
-        const endArrowLines: LineCanvasAnimation[] = []
-        const line = new LineCanvasAnimation({
+
+        result.set("shaft", new LineCanvasAnimation({
             object: {
                 origin: {x: 0, y: 0},
                 endPoint: relativeEndPoint,
                 weight: object.weight,
                 zIndex: object.zIndex
             }
-        })
+        }))
         let angle = getVectorAngle(this.p5, relativeEndPoint)
         let leftArrowSide = rotateVector(this.p5, {x: arrowBaseLength, y: arrowBaseWidth / 2}, angle)
         let rightArrowSide = rotateVector(this.p5, {x: arrowBaseLength, y: -arrowBaseWidth / 2}, angle)
         if (object.endType === "Arrow") {
-            endArrowLines.push(new LineCanvasAnimation({
+            result.set("left half arrowhead", new LineCanvasAnimation({
                 object: {
                     origin: relativeEndPoint,
                     endPoint: subtractPoints(relativeEndPoint, leftArrowSide),
@@ -39,7 +39,7 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowPa
                     zIndex: object.zIndex
                 }
             }))
-            endArrowLines.push(new LineCanvasAnimation({
+            result.set("right half arrowhead", new LineCanvasAnimation({
                 object: {
                     origin: relativeEndPoint,
                     endPoint: subtractPoints(relativeEndPoint, rightArrowSide),
@@ -49,7 +49,7 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowPa
             }))
         }
         if (object.startType === "Arrow") {
-            startArrowLines.push(new LineCanvasAnimation({
+            result.set("left half arrow tail", new LineCanvasAnimation({
                 object: {
                     origin: {x: 0, y: 0},
                     endPoint: leftArrowSide,
@@ -57,7 +57,7 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowPa
                     zIndex: object.zIndex
                 }
             }))
-            startArrowLines.push(new LineCanvasAnimation({
+            result.set("right half arrow tail", new LineCanvasAnimation({
                 object: {
                     origin: {x: 0, y: 0},
                     endPoint: rightArrowSide,
@@ -67,7 +67,7 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowPa
             }))
         }
 
-        return [line, ...startArrowLines, ...endArrowLines];
+        return result
     }
 
     mergeWithTransformation(obj: objectParamsType<arrowParamsType>, trans: Partial<arrowParamsType>, perc: number, p5: p5Types): arrowParamsType {

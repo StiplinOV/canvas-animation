@@ -131,7 +131,7 @@ export const animations: (p5: p5Types) => Array<CanvasAnimation<{}>> = (p5: p5Ty
         ],
         transformations: [{
             appearTime: 5000,
-            appearDuration: 3000,
+            appearDuration: 1000,
             object: {
                 chartPoints: [
                     {x: 1, y: 7},
@@ -140,7 +140,12 @@ export const animations: (p5: p5Types) => Array<CanvasAnimation<{}>> = (p5: p5Ty
                     {x: 4, y: 3},
                     //{point: {x: 5, y: 6}, text: "Sell"},
                     {x: 6, y: 4}
-                ]
+                ],
+                chartLines: [
+                    [{x: 1, y: 7}, {x: 3, y: 5}],
+                    [{x: 3, y: 5}, {x: 4, y: 3}],
+                    [{x: 4, y: 3}, {x: 6, y: 4}]
+                ],
             }
         }]
     }, p5)
