@@ -24,25 +24,35 @@ export interface selectionType {
 
 type transformationType<T> = {
     object: Partial<objectParamsType<T>>
+} & appearanceParamType
+
+type transformationParamType<T> = {
+    object: Partial<objectParamsType<T>>
 } & Partial<appearanceParamType>
 
+const transformationParamToTransformation = <T>(t: transformationParamType<T>): transformationType<T> =>
+    ({...t, ...toAppearanceParamType(t)})
+
 export type paramsType<T extends {}, U extends selectionType = selectionType> = {
-    transformations?: transformationType<T>[]
+    transformations?: transformationParamType<T>[]
     selections?: U[]
     object: objectParamsType<T>
 } & Partial<appearanceParamType>
 
+export type selectionInfoType<U extends selectionType = selectionType> = { selection?: U | null, percent: number }
+
 export default abstract class CanvasAnimation<T extends {}, U extends selectionType = selectionType> {
 
     private appearanceParam: appearanceParamType
-    private readonly transformations?: transformationType<T>[]
+    private readonly transformations: transformationType<T>[]
     private readonly selections?: U[]
     private readonly object: objectParamsType<T>
 
     public constructor(params: paramsType<T, U>) {
+        const transformations = params.transformations || []
         this.appearanceParam = toAppearanceParamType(params)
         this.selections = params.selections
-        this.transformations = params.transformations
+        this.transformations = transformations.map(t => transformationParamToTransformation(t))
         this.object = params.object
     }
 
@@ -57,41 +67,39 @@ export default abstract class CanvasAnimation<T extends {}, U extends selectionT
         })
     }
 
-    public draw(p5: p5Types, time: number): void {
+    public abstract draw(p5: p5Types, time: number): void
+
+    public calculateSelectionInfo(time: number): selectionInfoType<U> {
         const selections = this.selections || []
         let selected = false
-        let selectedPercent = 0
+        let percent = 0
         let selection = null
         for (let i = 0; i < selections.length; i++) {
             const currentSelection = selections[i]
             const duration = currentSelection.duration
-            //TODO func
             if (time >= currentSelection.time) {
                 selected = !duration || time <= currentSelection.time + duration
                 if (selected) {
-                    selectedPercent = duration ? (time - currentSelection.time) / duration : 1
+                    percent = duration ? (time - currentSelection.time) / duration : 1
                     selection = currentSelection
                     break
                 }
             }
         }
-        this.doDraw(p5, this.calculateObjectToBeDraw(time, p5), time, selectedPercent, selection)
+        return {selection, percent}
     }
 
     public getZIndex(time: number, p5: p5Types): number {
-        return this.calculateObjectToBeDraw(time, p5).zIndex || 0
+        return this.calculateObjectParamsInTime(time, p5).zIndex || 0
     }
 
-    public calculateObjectToBeDraw(time: number, p5: p5Types): objectParamsType<T> {
+    public calculateObjectParamsInTime(time: number, p5: p5Types, percentParam?: number): objectParamsType<T> {
         const sourceObject = this.object
-        let result = {
-            ...sourceObject
-        }
-        const transformations = this.transformations?.filter(t => needAppearObject(time, toAppearanceParamType(t))) || []
+        let result = {...sourceObject}
+        const transformations = this.getTransformations().filter(t => needAppearObject(time, toAppearanceParamType(t)))
         transformations.forEach(transformation => {
             const transformationObject = transformation.object
-            const percent = toAppearancePercent(time, toAppearanceParamType(transformation))
-
+            const percent = percentParam || toAppearancePercent(time, toAppearanceParamType(transformation))
             if (transformationObject.origin) {
                 result.origin = calculatePointPercentValue(result.origin, transformationObject.origin, percent)
             }
@@ -118,10 +126,18 @@ export default abstract class CanvasAnimation<T extends {}, U extends selectionT
         return result
     }
 
+    public getObject(): objectParamsType<T> {
+        return this.object
+    }
+
+    protected getTransformations(): transformationType<T>[] {
+        return this.transformations
+    }
+
+    public appendTransformation(transformation: transformationParamType<T>): void {
+        this.transformations.push(transformationParamToTransformation(transformation))
+    }
+
     public abstract mergeWithTransformation(obj: T, trans: Partial<T>, perc: number, p5: p5Types): T
-
-    public abstract doDraw(p5: p5Types, object: objectParamsType<T>, time: number, selectedPercent: number, selection: U | null): void
-
-    public abstract getIncludedObjects(object: objectParamsType<T>, selected?: boolean): { object: CanvasAnimation<{}>, selected: boolean }[]
 
 }

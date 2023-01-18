@@ -1,12 +1,13 @@
-import LineCanvasAnimation from "../../simple/line/LineCanvasAnimation";
-import CircleCanvasAnimation from "../../simple/circle/CircleCanvasAnimation";
 import {Point} from "../../../common/Point";
-import ComplexCanvasAnimation, {objectInfo} from "../ComplexCanvasAnimation";
-import ArrowCanvasAnimation from "../arrow/ArrowCanvasAnimation";
-import TextCanvasAnimation from "../../simple/text/TextCanvasAnimation";
+import ComplexCanvasAnimation from "../ComplexCanvasAnimation";
 import p5Types from "p5";
 import {calculateArrayPercentValue, calculatePercentValue, calculateTextPercentValue} from "../../../common/Utils";
 import {objectParamsType} from "../../CanvasAnimation";
+import SimpleCanvasAnimation from "../../simple/SimpleCanvasAnimation";
+import ArrowCanvasAnimation, {arrowParamsType} from "../arrow/ArrowCanvasAnimation";
+import TextCanvasAnimation from "../../simple/text/TextCanvasAnimation";
+import LineCanvasAnimation from "../../simple/line/LineCanvasAnimation";
+import CircleCanvasAnimation from "../../simple/circle/CircleCanvasAnimation";
 
 const coordinateDashWidth = 20
 const toScaleType = (value: scaleType | number): scaleType =>
@@ -30,7 +31,7 @@ type selectorType = { points?: "all" | number[], lines?: "all" }
 
 export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyChartParamsType, selectorType> {
 
-    getIncludedObjects(object: objectParamsType<xyChartParamsType>, selector?: selectorType | boolean): objectInfo[] {
+    getIncludedAnimationsByParameters(object: objectParamsType<xyChartParamsType>): SimpleCanvasAnimation<{}>[] {
         const {height, width} = object
         const xScale = object.xScale?.map(value => toScaleType(value)) || []
         const yScale = object.yScale?.map(value => toScaleType(value)) || []
@@ -39,23 +40,29 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
         const objChartPoints = object.chartPoints?.map(value => toChartPointType(value)) || []
         const objChartLines = object.chartLines || []
         const chartPointsDiameter = coordinateDashWidth / 2
-        const geometryHelper = this.getGeometryHelper()
-
-        const xArrow = new ArrowCanvasAnimation(
-            {object: {origin: {x: 0, y: 0}, endPoint: {x: width, y: 0}, endType: "Arrow", weight: 2}},
-            geometryHelper
-        )
-        const yArrow = new ArrowCanvasAnimation(
-            {object: {origin: {x: 0, y: 0}, endPoint: {x: 0, y: -height}, endType: "Arrow", weight: 2}},
-            geometryHelper
-        )
+        const xArrowObject: objectParamsType<arrowParamsType> = {
+            origin: {x: 0, y: 0},
+            endPoint: {x: width, y: 0},
+            endType: "Arrow",
+            weight: 2
+        }
+        const yArrowObject: objectParamsType<arrowParamsType> = {
+            origin: {x: 0, y: 0},
+            endPoint: {x: 0, y: -height},
+            endType: "Arrow",
+            weight: 2
+        }
+        const xArrow = new ArrowCanvasAnimation({object: xArrowObject}, this.p5)
+            .getIncludedAnimationsByParameters(xArrowObject)
+        const yArrow = new ArrowCanvasAnimation({object: yArrowObject}, this.p5)
+            .getIncludedAnimationsByParameters(yArrowObject)
         const xText = new TextCanvasAnimation({
             object: {
                 origin: {x: width / 2, y: coordinateDashWidth * 2},
                 value: xAxisName,
                 fontSize: 20,
-                horizontalAlign: geometryHelper.HORIZONTAL_ALIGN_CENTER,
-                verticalAlign: geometryHelper.VERTICAL_ALIGN_TOP
+                horizontalAlign: "center",
+                verticalAlign: "top"
             }
         })
         const yText = new TextCanvasAnimation({
@@ -64,8 +71,8 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
                 rotation: -Math.PI / 2,
                 value: yAxisName,
                 fontSize: 20,
-                horizontalAlign: geometryHelper.HORIZONTAL_ALIGN_CENTER,
-                verticalAlign: geometryHelper.VERTICAL_ALIGN_BOTTOM
+                horizontalAlign: "center",
+                verticalAlign: "bottom"
             }
         })
 
@@ -89,8 +96,8 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
                 object: {
                     origin: {x: x, y: Number(coordinateDashWidth)},
                     value: value.value,
-                    verticalAlign: geometryHelper.VERTICAL_ALIGN_TOP,
-                    horizontalAlign: geometryHelper.HORIZONTAL_ALIGN_CENTER
+                    verticalAlign: "top",
+                    horizontalAlign: "center"
                 }
             }))
         })
@@ -106,8 +113,8 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
                 object: {
                     origin: {x: -Number(coordinateDashWidth), y: y},
                     value: value.value,
-                    verticalAlign: geometryHelper.VERTICAL_ALIGN_CENTER,
-                    horizontalAlign: geometryHelper.HORIZONTAL_ALIGN_CENTER
+                    verticalAlign: "center",
+                    horizontalAlign: "center"
                 }
             }))
         })
@@ -153,9 +160,9 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
         //     }
         //     return result
         // }
-        const result: objectInfo[] = [
-            xArrow,
-            yArrow,
+        const result: SimpleCanvasAnimation<{}>[] = [
+            ...xArrow,
+            ...yArrow,
             xText,
             yText,
             ...xScaleLines,
@@ -163,32 +170,35 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
             ...xScaleAxisValues,
             ...yScaleAxisValues,
             ...chartPointsValues,
-        ].map(r => ({object: r, selected: false}))
-        chartPoints.forEach((p, i) => {
-            let selected = false
-            if (selector) {
-                if (typeof selector === "boolean") {
-                    selected = selector
-                } else if (selector.points) {
-                    if (selector.points === "all" || selector.points.includes(i))
-                    selected = true
-                }
-            }
-            result.push({object: p, selected})
-        })
-        chartLines.forEach((p) => {
-            let selected = false
-            if (selector) {
-                if (typeof selector === "boolean") {
-                    selected = selector
-                } else if (selector.lines) {
-                    if (selector.lines === "all") {
-                        selected = true
-                    }
-                }
-            }
-            result.push({object: p, selected})
-        })
+            ...chartPoints,
+            ...chartLines
+        ]
+        //console.log(result)
+        // chartPoints.forEach((p, i) => {
+        //     let selected = false
+        //     if (selector) {
+        //         if (typeof selector === "boolean") {
+        //             selected = selector
+        //         } else if (selector.points) {
+        //             if (selector.points === "all" || selector.points.includes(i))
+        //                 selected = true
+        //         }
+        //     }
+        //     result.push({object: p, selected})
+        // })
+        // chartLines.forEach((p) => {
+        //     let selected = false
+        //     if (selector) {
+        //         if (typeof selector === "boolean") {
+        //             selected = selector
+        //         } else if (selector.lines) {
+        //             if (selector.lines === "all") {
+        //                 selected = true
+        //             }
+        //         }
+        //     }
+        //     result.push({object: p, selected})
+        // })
 
         return result
     }

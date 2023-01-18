@@ -1,4 +1,6 @@
 import {Point} from "./Point";
+import p5Types from "p5";
+import {json} from "stream/consumers";
 
 type Coordinates = {
     x?: number,
@@ -15,6 +17,9 @@ export const calculatePercentValue = (from: number, to: number, percent: number)
 export const calculatePointPercentValue = (from: Point, to: Point, percent: number): Point =>
     ({x: calculatePercentValue(from.x, to.x, percent), y: calculatePercentValue(from.y, to.y, percent)})
 export const calculateArrayPercentValue = <T>(from: T[], to: T[], percent: number): T[] => {
+    if (JSON.stringify(from) === JSON.stringify(to)) {
+        return from
+    }
     const numberOfStates = from.length + to.length
     const currentState = Math.floor(calculatePercentValue(1, numberOfStates, percent))
     if (currentState >= 0 && currentState <= from.length - 1) {
@@ -32,11 +37,11 @@ export const calculateTextPercentValue = (from: string, to: string, percent: num
 export const toAppearanceParamType = (values: Partial<appearanceParamType>): appearanceParamType => ({
     appearTime: values.appearTime || 0,
     appearDuration: values.appearDuration || 0,
-    disappearTime: values.disappearTime || Number.POSITIVE_INFINITY,
+    disappearTime: values.disappearTime || Number.MAX_VALUE,
     disappearDuration: values.disappearDuration || 0
 })
 export const needAppearObject = (time: number, appearanceParam: appearanceParamType): boolean => {
-    if (appearanceParam.appearTime >= time) {
+    if (appearanceParam.appearTime > time) {
         return false
     }
     return appearanceParam.disappearTime + appearanceParam.disappearDuration > time;
@@ -69,3 +74,9 @@ export const subtractPoints = (minuend: Point, subtrahend: Coordinates, ...subtr
     {x: -(subtrahend.x || 0), y: -(subtrahend.y || 0)},
     ...subtrahends.map(subtrahend => ({x: subtrahend.x, y: subtrahend.y}))
 )
+
+export const getVectorAngle = (p5: p5Types, point: Point): number => p5.createVector(point.x, point.y).heading()
+export const rotateVector = (p5: p5Types, point: Point, angle: number): Point => {
+    const resultVector = p5.createVector(point.x, point.y).rotate(angle)
+    return {x: resultVector.x, y: resultVector.y}
+}

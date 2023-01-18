@@ -27,7 +27,7 @@ export default class TextCanvasAnimation extends SimpleCanvasAnimation<textParam
         fontSize ||= p5.textSize()
         boxHeight = boxHeight && trans.boxHeight ? calculatePercentValue(boxHeight, trans.boxHeight, perc) : boxHeight
         return {
-            value: trans.value ? calculateTextPercentValue(obj.value, trans.value, perc) : obj.value,
+            value: typeof trans.value === "string" ? calculateTextPercentValue(obj.value, trans.value, perc) : obj.value,
             fontSize: trans.fontSize ? calculatePercentValue(fontSize, trans.fontSize, perc) : fontSize,
             boxWidth: boxWidth && trans.boxWidth ? calculatePercentValue(boxWidth, trans.boxWidth, perc) : boxWidth,
             boxHeight,

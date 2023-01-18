@@ -1,21 +1,21 @@
-import ComplexCanvasAnimation, {complexCanvasAnimationSelectionType, objectInfo} from "../ComplexCanvasAnimation";
+import ComplexCanvasAnimation from "../ComplexCanvasAnimation";
 import LineCanvasAnimation, {lineParamsType} from "../../simple/line/LineCanvasAnimation";
 import p5Types from "p5";
-import {calculatePointPercentValue, subtractPoints} from "../../../common/Utils";
+import {calculatePointPercentValue, getVectorAngle, rotateVector, subtractPoints} from "../../../common/Utils";
 import {objectParamsType} from "../../CanvasAnimation";
+import SimpleCanvasAnimation from "../../simple/SimpleCanvasAnimation";
 
 const arrowBaseLength = 10
 const arrowBaseWidth = 10
 
-type arrowParamsType = lineParamsType & {
-    startType?: "Arrow"
-    endType?: "Arrow"
+export type arrowParamsType = lineParamsType & {
+    startType?: "Arrow" | "None"
+    endType?: "Arrow" | "None"
 }
 
 export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowParamsType, {}> {
 
-    getIncludedObjects(object: objectParamsType<arrowParamsType>, selector?: complexCanvasAnimationSelectionType<{}> | boolean): objectInfo[] {
-        const geometryHelper = this.getGeometryHelper()
+    public getIncludedAnimationsByParameters(object: objectParamsType<arrowParamsType>): SimpleCanvasAnimation<{}>[] {
         const relativeEndPoint = subtractPoints(object.endPoint, object.origin)
         const startArrowLines: LineCanvasAnimation[] = []
         const endArrowLines: LineCanvasAnimation[] = []
@@ -27,9 +27,9 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowPa
                 zIndex: object.zIndex
             }
         })
-        let angle = geometryHelper.getVectorAngle(relativeEndPoint)
-        let leftArrowSide = geometryHelper.rotateVector({x: arrowBaseLength, y: arrowBaseWidth / 2}, angle)
-        let rightArrowSide = geometryHelper.rotateVector({x: arrowBaseLength, y: -arrowBaseWidth / 2}, angle)
+        let angle = getVectorAngle(this.p5, relativeEndPoint)
+        let leftArrowSide = rotateVector(this.p5, {x: arrowBaseLength, y: arrowBaseWidth / 2}, angle)
+        let rightArrowSide = rotateVector(this.p5, {x: arrowBaseLength, y: -arrowBaseWidth / 2}, angle)
         if (object.endType === "Arrow") {
             endArrowLines.push(new LineCanvasAnimation({
                 object: {
@@ -66,15 +66,16 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowPa
                 }
             }))
         }
-        return [line, ...startArrowLines, ...endArrowLines].map(r => ({object: r, selected: Boolean(selector)}));
+
+        return [line, ...startArrowLines, ...endArrowLines];
     }
 
     mergeWithTransformation(obj: objectParamsType<arrowParamsType>, trans: Partial<arrowParamsType>, perc: number, p5: p5Types): arrowParamsType {
         let {endPoint, startType, endType} = obj
         return {
             endPoint: trans.endPoint ? calculatePointPercentValue(endPoint, trans.endPoint, perc) : endPoint,
-            startType: trans.startType ? (perc >= 0.5 ? startType : trans.startType) : startType,
-            endType: trans.endType ? (perc >= 0.5 ? endType : trans.endType) : endType
+            startType: trans.startType ? (perc >= 0.5 ? trans.startType: startType) : startType,
+            endType: trans.endType ? (perc >= 0.5 ? trans.endType: endType) : endType
         }
     }
 

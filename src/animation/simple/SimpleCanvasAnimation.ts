@@ -4,7 +4,9 @@ import {needAppearObject, toAppearancePercent} from "../../common/Utils";
 
 export default abstract class SimpleCanvasAnimation<T extends {}> extends CanvasAnimation<T> {
 
-    public doDraw(p5: p5Types, object: objectParamsType<T>, time: number, selectedPercent: number): void {
+    public draw(p5: p5Types, time: number): void {
+        const selectionInfo = this.calculateSelectionInfo(time)
+        const object = this.calculateObjectParamsInTime(time, p5)
         const offset = object.offset || {x: 0, y: 0}
         const rotationAxis = object.origin
 
@@ -16,14 +18,10 @@ export default abstract class SimpleCanvasAnimation<T extends {}> extends Canvas
         p5.translate(rotationAxis.x, rotationAxis.y)
         p5.rotate(object.rotation || 0)
         p5.translate(offset.x, offset.y)
-        this.drawObject(p5, object, toAppearancePercent(time, this.getAppearanceParam()), selectedPercent)
+        this.drawObject(p5, object, toAppearancePercent(time, this.getAppearanceParam()), selectionInfo.percent)
         p5.pop()
     }
 
-    public abstract drawObject(p5: p5Types, object: objectParamsType<T>, percent: number, selectedPercent: number): void
-
-    public getIncludedObjects(object: objectParamsType<T>, selected?: boolean): { object: CanvasAnimation<{}>, selected: boolean }[] {
-        return [{object: this, selected: selected || false}];
-    }
+    public abstract drawObject(p5: p5Types, obj: objectParamsType<T>, perc: number, selectedPercent: number): void
 
 }
