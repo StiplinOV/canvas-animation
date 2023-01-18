@@ -141,46 +141,6 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
             }
         })))
 
-        // if (selector) {
-        //     const result: CanvasAnimation<Params>[] = []
-        //     selector.lines === "all" && result.push(...chartLines)
-        //     if (selector.points) {
-        //         if (selector.points === "all") {
-        //             result.push(...chartPoints)
-        //         } else {
-        //             selector.points.forEach(pointIndex => result.push(chartPoints[pointIndex]))
-        //         }
-        //     }
-        //     return result
-        // }
-
-        //console.log(result)
-        // chartPoints.forEach((p, i) => {
-        //     let selected = false
-        //     if (selector) {
-        //         if (typeof selector === "boolean") {
-        //             selected = selector
-        //         } else if (selector.points) {
-        //             if (selector.points === "all" || selector.points.includes(i))
-        //                 selected = true
-        //         }
-        //     }
-        //     result.push({object: p, selected})
-        // })
-        // chartLines.forEach((p) => {
-        //     let selected = false
-        //     if (selector) {
-        //         if (typeof selector === "boolean") {
-        //             selected = selector
-        //         } else if (selector.lines) {
-        //             if (selector.lines === "all") {
-        //                 selected = true
-        //             }
-        //         }
-        //     }
-        //     result.push({object: p, selected})
-        // })
-
         return result
     }
 

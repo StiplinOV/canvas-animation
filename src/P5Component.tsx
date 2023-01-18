@@ -4,7 +4,6 @@ import p5Types from "p5";
 import {animations, canvasHeight, canvasWidth, timeDivider} from "./Animations";
 import {camera, cameraParams} from "./camera/CameraParams";
 import {cameras} from "./Cameras";
-import GeometryHelper from "./common/GeometryHelper";
 
 interface ComponentProps {
     //Your component props
