@@ -1,4 +1,4 @@
-import {Point} from "../../../common/Point";
+import {Point, ZeroPoint} from "../../../common/Point";
 import ComplexCanvasAnimation, {includedAnimationsType} from "../ComplexCanvasAnimation";
 import p5Types from "p5";
 import {calculateArrayPercentValue, calculatePercentValue, calculateTextPercentValue} from "../../../common/Utils";
@@ -42,13 +42,13 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
         const objChartLines = object.chartLines || []
         const chartPointsDiameter = coordinateDashWidth / 2
         const xArrowObject: objectParamsType<arrowParamsType> = {
-            origin: {x: 0, y: 0},
+            origin: ZeroPoint,
             endPoint: {x: width, y: 0},
             endType: "Arrow",
             weight: 2
         }
         const yArrowObject: objectParamsType<arrowParamsType> = {
-            origin: {x: 0, y: 0},
+            origin: ZeroPoint,
             endPoint: {x: 0, y: -height},
             endType: "Arrow",
             weight: 2

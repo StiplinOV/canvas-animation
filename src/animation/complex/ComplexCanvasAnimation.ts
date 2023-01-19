@@ -97,10 +97,15 @@ export default abstract class ComplexCanvasAnimation<T extends {}, U> extends Ca
             })
             disappearedObjectDisappearTime += disappearTime
         })
+        this.setAnimationSelections(result)
+        return result
+    }
+
+    private setAnimationSelections(animations: includedAnimationsType): void {
         this.getSelections().forEach(selection => {
             const {type, selector, time, duration} = selection
             const animationsToBeSelected: SimpleCanvasAnimation<{}>[] = []
-            result.forEach((value, key) => {
+            animations.forEach((value, key) => {
                 const {appearTime, disappearTime} = value.getAppearanceParam()
                 if (time >= appearTime && time <= disappearTime) {
                     if (!selector || this.convertSelectorToDiscriminatorRegexp(selector).test(key)) {
@@ -121,9 +126,7 @@ export default abstract class ComplexCanvasAnimation<T extends {}, U> extends Ca
             } else {
                 animationsToBeSelected.forEach(animation => animation.addSelection({time, duration}))
             }
-
         })
-        return result
     }
 
     private getAnimationsSetDifference(left: includedAnimationsType, right: includedAnimationsType): {

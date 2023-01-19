@@ -1,19 +1,20 @@
 import p5Types from "p5";
 import {
-    appearanceParamType,
+    appearanceParamType, calculateArrayPercentValue,
     calculatePercentValue,
     calculatePointPercentValue,
     needAppearObject,
     toAppearanceParamType,
     toAppearancePercent
 } from "../common/Utils";
-import {Point} from "../common/Point";
+import {Point, ZeroPoint} from "../common/Point";
 
 export type objectParamsType<T extends {} = {}> = {
     weight?: number
     zIndex?: number
     rotation?: number
     offset?: Point
+    dashed?: number[]
     origin: Point
 } & T
 
@@ -77,7 +78,7 @@ export default abstract class CanvasAnimation<T extends {}, U extends selectionT
 
     public draw(p5: p5Types, time: number): void {
         const object = this.calculateObjectParamsInTime(time, p5)
-        const offset = object.offset || {x: 0, y: 0}
+        const offset = object.offset || ZeroPoint
         const rotationAxis = object.origin
 
         if (!needAppearObject(time, this.getAppearanceParam())) {
@@ -87,6 +88,7 @@ export default abstract class CanvasAnimation<T extends {}, U extends selectionT
         p5.translate(rotationAxis.x, rotationAxis.y)
         p5.rotate(object.rotation || 0)
         p5.translate(offset.x, offset.y)
+        object.dashed && p5.drawingContext.setLineDash(object.dashed)
         this.doDraw(p5, time)
         p5.pop()
     }
@@ -117,10 +119,29 @@ export default abstract class CanvasAnimation<T extends {}, U extends selectionT
                 result.rotation = calculatePercentValue(result.rotation || 0, transformationObject.rotation, percent)
             }
             if (transformationObject.offset) {
-                result.offset = calculatePointPercentValue(result.offset || {
-                    x: 0,
-                    y: 0
-                }, transformationObject.offset, percent)
+                result.offset = calculatePointPercentValue(result.offset || ZeroPoint, transformationObject.offset, percent)
+            }
+            const transformDashed = transformationObject.dashed
+            const resultDashed = result.dashed || []
+            if (transformDashed && (transformDashed.length || resultDashed.length)) {
+                let resultLength = 1
+                if (resultDashed.length) {
+                    resultLength *= resultDashed.length
+                }
+                if (transformDashed.length) {
+                    resultLength *= transformDashed.length
+                }
+
+                let sourceCopy = []
+                let transformCopy = []
+                for (let i = 0; i < resultLength; i++) {
+                    sourceCopy.push(resultDashed.length ? resultDashed[i%resultDashed.length] : 0)
+                    transformCopy.push(transformDashed.length ? transformDashed[i%transformDashed.length]: 0)
+                }
+                for (let i = 0; i < resultLength; i++) {
+                    sourceCopy[i] = calculatePercentValue(sourceCopy[i], transformCopy[i], percent)
+                }
+                result.dashed = sourceCopy
             }
             result = {
                 ...result,

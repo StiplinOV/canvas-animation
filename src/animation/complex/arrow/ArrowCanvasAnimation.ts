@@ -4,6 +4,7 @@ import p5Types from "p5";
 import {calculatePointPercentValue, getVectorAngle, rotateVector, subtractPoints} from "../../../common/Utils";
 import {objectParamsType} from "../../CanvasAnimation";
 import SimpleCanvasAnimation from "../../simple/SimpleCanvasAnimation";
+import {ZeroPoint} from "../../../common/Point";
 
 const arrowBaseLength = 10
 const arrowBaseWidth = 10
@@ -21,7 +22,7 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowPa
 
         result.set("shaft", new LineCanvasAnimation({
             object: {
-                origin: {x: 0, y: 0},
+                origin: ZeroPoint,
                 endPoint: relativeEndPoint,
                 weight: object.weight,
                 zIndex: object.zIndex
@@ -51,7 +52,7 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowPa
         if (object.startType === "Arrow") {
             result.set("left half arrow tail", new LineCanvasAnimation({
                 object: {
-                    origin: {x: 0, y: 0},
+                    origin: ZeroPoint,
                     endPoint: leftArrowSide,
                     weight: object.weight,
                     zIndex: object.zIndex
@@ -59,7 +60,7 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowPa
             }))
             result.set("right half arrow tail", new LineCanvasAnimation({
                 object: {
-                    origin: {x: 0, y: 0},
+                    origin: ZeroPoint,
                     endPoint: rightArrowSide,
                     weight: object.weight,
                     zIndex: object.zIndex
