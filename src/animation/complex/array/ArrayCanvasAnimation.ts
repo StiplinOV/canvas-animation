@@ -1,4 +1,4 @@
-import ComplexCanvasAnimation, {includedAnimationsType} from "../ComplexCanvasAnimation";
+import ComplexCanvasAnimation from "../ComplexCanvasAnimation";
 import {objectParamsType} from "../../CanvasAnimation";
 import {calculateArrayPercentValue, calculatePercentValue, calculateTextPercentValue} from "../../../common/Utils";
 import SimpleCanvasAnimation from "../../simple/SimpleCanvasAnimation";
@@ -16,7 +16,10 @@ type arrayParamsType = {
 
 export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayParamsType, {}> {
 
-    getIncludedAnimationsByParameters(object: objectParamsType<arrayParamsType>): includedAnimationsType {
+    getIncludedAnimationsByParameters(object: objectParamsType<arrayParamsType>): {
+        complexAnimations: Map<string, ComplexCanvasAnimation<{}, {}>>
+        simpleAnimations: Map<string, SimpleCanvasAnimation<{}>>
+    } {
         const result = new Map<string, SimpleCanvasAnimation<{}>>()
         const {title, value, indexTitle, firstIndex} = object
         const partHeight = this.calculatePartHeight(object)
@@ -79,7 +82,10 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayPa
             }))
         }
 
-        return result
+        return {
+            simpleAnimations: result,
+            complexAnimations: new Map<string, ComplexCanvasAnimation<{}, {}>>
+        }
     }
 
     private calculateWidth(object: objectParamsType<arrayParamsType>): number {

@@ -7,14 +7,13 @@ export interface complexCanvasAnimationSelectionType<T> extends selectionType {
     selector?: T
 }
 
-export type includedAnimationsType = Map<string, SimpleCanvasAnimation<{}>>
-type animationSourceToTargetType = { source: SimpleCanvasAnimation<{}>, target: SimpleCanvasAnimation<{}> }
+type animationS2TType = { source: SimpleCanvasAnimation<{}>, target: SimpleCanvasAnimation<{}> }
 
 export default abstract class ComplexCanvasAnimation<T extends {}, U> extends CanvasAnimation<T, complexCanvasAnimationSelectionType<U>> {
 
     public readonly p5: p5Types
 
-    private readonly simpleAmimations: includedAnimationsType
+    private readonly simpleAmimations: Map<string, CanvasAnimation<{}>>
 
     constructor(params: paramsType<T, complexCanvasAnimationSelectionType<U>>, p5: p5Types) {
         super(params)
@@ -26,11 +25,11 @@ export default abstract class ComplexCanvasAnimation<T extends {}, U> extends Ca
         this.simpleAmimations.forEach(a => a.draw(p5, time))
     }
 
-    private calculateIncludedSimpleAnimations(): includedAnimationsType {
+    private calculateIncludedSimpleAnimations(): Map<string, SimpleCanvasAnimation<{}>> {
         const result = new Map<string, SimpleCanvasAnimation<{}>>()
         const {appearTime, appearDuration, disappearTime, disappearDuration} = this.getAppearanceParam()
         const objectOnAppearance = this.calculateObjectParamsInTime(appearTime, this.p5)
-        const animationsOnAppearance = this.getIncludedAnimationsByParameters(objectOnAppearance)
+        const animationsOnAppearance = this.getIncludedSimpleAnimationsByParameters(objectOnAppearance)
         const appearedObjectAppearDuration = appearDuration / animationsOnAppearance.size
         let appearedObjectAppearTime = appearTime
 
@@ -45,7 +44,7 @@ export default abstract class ComplexCanvasAnimation<T extends {}, U> extends Ca
         let prevAnimationSet = animationsOnAppearance
         this.getTransformations().sort((l, r) => l.appearTime - r.appearTime).forEach(t => {
             const objectOnTransform = this.calculateObjectParamsInTime(t.appearTime, this.p5, 1)
-            const animationsOnTransform = this.getIncludedAnimationsByParameters(objectOnTransform)
+            const animationsOnTransform = this.getIncludedSimpleAnimationsByParameters(objectOnTransform)
             const transformDuration = t.appearDuration
             const {
                 added,
@@ -101,7 +100,7 @@ export default abstract class ComplexCanvasAnimation<T extends {}, U> extends Ca
         return result
     }
 
-    private setAnimationSelections(animations: includedAnimationsType): void {
+    private setAnimationSelections(animations: Map<string, SimpleCanvasAnimation<{}>>): void {
         this.getSelections().forEach(selection => {
             const {type, selector, time, duration} = selection
             const animationsToBeSelected: SimpleCanvasAnimation<{}>[] = []
@@ -129,14 +128,14 @@ export default abstract class ComplexCanvasAnimation<T extends {}, U> extends Ca
         })
     }
 
-    private getAnimationsSetDifference(left: includedAnimationsType, right: includedAnimationsType): {
+    private getAnimationsSetDifference(left: Map<string, SimpleCanvasAnimation<{}>>, right: Map<string, SimpleCanvasAnimation<{}>>): {
         added: Map<string, SimpleCanvasAnimation<{}>>,
         deleted: Map<string, SimpleCanvasAnimation<{}>>,
-        changedSourceToTarget: Map<string, animationSourceToTargetType>
+        changedSourceToTarget: Map<string, animationS2TType>
     } {
         const added = new Map<string, SimpleCanvasAnimation<{}>>()
         const deleted = new Map<string, SimpleCanvasAnimation<{}>>()
-        const changedSourceToTarget: Map<string, animationSourceToTargetType> = new Map<string, animationSourceToTargetType>()
+        const changedSourceToTarget: Map<string, animationS2TType> = new Map<string, animationS2TType>()
 
         right.forEach((value, key) => !left.has(key) && added.set(key, value))
         left.forEach((value, key) => {
@@ -152,7 +151,23 @@ export default abstract class ComplexCanvasAnimation<T extends {}, U> extends Ca
         return {added, deleted, changedSourceToTarget}
     }
 
-    public abstract getIncludedAnimationsByParameters(object: objectParamsType<T>): includedAnimationsType
+    public getIncludedSimpleAnimationsByParameters(object: objectParamsType<T>): Map<string, SimpleCanvasAnimation<{}>> {
+        const result = new Map<string, SimpleCanvasAnimation<{}>>()
+        const includedAnimations = this.getIncludedAnimationsByParameters(object)
+        includedAnimations.simpleAnimations.forEach((value, key) => result.set(key, value))
+        includedAnimations.complexAnimations.forEach((value, key) => value
+            .getIncludedSimpleAnimationsByParameters(value.getObject())
+            .forEach((simpleAnimation, simpleAnimationKey) => {
+                simpleAnimation.getObject().offset = value.getObject().origin
+                result.set(key + " " + simpleAnimationKey, simpleAnimation)
+            }))
+        return result
+    }
+
+    public abstract getIncludedAnimationsByParameters(object: objectParamsType<T>): {
+        complexAnimations: Map<string, ComplexCanvasAnimation<{}, {}>>
+        simpleAnimations: Map<string, SimpleCanvasAnimation<{}>>
+    }
 
     protected convertSelectorToDiscriminatorRegexp(selector: U): RegExp {
         return /.*/

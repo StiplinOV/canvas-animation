@@ -1,4 +1,4 @@
-import ComplexCanvasAnimation, {includedAnimationsType} from "../ComplexCanvasAnimation";
+import ComplexCanvasAnimation from "../ComplexCanvasAnimation";
 import LineCanvasAnimation, {lineParamsType} from "../../simple/line/LineCanvasAnimation";
 import p5Types from "p5";
 import {calculatePointPercentValue, getVectorAngle, rotateVector, subtractPoints} from "../../../common/Utils";
@@ -16,11 +16,14 @@ export type arrowParamsType = lineParamsType & {
 
 export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowParamsType, {}> {
 
-    public getIncludedAnimationsByParameters(object: objectParamsType<arrowParamsType>): includedAnimationsType {
-        const result = new Map<string, SimpleCanvasAnimation<{}>>()
+    public getIncludedAnimationsByParameters(object: objectParamsType<arrowParamsType>): {
+        complexAnimations: Map<string, ComplexCanvasAnimation<{}, {}>>
+        simpleAnimations: Map<string, SimpleCanvasAnimation<{}>>
+    } {
+        const simpleAnimations = new Map<string, SimpleCanvasAnimation<{}>>()
         const relativeEndPoint = subtractPoints(object.endPoint, object.origin)
 
-        result.set("shaft", new LineCanvasAnimation({
+        simpleAnimations.set("shaft", new LineCanvasAnimation({
             object: {
                 origin: ZeroPoint,
                 endPoint: relativeEndPoint,
@@ -32,7 +35,7 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowPa
         let leftArrowSide = rotateVector(this.p5, {x: arrowBaseLength, y: arrowBaseWidth / 2}, angle)
         let rightArrowSide = rotateVector(this.p5, {x: arrowBaseLength, y: -arrowBaseWidth / 2}, angle)
         if (object.endType === "Arrow") {
-            result.set("left half arrowhead", new LineCanvasAnimation({
+            simpleAnimations.set("left half arrowhead", new LineCanvasAnimation({
                 object: {
                     origin: relativeEndPoint,
                     endPoint: subtractPoints(relativeEndPoint, leftArrowSide),
@@ -40,7 +43,7 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowPa
                     zIndex: object.zIndex
                 }
             }))
-            result.set("right half arrowhead", new LineCanvasAnimation({
+            simpleAnimations.set("right half arrowhead", new LineCanvasAnimation({
                 object: {
                     origin: relativeEndPoint,
                     endPoint: subtractPoints(relativeEndPoint, rightArrowSide),
@@ -50,7 +53,7 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowPa
             }))
         }
         if (object.startType === "Arrow") {
-            result.set("left half arrow tail", new LineCanvasAnimation({
+            simpleAnimations.set("left half arrow tail", new LineCanvasAnimation({
                 object: {
                     origin: ZeroPoint,
                     endPoint: leftArrowSide,
@@ -58,7 +61,7 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowPa
                     zIndex: object.zIndex
                 }
             }))
-            result.set("right half arrow tail", new LineCanvasAnimation({
+            simpleAnimations.set("right half arrow tail", new LineCanvasAnimation({
                 object: {
                     origin: ZeroPoint,
                     endPoint: rightArrowSide,
@@ -68,15 +71,18 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowPa
             }))
         }
 
-        return result
+        return {
+            simpleAnimations,
+            complexAnimations: new Map<string, ComplexCanvasAnimation<{}, {}>>
+        }
     }
 
     mergeWithTransformation(obj: objectParamsType<arrowParamsType>, trans: Partial<arrowParamsType>, perc: number, p5: p5Types): arrowParamsType {
         let {endPoint, startType, endType} = obj
         return {
             endPoint: trans.endPoint ? calculatePointPercentValue(endPoint, trans.endPoint, perc) : endPoint,
-            startType: trans.startType ? (perc >= 0.5 ? trans.startType: startType) : startType,
-            endType: trans.endType ? (perc >= 0.5 ? trans.endType: endType) : endType
+            startType: trans.startType ? (perc >= 0.5 ? trans.startType : startType) : startType,
+            endType: trans.endType ? (perc >= 0.5 ? trans.endType : endType) : endType
         }
     }
 

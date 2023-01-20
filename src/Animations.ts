@@ -67,7 +67,7 @@ export const animations: (p5: p5Types) => Array<CanvasAnimation<{}>> = (p5: p5Ty
                 [{x: 4, y: 3}, {x: 5, y: 6}],
                 [{x: 5, y: 6}, {x: 6, y: 4}]
             ],
-            weight: 2.
+            chartYRanges: [{yCoords: [1, 6], value: "Profit is 5"}]
         },
         appearTime: 10000,
         appearDuration: 4000,
@@ -88,6 +88,17 @@ export const animations: (p5: p5Types) => Array<CanvasAnimation<{}>> = (p5: p5Ty
                     {x: 6, y: 4}
                 ]
             }
-        }]
+        },/* {
+            object: {
+                appearTime: 27000,
+                appearDuration: 2000,
+                chartRanges: [
+                    {
+                        points: [{x: 2, y: 1},  {x: 5, y: 6}],
+                        value: "Profit is 5"
+                    }
+                ],
+            }
+        }*/]
     }, p5)
 ]
