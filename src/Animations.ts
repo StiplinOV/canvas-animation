@@ -9,7 +9,7 @@ export const canvasWidth = 1280
 export const canvasHeight = 800
 export const timeDivider = 1000000
 
-export const animations: (p5: p5Types) => Array<CanvasAnimation<{}>> = (p5: p5Types) => [
+export const canvasAnimations: (p5: p5Types) => Array<CanvasAnimation<{}>> = (p5: p5Types) => [
     new TextCanvasAnimation({
         object: {
             value: "Best Time to Buy and Sell Stock",
@@ -66,39 +66,49 @@ export const animations: (p5: p5Types) => Array<CanvasAnimation<{}>> = (p5: p5Ty
                 [{x: 3, y: 5}, {x: 4, y: 3}],
                 [{x: 4, y: 3}, {x: 5, y: 6}],
                 [{x: 5, y: 6}, {x: 6, y: 4}]
-            ],
-            chartYRanges: [{yCoords: [1, 6], value: "Profit is 5"}]
+            ]
         },
         appearTime: 10000,
         appearDuration: 4000,
         selections: [
             {time: 15000, duration: 5000, type: "sequentially", selector: {points: "all"}},
-            {time: 25000, duration: 1000, selector: {points: [1]}}
+            {time: 23000, duration: 500, selector: {points: [1]}},
+            {time: 25000, duration: 500, selector: {points: [4]}}
         ],
-        transformations: [{
-            appearTime: 21000,
-            appearDuration: 2000,
-            object: {
-                chartPoints: [
-                    {x: 1, y: 7},
-                    {point: {x: 2, y: 1}, text: "Buy"},
-                    {x: 3, y: 5},
-                    {x: 4, y: 3},
-                    {point: {x: 5, y: 6}, text: "Sell"},
-                    {x: 6, y: 4}
-                ]
-            }
-        },/* {
-            object: {
+        transformations: [
+            {
+                appearTime: 21000,
+                appearDuration: 500,
+                object: {
+                    chartPoints: [
+                        {x: 1, y: 7},
+                        {point: {x: 2, y: 1}, text: "Buy"},
+                        {x: 3, y: 5},
+                        {x: 4, y: 3},
+                        {x: 5, y: 6},
+                        {x: 6, y: 4}
+                    ]
+                }
+            },
+            {
+                appearTime: 22000,
+                appearDuration: 500,
+                object: {
+                    chartPoints: [
+                        {x: 1, y: 7},
+                        {point: {x: 2, y: 1}, text: "Buy"},
+                        {x: 3, y: 5},
+                        {x: 4, y: 3},
+                        {point: {x: 5, y: 6}, text: "Sell"},
+                        {x: 6, y: 4}
+                    ]
+                }
+            },
+            {
                 appearTime: 27000,
                 appearDuration: 2000,
-                chartRanges: [
-                    {
-                        points: [{x: 2, y: 1},  {x: 5, y: 6}],
-                        value: "Profit is 5"
-                    }
-                ],
+                object: {chartYRanges: [{yCoords: [1, 6], value: "Profit is 5"}]}
             }
-        }*/]
+        ]
     }, p5)
 ]

@@ -1,6 +1,6 @@
 import p5Types from "p5";
 import {
-    appearanceParamType, calculateArrayPercentValue,
+    appearanceParamType,
     calculatePercentValue,
     calculatePointPercentValue,
     needAppearObject,
@@ -102,52 +102,54 @@ export default abstract class CanvasAnimation<T extends {}, U extends selectionT
     public calculateObjectParamsInTime(time: number, p5: p5Types, percentParam?: number): objectParamsType<T> {
         const sourceObject = this.object
         let result = {...sourceObject}
-        const transformations = this.getTransformations().filter(t => needAppearObject(time, toAppearanceParamType(t)))
-        transformations.forEach(transformation => {
-            const transformationObject = transformation.object
-            const percent = percentParam || toAppearancePercent(time, toAppearanceParamType(transformation))
-            if (transformationObject.origin) {
-                result.origin = calculatePointPercentValue(result.origin, transformationObject.origin, percent)
-            }
-            if (transformationObject.zIndex) {
-                result.zIndex = calculatePercentValue(result.zIndex || 0, transformationObject.zIndex, percent)
-            }
-            if (transformationObject.weight) {
-                result.weight = calculatePercentValue(result.weight || 1, transformationObject.weight, percent)
-            }
-            if (transformationObject.rotation) {
-                result.rotation = calculatePercentValue(result.rotation || 0, transformationObject.rotation, percent)
-            }
-            if (transformationObject.offset) {
-                result.offset = calculatePointPercentValue(result.offset || ZeroPoint, transformationObject.offset, percent)
-            }
-            const transformDashed = transformationObject.dashed
-            const resultDashed = result.dashed || []
-            if (transformDashed && (transformDashed.length || resultDashed.length)) {
-                let resultLength = 1
-                if (resultDashed.length) {
-                    resultLength *= resultDashed.length
+        this.getTransformations()
+            .filter(t => needAppearObject(time, toAppearanceParamType(t)))
+            .sort((l, r) => l.appearTime - r.appearTime)
+            .forEach((t) => {
+                const transformationObject = t.object
+                const percent = percentParam || toAppearancePercent(time, toAppearanceParamType(t))
+                if (transformationObject.origin) {
+                    result.origin = calculatePointPercentValue(result.origin, transformationObject.origin, percent)
                 }
-                if (transformDashed.length) {
-                    resultLength *= transformDashed.length
+                if (transformationObject.zIndex) {
+                    result.zIndex = calculatePercentValue(result.zIndex || 0, transformationObject.zIndex, percent)
                 }
+                if (transformationObject.weight) {
+                    result.weight = calculatePercentValue(result.weight || 1, transformationObject.weight, percent)
+                }
+                if (transformationObject.rotation) {
+                    result.rotation = calculatePercentValue(result.rotation || 0, transformationObject.rotation, percent)
+                }
+                if (transformationObject.offset) {
+                    result.offset = calculatePointPercentValue(result.offset || ZeroPoint, transformationObject.offset, percent)
+                }
+                const transformDashed = transformationObject.dashed
+                const resultDashed = result.dashed || []
+                if (transformDashed && (transformDashed.length || resultDashed.length)) {
+                    let resultLength = 1
+                    if (resultDashed.length) {
+                        resultLength *= resultDashed.length
+                    }
+                    if (transformDashed.length) {
+                        resultLength *= transformDashed.length
+                    }
 
-                let sourceCopy = []
-                let transformCopy = []
-                for (let i = 0; i < resultLength; i++) {
-                    sourceCopy.push(resultDashed.length ? resultDashed[i%resultDashed.length] : 0)
-                    transformCopy.push(transformDashed.length ? transformDashed[i%transformDashed.length]: 0)
+                    let sourceCopy = []
+                    let transformCopy = []
+                    for (let i = 0; i < resultLength; i++) {
+                        sourceCopy.push(resultDashed.length ? resultDashed[i % resultDashed.length] : 0)
+                        transformCopy.push(transformDashed.length ? transformDashed[i % transformDashed.length] : 0)
+                    }
+                    for (let i = 0; i < resultLength; i++) {
+                        sourceCopy[i] = calculatePercentValue(sourceCopy[i], transformCopy[i], percent)
+                    }
+                    result.dashed = sourceCopy
                 }
-                for (let i = 0; i < resultLength; i++) {
-                    sourceCopy[i] = calculatePercentValue(sourceCopy[i], transformCopy[i], percent)
+                result = {
+                    ...result,
+                    ...this.mergeWithTransformation(result, transformationObject, percent, p5)
                 }
-                result.dashed = sourceCopy
-            }
-            result = {
-                ...result,
-                ...this.mergeWithTransformation(result, transformationObject, percent, p5)
-            }
-        })
+            })
         return result
     }
 

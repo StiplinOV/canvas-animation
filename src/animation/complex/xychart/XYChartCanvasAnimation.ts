@@ -130,6 +130,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
             simpleAnimations.set("chartPoint " + index, new CircleCanvasAnimation({
                 object: {origin: pointCoordinate, diameter: chartPointsDiameter, weight: 2, zIndex: 2}
             }))
+            //console.log(index, value)
             simpleAnimations.set("chartPointValue " + index, new TextCanvasAnimation({
                 object: {
                     origin: {x: pointCoordinate.x, y: pointCoordinate.y + (textPosition === "below" ? 10 : -10)},
@@ -202,6 +203,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
                 }
             }))
         })
+        //console.log(simpleAnimations)
 
         return {simpleAnimations, complexAnimations}
     }
@@ -238,6 +240,10 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
         chartPoints ||= []
         chartLines ||= []
         chartYRanges ||= []
+        // console.log(obj)
+        // console.log(t)
+        // console.log(p)
+        // console.log(t.chartPoints ? calculateArrayPercentValue(chartPoints, t.chartPoints, p) : chartPoints)
         return {
             width: t.width ? calculatePercentValue(width, t.width, p) : width,
             height: t.height ? calculatePercentValue(height, t.height, p) : height,

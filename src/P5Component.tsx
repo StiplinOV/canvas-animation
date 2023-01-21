@@ -1,15 +1,18 @@
 import React from "react";
 import Sketch from "react-p5";
 import p5Types from "p5";
-import {animations, canvasHeight, canvasWidth, timeDivider} from "./Animations";
+import {canvasAnimations, canvasHeight, canvasWidth, timeDivider} from "./Animations";
 import {camera, cameraParams} from "./camera/CameraParams";
 import {cameras} from "./Cameras";
+import CanvasAnimation from "./animation/CanvasAnimation";
 
 interface ComponentProps {
     //Your component props
 }
 
 export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => {
+
+    const animations: CanvasAnimation<{}>[] = []
 
     const preload = (p5: p5Types) => {
     }
@@ -19,7 +22,8 @@ export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => 
         cnv.position(0, 0)
         cnv.style("border: 1px solid")
         cameras.sort((left, right) => left.startTime - right.startTime)
-        animations(p5).sort((left, right) => left.getZIndex(0, p5) - right.getZIndex(0, p5))
+        console.log("setup")
+        animations.push(...canvasAnimations(p5).sort((left, right) => left.getZIndex(0, p5) - right.getZIndex(0, p5)))
     }
 
     const draw = (p5: p5Types) => {
@@ -30,7 +34,7 @@ export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => 
         camera.rotation && p5.rotate(camera.rotation)
         p5.translate(-camera.x * zoom, -camera.y * zoom)
         p5.scale(zoom)
-        animations(p5)
+        animations
             .sort((left, right) => left.getZIndex(millis, p5) - right.getZIndex(millis, p5))
             .forEach(animation => animation.draw(p5, millis))
     }

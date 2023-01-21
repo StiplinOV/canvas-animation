@@ -18,6 +18,7 @@ export default abstract class ComplexCanvasAnimation<T extends {}, U> extends Ca
     constructor(params: paramsType<T, complexCanvasAnimationSelectionType<U>>, p5: p5Types) {
         super(params)
         this.p5 = p5
+        //TODO нахуя симпл димпл?
         this.simpleAmimations = this.calculateIncludedSimpleAnimations()
     }
 
@@ -75,14 +76,15 @@ export default abstract class ComplexCanvasAnimation<T extends {}, U> extends Ca
 
             let sourceToTargetAppearTime = t.appearTime
             const sourceToTargetAppearDuration = transformDuration / (changedSourceToTarget.size * 2)
+            console.log("changedSourceToTarget", changedSourceToTarget)
             changedSourceToTarget.forEach((value, key) => {
-                value.source.appendTransformation({
+                result.get(key)?.appendTransformation({
                     appearTime: sourceToTargetAppearTime,
                     appearDuration: sourceToTargetAppearDuration,
                     object: value.target.getObject()
                 })
                 sourceToTargetAppearTime += 2 * sourceToTargetAppearDuration
-                animationsOnTransform.set(key, value.source)
+                //animationsOnTransform.set(key, value.source)
             })
             prevAnimationSet = animationsOnTransform
         })
@@ -151,16 +153,25 @@ export default abstract class ComplexCanvasAnimation<T extends {}, U> extends Ca
         return {added, deleted, changedSourceToTarget}
     }
 
-    public getIncludedSimpleAnimationsByParameters(object: objectParamsType<T>): Map<string, SimpleCanvasAnimation<{}>> {
+    private getIncludedSimpleAnimationsByParameters(object: objectParamsType<T>): Map<string, SimpleCanvasAnimation<{}>> {
+        //Флаг isComplex
+        //Выглядит как искуственная херь поебень
+        //Поле order
+        //Очень усложнит код
+        //set offset
+        //Тоже как то искуственно
+        //Можно еще поработать с offset но тогда возможно будет проблема с вращениями, поскольку rotation это вращение вокруг offset
+        //Что?
+        //А почему если мы стрелке назначаем origin она не работает?
         const result = new Map<string, SimpleCanvasAnimation<{}>>()
         const includedAnimations = this.getIncludedAnimationsByParameters(object)
-        includedAnimations.simpleAnimations.forEach((value, key) => result.set(key, value))
         includedAnimations.complexAnimations.forEach((value, key) => value
             .getIncludedSimpleAnimationsByParameters(value.getObject())
             .forEach((simpleAnimation, simpleAnimationKey) => {
                 simpleAnimation.getObject().offset = value.getObject().origin
                 result.set(key + " " + simpleAnimationKey, simpleAnimation)
             }))
+        includedAnimations.simpleAnimations.forEach((value, key) => result.set(key, value))
         return result
     }
 
