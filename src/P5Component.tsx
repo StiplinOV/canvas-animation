@@ -22,7 +22,6 @@ export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => 
         cnv.position(0, 0)
         cnv.style("border: 1px solid")
         cameras.sort((left, right) => left.startTime - right.startTime)
-        console.log("setup")
         animations.push(...canvasAnimations(p5).sort((left, right) => left.getZIndex(0, p5) - right.getZIndex(0, p5)))
     }
 

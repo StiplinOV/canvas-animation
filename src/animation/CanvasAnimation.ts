@@ -66,7 +66,14 @@ export default abstract class CanvasAnimation<T extends {}, U extends selectionT
             ...this.appearanceParam,
             ...param
         })
+        this.afterSetAppearanceParam()
     }
+
+    protected afterSetAppearanceParam(): void {
+        // skip
+    }
+
+    public abstract getNumberOfContainedAnimations(): number
 
     protected getSelections(): U[] {
         return this.selections

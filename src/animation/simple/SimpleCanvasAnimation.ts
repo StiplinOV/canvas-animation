@@ -11,6 +11,10 @@ export default abstract class SimpleCanvasAnimation<T extends {}> extends Canvas
         this.drawObject(p5, object, toAppearancePercent(time, this.getAppearanceParam()), selectionInfo.percent)
     }
 
+    public getNumberOfContainedAnimations(): number {
+        return 1;
+    }
+
     private calculateSelectionInfo(time: number): selectionInfoType {
         const selections = this.getSelections()
         let selected = false
