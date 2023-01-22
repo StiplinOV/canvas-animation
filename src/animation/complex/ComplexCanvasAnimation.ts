@@ -8,13 +8,15 @@ export interface complexCanvasAnimationSelectionType<T> extends selectionType {
 
 type animationS2TType = { source: CanvasAnimation<{}>, target: CanvasAnimation<{}> }
 
-export default abstract class ComplexCanvasAnimation<T extends {}, U> extends CanvasAnimation<T, complexCanvasAnimationSelectionType<U>> {
+export default abstract class ComplexCanvasAnimation<T extends {}, U> extends CanvasAnimation<T, {
+    type: "together" | "sequentially"
+}, complexCanvasAnimationSelectionType<U>> {
 
     public readonly p5: p5Types
 
     private readonly containedAnimations: Map<string, CanvasAnimation<{}>>
 
-    constructor(params: paramsType<T, complexCanvasAnimationSelectionType<U>>, p5: p5Types) {
+    constructor(params: paramsType<T, complexCanvasAnimationSelectionType<U>, complexCanvasAnimationSelectionType<U>>, p5: p5Types) {
         super(params)
         this.p5 = p5
         this.containedAnimations = this.calculateContainedAnimations()
@@ -72,6 +74,7 @@ export default abstract class ComplexCanvasAnimation<T extends {}, U> extends Ca
             const objectOnTransform = this.calculateObjectParamsInTime(t.appearTime, this.p5, 1)
             const animationsOnTransform = this.getIncludedAnimationsByParameters(objectOnTransform)
             const transformDuration = t.appearDuration
+            const transformationType = t.type
             const {
                 added,
                 deleted,
@@ -81,42 +84,57 @@ export default abstract class ComplexCanvasAnimation<T extends {}, U> extends Ca
             if (added.size) {
                 let numberOfAdded = 0
                 added.forEach(a => numberOfAdded += a.getNumberOfContainedAnimations())
-                const addedAppearDuration = transformDuration / numberOfAdded
                 let addedAppearTime = t.appearTime
                 added.forEach((value, key) => {
+                    let addedAppearDuration = transformDuration
+                    if (transformationType === "sequentially") {
+                        addedAppearDuration = (transformDuration / numberOfAdded) * value.getNumberOfContainedAnimations()
+                    }
                     value.setAppearanceParam({
                         appearTime: addedAppearTime,
-                        appearDuration: addedAppearDuration * value.getNumberOfContainedAnimations()
+                        appearDuration: addedAppearDuration
                     })
-                    addedAppearTime += addedAppearDuration * value.getNumberOfContainedAnimations()
+                    if (transformationType === "sequentially") {
+                        addedAppearTime += addedAppearDuration * value.getNumberOfContainedAnimations()
+                    }
                     result.set(key, value)
                 })
             }
             if (deleted.size) {
                 let numberOfDeleted = 0
                 deleted.forEach(d => numberOfDeleted += d.getNumberOfContainedAnimations())
-                const deletedDisappearDuration = transformDuration / numberOfDeleted
                 let deletedDisappearTime = t.appearTime
                 deleted.forEach(d => {
+                    let deletedDisappearDuration = transformDuration
+                    if (transformationType === "sequentially") {
+                        deletedDisappearDuration = (transformDuration / numberOfDeleted)* d.getNumberOfContainedAnimations()
+                    }
                     d.setAppearanceParam({
                         disappearTime: deletedDisappearTime,
-                        disappearDuration: deletedDisappearDuration * d.getNumberOfContainedAnimations()
+                        disappearDuration: deletedDisappearDuration
                     })
-                    deletedDisappearTime += deletedDisappearDuration * d.getNumberOfContainedAnimations()
+                    if (transformationType === "sequentially") {
+                        deletedDisappearTime += deletedDisappearDuration * d.getNumberOfContainedAnimations()
+                    }
                 })
             }
 
             let sourceToTargetAppearTime = t.appearTime
             let numberOfS2T = 0
             changedSourceToTarget.forEach(c => numberOfS2T += c.target.getNumberOfContainedAnimations())
-            const sourceToTargetAppearDuration = transformDuration / numberOfS2T
             changedSourceToTarget.forEach((value, key) => {
+                let sourceToTargetAppearDuration = transformDuration
+                if (transformationType === "sequentially") {
+                    sourceToTargetAppearDuration = (transformDuration / numberOfS2T) * value.target.getNumberOfContainedAnimations()
+                }
                 result.get(key)?.appendTransformation({
                     appearTime: sourceToTargetAppearTime,
-                    appearDuration: sourceToTargetAppearDuration * value.target.getNumberOfContainedAnimations(),
+                    appearDuration: sourceToTargetAppearDuration,
                     object: value.target.getObject()
                 })
-                sourceToTargetAppearTime += sourceToTargetAppearDuration * value.target.getNumberOfContainedAnimations()
+                if (transformationType === "sequentially") {
+                    sourceToTargetAppearTime += sourceToTargetAppearDuration * value.target.getNumberOfContainedAnimations()
+                }
                 //animationsOnTransform.set(key, value.source)
             })
             prevAnimationSet = animationsOnTransform

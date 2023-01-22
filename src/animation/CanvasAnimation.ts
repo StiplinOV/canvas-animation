@@ -23,33 +23,33 @@ export interface selectionType {
     duration?: number
 }
 
-type transformationType<T> = {
+type transformationType<T, U extends {} = {}> = {
     object: Partial<objectParamsType<T>>
-} & appearanceParamType
+} & appearanceParamType & Partial<U>
 
-type transformationParamType<T> = {
+type transformationParamType<T, U extends {} = {}> = {
     object: Partial<objectParamsType<T>>
-} & Partial<appearanceParamType>
+} & Partial<appearanceParamType> & Partial<U>
 
-const transformationParamToTransformation = <T>(t: transformationParamType<T>): transformationType<T> =>
+const transformationParamToTransformation = <T, U extends {} = {}>(t: transformationParamType<T, U>): transformationType<T, U> =>
     ({...t, ...toAppearanceParamType(t)})
 
-export type paramsType<T extends {}, U extends selectionType = selectionType> = {
-    transformations?: transformationParamType<T>[]
-    selections?: U[]
+export type paramsType<T extends {}, U extends {} = {}, V extends selectionType = selectionType> = {
+    transformations?: transformationParamType<T, U>[]
+    selections?: V[]
     object: objectParamsType<T>
 } & Partial<appearanceParamType>
 
 export type selectionInfoType<U extends selectionType = selectionType> = { selection?: U | null, percent: number }
 
-export default abstract class CanvasAnimation<T extends {}, U extends selectionType = selectionType> {
+export default abstract class CanvasAnimation<T extends {}, U extends {} = {}, V extends selectionType = selectionType> {
 
     private appearanceParam: appearanceParamType
-    private readonly transformations: transformationType<T>[]
-    private readonly selections: U[]
+    private readonly transformations: transformationType<T, U>[]
+    private readonly selections: V[]
     private readonly object: objectParamsType<T>
 
-    public constructor(params: paramsType<T, U>) {
+    public constructor(params: paramsType<T, U, V>) {
         const transformations = params.transformations || []
         this.appearanceParam = toAppearanceParamType(params)
         this.selections = params.selections || []
@@ -75,11 +75,11 @@ export default abstract class CanvasAnimation<T extends {}, U extends selectionT
 
     public abstract getNumberOfContainedAnimations(): number
 
-    protected getSelections(): U[] {
+    protected getSelections(): V[] {
         return this.selections
     }
 
-    public addSelection(selection: U): void {
+    public addSelection(selection: V): void {
         this.selections.push(selection)
     }
 
@@ -164,7 +164,7 @@ export default abstract class CanvasAnimation<T extends {}, U extends selectionT
         return this.object
     }
 
-    protected getTransformations(): transformationType<T>[] {
+    protected getTransformations(): transformationType<T, U>[] {
         return this.transformations
     }
 
