@@ -1,18 +1,18 @@
-import CanvasAnimation, {objectParamsType, selectionInfoType} from "../CanvasAnimation";
-import p5Types from "p5";
-import {toAppearancePercent} from "../../common/Utils";
+import CanvasAnimation, {objectParamsType, selectionInfoType} from '../CanvasAnimation'
+import p5Types from 'p5'
+import {toAppearancePercent} from '../../common/Utils'
 
 export default abstract class SimpleCanvasAnimation<T extends {}> extends CanvasAnimation<T> {
 
-    protected doDraw(p5: p5Types, time: number) {
+    protected doDraw(p5: p5Types, time: number): void {
         const object = this.calculateObjectParamsInTime(time, p5)
         const selectionInfo = this.calculateSelectionInfo(time)
-        p5.strokeWeight(object.weight || 1)
+        p5.strokeWeight(object.weight ?? 1)
         this.drawObject(p5, object, toAppearancePercent(time, this.getAppearanceParam()), selectionInfo.percent)
     }
 
     public getNumberOfContainedAnimations(): number {
-        return 1;
+        return 1
     }
 
     private calculateSelectionInfo(time: number): selectionInfoType {

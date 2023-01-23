@@ -1,4 +1,4 @@
-import p5Types from "p5";
+import p5Types from 'p5'
 import {
     appearanceParamType,
     calculatePercentValue,
@@ -6,8 +6,8 @@ import {
     needAppearObject,
     toAppearanceParamType,
     toAppearancePercent
-} from "../common/Utils";
-import {Point, ZeroPoint} from "../common/Point";
+} from '../common/Utils'
+import {Point, ZeroPoint} from '../common/Point'
 
 export type objectParamsType<T extends {} = {}> = {
     weight?: number
@@ -19,19 +19,19 @@ export type objectParamsType<T extends {} = {}> = {
 } & T
 
 export interface selectionType {
-    time: number,
+    time: number
     duration?: number
 }
 
-type transformationType<T, U extends {} = {}> = {
+type transformationType<T extends {}, U extends {} = {}> = {
     object: Partial<objectParamsType<T>>
 } & appearanceParamType & Partial<U>
 
-type transformationParamType<T, U extends {} = {}> = {
+type transformationParamType<T extends {}, U extends {} = {}> = {
     object: Partial<objectParamsType<T>>
 } & Partial<appearanceParamType> & Partial<U>
 
-const transformationParamToTransformation = <T, U extends {} = {}>(t: transformationParamType<T, U>): transformationType<T, U> =>
+const transformationParamToTransformation = <T extends {}, U extends {} = {}>(t: transformationParamType<T, U>): transformationType<T, U> =>
     ({...t, ...toAppearanceParamType(t)})
 
 export type paramsType<T extends {}, U extends {} = {}, V extends selectionType = selectionType> = {
@@ -50,9 +50,9 @@ export default abstract class CanvasAnimation<T extends {}, U extends {} = {}, V
     private readonly object: objectParamsType<T>
 
     public constructor(params: paramsType<T, U, V>) {
-        const transformations = params.transformations || []
+        const transformations = params.transformations ?? []
         this.appearanceParam = toAppearanceParamType(params)
-        this.selections = params.selections || []
+        this.selections = params.selections ?? []
         this.transformations = transformations.map(t => transformationParamToTransformation(t))
         this.object = params.object
     }
@@ -85,7 +85,7 @@ export default abstract class CanvasAnimation<T extends {}, U extends {} = {}, V
 
     public draw(p5: p5Types, time: number): void {
         const object = this.calculateObjectParamsInTime(time, p5)
-        const offset = object.offset || ZeroPoint
+        const offset = object.offset ?? ZeroPoint
         const rotationAxis = object.origin
 
         if (!needAppearObject(time, this.getAppearanceParam())) {
@@ -93,7 +93,7 @@ export default abstract class CanvasAnimation<T extends {}, U extends {} = {}, V
         }
         p5.push()
         p5.translate(rotationAxis.x, rotationAxis.y)
-        p5.rotate(object.rotation || 0)
+        p5.rotate(object.rotation ?? 0)
         p5.translate(offset.x, offset.y)
         object.dashed && p5.drawingContext.setLineDash(object.dashed)
         this.doDraw(p5, time)
@@ -103,7 +103,7 @@ export default abstract class CanvasAnimation<T extends {}, U extends {} = {}, V
     protected abstract doDraw(p5: p5Types, time: number): void
 
     public getZIndex(time: number, p5: p5Types): number {
-        return this.calculateObjectParamsInTime(time, p5).zIndex || 0
+        return this.calculateObjectParamsInTime(time, p5).zIndex ?? 0
     }
 
     public calculateObjectParamsInTime(time: number, p5: p5Types, percentParam?: number): objectParamsType<T> {
@@ -114,24 +114,24 @@ export default abstract class CanvasAnimation<T extends {}, U extends {} = {}, V
             .sort((l, r) => l.appearTime - r.appearTime)
             .forEach((t) => {
                 const transformationObject = t.object
-                const percent = percentParam || toAppearancePercent(time, toAppearanceParamType(t))
+                const percent = percentParam ?? toAppearancePercent(time, toAppearanceParamType(t))
                 if (transformationObject.origin) {
                     result.origin = calculatePointPercentValue(result.origin, transformationObject.origin, percent)
                 }
                 if (transformationObject.zIndex) {
-                    result.zIndex = calculatePercentValue(result.zIndex || 0, transformationObject.zIndex, percent)
+                    result.zIndex = calculatePercentValue(result.zIndex ?? 0, transformationObject.zIndex, percent)
                 }
                 if (transformationObject.weight) {
-                    result.weight = calculatePercentValue(result.weight || 1, transformationObject.weight, percent)
+                    result.weight = calculatePercentValue(result.weight ?? 1, transformationObject.weight, percent)
                 }
                 if (transformationObject.rotation) {
-                    result.rotation = calculatePercentValue(result.rotation || 0, transformationObject.rotation, percent)
+                    result.rotation = calculatePercentValue(result.rotation ?? 0, transformationObject.rotation, percent)
                 }
                 if (transformationObject.offset) {
-                    result.offset = calculatePointPercentValue(result.offset || ZeroPoint, transformationObject.offset, percent)
+                    result.offset = calculatePointPercentValue(result.offset ?? ZeroPoint, transformationObject.offset, percent)
                 }
                 const transformDashed = transformationObject.dashed
-                const resultDashed = result.dashed || []
+                const resultDashed = result.dashed ?? []
                 if (transformDashed && (transformDashed.length || resultDashed.length)) {
                     let resultLength = 1
                     if (resultDashed.length) {
@@ -141,8 +141,8 @@ export default abstract class CanvasAnimation<T extends {}, U extends {} = {}, V
                         resultLength *= transformDashed.length
                     }
 
-                    let sourceCopy = []
-                    let transformCopy = []
+                    const sourceCopy = []
+                    const transformCopy = []
                     for (let i = 0; i < resultLength; i++) {
                         sourceCopy.push(resultDashed.length ? resultDashed[i % resultDashed.length] : 0)
                         transformCopy.push(transformDashed.length ? transformDashed[i % transformDashed.length] : 0)

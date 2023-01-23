@@ -1,4 +1,4 @@
-import {cameraParams} from "./camera/CameraParams";
+import {cameraParams} from './camera/CameraParams'
 
 export const cameras: cameraParams[] = [
     {

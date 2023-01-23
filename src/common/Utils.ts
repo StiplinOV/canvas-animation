@@ -1,17 +1,18 @@
-import {Point} from "./Point";
-import p5Types from "p5";
-import {json} from "stream/consumers";
+import {Point} from './Point'
+import p5Types from 'p5'
 
-type Coordinates = {
-    x?: number,
+interface Coordinates {
+    x?: number
     y?: number
 }
-export type appearanceParamType = {
-    appearTime: number,
-    appearDuration: number,
-    disappearTime: number,
-    disappearDuration: number,
+
+export interface appearanceParamType {
+    appearTime: number
+    appearDuration: number
+    disappearTime: number
+    disappearDuration: number
 }
+
 export const convertPercentToFadeInFadeOut = (percent: number): number => 2 * Math.abs(0.5 - Math.abs(percent - 0.5))
 export const calculatePercentValue = (from: number, to: number, percent: number): number => from + (to - from) * percent
 export const calculatePointPercentValue = (from: Point, to: Point, percent: number): Point =>
@@ -35,48 +36,61 @@ export const calculateTextPercentValue = (from: string, to: string, percent: num
 }
 
 export const toAppearanceParamType = (values: Partial<appearanceParamType>): appearanceParamType => ({
-    appearTime: values.appearTime || 0,
-    appearDuration: values.appearDuration || 0,
-    disappearTime: values.disappearTime || Number.MAX_VALUE,
-    disappearDuration: values.disappearDuration || 0
+    appearTime: values.appearTime ?? 0,
+    appearDuration: values.appearDuration ?? 0,
+    disappearTime: values.disappearTime ?? Number.MAX_VALUE,
+    disappearDuration: values.disappearDuration ?? 0
 })
 export const needAppearObject = (time: number, appearanceParam: appearanceParamType): boolean => {
     if (appearanceParam.appearTime > time) {
         return false
     }
-    return appearanceParam.disappearTime + appearanceParam.disappearDuration > time;
+    return appearanceParam.disappearTime + appearanceParam.disappearDuration > time
 }
 export const toAppearancePercent = (time: number, appearanceParam: appearanceParamType): number => {
     const {appearTime, appearDuration, disappearTime, disappearDuration} = appearanceParam
-    if (appearDuration && appearDuration >= (time - appearTime)) {
+    if (time < appearTime) {
+        return 0
+    }
+    if (appearDuration >= (time - appearTime)) {
         return (time - appearTime) / appearDuration
-    } else if (disappearDuration && time > disappearTime && (disappearDuration >= (time - disappearTime))) {
+    } else if ((time > disappearTime) && (disappearDuration >= (time - disappearTime))) {
         return 1 - ((time - disappearTime) / disappearDuration)
     }
     return 1
 }
 
 export const addPoints = (term1: Point, term2: Coordinates, ...terms: Coordinates[]): Point => {
-    let resultX = term1.x + (term2.x || 0)
-    let resultY = term1.y + (term2.y || 0)
-    if (terms) {
-        if (terms.length >= 1) {
-            terms.forEach(term => {
-                resultX += term.x || 0
-                resultY += term.y || 0
-            })
-        }
+    let resultX = term1.x + (term2.x ?? 0)
+    let resultY = term1.y + (term2.y ?? 0)
+    if (terms.length > 0) {
+        terms.forEach(term => {
+            resultX += term.x ?? 0
+            resultY += term.y ?? 0
+        })
     }
-    return {x: resultX, y: resultY}
+    return {
+        x: resultX,
+        y: resultY
+    }
 }
 export const subtractPoints = (minuend: Point, subtrahend: Coordinates, ...subtrahends: Coordinates[]): Point => addPoints(
     minuend,
-    {x: -(subtrahend.x || 0), y: -(subtrahend.y || 0)},
-    ...subtrahends.map(subtrahend => ({x: subtrahend.x, y: subtrahend.y}))
+    {
+        x: -(subtrahend.x ?? 0),
+        y: -(subtrahend.y ?? 0)
+    },
+    ...subtrahends.map(subtrahend => ({
+        x: subtrahend.x,
+        y: subtrahend.y
+    }))
 )
 
 export const getVectorAngle = (p5: p5Types, point: Point): number => p5.createVector(point.x, point.y).heading()
 export const rotateVector = (p5: p5Types, point: Point, angle: number): Point => {
     const resultVector = p5.createVector(point.x, point.y).rotate(angle)
-    return {x: resultVector.x, y: resultVector.y}
+    return {
+        x: resultVector.x,
+        y: resultVector.y
+    }
 }

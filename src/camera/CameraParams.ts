@@ -1,11 +1,11 @@
-export type camera = {
+export interface camera {
     x: number
     y: number
     zoom?: number
     rotation?: number
 }
 
-export type cameraParams = {
+export interface cameraParams {
     startTime: number
     transformDuration?: number
     camera: camera

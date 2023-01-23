@@ -1,11 +1,11 @@
-import React from 'react';
-import './App.css';
-import {P5Component} from "./P5Component";
+import React, {ReactElement} from 'react'
+import './App.css'
+import {P5Component} from './P5Component'
 
-const chunks: Blob[] = [];
+const chunks: Blob[] = []
 let recorder: MediaRecorder | null = null
 
-function App() {
+function App(): ReactElement {
 
     return (
         <>
@@ -14,39 +14,40 @@ function App() {
             </div>
             <button
                 type="button"
-                style={{position: "absolute", top: 900}}
+                style={{position: 'absolute', top: 900}}
                 onClick={() => {
                     if (recorder) {
-                        recorder.stop();
+                        recorder.stop()
                     } else {
-                        let stream = document.querySelector('canvas')?.captureStream(30)
+                        const stream = document.querySelector('canvas')?.captureStream(30)
                         if (!stream) {
                             return
                         }
-                        recorder = new MediaRecorder(stream);
+                        recorder = new MediaRecorder(stream)
                         recorder.ondataavailable = e => {
                             if (e.data.size) {
-                                chunks.push(e.data);
+                                chunks.push(e.data)
                             }
-                        };
-                        recorder.onstop = exportVideo;
-                        recorder.start();
+                        }
+                        recorder.onstop = exportVideo
+                        recorder.start()
                     }
                 }}
-            >Export Video</button>
+            >Export Video
+            </button>
         </>
-    );
+    )
 }
 
-function exportVideo(e: Event) {
-    var blob = new Blob(chunks);
-    var vid = document.createElement('video');
+function exportVideo(e: Event): void {
+    const blob = new Blob(chunks)
+    const vid = document.createElement('video')
     vid.id = 'recorded'
-    vid.controls = true;
-    vid.src = URL.createObjectURL(blob);
-    vid.style.top = "10000"
-    document.body.appendChild(vid);
-    vid.play();
+    vid.controls = true
+    vid.src = URL.createObjectURL(blob)
+    vid.style.top = '10000'
+    document.body.appendChild(vid)
+    vid.play()
 }
 
-export default App;
+export default App

@@ -1,8 +1,8 @@
-import ComplexCanvasAnimation from "../ComplexCanvasAnimation";
-import CanvasAnimation, {objectParamsType} from "../../CanvasAnimation";
-import {calculateArrayPercentValue, calculatePercentValue, calculateTextPercentValue} from "../../../common/Utils";
-import TextCanvasAnimation from "../../simple/text/TextCanvasAnimation";
-import RectangleCanvasAnimation from "../../simple/rectangle/RectangleCanvasAnimation";
+import ComplexCanvasAnimation from '../ComplexCanvasAnimation'
+import CanvasAnimation, {objectParamsType} from '../../CanvasAnimation'
+import {calculateArrayPercentValue, calculatePercentValue, calculateTextPercentValue} from '../../../common/Utils'
+import TextCanvasAnimation from '../../simple/text/TextCanvasAnimation'
+import RectangleCanvasAnimation from '../../simple/rectangle/RectangleCanvasAnimation'
 
 type arrayParamsType = {
     value: string[]
@@ -23,19 +23,19 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayPa
         const arrayRectangleWidth = (width - (value.length - 1) * partHeight) / value.length
         let partShift = 0
         if (title) {
-            result.set("array title", new TextCanvasAnimation({
+            result.set('array title', new TextCanvasAnimation({
                 object: {
                     value: title,
                     origin: {x: width / 2, y: partShift},
                     fontSize: partHeight,
-                    horizontalAlign: "center",
-                    verticalAlign: "top"
+                    horizontalAlign: 'center',
+                    verticalAlign: 'top'
                 }
             }))
             partShift += partHeight * 2
         }
         value.forEach((value, index) => {
-            result.set("value rect " + index, new RectangleCanvasAnimation({
+            result.set(`value rect ${index}`, new RectangleCanvasAnimation({
                 object: {
                     origin: {x: index * (arrayRectangleWidth + partHeight), y: partShift},
                     width: arrayRectangleWidth,
@@ -43,37 +43,37 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayPa
                     cornerRadius: 20
                 }
             }))
-            result.set("value text " + index, new TextCanvasAnimation({
+            result.set(`value text ${index}`, new TextCanvasAnimation({
                 object: {
-                    value: value,
+                    value,
                     origin: {
                         x: index * (arrayRectangleWidth + partHeight) + arrayRectangleWidth / 2,
                         y: partShift + partHeight * 2
                     },
                     fontSize: partHeight,
-                    horizontalAlign: "center",
+                    horizontalAlign: 'center',
                     zIndex: 1
                 }
             }))
-            result.set("index text " + index, new TextCanvasAnimation({
+            result.set(`index text ${index}`, new TextCanvasAnimation({
                 object: {
-                    value: String(index + (firstIndex || 0)),
+                    value: String(index + (firstIndex ?? 0)),
                     origin: {
                         x: index * (arrayRectangleWidth + partHeight) + arrayRectangleWidth / 2,
                         y: partShift + partHeight * 4
                     },
-                    horizontalAlign: "center",
+                    horizontalAlign: 'center'
                 }
             }))
         })
         partShift += partHeight * 5
         if (indexTitle) {
-            result.set("index title", new TextCanvasAnimation({
+            result.set('index title', new TextCanvasAnimation({
                 object: {
                     value: indexTitle,
                     origin: {x: width / 2, y: partShift},
                     fontSize: partHeight / 2,
-                    horizontalAlign: "center",
+                    horizontalAlign: 'center'
                 }
             }))
         }
@@ -85,7 +85,7 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayPa
         const {value} = object
         const partHeight = this.calculatePartHeight(object)
         const arrayHeight = partHeight * 3
-        return object.width || (value.length * arrayHeight + (value.length - 1) * partHeight)
+        return object.width ?? (value.length * arrayHeight + (value.length - 1) * partHeight)
     }
 
     private calculatePartHeight(object: objectParamsType<arrayParamsType>): number {
@@ -100,13 +100,13 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayPa
         return height / numberOfParts
     }
 
-    public mergeWithTransformation(o: objectParamsType<arrayParamsType>, t: Partial<arrayParamsType>, p: number, p5: import("p5")): arrayParamsType {
+    public mergeWithTransformation(o: objectParamsType<arrayParamsType>, t: Partial<arrayParamsType>, p: number, p5: import('p5')): arrayParamsType {
         let {value, width, height, title, indexTitle, firstIndex} = o
-        value ||= []
-        width ||= this.calculateWidth(o)
-        title ||= ""
-        indexTitle ||= ""
-        firstIndex ||= 0
+        value ??= []
+        width ??= this.calculateWidth(o)
+        title ??= ''
+        indexTitle ??= ''
+        firstIndex ??= 0
         return {
             value: t.value ? calculateArrayPercentValue(value, t.value, p) : value,
             width: t.width ? calculatePercentValue(width, t.width, p) : width,
@@ -114,7 +114,7 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayPa
             title: t.title ? calculateTextPercentValue(title, t.title, p) : title,
             indexTitle: t.indexTitle ? calculateTextPercentValue(indexTitle, t.indexTitle, p) : indexTitle,
             firstIndex: t.firstIndex ? Math.floor(calculatePercentValue(firstIndex, t.firstIndex, p)) : firstIndex
-        };
+        }
     }
 
 }

@@ -1,8 +1,8 @@
-import p5Types from "p5";
-import SimpleCanvasAnimation from "../SimpleCanvasAnimation";
-import {calculatePointPercentValue} from "../../../common/Utils";
-import {Point} from "../../../common/Point";
-import {objectParamsType} from "../../CanvasAnimation";
+import p5Types from 'p5'
+import SimpleCanvasAnimation from '../SimpleCanvasAnimation'
+import {calculatePointPercentValue} from '../../../common/Utils'
+import {Point} from '../../../common/Point'
+import {objectParamsType} from '../../CanvasAnimation'
 
 export type lineParamsType = { endPoint: Point }
 
@@ -15,8 +15,8 @@ export default class LineCanvasAnimation extends SimpleCanvasAnimation<lineParam
         selectedPercent: number
     ): void {
         const {origin, endPoint} = object
-        let endX = (endPoint.x - origin.x) * percent
-        let endY = (endPoint.y - origin.y) * percent
+        const endX = (endPoint.x - origin.x) * percent
+        const endY = (endPoint.y - origin.y) * percent
         p5.line(0, 0, endX, endY)
     }
 

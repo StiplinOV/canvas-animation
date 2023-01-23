@@ -1,9 +1,9 @@
-import SimpleCanvasAnimation from "../SimpleCanvasAnimation";
-import p5Types from "p5";
-import {calculatePercentValue} from "../../../common/Utils";
-import {objectParamsType} from "../../CanvasAnimation";
+import SimpleCanvasAnimation from '../SimpleCanvasAnimation'
+import p5Types from 'p5'
+import {calculatePercentValue} from '../../../common/Utils'
+import {objectParamsType} from '../../CanvasAnimation'
 
-type rectangleParamsType = {
+interface rectangleParamsType {
     width: number
     height: number
     cornerRadius?: number
@@ -17,7 +17,7 @@ export default class RectangleCanvasAnimation extends SimpleCanvasAnimation<rect
     }
 
     mergeWithTransformation(obj: rectangleParamsType, trans: Partial<rectangleParamsType>, perc: number): rectangleParamsType {
-        let cornerRadius = obj.cornerRadius || 0
+        let cornerRadius = obj.cornerRadius ?? 0
         if (trans.cornerRadius) {
             cornerRadius = calculatePercentValue(cornerRadius, trans.cornerRadius, perc)
         }

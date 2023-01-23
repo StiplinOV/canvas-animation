@@ -1,21 +1,21 @@
-import CanvasAnimation from "./animation/CanvasAnimation";
-import p5Types from "p5";
-import XYChartCanvasAnimation from "./animation/complex/xychart/XYChartCanvasAnimation";
-import RectangleCanvasAnimation from "./animation/simple/rectangle/RectangleCanvasAnimation";
-import TextCanvasAnimation from "./animation/simple/text/TextCanvasAnimation";
-import ArrayCanvasAnimation from "./animation/complex/array/ArrayCanvasAnimation";
+import CanvasAnimation from './animation/CanvasAnimation'
+import p5Types from 'p5'
+import XYChartCanvasAnimation from './animation/complex/xychart/XYChartCanvasAnimation'
+import RectangleCanvasAnimation from './animation/simple/rectangle/RectangleCanvasAnimation'
+import TextCanvasAnimation from './animation/simple/text/TextCanvasAnimation'
+import ArrayCanvasAnimation from './animation/complex/array/ArrayCanvasAnimation'
 
 export const canvasWidth = 1280
 export const canvasHeight = 800
 export const timeDivider = 1000000
 
-export const canvasAnimations: (p5: p5Types) => Array<CanvasAnimation<{}>> = (p5: p5Types) => [
+export const canvasAnimations: (p5: p5Types) => CanvasAnimation<{}>[] = (p5: p5Types) => [
     new TextCanvasAnimation({
         object: {
-            value: "Best Time to Buy and Sell Stock",
+            value: 'Best Time to Buy and Sell Stock',
             origin: {x: 640, y: 400},
-            horizontalAlign: "center",
-            verticalAlign: "center",
+            horizontalAlign: 'center',
+            verticalAlign: 'center',
             fontSize: 70
         },
         appearDuration: 2000,
@@ -32,24 +32,24 @@ export const canvasAnimations: (p5: p5Types) => Array<CanvasAnimation<{}>> = (p5
     new ArrayCanvasAnimation({
         object: {
             origin: {x: 240, y: 600},
-            value: ["7", "1", "5", "3", "6", "4"],
+            value: ['7', '1', '5', '3', '6', '4'],
             height: 300,
             width: 800,
-            title: "Array of stock prices",
-            indexTitle: "Number of day",
+            title: 'Array of stock prices',
+            indexTitle: 'Number of day',
             firstIndex: 1
         },
         appearTime: 5000,
         appearDuration: 4000,
-        selections: [{time: 10000, duration: 5000, type: "sequentially"}]
+        selections: [{time: 10000, duration: 5000, type: 'sequentially'}]
     }, p5),
     new XYChartCanvasAnimation({
         object: {
             origin: {x: 240, y: 1250},
             width: 800,
             height: 400,
-            yAxisName: "Price",
-            xAxisName: "Number of day",
+            yAxisName: 'Price',
+            xAxisName: 'Number of day',
             xScale: [0, 1, 2, 3, 4, 5, 6],
             yScale: [0, 1, 2, 3, 4, 5, 6, 7],
             chartPoints: [
@@ -71,7 +71,7 @@ export const canvasAnimations: (p5: p5Types) => Array<CanvasAnimation<{}>> = (p5
         appearTime: 10000,
         appearDuration: 4000,
         selections: [
-            {time: 15000, duration: 5000, type: "sequentially", selector: {points: "all"}},
+            {time: 15000, duration: 5000, type: 'sequentially', selector: {points: 'all'}},
             {time: 23000, duration: 500, selector: {points: [1]}},
             {time: 25000, duration: 500, selector: {points: [4]}}
         ],
@@ -82,7 +82,7 @@ export const canvasAnimations: (p5: p5Types) => Array<CanvasAnimation<{}>> = (p5
                 object: {
                     chartPoints: [
                         {x: 1, y: 7},
-                        {point: {x: 2, y: 1}, text: "Buy"},
+                        {point: {x: 2, y: 1}, text: 'Buy'},
                         {x: 3, y: 5},
                         {x: 4, y: 3},
                         {x: 5, y: 6},
@@ -116,7 +116,7 @@ export const canvasAnimations: (p5: p5Types) => Array<CanvasAnimation<{}>> = (p5
             {
                 appearTime: 27000,
                 appearDuration: 2000,
-                object: {chartYRanges: [{yCoords: [1, 6], value: "Profit is 5"}]}
+                object: {chartYRanges: [{yCoords: [1, 6], value: 'Profit is 5'}]}
             }
         ]
     }, p5)
