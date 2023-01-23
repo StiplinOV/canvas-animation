@@ -1,6 +1,8 @@
-import CanvasAnimation, {objectParamsType, selectionInfoType} from '../CanvasAnimation'
+import CanvasAnimation, {objectParamsType, selectionType} from '../CanvasAnimation'
 import p5Types from 'p5'
 import {toAppearancePercent} from '../../common/Utils'
+
+type selectionInfoType<U extends selectionType = selectionType> = { selection?: U | null, percent: number }
 
 export default abstract class SimpleCanvasAnimation<T extends {}> extends CanvasAnimation<T> {
 

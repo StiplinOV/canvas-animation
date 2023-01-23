@@ -18,7 +18,9 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimation<{}>[] = (p5: p5T
             verticalAlign: 'center',
             fontSize: 70
         },
-        appearDuration: 2000,
+        presenceParameters: {
+            appearDuration: 2000
+        },
         selections: [{time: 2000, duration: 2000}]
     }),
     new RectangleCanvasAnimation({
@@ -39,8 +41,10 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimation<{}>[] = (p5: p5T
             indexTitle: 'Number of day',
             firstIndex: 1
         },
-        appearTime: 5000,
-        appearDuration: 4000,
+        presenceParameters: {
+            appearTime: 5000,
+            appearDuration: 4000
+        },
         selections: [{time: 10000, duration: 5000, type: 'sequentially'}]
     }, p5),
     new XYChartCanvasAnimation({
@@ -68,8 +72,10 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimation<{}>[] = (p5: p5T
                 [{x: 5, y: 6}, {x: 6, y: 4}]
             ]
         },
-        appearTime: 10000,
-        appearDuration: 4000,
+        presenceParameters: {
+            appearTime: 10000,
+            appearDuration: 4000
+        },
         selections: [
             {time: 15000, duration: 5000, type: 'sequentially', selector: {points: 'all'}},
             {time: 23000, duration: 500, selector: {points: [1]}},
@@ -77,8 +83,10 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimation<{}>[] = (p5: p5T
         ],
         transformations: [
             {
-                appearTime: 21000,
-                appearDuration: 500,
+                presenceParameters: {
+                    appearTime: 21000,
+                    appearDuration: 500
+                },
                 object: {
                     chartPoints: [
                         {x: 1, y: 7},
@@ -88,11 +96,13 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimation<{}>[] = (p5: p5T
                         {x: 5, y: 6},
                         {x: 6, y: 4}
                     ]
-                }
+                },
             },
             {
-                appearTime: 22000,
-                appearDuration: 1000,
+                presenceParameters: {
+                    appearTime: 22000,
+                    appearDuration: 1000
+                },
                 object: {
                     xScale: [0, 1, 2, 3, 4, 5, 6, 7],
                     yScale: [0, 1, 2, 3, 4, 5, 6, 7, 8],
@@ -114,8 +124,10 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimation<{}>[] = (p5: p5T
                 }
             },
             {
-                appearTime: 27000,
-                appearDuration: 2000,
+                presenceParameters: {
+                    appearTime: 27000,
+                    appearDuration: 2000
+                },
                 object: {chartYRanges: [{yCoords: [1, 6], value: 'Profit is 5'}]}
             }
         ]

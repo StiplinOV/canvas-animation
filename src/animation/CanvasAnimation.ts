@@ -25,22 +25,28 @@ export interface selectionType {
 
 type transformationType<T extends {}, U extends {} = {}> = {
     object: Partial<objectParamsType<T>>
-} & appearanceParamType & Partial<U>
+    presenceParameters: appearanceParamType
+    options?: U
+}
 
 type transformationParamType<T extends {}, U extends {} = {}> = {
     object: Partial<objectParamsType<T>>
-} & Partial<appearanceParamType> & Partial<U>
+    presenceParameters?: & Partial<appearanceParamType>
+    options?: U
+}
 
-const transformationParamToTransformation = <T extends {}, U extends {} = {}>(t: transformationParamType<T, U>): transformationType<T, U> =>
-    ({...t, ...toAppearanceParamType(t)})
+const transformationParamToTransformation = <T extends {}, U extends {} = {}>(t: transformationParamType<T, U>): transformationType<T, U> => ({
+    ...t,
+    presenceParameters: toAppearanceParamType(t?.presenceParameters ?? {}),
+    options: t.options
+})
 
 export type paramsType<T extends {}, U extends {} = {}, V extends selectionType = selectionType> = {
     transformations?: transformationParamType<T, U>[]
     selections?: V[]
     object: objectParamsType<T>
-} & Partial<appearanceParamType>
-
-export type selectionInfoType<U extends selectionType = selectionType> = { selection?: U | null, percent: number }
+    presenceParameters?: & Partial<appearanceParamType>
+}
 
 export default abstract class CanvasAnimation<T extends {}, U extends {} = {}, V extends selectionType = selectionType> {
 
@@ -51,7 +57,7 @@ export default abstract class CanvasAnimation<T extends {}, U extends {} = {}, V
 
     public constructor(params: paramsType<T, U, V>) {
         const transformations = params.transformations ?? []
-        this.appearanceParam = toAppearanceParamType(params)
+        this.appearanceParam = toAppearanceParamType(params.presenceParameters ?? {})
         this.selections = params.selections ?? []
         this.transformations = transformations.map(t => transformationParamToTransformation(t))
         this.object = params.object
@@ -110,11 +116,11 @@ export default abstract class CanvasAnimation<T extends {}, U extends {} = {}, V
         const sourceObject = this.object
         let result = {...sourceObject}
         this.getTransformations()
-            .filter(t => needAppearObject(time, toAppearanceParamType(t)))
-            .sort((l, r) => l.appearTime - r.appearTime)
+            .filter(t => needAppearObject(time, toAppearanceParamType(t.presenceParameters)))
+            .sort((l, r) => l.presenceParameters.appearTime - r.presenceParameters.appearTime)
             .forEach((t) => {
                 const transformationObject = t.object
-                const percent = percentParam ?? toAppearancePercent(time, toAppearanceParamType(t))
+                const percent = percentParam ?? toAppearancePercent(time, toAppearanceParamType(t.presenceParameters))
                 if (transformationObject.origin) {
                     result.origin = calculatePointPercentValue(result.origin, transformationObject.origin, percent)
                 }
@@ -168,7 +174,7 @@ export default abstract class CanvasAnimation<T extends {}, U extends {} = {}, V
         return this.transformations
     }
 
-    public appendTransformation(transformation: transformationParamType<T>): void {
+    public appendTransformation(transformation: transformationParamType<T, U>): void {
         this.transformations.push(transformationParamToTransformation(transformation))
     }
 

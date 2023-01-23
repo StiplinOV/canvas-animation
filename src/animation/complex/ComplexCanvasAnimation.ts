@@ -7,16 +7,16 @@ export interface complexCanvasAnimationSelectionType<T> extends selectionType {
 }
 
 type animationS2TType = { source: CanvasAnimation<{}>, target: CanvasAnimation<{}> }
+type transformOptionsType = { type: 'together' | 'sequentially' }
 
-export default abstract class ComplexCanvasAnimation<T extends {}, U> extends CanvasAnimation<T, {
-    type: 'together' | 'sequentially'
-}, complexCanvasAnimationSelectionType<U>> {
+export default abstract class ComplexCanvasAnimation<T extends {}, U>
+    extends CanvasAnimation<T, transformOptionsType, complexCanvasAnimationSelectionType<U>> {
 
     public readonly p5: p5Types
 
     private readonly containedAnimations: Map<string, CanvasAnimation<{}>>
 
-    constructor(params: paramsType<T, complexCanvasAnimationSelectionType<U>, complexCanvasAnimationSelectionType<U>>, p5: p5Types) {
+    constructor(params: paramsType<T, transformOptionsType, complexCanvasAnimationSelectionType<U>>, p5: p5Types) {
         super(params)
         this.p5 = p5
         this.containedAnimations = this.calculateContainedAnimations()
@@ -76,11 +76,11 @@ export default abstract class ComplexCanvasAnimation<T extends {}, U> extends Ca
             result.set(key, value)
         })
         let prevAnimationSet = animationsOnAppearance
-        this.getTransformations().sort((l, r) => l.appearTime - r.appearTime).forEach(t => {
-            const objectOnTransform = this.calculateObjectParamsInTime(t.appearTime, this.p5, 1)
+        this.getTransformations().sort((l, r) => l.presenceParameters.appearTime - r.presenceParameters.appearTime).forEach(t => {
+            const objectOnTransform = this.calculateObjectParamsInTime(t.presenceParameters.appearTime, this.p5, 1)
             const animationsOnTransform = this.getIncludedAnimationsByParameters(objectOnTransform)
-            const transformDuration = t.appearDuration
-            const transformationType = t.type
+            const transformDuration = t.presenceParameters.appearDuration
+            const transformationType = t.options?.type
             const {
                 added,
                 deleted,
@@ -92,7 +92,7 @@ export default abstract class ComplexCanvasAnimation<T extends {}, U> extends Ca
                 added.forEach(a => {
                     numberOfAdded += a.getNumberOfContainedAnimations()
                 })
-                let addedAppearTime = t.appearTime
+                let addedAppearTime = t.presenceParameters.appearTime
                 added.forEach((value, key) => {
                     let addedAppearDuration = transformDuration
                     if (transformationType === 'sequentially') {
@@ -113,7 +113,7 @@ export default abstract class ComplexCanvasAnimation<T extends {}, U> extends Ca
                 deleted.forEach(d => {
                     numberOfDeleted += d.getNumberOfContainedAnimations()
                 })
-                let deletedDisappearTime = t.appearTime
+                let deletedDisappearTime = t.presenceParameters.appearTime
                 deleted.forEach(d => {
                     let deletedDisappearDuration = transformDuration
                     if (transformationType === 'sequentially') {
@@ -129,7 +129,7 @@ export default abstract class ComplexCanvasAnimation<T extends {}, U> extends Ca
                 })
             }
 
-            let sourceToTargetAppearTime = t.appearTime
+            let sourceToTargetAppearTime = t.presenceParameters.appearTime
             let numberOfS2T = 0
             changedSourceToTarget.forEach(c => {
                 numberOfS2T += c.target.getNumberOfContainedAnimations()
@@ -140,8 +140,10 @@ export default abstract class ComplexCanvasAnimation<T extends {}, U> extends Ca
                     sourceToTargetAppearDuration = (transformDuration / numberOfS2T) * value.target.getNumberOfContainedAnimations()
                 }
                 result.get(key)?.appendTransformation({
-                    appearTime: sourceToTargetAppearTime,
-                    appearDuration: sourceToTargetAppearDuration,
+                    presenceParameters: {
+                        appearTime: sourceToTargetAppearTime,
+                        appearDuration: sourceToTargetAppearDuration
+                    },
                     object: value.target.getObject()
                 })
                 if (transformationType === 'sequentially') {
