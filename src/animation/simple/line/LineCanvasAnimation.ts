@@ -2,13 +2,13 @@ import p5Types from 'p5'
 import SimpleCanvasAnimation from '../SimpleCanvasAnimation'
 import {calculatePointPercentValue} from '../../../common/Utils'
 import {Point} from '../../../common/Point'
-import {objectParamsType} from '../../CanvasAnimation'
+import {ObjectParams} from '../../CanvasAnimation'
 
 export interface onlyLineParamsType {
     endPoint: Point
 }
 
-interface lineParamsType extends objectParamsType, onlyLineParamsType {
+interface lineParamsType extends ObjectParams, onlyLineParamsType {
 }
 
 export default class LineCanvasAnimation extends SimpleCanvasAnimation<lineParamsType> {

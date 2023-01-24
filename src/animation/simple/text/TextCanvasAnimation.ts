@@ -1,7 +1,7 @@
 import p5Types, {HORIZ_ALIGN, VERT_ALIGN} from 'p5'
 import SimpleCanvasAnimation from '../SimpleCanvasAnimation'
 import {calculatePercentValue, calculateTextPercentValue} from '../../../common/Utils'
-import {objectParamsType} from '../../CanvasAnimation'
+import {ObjectParams} from '../../CanvasAnimation'
 
 interface onlyTextParamsType {
     value: string
@@ -11,7 +11,7 @@ interface onlyTextParamsType {
     horizontalAlign?: HORIZ_ALIGN
     verticalAlign?: VERT_ALIGN
 }
-interface textParamsType extends objectParamsType, onlyTextParamsType {}
+interface textParamsType extends ObjectParams, onlyTextParamsType {}
 
 export default class TextCanvasAnimation extends SimpleCanvasAnimation<textParamsType> {
 

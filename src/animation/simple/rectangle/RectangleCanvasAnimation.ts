@@ -1,14 +1,14 @@
 import SimpleCanvasAnimation from '../SimpleCanvasAnimation'
 import p5Types from 'p5'
 import {calculatePercentValue} from '../../../common/Utils'
-import {objectParamsType} from '../../CanvasAnimation'
+import {ObjectParams} from '../../CanvasAnimation'
 
 interface onlyRectangleParamsType {
     width: number
     height: number
     cornerRadius?: number
 }
-interface rectangleParamsType extends onlyRectangleParamsType, objectParamsType {}
+interface rectangleParamsType extends onlyRectangleParamsType, ObjectParams {}
 
 export default class RectangleCanvasAnimation extends SimpleCanvasAnimation<rectangleParamsType> {
 

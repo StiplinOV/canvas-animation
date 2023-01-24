@@ -1,10 +1,10 @@
-import CanvasAnimation, {objectParamsType, selectionType} from '../CanvasAnimation'
+import CanvasAnimation, {ObjectParams, Selection} from '../CanvasAnimation'
 import p5Types from 'p5'
 import {toAppearancePercent} from '../../common/Utils'
 
-type selectionInfoType<U extends selectionType = selectionType> = { selection?: U | null, percent: number }
+interface SelectionInfo<U extends Selection = Selection> { selection?: U | null, percent: number }
 
-export default abstract class SimpleCanvasAnimation<T extends objectParamsType> extends CanvasAnimation<T> {
+export default abstract class SimpleCanvasAnimation<T extends ObjectParams> extends CanvasAnimation<T> {
 
     protected doDraw(p5: p5Types, time: number): void {
         const object = this.calculateObjectParamsInTime(time, p5)
@@ -13,11 +13,11 @@ export default abstract class SimpleCanvasAnimation<T extends objectParamsType> 
         this.drawObject(p5, object, toAppearancePercent(time, this.getAppearanceParam()), selectionInfo.percent)
     }
 
-    public getNumberOfContainedAnimations(): number {
+    public containedAnimationsLength(): number {
         return 1
     }
 
-    private calculateSelectionInfo(time: number): selectionInfoType {
+    private calculateSelectionInfo(time: number): SelectionInfo {
         const selections = this.getSelections()
         let selected = false
         let percent = 0

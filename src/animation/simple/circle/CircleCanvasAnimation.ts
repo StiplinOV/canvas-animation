@@ -1,10 +1,10 @@
 import p5Types from 'p5'
 import SimpleCanvasAnimation from '../SimpleCanvasAnimation'
 import {calculatePercentValue, convertPercentToFadeInFadeOut} from '../../../common/Utils'
-import {objectParamsType} from '../../CanvasAnimation'
+import {ObjectParams} from '../../CanvasAnimation'
 
 interface onlyCircleParamsType { diameter: number }
-interface circleParamsType extends onlyCircleParamsType, objectParamsType {}
+interface circleParamsType extends onlyCircleParamsType, ObjectParams {}
 
 export default class CircleCanvasAnimation extends SimpleCanvasAnimation<circleParamsType> {
 

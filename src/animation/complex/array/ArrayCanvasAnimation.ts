@@ -1,5 +1,5 @@
 import ComplexCanvasAnimation from '../ComplexCanvasAnimation'
-import CanvasAnimation, {objectParamsType} from '../../CanvasAnimation'
+import CanvasAnimation, {ObjectParams} from '../../CanvasAnimation'
 import {calculateArrayPercentValue, calculatePercentValue, calculateTextPercentValue} from '../../../common/Utils'
 import TextCanvasAnimation from '../../simple/text/TextCanvasAnimation'
 import RectangleCanvasAnimation from '../../simple/rectangle/RectangleCanvasAnimation'
@@ -13,7 +13,7 @@ interface onlyArrayParamsType {
     firstIndex?: number
 }
 
-interface arrayParamsType extends onlyArrayParamsType, objectParamsType {
+interface arrayParamsType extends onlyArrayParamsType, ObjectParams {
 }
 
 export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayParamsType> {

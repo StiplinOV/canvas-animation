@@ -2,7 +2,7 @@ import {Point, ZeroPoint} from '../../../common/Point'
 import ComplexCanvasAnimation from '../ComplexCanvasAnimation'
 import p5Types from 'p5'
 import {calculateArrayPercentValue, calculatePercentValue, calculateTextPercentValue} from '../../../common/Utils'
-import CanvasAnimation, {objectParamsType} from '../../CanvasAnimation'
+import CanvasAnimation, {ObjectParams} from '../../CanvasAnimation'
 import ArrowCanvasAnimation from '../arrow/ArrowCanvasAnimation'
 import TextCanvasAnimation from '../../simple/text/TextCanvasAnimation'
 import LineCanvasAnimation from '../../simple/line/LineCanvasAnimation'
@@ -28,7 +28,7 @@ interface onlyXyChartParamsType {
     chartLines?: [Point, Point][]
     chartYRanges?: chartYRangeType[]
 }
-interface xyChartParamsType extends onlyXyChartParamsType, objectParamsType {}
+interface xyChartParamsType extends onlyXyChartParamsType, ObjectParams {}
 type selectorType = { points?: 'all' | number[], lines?: 'all' }
 
 export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyChartParamsType, selectorType> {

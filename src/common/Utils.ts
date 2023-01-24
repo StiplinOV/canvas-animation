@@ -6,7 +6,7 @@ interface Coordinates {
     y?: number
 }
 
-export type appearanceParamType = {
+export interface appearanceParamType {
     appearTime: number
     appearDuration: number
     disappearTime: number

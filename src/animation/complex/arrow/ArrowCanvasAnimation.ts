@@ -2,7 +2,7 @@ import ComplexCanvasAnimation from '../ComplexCanvasAnimation'
 import LineCanvasAnimation, {onlyLineParamsType} from '../../simple/line/LineCanvasAnimation'
 import p5Types from 'p5'
 import {calculatePointPercentValue, getVectorAngle, rotateVector, subtractPoints} from '../../../common/Utils'
-import CanvasAnimation, {objectParamsType} from '../../CanvasAnimation'
+import CanvasAnimation, {ObjectParams} from '../../CanvasAnimation'
 import {ZeroPoint} from '../../../common/Point'
 
 const arrowBaseLength = 10
@@ -13,7 +13,7 @@ export interface onlyArrowParamsType extends onlyLineParamsType {
     endType?: 'Arrow' | 'None'
 }
 
-interface arrowParamsType extends onlyArrowParamsType, objectParamsType {
+interface arrowParamsType extends onlyArrowParamsType, ObjectParams {
 }
 
 export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowParamsType> {
