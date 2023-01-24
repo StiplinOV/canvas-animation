@@ -16,7 +16,7 @@ export interface onlyArrowParamsType extends onlyLineParamsType {
 interface arrowParamsType extends onlyArrowParamsType, objectParamsType {
 }
 
-export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowParamsType, {}> {
+export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowParamsType> {
 
     public getIncludedAnimationsByParameters(object: arrowParamsType): Map<string, CanvasAnimation> {
         const result = new Map<string, CanvasAnimation>()

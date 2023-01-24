@@ -9,7 +9,7 @@ export interface complexCanvasAnimationSelectionType<T> extends selectionType {
 type animationS2TType = { source: CanvasAnimation, target: CanvasAnimation }
 type transformOptionsType = { type: 'together' | 'sequentially' }
 
-export default abstract class ComplexCanvasAnimation<T extends objectParamsType, U>
+export default abstract class ComplexCanvasAnimation<T extends objectParamsType, U extends Record<string, unknown> = Record<string, unknown>>
     extends CanvasAnimation<T, transformOptionsType, complexCanvasAnimationSelectionType<U>> {
 
     public readonly p5: p5Types

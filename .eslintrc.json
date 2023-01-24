@@ -1,0 +1,56 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "extends": [
+    "plugin:react/recommended",
+    "standard-with-typescript"
+  ],
+  "overrides": [
+  ],
+  "parserOptions": {
+    "project": [
+      "./tsconfig.json"
+    ],
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": [
+    "react"
+  ],
+  "ignorePatterns": [
+    "**/src/setupTests.ts",
+    "**/src/reportWebVitals.ts",
+    "**/src/react-app-env.d.ts",
+    "**/src/logo.svg",
+    "**/src/index.tsx",
+    "**/src/index.css",
+    "**/src/App.css",
+    "**/src/App.tsx",
+    "**/src/App.test.tsx"
+  ],
+  "rules": {
+    "@typescript-eslint/indent": [
+      "error",
+      4
+    ],
+    "@typescript-eslint/array-type": ["error", { "default": "array" }],
+    "@typescript-eslint/consistent-type-definitions": "off",
+    "@typescript-eslint/object-curly-spacing": "off",
+    "@typescript-eslint/space-before-function-paren": "off",
+    "@typescript-eslint/strict-boolean-expressions": "off",
+    "indent": [
+      "error",
+      4
+    ],
+    "padded-blocks": "off"
+    //TODO
+    //"@typescript-eslint/ban-types": "off"
+  }
+}

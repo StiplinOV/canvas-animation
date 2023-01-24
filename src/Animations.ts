@@ -96,7 +96,7 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimation[] = (p5: p5Types
                         {x: 5, y: 6},
                         {x: 6, y: 4}
                     ]
-                },
+                }
             },
             {
                 presenceParameters: {

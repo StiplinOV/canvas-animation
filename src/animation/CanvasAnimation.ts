@@ -23,32 +23,34 @@ export interface selectionType {
     duration?: number
 }
 
-type transformationType<T extends objectParamsType, U extends {} = {}> = {
+type transformationType<T extends objectParamsType, U extends Record<string, unknown> = Record<string, unknown>> = {
     object: Partial<T>
     presenceParameters: appearanceParamType
     options?: U
 }
 
-type transformationParamType<T extends objectParamsType, U extends {} = {}> = {
+type transformationParamType<T extends objectParamsType, U extends Record<string, unknown> = Record<string, unknown>> = {
     object: Partial<T>
     presenceParameters?: & Partial<appearanceParamType>
     options?: U
 }
 
-const transformationParamToTransformation = <T extends objectParamsType, U extends {} = {}>(t: transformationParamType<T, U>): transformationType<T, U> => ({
+const transformationParamToTransformation = <T extends objectParamsType, U extends Record<string, unknown> = Record<string, unknown>>(t: transformationParamType<T, U>): transformationType<T, U> => ({
     ...t,
     presenceParameters: toAppearanceParamType(t?.presenceParameters ?? {}),
     options: t.options
 })
 
-export type paramsType<T extends objectParamsType, U extends {} = {}, V extends selectionType = selectionType> = {
+export type paramsType<T extends objectParamsType, U extends Record<string, unknown> = Record<string, unknown>, V extends selectionType = selectionType> = {
     transformations?: transformationParamType<T, U>[]
     selections?: V[]
     object: T
     presenceParameters?: & Partial<appearanceParamType>
 }
 
-export default abstract class CanvasAnimation<T extends objectParamsType = objectParamsType, U extends {} = {}, V extends selectionType = selectionType> {
+export default abstract class CanvasAnimation<T extends objectParamsType = objectParamsType,
+    U extends Record<string, unknown> = Record<string, unknown>,
+    V extends selectionType = selectionType> {
 
     private appearanceParam: appearanceParamType
     private readonly transformations: transformationType<T, U>[]

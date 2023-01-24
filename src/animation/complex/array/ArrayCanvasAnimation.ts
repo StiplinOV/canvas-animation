@@ -16,7 +16,7 @@ interface onlyArrayParamsType {
 interface arrayParamsType extends onlyArrayParamsType, objectParamsType {
 }
 
-export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayParamsType, {}> {
+export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayParamsType> {
 
     getIncludedAnimationsByParameters(object: arrayParamsType): Map<string, CanvasAnimation> {
         const result = new Map<string, CanvasAnimation>()
