@@ -4,7 +4,7 @@ import {calculateArrayPercentValue, calculatePercentValue, calculateTextPercentV
 import TextCanvasAnimation from '../../simple/text/TextCanvasAnimation'
 import RectangleCanvasAnimation from '../../simple/rectangle/RectangleCanvasAnimation'
 
-type arrayParamsType = {
+interface onlyArrayParamsType {
     value: string[]
     height: number
     width?: number
@@ -13,10 +13,13 @@ type arrayParamsType = {
     firstIndex?: number
 }
 
+interface arrayParamsType extends onlyArrayParamsType, objectParamsType {
+}
+
 export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayParamsType, {}> {
 
-    getIncludedAnimationsByParameters(object: objectParamsType<arrayParamsType>): Map<string, CanvasAnimation<{}>> {
-        const result = new Map<string, CanvasAnimation<{}>>()
+    getIncludedAnimationsByParameters(object: arrayParamsType): Map<string, CanvasAnimation> {
+        const result = new Map<string, CanvasAnimation>()
         const {title, value, indexTitle, firstIndex} = object
         const partHeight = this.calculatePartHeight(object)
         const width = this.calculateWidth(object)
@@ -81,14 +84,14 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayPa
         return result
     }
 
-    private calculateWidth(object: objectParamsType<arrayParamsType>): number {
+    private calculateWidth(object: arrayParamsType): number {
         const {value} = object
         const partHeight = this.calculatePartHeight(object)
         const arrayHeight = partHeight * 3
         return object.width ?? (value.length * arrayHeight + (value.length - 1) * partHeight)
     }
 
-    private calculatePartHeight(object: objectParamsType<arrayParamsType>): number {
+    private calculatePartHeight(object: arrayParamsType): number {
         const {title, indexTitle, height} = object
         let numberOfParts = 5
         if (title) {
@@ -100,7 +103,7 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayPa
         return height / numberOfParts
     }
 
-    public mergeWithTransformation(o: objectParamsType<arrayParamsType>, t: Partial<arrayParamsType>, p: number, p5: import('p5')): arrayParamsType {
+    public mergeWithTransformation(o: arrayParamsType, t: Partial<arrayParamsType>, p: number, p5: import('p5')): onlyArrayParamsType {
         let {value, width, height, title, indexTitle, firstIndex} = o
         value ??= []
         width ??= this.calculateWidth(o)

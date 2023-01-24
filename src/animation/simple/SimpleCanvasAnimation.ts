@@ -4,7 +4,7 @@ import {toAppearancePercent} from '../../common/Utils'
 
 type selectionInfoType<U extends selectionType = selectionType> = { selection?: U | null, percent: number }
 
-export default abstract class SimpleCanvasAnimation<T extends {}> extends CanvasAnimation<T> {
+export default abstract class SimpleCanvasAnimation<T extends objectParamsType> extends CanvasAnimation<T> {
 
     protected doDraw(p5: p5Types, time: number): void {
         const object = this.calculateObjectParamsInTime(time, p5)
@@ -37,6 +37,6 @@ export default abstract class SimpleCanvasAnimation<T extends {}> extends Canvas
         return {selection, percent}
     }
 
-    public abstract drawObject(p5: p5Types, obj: objectParamsType<T>, perc: number, selectedPercent: number): void
+    public abstract drawObject(p5: p5Types, obj: T, perc: number, selectedPercent: number): void
 
 }

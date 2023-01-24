@@ -9,7 +9,7 @@ export const canvasWidth = 1280
 export const canvasHeight = 800
 export const timeDivider = 1000000
 
-export const canvasAnimations: (p5: p5Types) => CanvasAnimation<{}>[] = (p5: p5Types) => [
+export const canvasAnimations: (p5: p5Types) => CanvasAnimation[] = (p5: p5Types) => [
     new TextCanvasAnimation({
         object: {
             value: 'Best Time to Buy and Sell Stock',

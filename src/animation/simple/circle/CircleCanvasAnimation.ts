@@ -3,11 +3,12 @@ import SimpleCanvasAnimation from '../SimpleCanvasAnimation'
 import {calculatePercentValue, convertPercentToFadeInFadeOut} from '../../../common/Utils'
 import {objectParamsType} from '../../CanvasAnimation'
 
-interface circleParamsType { diameter: number }
+interface onlyCircleParamsType { diameter: number }
+interface circleParamsType extends onlyCircleParamsType, objectParamsType {}
 
 export default class CircleCanvasAnimation extends SimpleCanvasAnimation<circleParamsType> {
 
-    public drawObject(p5: p5Types, object: objectParamsType<circleParamsType>, percent: number, selectedPercentParam: number): void {
+    public drawObject(p5: p5Types, object: circleParamsType, percent: number, selectedPercentParam: number): void {
         const selectedPercent = convertPercentToFadeInFadeOut(selectedPercentParam)
         const diameter = calculatePercentValue(object.diameter, object.diameter * 2, selectedPercent)
         const weight = calculatePercentValue(object.weight ?? 1, (object.weight ?? 1) * 2, selectedPercent)
@@ -18,7 +19,7 @@ export default class CircleCanvasAnimation extends SimpleCanvasAnimation<circleP
         p5.arc(0, 0, diameter, diameter, 0, p5.PI * 2 * percent)
     }
 
-    mergeWithTransformation(obj: circleParamsType, trans: Partial<circleParamsType>, perc: number): circleParamsType {
+    mergeWithTransformation(obj: circleParamsType, trans: circleParamsType, perc: number): onlyCircleParamsType {
         return {
             diameter: trans.diameter ? calculatePercentValue(obj.diameter, trans.diameter, perc) : obj.diameter
         }

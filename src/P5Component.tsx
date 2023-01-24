@@ -12,7 +12,7 @@ interface ComponentProps {
 
 export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => {
 
-    const animations: CanvasAnimation<{}>[] = []
+    const animations: CanvasAnimation[] = []
 
     const preload = (p5: p5Types): void => {
     }

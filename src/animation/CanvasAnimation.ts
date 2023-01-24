@@ -9,51 +9,51 @@ import {
 } from '../common/Utils'
 import {Point, ZeroPoint} from '../common/Point'
 
-export type objectParamsType<T extends {} = {}> = {
+export interface objectParamsType {
     weight?: number
     zIndex?: number
     rotation?: number
     offset?: Point
     dashed?: number[]
     origin: Point
-} & T
+}
 
 export interface selectionType {
     time: number
     duration?: number
 }
 
-type transformationType<T extends {}, U extends {} = {}> = {
-    object: Partial<objectParamsType<T>>
+type transformationType<T extends objectParamsType, U extends {} = {}> = {
+    object: Partial<T>
     presenceParameters: appearanceParamType
     options?: U
 }
 
-type transformationParamType<T extends {}, U extends {} = {}> = {
-    object: Partial<objectParamsType<T>>
+type transformationParamType<T extends objectParamsType, U extends {} = {}> = {
+    object: Partial<T>
     presenceParameters?: & Partial<appearanceParamType>
     options?: U
 }
 
-const transformationParamToTransformation = <T extends {}, U extends {} = {}>(t: transformationParamType<T, U>): transformationType<T, U> => ({
+const transformationParamToTransformation = <T extends objectParamsType, U extends {} = {}>(t: transformationParamType<T, U>): transformationType<T, U> => ({
     ...t,
     presenceParameters: toAppearanceParamType(t?.presenceParameters ?? {}),
     options: t.options
 })
 
-export type paramsType<T extends {}, U extends {} = {}, V extends selectionType = selectionType> = {
+export type paramsType<T extends objectParamsType, U extends {} = {}, V extends selectionType = selectionType> = {
     transformations?: transformationParamType<T, U>[]
     selections?: V[]
-    object: objectParamsType<T>
+    object: T
     presenceParameters?: & Partial<appearanceParamType>
 }
 
-export default abstract class CanvasAnimation<T extends {}, U extends {} = {}, V extends selectionType = selectionType> {
+export default abstract class CanvasAnimation<T extends objectParamsType = objectParamsType, U extends {} = {}, V extends selectionType = selectionType> {
 
     private appearanceParam: appearanceParamType
     private readonly transformations: transformationType<T, U>[]
     private readonly selections: V[]
-    private readonly object: objectParamsType<T>
+    private readonly object: T
 
     public constructor(params: paramsType<T, U, V>) {
         const transformations = params.transformations ?? []
@@ -112,7 +112,7 @@ export default abstract class CanvasAnimation<T extends {}, U extends {} = {}, V
         return this.calculateObjectParamsInTime(time, p5).zIndex ?? 0
     }
 
-    public calculateObjectParamsInTime(time: number, p5: p5Types, percentParam?: number): objectParamsType<T> {
+    public calculateObjectParamsInTime(time: number, p5: p5Types, percentParam?: number): T {
         const sourceObject = this.object
         let result = {...sourceObject}
         this.getTransformations()
@@ -166,7 +166,7 @@ export default abstract class CanvasAnimation<T extends {}, U extends {} = {}, V
         return result
     }
 
-    public getObject(): objectParamsType<T> {
+    public getObject(): T {
         return this.object
     }
 
@@ -178,6 +178,6 @@ export default abstract class CanvasAnimation<T extends {}, U extends {} = {}, V
         this.transformations.push(transformationParamToTransformation(transformation))
     }
 
-    public abstract mergeWithTransformation(obj: T, trans: Partial<T>, perc: number, p5: p5Types): T
+    public abstract mergeWithTransformation(obj: T, trans: Partial<T>, perc: number, p5: p5Types): Omit<T, keyof objectParamsType>
 
 }

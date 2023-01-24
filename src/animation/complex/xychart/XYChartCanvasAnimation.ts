@@ -17,7 +17,7 @@ const toChartPointType = (value: chartPointType | Point): chartPointType =>
 type scaleType = { position: number, value: string }
 type chartPointType = { point: Point, text: string }
 type chartYRangeType = { yCoords: [number, number], value: string }
-type xyChartParamsType = {
+interface onlyXyChartParamsType {
     width: number
     height: number
     xScale?: (scaleType | number)[]
@@ -28,12 +28,13 @@ type xyChartParamsType = {
     chartLines?: [Point, Point][]
     chartYRanges?: chartYRangeType[]
 }
+interface xyChartParamsType extends onlyXyChartParamsType, objectParamsType {}
 type selectorType = { points?: 'all' | number[], lines?: 'all' }
 
 export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyChartParamsType, selectorType> {
 
-    getIncludedAnimationsByParameters(object: objectParamsType<xyChartParamsType>): Map<string, CanvasAnimation<{}>> {
-        const result = new Map<string, CanvasAnimation<{}>>()
+    getIncludedAnimationsByParameters(object: xyChartParamsType): Map<string, CanvasAnimation> {
+        const result = new Map<string, CanvasAnimation>()
         const {height, width} = object
         const xScale = object.xScale?.map(value => toScaleType(value)) ?? []
         const yScale = object.yScale?.map(value => toScaleType(value)) ?? []
@@ -223,7 +224,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
         }
     }
 
-    mergeWithTransformation(obj: objectParamsType<xyChartParamsType>, t: Partial<xyChartParamsType>, p: number, p5: p5Types): xyChartParamsType {
+    mergeWithTransformation(obj: xyChartParamsType, t: Partial<xyChartParamsType>, p: number, p5: p5Types): onlyXyChartParamsType {
         let {width, height, xScale, yScale, xAxisName, yAxisName, chartPoints, chartLines, chartYRanges} = obj
         xScale ??= []
         yScale ??= []

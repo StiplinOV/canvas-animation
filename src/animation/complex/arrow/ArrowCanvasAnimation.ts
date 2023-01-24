@@ -1,5 +1,5 @@
 import ComplexCanvasAnimation from '../ComplexCanvasAnimation'
-import LineCanvasAnimation, {lineParamsType} from '../../simple/line/LineCanvasAnimation'
+import LineCanvasAnimation, {onlyLineParamsType} from '../../simple/line/LineCanvasAnimation'
 import p5Types from 'p5'
 import {calculatePointPercentValue, getVectorAngle, rotateVector, subtractPoints} from '../../../common/Utils'
 import CanvasAnimation, {objectParamsType} from '../../CanvasAnimation'
@@ -8,15 +8,18 @@ import {ZeroPoint} from '../../../common/Point'
 const arrowBaseLength = 10
 const arrowBaseWidth = 10
 
-export type arrowParamsType = lineParamsType & {
+export interface onlyArrowParamsType extends onlyLineParamsType {
     startType?: 'Arrow' | 'None'
     endType?: 'Arrow' | 'None'
 }
 
+interface arrowParamsType extends onlyArrowParamsType, objectParamsType {
+}
+
 export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowParamsType, {}> {
 
-    public getIncludedAnimationsByParameters(object: objectParamsType<arrowParamsType>): Map<string, CanvasAnimation<{}>> {
-        const result = new Map<string, CanvasAnimation<{}>>()
+    public getIncludedAnimationsByParameters(object: arrowParamsType): Map<string, CanvasAnimation> {
+        const result = new Map<string, CanvasAnimation>()
         const relativeEndPoint = subtractPoints(object.endPoint, object.origin)
 
         result.set('shaft', new LineCanvasAnimation({
@@ -70,7 +73,7 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowPa
         return result
     }
 
-    mergeWithTransformation(obj: objectParamsType<arrowParamsType>, trans: Partial<arrowParamsType>, perc: number, p5: p5Types): arrowParamsType {
+    mergeWithTransformation(obj: arrowParamsType, trans: Partial<arrowParamsType>, perc: number, p5: p5Types): onlyArrowParamsType {
         const {endPoint, startType, endType} = obj
         return {
             endPoint: trans.endPoint ? calculatePointPercentValue(endPoint, trans.endPoint, perc) : endPoint,
