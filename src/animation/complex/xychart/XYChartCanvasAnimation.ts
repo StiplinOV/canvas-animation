@@ -51,7 +51,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
                 endType: 'Arrow',
                 weight: 2
             }
-        }, this.p5))
+        }, this.p5, this.getAnimationStyle()))
         result.set('yArrow', new ArrowCanvasAnimation({
             object: {
                 origin: ZeroPoint,
@@ -59,7 +59,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
                 endType: 'Arrow',
                 weight: 2
             }
-        }, this.p5))
+        }, this.p5, this.getAnimationStyle()))
         result.set('xText', new TextCanvasAnimation({
             object: {
                 origin: {x: width / 2, y: coordinateDashWidth * 2},
@@ -68,7 +68,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
                 horizontalAlign: 'center',
                 verticalAlign: 'top'
             }
-        }))
+        }, this.getAnimationStyle()))
         result.set('yText', new TextCanvasAnimation({
             object: {
                 origin: {x: -coordinateDashWidth * 2, y: -height / 2},
@@ -78,7 +78,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
                 horizontalAlign: 'center',
                 verticalAlign: 'bottom'
             }
-        }))
+        }, this.getAnimationStyle()))
 
         xScale.forEach((value, index) => {
             const x = this.getXForValue(object, value)
@@ -87,7 +87,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
                     origin: {x, y: -coordinateDashWidth / 2},
                     endPoint: {x, y: coordinateDashWidth / 2}
                 }
-            }))
+            }, this.getAnimationStyle()))
             result.set(`xScaleValue ${index}`, new TextCanvasAnimation({
                 object: {
                     origin: {x, y: Number(coordinateDashWidth)},
@@ -95,7 +95,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
                     verticalAlign: 'top',
                     horizontalAlign: 'center'
                 }
-            }))
+            }, this.getAnimationStyle()))
         })
         yScale.forEach((value, index) => {
             const y = this.getYForValue(object, value.position)
@@ -104,7 +104,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
                     origin: {x: -coordinateDashWidth / 2, y},
                     endPoint: {x: coordinateDashWidth / 2, y}
                 }
-            }))
+            }, this.getAnimationStyle()))
             result.set(`yScaleValue ${index}`, new TextCanvasAnimation({
                 object: {
                     origin: {x: -Number(coordinateDashWidth), y},
@@ -112,7 +112,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
                     verticalAlign: 'center',
                     horizontalAlign: 'center'
                 }
-            }))
+            }, this.getAnimationStyle()))
         })
         objChartPoints.forEach((value, index) => {
             const curPoint = value.point
@@ -125,7 +125,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
             const pointCoordinate = this.convertPointToCoordinate(object, curPoint)
             result.set(`chartPoint ${index}`, new CircleCanvasAnimation({
                 object: {origin: pointCoordinate, diameter: chartPointsDiameter, weight: 2, zIndex: 2}
-            }))
+            }, this.getAnimationStyle()))
             result.set(`chartPointValue ${index}`, new TextCanvasAnimation({
                 object: {
                     origin: {x: pointCoordinate.x, y: pointCoordinate.y + (textPosition === 'below' ? 10 : -10)},
@@ -134,7 +134,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
                     verticalAlign: textPosition === 'below' ? 'top' : 'bottom',
                     fontSize: 15
                 }
-            }))
+            }, this.getAnimationStyle()))
         })
         objChartLines.forEach((line, index) => result.set(`chartLine ${index}`, new LineCanvasAnimation({
             object: {
@@ -142,7 +142,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
                 endPoint: this.convertPointToCoordinate(object, line[1]),
                 weight: 3
             }
-        })))
+        }, this.getAnimationStyle())))
         objChartYRanges.sort((l, r) => {
             const [firstLeft, firstRight] = l.yCoords.sort()
             const [secondLeft, secondRight] = r.yCoords.sort()
@@ -169,14 +169,14 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
                     endPoint: {x: endXCoord + 20, y: firstPointY},
                     dashed: [5, 10, 30, 10]
                 }
-            }))
+            }, this.getAnimationStyle()))
             result.set(`objectChartRangeSecondLine ${index}`, new LineCanvasAnimation({
                 object: {
                     origin: {x: 0, y: secondPointY},
                     endPoint: {x: endXCoord + 20, y: secondPointY},
                     dashed: [5, 10, 30, 10]
                 }
-            }))
+            }, this.getAnimationStyle()))
             result.set(`objectChartRangeArrow ${index}`, new ArrowCanvasAnimation(
                 {
                     object: {
@@ -186,7 +186,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
                         endType: 'Arrow',
                         weight: 2
                     }
-                }, this.p5)
+                }, this.p5, this.getAnimationStyle())
             )
             result.set(`objectChartRangeValue ${index}`, new TextCanvasAnimation({
                 object: {
@@ -196,7 +196,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
                     horizontalAlign: 'center',
                     fontSize: 20
                 }
-            }))
+            }, this.getAnimationStyle()))
         })
         return result
     }

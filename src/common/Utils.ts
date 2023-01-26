@@ -34,6 +34,19 @@ export const calculateArrayPercentValue = <T>(from: T[], to: T[], percent: numbe
 export const calculateTextPercentValue = (from: string, to: string, percent: number): string => {
     return calculateArrayPercentValue(from.split(''), to.split(''), percent).join('')
 }
+export const calculateColorPercentValue = (from: string, to: string, percent: number): string => {
+    const fromNumR = parseInt(from.substring(1, 3), 16)
+    const toNumR = parseInt(to.substring(1, 3), 16)
+    const fromNumG = parseInt(from.substring(3, 5), 16)
+    const toNumG = parseInt(to.substring(3, 5), 16)
+    const fromNumB = parseInt(from.substring(5, 7), 16)
+    const toNumB = parseInt(to.substring(5, 7), 16)
+    const r = Math.round(calculatePercentValue(fromNumR, toNumR, percent)).toString(16).padStart(2, '0')
+    const g = Math.round(calculatePercentValue(fromNumG, toNumG, percent)).toString(16).padStart(2, '0')
+    const b = Math.round(calculatePercentValue(fromNumB, toNumB, percent)).toString(16).padStart(2, '0')
+
+    return `#${r}${g}${b}`
+}
 
 export const toAppearanceParamType = (values: Partial<appearanceParamType>): appearanceParamType => ({
     appearTime: values.appearTime ?? 0,

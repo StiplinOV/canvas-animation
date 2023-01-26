@@ -34,7 +34,7 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayPa
                     horizontalAlign: 'center',
                     verticalAlign: 'top'
                 }
-            }))
+            }, this.getAnimationStyle()))
             partShift += partHeight * 2
         }
         value.forEach((value, index) => {
@@ -45,7 +45,7 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayPa
                     height: partHeight * 3,
                     cornerRadius: 20
                 }
-            }))
+            }, this.getAnimationStyle()))
             result.set(`value text ${index}`, new TextCanvasAnimation({
                 object: {
                     value,
@@ -57,7 +57,7 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayPa
                     horizontalAlign: 'center',
                     zIndex: 1
                 }
-            }))
+            }, this.getAnimationStyle()))
             result.set(`index text ${index}`, new TextCanvasAnimation({
                 object: {
                     value: String(index + (firstIndex ?? 0)),
@@ -67,7 +67,7 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayPa
                     },
                     horizontalAlign: 'center'
                 }
-            }))
+            }, this.getAnimationStyle()))
         })
         partShift += partHeight * 5
         if (indexTitle) {
@@ -78,7 +78,7 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayPa
                     fontSize: partHeight / 2,
                     horizontalAlign: 'center'
                 }
-            }))
+            }, this.getAnimationStyle()))
         }
 
         return result

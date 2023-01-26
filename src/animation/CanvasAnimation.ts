@@ -8,6 +8,7 @@ import {
     toAppearancePercent
 } from '../common/Utils'
 import {Point, ZeroPoint} from '../common/Point'
+import AnimationStyle from '../AnimationStyles'
 
 export interface ObjectParams {
     weight?: number
@@ -56,13 +57,19 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
     private readonly transformations: Transformation<T, U>[]
     private readonly selections: V[]
     private readonly object: T
+    private readonly animationStyle: AnimationStyle
 
-    public constructor(params: Params<T, U, V>) {
+    public constructor(params: Params<T, U, V>, animationStyle: AnimationStyle) {
         const transformations = params.transformations ?? []
         this.appearanceParam = toAppearanceParamType(params.presenceParameters ?? {})
         this.selections = params.selections ?? []
         this.transformations = transformations.map(t => transformationParamToTransformation(t))
         this.object = params.object
+        this.animationStyle = animationStyle
+    }
+
+    protected getAnimationStyle(): AnimationStyle {
+        return this.animationStyle
     }
 
     public getAppearanceParam(): appearanceParamType {

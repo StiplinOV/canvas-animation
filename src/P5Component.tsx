@@ -5,6 +5,7 @@ import {canvasAnimations, canvasHeight, canvasWidth, timeDivider} from './Animat
 import {camera, cameraParams} from './camera/CameraParams'
 import {cameras} from './Cameras'
 import CanvasAnimation from './animation/CanvasAnimation'
+import {getAnimationStyle} from './AnimationStyles'
 
 interface ComponentProps {
     some?: string
@@ -13,23 +14,28 @@ interface ComponentProps {
 export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => {
 
     const animations: CanvasAnimation[] = []
+    const animationStyle = getAnimationStyle('custom')
 
     const preload = (p5: p5Types): void => {
     }
 
     const setup = (p5: p5Types): void => {
         const cnv = p5.createCanvas(canvasWidth, canvasHeight)
+        // p5.drawingContext.shadowOffsetX = 3
+        // p5.drawingContext.shadowOffsetY = -3
+        // p5.drawingContext.shadowBlur = 5
+        // p5.drawingContext.shadowColor = '#000000'
         cnv.position(0, 0)
         cnv.style('border: 1px solid')
         cameras.sort((left, right) => left.startTime - right.startTime)
-        animations.push(...canvasAnimations(p5).sort((left, right) => left.getZIndex(0, p5) - right.getZIndex(0, p5)))
+        animations.push(...canvasAnimations(p5, animationStyle).sort((left, right) => left.getZIndex(0, p5) - right.getZIndex(0, p5)))
     }
 
     const draw = (p5: p5Types): void => {
         const millis = p5.millis() % timeDivider
         const camera = getActualCamera(millis)
         const zoom = camera.zoom ?? 1
-        p5.background(255)
+        p5.background(animationStyle.backgroundColor)
         camera.rotation && p5.rotate(camera.rotation)
         p5.translate(-camera.x * zoom, -camera.y * zoom)
         p5.scale(zoom)

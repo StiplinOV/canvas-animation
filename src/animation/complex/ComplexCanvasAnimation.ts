@@ -1,5 +1,6 @@
 import CanvasAnimation, {ObjectParams, Params, Selection} from '../CanvasAnimation'
 import p5Types from 'p5'
+import AnimationStyle from '../../AnimationStyles'
 
 export interface ComplexCanvasAnimationSelection<T> extends Selection {
     type?: 'together' | 'sequentially'
@@ -16,8 +17,8 @@ export default abstract class ComplexCanvasAnimation<T extends ObjectParams, U =
 
     private readonly containedAnimations: Map<string, CanvasAnimation>
 
-    constructor(params: Params<T, TransformOptions, ComplexCanvasAnimationSelection<U>>, p5: p5Types) {
-        super(params)
+    constructor(params: Params<T, TransformOptions, ComplexCanvasAnimationSelection<U>>, p5: p5Types, animationStyle: AnimationStyle) {
+        super(params, animationStyle)
         this.p5 = p5
         this.containedAnimations = this.calculateContainedAnimations()
     }

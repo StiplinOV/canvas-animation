@@ -29,7 +29,7 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowPa
                 weight: object.weight,
                 zIndex: object.zIndex
             }
-        }))
+        }, this.getAnimationStyle()))
         const angle = getVectorAngle(this.p5, relativeEndPoint)
         const leftArrowSide = rotateVector(this.p5, {x: arrowBaseLength, y: arrowBaseWidth / 2}, angle)
         const rightArrowSide = rotateVector(this.p5, {x: arrowBaseLength, y: -arrowBaseWidth / 2}, angle)
@@ -41,7 +41,7 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowPa
                     weight: object.weight,
                     zIndex: object.zIndex
                 }
-            }))
+            }, this.getAnimationStyle()))
             result.set('right half arrowhead', new LineCanvasAnimation({
                 object: {
                     origin: relativeEndPoint,
@@ -49,7 +49,7 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowPa
                     weight: object.weight,
                     zIndex: object.zIndex
                 }
-            }))
+            }, this.getAnimationStyle()))
         }
         if (object.startType === 'Arrow') {
             result.set('left half arrow tail', new LineCanvasAnimation({
@@ -59,7 +59,7 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowPa
                     weight: object.weight,
                     zIndex: object.zIndex
                 }
-            }))
+            }, this.getAnimationStyle()))
             result.set('right half arrow tail', new LineCanvasAnimation({
                 object: {
                     origin: ZeroPoint,
@@ -67,7 +67,7 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowPa
                     weight: object.weight,
                     zIndex: object.zIndex
                 }
-            }))
+            }, this.getAnimationStyle()))
         }
 
         return result
