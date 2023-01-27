@@ -59,7 +59,7 @@ export default abstract class ComplexCanvasAnimation<T extends ObjectParams, U =
     private calculateContainedAnimations(): Map<string, CanvasAnimation> {
         const result = new Map<string, CanvasAnimation>()
         const {appearTime, appearDuration, disappearTime, disappearDuration} = this.getAppearanceParam()
-        const objectOnAppearance = this.calculateObjectParamsInTime(appearTime, this.p5)
+        const objectOnAppearance = this.calculateObjectParamsInTime(appearTime)
         const animationsOnAppearance = this.getIncludedAnimationsByParameters(objectOnAppearance)
         let numberOfAnimationsOnAppearance = 0
         animationsOnAppearance.forEach(a => {
@@ -78,7 +78,7 @@ export default abstract class ComplexCanvasAnimation<T extends ObjectParams, U =
         })
         let prevAnimationSet = animationsOnAppearance
         this.getTransformations().sort((l, r) => l.presenceParameters.appearTime - r.presenceParameters.appearTime).forEach(t => {
-            const objectOnTransform = this.calculateObjectParamsInTime(t.presenceParameters.appearTime, this.p5, 1)
+            const objectOnTransform = this.calculateObjectParamsInTime(t.presenceParameters.appearTime, 1)
             const animationsOnTransform = this.getIncludedAnimationsByParameters(objectOnTransform)
             const transformDuration = t.presenceParameters.appearDuration
             const transformationType = t.options?.type

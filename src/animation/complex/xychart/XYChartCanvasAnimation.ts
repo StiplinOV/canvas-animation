@@ -1,6 +1,5 @@
 import {Point, ZeroPoint} from '../../../common/Point'
 import ComplexCanvasAnimation from '../ComplexCanvasAnimation'
-import p5Types from 'p5'
 import {calculateArrayPercentValue, calculatePercentValue, calculateTextPercentValue} from '../../../common/Utils'
 import CanvasAnimation, {ObjectParams} from '../../CanvasAnimation'
 import ArrowCanvasAnimation from '../arrow/ArrowCanvasAnimation'
@@ -17,6 +16,7 @@ const toChartPointType = (value: chartPointType | Point): chartPointType =>
 type scaleType = { position: number, value: string }
 type chartPointType = { point: Point, text: string }
 type chartYRangeType = { yCoords: [number, number], value: string }
+
 interface onlyXyChartParamsType {
     width: number
     height: number
@@ -28,7 +28,10 @@ interface onlyXyChartParamsType {
     chartLines?: [Point, Point][]
     chartYRanges?: chartYRangeType[]
 }
-interface xyChartParamsType extends onlyXyChartParamsType, ObjectParams {}
+
+interface xyChartParamsType extends onlyXyChartParamsType, ObjectParams {
+}
+
 type selectorType = { points?: 'all' | number[], lines?: 'all' }
 
 export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyChartParamsType, selectorType> {
@@ -224,7 +227,7 @@ export default class XYChartCanvasAnimation extends ComplexCanvasAnimation<xyCha
         }
     }
 
-    mergeWithTransformation(obj: xyChartParamsType, t: Partial<xyChartParamsType>, p: number, p5: p5Types): onlyXyChartParamsType {
+    mergeWithTransformation(obj: xyChartParamsType, t: Partial<xyChartParamsType>, p: number): onlyXyChartParamsType {
         let {width, height, xScale, yScale, xAxisName, yAxisName, chartPoints, chartLines, chartYRanges} = obj
         xScale ??= []
         yScale ??= []

@@ -99,7 +99,7 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
     }
 
     public draw(p5: p5Types, time: number): void {
-        const object = this.calculateObjectParamsInTime(time, p5)
+        const object = this.calculateObjectParamsInTime(time)
         const offset = object.offset ?? ZeroPoint
         const rotationAxis = object.origin
 
@@ -117,11 +117,11 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
 
     protected abstract doDraw(p5: p5Types, time: number): void
 
-    public getZIndex(time: number, p5: p5Types): number {
-        return this.calculateObjectParamsInTime(time, p5).zIndex ?? 0
+    public getZIndex(time: number): number {
+        return this.calculateObjectParamsInTime(time).zIndex ?? 0
     }
 
-    public calculateObjectParamsInTime(time: number, p5: p5Types, percentParam?: number): T {
+    public calculateObjectParamsInTime(time: number, percentParam?: number): T {
         const sourceObject = this.object
         let result = {...sourceObject}
         this.getTransformations()
@@ -169,7 +169,7 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
                 }
                 result = {
                     ...result,
-                    ...this.mergeWithTransformation(result, transformationObject, percent, p5)
+                    ...this.mergeWithTransformation(result, transformationObject, percent)
                 }
             })
         return result
@@ -187,6 +187,6 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
         this.transformations.push(transformationParamToTransformation(transformation))
     }
 
-    public abstract mergeWithTransformation(obj: T, trans: Partial<T>, perc: number, p5: p5Types): Omit<T, keyof ObjectParams>
+    public abstract mergeWithTransformation(obj: T, trans: Partial<T>, perc: number): Omit<T, keyof ObjectParams>
 
 }

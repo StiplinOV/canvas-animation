@@ -24,9 +24,9 @@ export default class TextCanvasAnimation extends SimpleCanvasAnimation<textParam
         p5.text(value.substring(0, (value.length + 1) * percent), 0, 0, boxWidth, boxHeight)
     }
 
-    mergeWithTransformation(obj: textParamsType, trans: Partial<textParamsType>, perc: number, p5: p5Types): onlyTextParamsType {
+    mergeWithTransformation(obj: textParamsType, trans: Partial<textParamsType>, perc: number): onlyTextParamsType {
         let {fontSize, boxWidth, boxHeight} = obj
-        fontSize ??= p5.textSize()
+        fontSize ??= this.getAnimationStyle().fontSize
         boxHeight = boxHeight && trans.boxHeight ? calculatePercentValue(boxHeight, trans.boxHeight, perc) : boxHeight
         return {
             value: typeof trans.value === 'string' ? calculateTextPercentValue(obj.value, trans.value, perc) : obj.value,

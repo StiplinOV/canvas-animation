@@ -103,7 +103,7 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayPa
         return height / numberOfParts
     }
 
-    public mergeWithTransformation(o: arrayParamsType, t: Partial<arrayParamsType>, p: number, p5: import('p5')): onlyArrayParamsType {
+    public mergeWithTransformation(o: arrayParamsType, t: Partial<arrayParamsType>, p: number): onlyArrayParamsType {
         let {value, width, height, title, indexTitle, firstIndex} = o
         value ??= []
         width ??= this.calculateWidth(o)

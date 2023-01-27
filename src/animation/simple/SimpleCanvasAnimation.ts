@@ -7,7 +7,7 @@ interface SelectionInfo<U extends Selection = Selection> { selection?: U | null,
 export default abstract class SimpleCanvasAnimation<T extends ObjectParams> extends CanvasAnimation<T> {
 
     protected doDraw(p5: p5Types, time: number): void {
-        const object = this.calculateObjectParamsInTime(time, p5)
+        const object = this.calculateObjectParamsInTime(time)
         const selectionInfo = this.calculateSelectionInfo(time)
         p5.strokeWeight(object.weight ?? 1)
         p5.stroke(this.getAnimationStyle().strokeColor)

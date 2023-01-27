@@ -1,6 +1,5 @@
 import ComplexCanvasAnimation from '../ComplexCanvasAnimation'
 import LineCanvasAnimation, {onlyLineParamsType} from '../../simple/line/LineCanvasAnimation'
-import p5Types from 'p5'
 import {calculatePointPercentValue, getVectorAngle, rotateVector, subtractPoints} from '../../../common/Utils'
 import CanvasAnimation, {ObjectParams} from '../../CanvasAnimation'
 import {ZeroPoint} from '../../../common/Point'
@@ -73,7 +72,7 @@ export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowPa
         return result
     }
 
-    mergeWithTransformation(obj: arrowParamsType, trans: Partial<arrowParamsType>, perc: number, p5: p5Types): onlyArrowParamsType {
+    mergeWithTransformation(obj: arrowParamsType, trans: Partial<arrowParamsType>, perc: number): onlyArrowParamsType {
         const {endPoint, startType, endType} = obj
         return {
             endPoint: trans.endPoint ? calculatePointPercentValue(endPoint, trans.endPoint, perc) : endPoint,
