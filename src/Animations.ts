@@ -17,7 +17,7 @@ export const canvasAnimations: (p5: p5Types, style: AnimationStyle) => CanvasAni
             origin: {x: 640, y: 400},
             horizontalAlign: 'center',
             verticalAlign: 'center',
-            fontSize: 70
+            fontSize: 65
         },
         presenceParameters: {
             appearDuration: 2000

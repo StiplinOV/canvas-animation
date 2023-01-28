@@ -18,7 +18,7 @@ export default class RectangleCanvasAnimation extends SimpleCanvasAnimation<rect
     }
 
     mergeWithTransformation(obj: rectangleParamsType, trans: Partial<rectangleParamsType>, perc: number): onlyRectangleParamsType {
-        let cornerRadius = obj.cornerRadius ?? 0
+        let cornerRadius = obj.cornerRadius ?? this.getAnimationStyle().cornerRadius
         if (trans.cornerRadius) {
             cornerRadius = calculatePercentValue(cornerRadius, trans.cornerRadius, perc)
         }

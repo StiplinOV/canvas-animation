@@ -18,6 +18,8 @@ export default class TextCanvasAnimation extends SimpleCanvasAnimation<textParam
     public drawObject(p5: p5Types, object: textParamsType, percent: number, selectedPercent: number): void {
         const {boxHeight, boxWidth, fontSize, value, horizontalAlign, verticalAlign} = object
         const textSize = fontSize ?? p5.textSize()
+        p5.strokeWeight(this.getAnimationStyle().fontWeight)
+        p5.textFont(this.getAnimationStyle().font)
         p5.fill(this.getAnimationStyle().fontColor)
         p5.textSize(textSize)
         p5.textAlign(horizontalAlign ?? p5.LEFT, verticalAlign ?? p5.BOTTOM)

@@ -108,7 +108,7 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
         }
         p5.push()
         p5.translate(rotationAxis.x, rotationAxis.y)
-        p5.rotate(object.rotation ?? 0)
+        p5.rotate(object.rotation ?? this.getAnimationStyle().objectRotation)
         p5.translate(offset.x, offset.y)
         object.dashed && p5.drawingContext.setLineDash(object.dashed)
         this.doDraw(p5, time)
@@ -137,13 +137,24 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
                     result.zIndex = calculatePercentValue(result.zIndex ?? 0, transformationObject.zIndex, percent)
                 }
                 if (transformationObject.weight) {
-                    result.weight = calculatePercentValue(result.weight ?? 1, transformationObject.weight, percent)
+                    result.weight = calculatePercentValue(
+                        result.weight ?? this.getAnimationStyle().strokeWeight,
+                        transformationObject.weight, percent
+                    )
                 }
                 if (transformationObject.rotation) {
-                    result.rotation = calculatePercentValue(result.rotation ?? 0, transformationObject.rotation, percent)
+                    result.rotation = calculatePercentValue(
+                        result.rotation ?? this.getAnimationStyle().objectRotation,
+                        transformationObject.rotation,
+                        percent
+                    )
                 }
                 if (transformationObject.offset) {
-                    result.offset = calculatePointPercentValue(result.offset ?? ZeroPoint, transformationObject.offset, percent)
+                    result.offset = calculatePointPercentValue(
+                        result.offset ?? ZeroPoint,
+                        transformationObject.offset,
+                        percent
+                    )
                 }
                 const transformDashed = transformationObject.dashed
                 const resultDashed = result.dashed ?? []

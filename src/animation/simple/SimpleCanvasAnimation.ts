@@ -9,7 +9,7 @@ export default abstract class SimpleCanvasAnimation<T extends ObjectParams> exte
     protected doDraw(p5: p5Types, time: number): void {
         const object = this.calculateObjectParamsInTime(time)
         const selectionInfo = this.calculateSelectionInfo(time)
-        p5.strokeWeight(object.weight ?? 1)
+        p5.strokeWeight(object.weight ?? this.getAnimationStyle().strokeWeight)
         p5.stroke(this.getAnimationStyle().strokeColor)
         p5.fill(this.getAnimationStyle().fillColor)
         this.drawObject(p5, object, toAppearancePercent(time, this.getAppearanceParam()), selectionInfo.percent)
