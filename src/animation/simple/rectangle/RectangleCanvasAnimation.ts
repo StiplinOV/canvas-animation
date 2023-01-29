@@ -2,6 +2,7 @@ import SimpleCanvasAnimation from '../SimpleCanvasAnimation'
 import p5Types from 'p5'
 import {calculatePercentValue} from '../../../common/Utils'
 import {ObjectParams} from '../../CanvasAnimation'
+import AnimationStyle from '../../../AnimationStyles'
 
 interface onlyRectangleParamsType {
     width: number
@@ -17,8 +18,8 @@ export default class RectangleCanvasAnimation extends SimpleCanvasAnimation<rect
         p5.rect(width / 2 * (1 - percent), height / 2 * (1 - percent), width * percent, height * percent, cornerRadius)
     }
 
-    mergeWithTransformation(obj: rectangleParamsType, trans: Partial<rectangleParamsType>, perc: number): onlyRectangleParamsType {
-        let cornerRadius = obj.cornerRadius ?? this.getAnimationStyle().cornerRadius
+    mergeWithTransformation(obj: rectangleParamsType, trans: Partial<rectangleParamsType>, perc: number, style: AnimationStyle): onlyRectangleParamsType {
+        let cornerRadius = obj.cornerRadius ?? style.cornerRadius
         if (trans.cornerRadius) {
             cornerRadius = calculatePercentValue(cornerRadius, trans.cornerRadius, perc)
         }

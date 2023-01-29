@@ -180,7 +180,7 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
                 }
                 result = {
                     ...result,
-                    ...this.mergeWithTransformation(result, transformationObject, percent)
+                    ...this.mergeWithTransformation(result, transformationObject, percent, this.animationStyle)
                 }
             })
         return result
@@ -198,6 +198,6 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
         this.transformations.push(transformationParamToTransformation(transformation))
     }
 
-    public abstract mergeWithTransformation(obj: T, trans: Partial<T>, perc: number): Omit<T, keyof ObjectParams>
+    public abstract mergeWithTransformation(obj: T, trans: Partial<T>, perc: number, animationStyle: AnimationStyle): Omit<T, keyof ObjectParams>
 
 }

@@ -28,7 +28,7 @@ const createAnimationStyles = (): Record<string, Partial<AnimationStyle>> => ({
     default: defaultAnimationStyle,
     custom: {
         backgroundColor: '#132226',
-        fillColor: '#525B56',
+        fillColor: '#132226',
         fontColor: '#A4978E',
         selectedColor: '#ff4000',
         strokeColor: '#BE9063'
