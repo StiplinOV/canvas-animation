@@ -1,10 +1,10 @@
 import {HORIZ_ALIGN, VERT_ALIGN} from 'p5'
 import {calculatePercentValue, calculateTextPercentValue} from '../../../common/Utils'
 import {ObjectParams} from '../../CanvasAnimationParams'
-import SimpleCanvasAnimationParams from "../SimpleCanvasAnimationParams";
-import AnimationStyle from "../../../AnimationStyles";
-import TextCanvasAnimation from "./TextCanvasAnimation";
-import CanvasAnimation from "../../CanvasAnimation";
+import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
+import AnimationStyle from '../../../AnimationStyles'
+import TextCanvasAnimation from './TextCanvasAnimation'
+import CanvasAnimation from '../../CanvasAnimation'
 
 interface onlyTextParamsType {
     value: string
@@ -35,7 +35,7 @@ export default class TextCanvasAnimationParams extends SimpleCanvasAnimationPara
     }
 
     toCanvasAnimation(animationStyle: AnimationStyle): CanvasAnimation {
-        return new TextCanvasAnimation(this, animationStyle);
+        return new TextCanvasAnimation(this, animationStyle)
     }
 
 }

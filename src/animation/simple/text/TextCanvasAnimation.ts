@@ -1,7 +1,7 @@
 import p5Types from 'p5'
 import SimpleCanvasAnimation from '../SimpleCanvasAnimation'
-import AnimationStyle from "../../../AnimationStyles";
-import {textParamsType} from './TextCanvasAnimationParams';
+import AnimationStyle from '../../../AnimationStyles'
+import {textParamsType} from './TextCanvasAnimationParams'
 
 export default class TextCanvasAnimation extends SimpleCanvasAnimation<textParamsType> {
 
