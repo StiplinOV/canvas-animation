@@ -1,8 +1,9 @@
-import ComplexCanvasAnimation from '../ComplexCanvasAnimation'
-import LineCanvasAnimation, {onlyLineParamsType} from '../../simple/line/LineCanvasAnimation'
+import {onlyLineParamsType} from '../../simple/line/LineCanvasAnimation'
 import {calculatePointPercentValue, getVectorAngle, rotateVector, subtractPoints} from '../../../common/Utils'
-import CanvasAnimation, {ObjectParams} from '../../CanvasAnimation'
+import CanvasAnimationParams, {ObjectParams} from '../../CanvasAnimationParams'
 import {ZeroPoint} from '../../../common/Point'
+import ComplexCanvasAnimationParams from "../ComplexCanvasAnimationParams";
+import LineCanvasAnimationParams from "../../simple/line/LineCanvasAnimationParams";
 
 const arrowBaseLength = 10
 const arrowBaseWidth = 10
@@ -15,58 +16,58 @@ export interface onlyArrowParamsType extends onlyLineParamsType {
 interface arrowParamsType extends onlyArrowParamsType, ObjectParams {
 }
 
-export default class ArrowCanvasAnimation extends ComplexCanvasAnimation<arrowParamsType> {
+export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationParams<arrowParamsType> {
 
-    public getIncludedAnimationsByParameters(object: arrowParamsType): Map<string, CanvasAnimation> {
-        const result = new Map<string, CanvasAnimation>()
+    public getIncludedAnimationsByParameters(object: arrowParamsType): Map<string, CanvasAnimationParams> {
+        const result = new Map<string, CanvasAnimationParams>()
         const relativeEndPoint = subtractPoints(object.endPoint, object.origin)
 
-        result.set('shaft', new LineCanvasAnimation({
+        result.set('shaft', new LineCanvasAnimationParams({
             object: {
                 origin: ZeroPoint,
                 endPoint: relativeEndPoint,
                 weight: object.weight,
                 zIndex: object.zIndex
             }
-        }, this.getAnimationStyle()))
+        }))
         const angle = getVectorAngle(this.p5, relativeEndPoint)
         const leftArrowSide = rotateVector(this.p5, {x: arrowBaseLength, y: arrowBaseWidth / 2}, angle)
         const rightArrowSide = rotateVector(this.p5, {x: arrowBaseLength, y: -arrowBaseWidth / 2}, angle)
         if (object.endType === 'Arrow') {
-            result.set('left half arrowhead', new LineCanvasAnimation({
+            result.set('left half arrowhead', new LineCanvasAnimationParams({
                 object: {
                     origin: relativeEndPoint,
                     endPoint: subtractPoints(relativeEndPoint, leftArrowSide),
                     weight: object.weight,
                     zIndex: object.zIndex
                 }
-            }, this.getAnimationStyle()))
-            result.set('right half arrowhead', new LineCanvasAnimation({
+            }))
+            result.set('right half arrowhead', new LineCanvasAnimationParams({
                 object: {
                     origin: relativeEndPoint,
                     endPoint: subtractPoints(relativeEndPoint, rightArrowSide),
                     weight: object.weight,
                     zIndex: object.zIndex
                 }
-            }, this.getAnimationStyle()))
+            }))
         }
         if (object.startType === 'Arrow') {
-            result.set('left half arrow tail', new LineCanvasAnimation({
+            result.set('left half arrow tail', new LineCanvasAnimationParams({
                 object: {
                     origin: ZeroPoint,
                     endPoint: leftArrowSide,
                     weight: object.weight,
                     zIndex: object.zIndex
                 }
-            }, this.getAnimationStyle()))
-            result.set('right half arrow tail', new LineCanvasAnimation({
+            }))
+            result.set('right half arrow tail', new LineCanvasAnimationParams({
                 object: {
                     origin: ZeroPoint,
                     endPoint: rightArrowSide,
                     weight: object.weight,
                     zIndex: object.zIndex
                 }
-            }, this.getAnimationStyle()))
+            }))
         }
 
         return result

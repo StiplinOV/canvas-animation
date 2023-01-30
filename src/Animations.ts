@@ -1,17 +1,16 @@
-import CanvasAnimation from './animation/CanvasAnimation'
 import p5Types from 'p5'
-import XYChartCanvasAnimation from './animation/complex/xychart/XYChartCanvasAnimation'
-import RectangleCanvasAnimation from './animation/simple/rectangle/RectangleCanvasAnimation'
-import TextCanvasAnimation from './animation/simple/text/TextCanvasAnimation'
-import ArrayCanvasAnimation from './animation/complex/array/ArrayCanvasAnimation'
-import AnimationStyle from './AnimationStyles'
+import XYChartCanvasAnimationParams from './animation/complex/xychart/XYChartCanvasAnimationParams'
+import TextCanvasAnimationParams from './animation/simple/text/TextCanvasAnimationParams'
+import RectangleCanvasAnimationParams from './animation/simple/rectangle/RectangleCanvasAnimationParams'
+import CanvasAnimationParams from './animation/CanvasAnimationParams'
+import ArrayCanvasAnimationParams from './animation/complex/array/ArrayCanvasAnimationParams'
 
 export const canvasWidth = 1280
 export const canvasHeight = 800
 export const timeDivider = 1000000
 
-export const canvasAnimations: (p5: p5Types, style: AnimationStyle) => CanvasAnimation[] = (p5: p5Types, style: AnimationStyle) => [
-    new TextCanvasAnimation({
+export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5: p5Types) => [
+    new TextCanvasAnimationParams({
         object: {
             value: 'Best Time to Buy and Sell Stock',
             origin: {x: 640, y: 400},
@@ -23,16 +22,16 @@ export const canvasAnimations: (p5: p5Types, style: AnimationStyle) => CanvasAni
             appearDuration: 2000
         },
         selections: [{time: 2000, duration: 2000}]
-    }, style),
-    new RectangleCanvasAnimation({
+    }),
+    new RectangleCanvasAnimationParams({
         object: {
             origin: {x: 50, y: 50},
             width: 50,
             height: 50
         },
         selections: [{time: 0, duration: 1000}]
-    }, style),
-    new ArrayCanvasAnimation({
+    }),
+    new ArrayCanvasAnimationParams({
         object: {
             origin: {x: 240, y: 600},
             value: ['7', '1', '5', '3', '6', '4'],
@@ -47,8 +46,8 @@ export const canvasAnimations: (p5: p5Types, style: AnimationStyle) => CanvasAni
             appearDuration: 4000
         },
         selections: [{time: 10000, duration: 5000, type: 'sequentially'}]
-    }, p5, style),
-    new XYChartCanvasAnimation({
+    }, p5),
+    new XYChartCanvasAnimationParams({
         object: {
             origin: {x: 240, y: 1250},
             width: 800,
@@ -132,5 +131,5 @@ export const canvasAnimations: (p5: p5Types, style: AnimationStyle) => CanvasAni
                 object: {chartYRanges: [{yCoords: [1, 6], value: 'Profit is 5'}]}
             }
         ]
-    }, p5, style)
+    }, p5)
 ]

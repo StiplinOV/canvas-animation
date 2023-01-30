@@ -1,8 +1,8 @@
-import ComplexCanvasAnimation from '../ComplexCanvasAnimation'
-import CanvasAnimation, {ObjectParams} from '../../CanvasAnimation'
+import CanvasAnimationParams, {ObjectParams} from '../../CanvasAnimationParams'
 import {calculateArrayPercentValue, calculatePercentValue, calculateTextPercentValue} from '../../../common/Utils'
-import TextCanvasAnimation from '../../simple/text/TextCanvasAnimation'
-import RectangleCanvasAnimation from '../../simple/rectangle/RectangleCanvasAnimation'
+import ComplexCanvasAnimationParams from '../ComplexCanvasAnimationParams'
+import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
+import RectangleCanvasAnimationParams from '../../simple/rectangle/RectangleCanvasAnimationParams'
 
 interface onlyArrayParamsType {
     value: string[]
@@ -16,17 +16,17 @@ interface onlyArrayParamsType {
 interface arrayParamsType extends onlyArrayParamsType, ObjectParams {
 }
 
-export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayParamsType> {
+export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationParams<arrayParamsType> {
 
-    getIncludedAnimationsByParameters(object: arrayParamsType): Map<string, CanvasAnimation> {
-        const result = new Map<string, CanvasAnimation>()
+    getIncludedAnimationsByParameters(object: arrayParamsType): Map<string, CanvasAnimationParams> {
+        const result = new Map<string, CanvasAnimationParams>()
         const {title, value, indexTitle, firstIndex} = object
         const partHeight = this.calculatePartHeight(object)
         const width = this.calculateWidth(object)
         const arrayRectangleWidth = (width - (value.length - 1) * partHeight) / value.length
         let partShift = 0
         if (title) {
-            result.set('array title', new TextCanvasAnimation({
+            result.set('array title', new TextCanvasAnimationParams({
                 object: {
                     value: title,
                     origin: {x: width / 2, y: partShift},
@@ -34,19 +34,19 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayPa
                     horizontalAlign: 'center',
                     verticalAlign: 'top'
                 }
-            }, this.getAnimationStyle()))
+            }))
             partShift += partHeight * 2
         }
         value.forEach((value, index) => {
-            result.set(`value rect ${index}`, new RectangleCanvasAnimation({
+            result.set(`value rect ${index}`, new RectangleCanvasAnimationParams({
                 object: {
                     origin: {x: index * (arrayRectangleWidth + partHeight), y: partShift},
                     width: arrayRectangleWidth,
                     height: partHeight * 3,
                     cornerRadius: 20
                 }
-            }, this.getAnimationStyle()))
-            result.set(`value text ${index}`, new TextCanvasAnimation({
+            }))
+            result.set(`value text ${index}`, new TextCanvasAnimationParams({
                 object: {
                     value,
                     origin: {
@@ -57,8 +57,8 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayPa
                     horizontalAlign: 'center',
                     zIndex: 1
                 }
-            }, this.getAnimationStyle()))
-            result.set(`index text ${index}`, new TextCanvasAnimation({
+            }))
+            result.set(`index text ${index}`, new TextCanvasAnimationParams({
                 object: {
                     value: String(index + (firstIndex ?? 0)),
                     origin: {
@@ -67,18 +67,18 @@ export default class ArrayCanvasAnimation extends ComplexCanvasAnimation<arrayPa
                     },
                     horizontalAlign: 'center'
                 }
-            }, this.getAnimationStyle()))
+            }))
         })
         partShift += partHeight * 5
         if (indexTitle) {
-            result.set('index title', new TextCanvasAnimation({
+            result.set('index title', new TextCanvasAnimationParams({
                 object: {
                     value: indexTitle,
                     origin: {x: width / 2, y: partShift},
                     fontSize: partHeight / 2,
                     horizontalAlign: 'center'
                 }
-            }, this.getAnimationStyle()))
+            }))
         }
 
         return result

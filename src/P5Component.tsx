@@ -5,7 +5,7 @@ import {canvasAnimations, canvasHeight, canvasWidth, timeDivider} from './Animat
 import {camera, cameraParams} from './camera/CameraParams'
 import {cameras} from './Cameras'
 import CanvasAnimation from './animation/CanvasAnimation'
-import AnimationStyle, {getAnimationStyle} from './AnimationStyles'
+import {getAnimationStyle} from './AnimationStyles'
 
 interface ComponentProps {
     some?: string
@@ -14,14 +14,13 @@ interface ComponentProps {
 export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => {
 
     const animations: CanvasAnimation[] = []
-    let animationStyle: AnimationStyle | null = null
+    const animationStyle = getAnimationStyle('custom')
 
     const preload = (p5: p5Types): void => {
     }
 
     const setup = (p5: p5Types): void => {
         const cnv = p5.createCanvas(canvasWidth, canvasHeight)
-        animationStyle = getAnimationStyle('custom')
         // p5.drawingContext.shadowOffsetX = 3
         // p5.drawingContext.shadowOffsetY = -3
         // p5.drawingContext.shadowBlur = 5
@@ -29,11 +28,14 @@ export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => 
         cnv.position(0, 0)
         cnv.style('border: 1px solid')
         cameras.sort((left, right) => left.startTime - right.startTime)
-        animations.push(...canvasAnimations(p5, animationStyle).sort((left, right) => left.getZIndex(0) - right.getZIndex(0)))
+        animations.push(
+            ...canvasAnimations(p5)
+                .sort((left, right) => left.getZIndex(0, animationStyle) - right.getZIndex(0, animationStyle))
+                .map(p => p.toCanvasAnimation(animationStyle))
+        )
     }
 
     const draw = (p5: p5Types): void => {
-        animationStyle = animationStyle ?? getAnimationStyle('defaut')
         const millis = p5.millis() % timeDivider
         const camera = getActualCamera(millis)
         const zoom = camera.zoom ?? 1
@@ -41,7 +43,7 @@ export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => 
         camera.rotation && p5.rotate(camera.rotation)
         p5.translate(-camera.x * zoom, -camera.y * zoom)
         p5.scale(zoom)
-        animations.sort((left, right) => left.getZIndex(millis) - right.getZIndex(millis)).forEach(a => {
+        animations.forEach(a => {
             a.draw(p5, millis)
         })
     }
