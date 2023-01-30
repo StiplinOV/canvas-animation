@@ -1,21 +1,9 @@
-import p5Types, {HORIZ_ALIGN, VERT_ALIGN} from 'p5'
+import p5Types from 'p5'
 import SimpleCanvasAnimation from '../SimpleCanvasAnimation'
-import {calculatePercentValue, calculateTextPercentValue} from '../../../common/Utils'
-import {ObjectParams} from '../../CanvasAnimationParams'
-import TextCanvasAnimationParams from "./TextCanvasAnimationParams";
 import AnimationStyle from "../../../AnimationStyles";
+import {textParamsType} from './TextCanvasAnimationParams';
 
-interface onlyTextParamsType {
-    value: string
-    fontSize?: number
-    boxWidth?: number
-    boxHeight?: number
-    horizontalAlign?: HORIZ_ALIGN
-    verticalAlign?: VERT_ALIGN
-}
-interface textParamsType extends ObjectParams, onlyTextParamsType {}
-
-export default class TextCanvasAnimation extends SimpleCanvasAnimation<textParamsType, TextCanvasAnimationParams> {
+export default class TextCanvasAnimation extends SimpleCanvasAnimation<textParamsType> {
 
     public drawObject(p5: p5Types, object: textParamsType, percent: number, selectedPercent: number, style: AnimationStyle): void {
         const {boxHeight, boxWidth, fontSize, value, horizontalAlign, verticalAlign} = object

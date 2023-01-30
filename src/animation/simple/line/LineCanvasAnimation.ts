@@ -1,18 +1,8 @@
 import p5Types from 'p5'
 import SimpleCanvasAnimation from '../SimpleCanvasAnimation'
-import {calculatePointPercentValue} from '../../../common/Utils'
-import {Point} from '../../../common/Point'
-import {ObjectParams} from '../../CanvasAnimationParams'
-import LineCanvasAnimationParams from "./LineCanvasAnimationParams";
+import {lineParamsType} from './LineCanvasAnimationParams'
 
-export interface onlyLineParamsType {
-    endPoint: Point
-}
-
-interface lineParamsType extends ObjectParams, onlyLineParamsType {
-}
-
-export default class LineCanvasAnimation extends SimpleCanvasAnimation<lineParamsType, LineCanvasAnimationParams> {
+export default class LineCanvasAnimation extends SimpleCanvasAnimation<lineParamsType> {
 
     public drawObject(p5: p5Types, object: lineParamsType, percent: number, selectedPercent: number): void {
         const {origin, endPoint} = object

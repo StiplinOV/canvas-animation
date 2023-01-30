@@ -12,7 +12,7 @@ interface onlyRectangleParamsType {
     height: number
     cornerRadius?: number
 }
-interface rectangleParamsType extends onlyRectangleParamsType, ObjectParams {}
+export interface rectangleParamsType extends onlyRectangleParamsType, ObjectParams {}
 
 export default class RectangleCanvasAnimationParams extends SimpleCanvasAnimationParams<rectangleParamsType> {
 

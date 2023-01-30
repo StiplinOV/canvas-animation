@@ -15,7 +15,7 @@ interface onlyTextParamsType {
     verticalAlign?: VERT_ALIGN
 }
 
-interface textParamsType extends ObjectParams, onlyTextParamsType {
+export interface textParamsType extends ObjectParams, onlyTextParamsType {
 }
 
 export default class TextCanvasAnimationParams extends SimpleCanvasAnimationParams<textParamsType> {

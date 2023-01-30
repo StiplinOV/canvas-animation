@@ -2,12 +2,9 @@ import p5Types from 'p5'
 import {needAppearObject} from '../common/Utils'
 import {ZeroPoint} from '../common/Point'
 import AnimationStyle from '../AnimationStyles'
-import CanvasAnimationParams, {Selection} from './CanvasAnimationParams';
+import CanvasAnimationParams from './CanvasAnimationParams';
 
-//TODO избавиться от всратых ненужных джинериков, вынести обджект парамс
-export default abstract class CanvasAnimation<T extends CanvasAnimationParams = CanvasAnimationParams,
-    U = unknown,
-    V extends Selection = Selection> {
+export default abstract class CanvasAnimation<T extends CanvasAnimationParams = CanvasAnimationParams> {
 
     public readonly params: T
 

@@ -2,10 +2,10 @@ import CanvasAnimation from '../CanvasAnimation'
 import p5Types from 'p5'
 import {toAppearancePercent} from '../../common/Utils'
 import SimpleCanvasAnimationParams from "./SimpleCanvasAnimationParams";
-import {ObjectParams, Selection} from "../CanvasAnimationParams";
+import {ObjectParams} from "../CanvasAnimationParams";
 import AnimationStyle from "../../AnimationStyles";
 
-export default abstract class SimpleCanvasAnimation<T extends ObjectParams, U extends SimpleCanvasAnimationParams<T>> extends CanvasAnimation<U> {
+export default abstract class SimpleCanvasAnimation<T extends ObjectParams, U extends SimpleCanvasAnimationParams<T> = SimpleCanvasAnimationParams<T>> extends CanvasAnimation<U> {
 
     protected doDraw(p5: p5Types, time: number, animationStyle: AnimationStyle): void {
         const object = this.params.calculateObjectParamsInTime(time, animationStyle)

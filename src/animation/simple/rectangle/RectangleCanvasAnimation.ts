@@ -1,18 +1,8 @@
 import SimpleCanvasAnimation from '../SimpleCanvasAnimation'
 import p5Types from 'p5'
-import {calculatePercentValue} from '../../../common/Utils'
-import {ObjectParams} from '../../CanvasAnimationParams'
-import AnimationStyle from '../../../AnimationStyles'
-import RectangleCanvasAnimationParams from "./RectangleCanvasAnimationParams";
+import {rectangleParamsType} from "./RectangleCanvasAnimationParams";
 
-interface onlyRectangleParamsType {
-    width: number
-    height: number
-    cornerRadius?: number
-}
-interface rectangleParamsType extends onlyRectangleParamsType, ObjectParams {}
-
-export default class RectangleCanvasAnimation extends SimpleCanvasAnimation<rectangleParamsType, RectangleCanvasAnimationParams> {
+export default class RectangleCanvasAnimation extends SimpleCanvasAnimation<rectangleParamsType> {
 
     drawObject(p5: p5Types, object: rectangleParamsType, percent: number): void {
         const {width, height, cornerRadius} = object
