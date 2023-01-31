@@ -1,8 +1,8 @@
 import {calculatePointPercentValue, getVectorAngle, rotateVector, subtractPoints} from '../../../common/Utils'
 import CanvasAnimationParams, {ObjectParams} from '../../CanvasAnimationParams'
 import {ZeroPoint} from '../../../common/Point'
-import ComplexCanvasAnimationParams from "../ComplexCanvasAnimationParams";
-import LineCanvasAnimationParams, {onlyLineParamsType} from "../../simple/line/LineCanvasAnimationParams";
+import ComplexCanvasAnimationParams from '../ComplexCanvasAnimationParams'
+import LineCanvasAnimationParams, {onlyLineParamsType} from '../../simple/line/LineCanvasAnimationParams'
 
 const arrowBaseLength = 10
 const arrowBaseWidth = 10

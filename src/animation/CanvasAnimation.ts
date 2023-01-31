@@ -2,7 +2,7 @@ import p5Types from 'p5'
 import {needAppearObject} from '../common/Utils'
 import {ZeroPoint} from '../common/Point'
 import AnimationStyle from '../AnimationStyles'
-import CanvasAnimationParams from './CanvasAnimationParams';
+import CanvasAnimationParams from './CanvasAnimationParams'
 
 export default abstract class CanvasAnimation<T extends CanvasAnimationParams = CanvasAnimationParams> {
 

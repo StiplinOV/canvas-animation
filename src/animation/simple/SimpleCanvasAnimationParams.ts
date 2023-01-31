@@ -1,7 +1,7 @@
 import CanvasAnimationParams, {ObjectParams, Selection} from '../CanvasAnimationParams'
 
 interface SelectionInfo<U extends Selection = Selection> {
-    selection?: U | null,
+    selection?: U | null
     percent: number
 }
 

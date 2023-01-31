@@ -1,6 +1,6 @@
 import SimpleCanvasAnimation from '../SimpleCanvasAnimation'
 import p5Types from 'p5'
-import {rectangleParamsType} from "./RectangleCanvasAnimationParams";
+import {rectangleParamsType} from './RectangleCanvasAnimationParams'
 
 export default class RectangleCanvasAnimation extends SimpleCanvasAnimation<rectangleParamsType> {
 
