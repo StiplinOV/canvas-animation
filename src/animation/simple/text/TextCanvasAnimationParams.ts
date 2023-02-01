@@ -1,4 +1,4 @@
-import {HORIZ_ALIGN, VERT_ALIGN} from 'p5'
+import {HORIZ_ALIGN, VERT_ALIGN, THE_STYLE} from 'p5'
 import {calculatePercentValue, calculateTextPercentValue} from '../../../common/Utils'
 import {ObjectParams} from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
@@ -11,6 +11,7 @@ interface onlyTextParamsType {
     fontSize?: number
     boxWidth?: number
     boxHeight?: number
+    textStyle?: THE_STYLE
     horizontalAlign?: HORIZ_ALIGN
     verticalAlign?: VERT_ALIGN
 }

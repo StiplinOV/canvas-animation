@@ -21,14 +21,37 @@ export const calculateArrayPercentValue = <T>(from: T[], to: T[], percent: numbe
     if (JSON.stringify(from) === JSON.stringify(to)) {
         return from
     }
-    const numberOfStates = from.length + to.length
-    const currentState = Math.floor(calculatePercentValue(1, numberOfStates, percent))
-    if (currentState >= 0 && currentState <= from.length - 1) {
-        return from.slice(0, from.length - currentState)
-    } else if (currentState >= from.length + 1 && currentState <= from.length + to.length) {
-        return to.slice(0, currentState - from.length)
+    let toStartsWithFrom = true
+    let fromStartsWithTo = true
+    for (let i = 0; i < Math.min(from.length, to.length); i++) {
+        if (from[i] !== to[i]) {
+            toStartsWithFrom = false
+            fromStartsWithTo = false
+            break
+        }
+    }
+    if (toStartsWithFrom) {
+        toStartsWithFrom = to.length >= from.length
+        fromStartsWithTo = from.length >= to.length
+    }
+    if (toStartsWithFrom) {
+        const numberOfStates = to.length - from.length
+        const currentState = Math.floor(calculatePercentValue(1, numberOfStates, percent))
+        return to.slice(0, from.length + currentState)
+    } else if (fromStartsWithTo) {
+        const numberOfStates = from.length - to.length
+        const currentState = Math.floor(calculatePercentValue(1, numberOfStates, percent))
+        return to.slice(0, from.length - currentState)
     } else {
-        return []
+        const numberOfStates = from.length + to.length
+        const currentState = Math.floor(calculatePercentValue(1, numberOfStates, percent))
+        if (currentState >= 0 && currentState <= from.length - 1) {
+            return from.slice(0, from.length - currentState)
+        } else if (currentState >= from.length + 1 && currentState <= from.length + to.length) {
+            return to.slice(0, currentState - from.length)
+        } else {
+            return []
+        }
     }
 }
 export const calculateTextPercentValue = (from: string, to: string, percent: number): string => {

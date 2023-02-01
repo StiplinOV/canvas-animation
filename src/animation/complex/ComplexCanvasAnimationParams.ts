@@ -133,7 +133,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
                 disappearTime: disappearedObjectDisappearTime,
                 disappearDuration: disappearedObjectDisappearDuration * containedAnimationLength
             })
-            disappearedObjectDisappearTime += disappearTime * containedAnimationLength
+            disappearedObjectDisappearTime += disappearedObjectDisappearDuration * containedAnimationLength
         })
         this.setAnimationSelections(result)
         return Array.from(result.values())

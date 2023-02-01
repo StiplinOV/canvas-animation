@@ -1,7 +1,7 @@
 import React from 'react'
 import Sketch from 'react-p5'
 import p5Types from 'p5'
-import {canvasAnimations, canvasHeight, canvasWidth, timeDivider} from './Animations'
+import {canvasAnimations, canvasHeight, canvasWidth, timeDivider, timeMultiplier} from './Animations'
 import {camera, cameraParams} from './camera/CameraParams'
 import {cameras} from './Cameras'
 import CanvasAnimation from './animation/CanvasAnimation'
@@ -36,7 +36,7 @@ export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => 
     }
 
     const draw = (p5: p5Types): void => {
-        const millis = p5.millis() % timeDivider
+        const millis = (p5.millis() * timeMultiplier) % timeDivider
         const camera = getActualCamera(millis)
         const zoom = camera.zoom ?? 1
         p5.background(animationStyle.backgroundColor)

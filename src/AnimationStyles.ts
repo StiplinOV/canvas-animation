@@ -1,3 +1,5 @@
+import {THE_STYLE} from "p5";
+
 export default interface AnimationStyle {
     backgroundColor: string
     fillColor: string
@@ -10,6 +12,7 @@ export default interface AnimationStyle {
     strokeWeight: number
     cornerRadius: number
     objectRotation: number
+    textStyle: THE_STYLE
 }
 const defaultAnimationStyle: AnimationStyle = {
     backgroundColor: '#FFFFFF',
@@ -22,7 +25,8 @@ const defaultAnimationStyle: AnimationStyle = {
     fontWeight: 0.5,
     strokeWeight: 1,
     cornerRadius: 0,
-    objectRotation: 0
+    objectRotation: 0,
+    textStyle: "normal"
 }
 const createAnimationStyles = (): Record<string, Partial<AnimationStyle>> => ({
     default: defaultAnimationStyle,
