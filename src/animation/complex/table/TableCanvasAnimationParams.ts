@@ -10,6 +10,8 @@ interface onlyTableParamsType {
     width: number
     height: number
     fontSize?: number
+    verticalTitles?: string[]
+    horizontalTitles?: string[]
 }
 
 interface tableParamsType extends onlyTableParamsType, ObjectParams {
@@ -19,14 +21,15 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
 
     getIncludedAnimationsByParameters(object: tableParamsType): Map<string, CanvasAnimationParams> {
         const result = new Map<string, CanvasAnimationParams>()
-        const {values, width, height} = object
+        const {values, width, height, verticalTitles} = object
         const stepHeight = height / values.length
         const mergedWidthsMap: Map<number, number[]> = new Map<number, number[]>()
+        const verticalTitleWidth = this.calculateVerticalTitleWidth(object)
 
         values.forEach((row, i) => {
             const widths = mergedWidthsMap.get(row.length) ?? new Array<number>(row.length).fill(0)
             row.forEach((value, j) => {
-                widths[j] = Math.max(widths[j], this.p5.textWidth(values[i][j]))
+                widths[j] = Math.max(widths[j], this.p5.textWidth(value))
             })
             mergedWidthsMap.set(row.length, widths)
         })
@@ -34,7 +37,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         mergedWidthsMap.forEach((value, key) => {
             const tempWidthsSum = value.reduce((l, r) => l + r, 0)
             for (let i = 0; i < key; i++) {
-                value[i] = (value[i] * width) / tempWidthsSum
+                value[i] = (value[i] * (width - verticalTitleWidth)) / tempWidthsSum
             }
         })
         for (let i = 0; i < values.length; i++) {
@@ -46,7 +49,15 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                     }
                 }))
             }
-            let accumulatedWidth = 0
+            let accumulatedWidth = verticalTitleWidth
+            if (verticalTitleWidth) {
+                result.set(`vertical line title ${i}`, new LineCanvasAnimationParams({
+                    object: {
+                        origin: {x: accumulatedWidth, y: i * stepHeight},
+                        endPoint: {x: accumulatedWidth, y: (i + 1) * stepHeight}
+                    }
+                }))
+            }
             const widths = mergedWidthsMap.get(values[i].length) ?? []
             for (let j = 0; j < values[i].length - 1; j++) {
                 accumulatedWidth += widths[j]
@@ -60,6 +71,21 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         }
         for (let i = 0; i < values.length; i++) {
             let accumulatedWidth = 0
+            if (verticalTitles?.length) {
+                const x = accumulatedWidth + verticalTitleWidth / 2
+                const y = stepHeight * i + (stepHeight / 2)
+                result.set(`title ${i}`, new TextCanvasAnimationParams({
+                    object: {
+                        fontSize: object.fontSize,
+                        origin: {x, y},
+                        value: verticalTitles.length <= i ? '' : verticalTitles[i],
+                        horizontalAlign: 'center',
+                        verticalAlign: 'center',
+                        textStyle: 'bold'
+                    }
+                }))
+                accumulatedWidth += verticalTitleWidth
+            }
             const widths = mergedWidthsMap.get(values[i].length) ?? []
             for (let j = 0; j < values[i].length; j++) {
                 const x = accumulatedWidth + widths[j] / 2
@@ -77,6 +103,42 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
             }
         }
 
+        return result
+    }
+
+    private calculateVerticalTitleWidth(object: tableParamsType): number {
+        const {verticalTitles, values, width} = object
+        let titleWidth = 0
+        if (verticalTitles) {
+            const maxTitle = this.getStringWithMaximumWidth(verticalTitles)
+            titleWidth = Number.MAX_VALUE
+            for (let i = 0; i < values.length; i++) {
+                const row = [maxTitle, ...values[i]]
+                titleWidth = Math.min(titleWidth, this.stringsToWidths(row, width)[0])
+            }
+        }
+        return titleWidth
+    }
+
+    private getStringWithMaximumWidth(strings: string[]): string {
+        let resultIndex = -1
+        let maximumWidth = 0
+        for (let i = 0; i < strings.length; i++) {
+            const textWidth = this.p5.textWidth(strings[i])
+            if (textWidth > maximumWidth) {
+                resultIndex = i
+                maximumWidth = textWidth
+            }
+        }
+        return strings[resultIndex]
+    }
+
+    private stringsToWidths(strings: string[], width: number): number[] {
+        const result = strings.map(s => this.p5.textWidth(s))
+        const textWidthsSum = result.reduce((l, r) => l + r, 0)
+        for (let i = 0; i < result.length; i++) {
+            result[i] = (result[i] * width) / textWidthsSum
+        }
         return result
     }
 
