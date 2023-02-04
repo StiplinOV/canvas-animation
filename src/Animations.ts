@@ -1,15 +1,16 @@
 import p5Types from 'p5'
 import XYChartCanvasAnimationParams from './animation/complex/xychart/XYChartCanvasAnimationParams'
 import TextCanvasAnimationParams from './animation/simple/text/TextCanvasAnimationParams'
-import RectangleCanvasAnimationParams from './animation/simple/rectangle/RectangleCanvasAnimationParams'
 import CanvasAnimationParams from './animation/CanvasAnimationParams'
+import TableCanvasAnimationParams from './animation/complex/table/TableCanvasAnimationParams'
 import ArrayCanvasAnimationParams from './animation/complex/array/ArrayCanvasAnimationParams'
 
 export const canvasWidth = 1280
 export const canvasHeight = 800
 export const timeDivider = 1000000
+export const timeMultiplier = 4
 
-export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5: p5Types) => [
+export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) => [
     new TextCanvasAnimationParams({
         object: {
             value: 'Best Time to Buy and Sell Stock',
@@ -20,16 +21,7 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5: p
         },
         presenceParameters: {
             appearDuration: 2000
-        },
-        selections: [{time: 2000, duration: 2000}]
-    }),
-    new RectangleCanvasAnimationParams({
-        object: {
-            origin: {x: 50, y: 50},
-            width: 50,
-            height: 50
-        },
-        selections: [{time: 0, duration: 1000}]
+        }
     }),
     new ArrayCanvasAnimationParams({
         object: {
@@ -43,9 +35,10 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5: p
         },
         presenceParameters: {
             appearTime: 5000,
-            appearDuration: 4000
-        },
-        selections: [{time: 10000, duration: 5000, type: 'sequentially'}]
+            appearDuration: 4000,
+            disappearTime: 35000,
+            disappearDuration: 4000
+        }
     }, p5),
     new XYChartCanvasAnimationParams({
         object: {
@@ -104,22 +97,13 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5: p
                     appearDuration: 1000
                 },
                 object: {
-                    xScale: [0, 1, 2, 3, 4, 5, 6, 7],
-                    yScale: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                     chartPoints: [
-                        {x: 2, y: 3},
-                        {x: 3, y: 1},
+                        {x: 1, y: 7},
+                        {point: {x: 2, y: 1}, text: 'Buy'},
+                        {x: 3, y: 5},
                         {x: 4, y: 3},
-                        {x: 5, y: 2},
-                        {x: 6, y: 1},
-                        {x: 7, y: 1}
-                    ],
-                    chartLines: [
-                        [{x: 2, y: 3}, {x: 3, y: 1}],
-                        [{x: 3, y: 1}, {x: 4, y: 3}],
-                        [{x: 4, y: 3}, {x: 5, y: 2}],
-                        [{x: 5, y: 2}, {x: 6, y: 1}],
-                        [{x: 6, y: 1}, {x: 7, y: 1}]
+                        {point: {x: 5, y: 6}, text: 'Sell'},
+                        {x: 6, y: 4}
                     ]
                 }
             },
@@ -129,6 +113,133 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5: p
                     appearDuration: 2000
                 },
                 object: {chartYRanges: [{yCoords: [1, 6], value: 'Profit is 5'}]}
+            },
+            {
+                presenceParameters: {
+                    appearTime: 35000,
+                    appearDuration: 2000
+                },
+                object: {chartYRanges: []}
+            },
+            {
+                presenceParameters: {
+                    appearTime: 44000,
+                    appearDuration: 2000
+                },
+                object: {
+                    width: 1200
+                }
+            }
+        ]
+    }, p5),
+    new TextCanvasAnimationParams({
+        presenceParameters: {
+            appearTime: 30000,
+            appearDuration: 500,
+            disappearTime: 35000,
+            disappearDuration: 500
+        },
+        object: {
+            origin: {x: 1050, y: 850},
+            value: 'fee = 2',
+            fontSize: 35
+        }
+    }),
+    new TextCanvasAnimationParams({
+        presenceParameters: {
+            appearTime: 32000,
+            appearDuration: 500,
+            disappearTime: 35000,
+            disappearDuration: 500
+
+        },
+        object: {
+            origin: {x: 1050, y: 900},
+            value: 'cool down = 1',
+            fontSize: 35
+        }
+    }),
+    new TextCanvasAnimationParams({
+        presenceParameters: {
+            appearTime: 35000,
+            appearDuration: 1000,
+            disappearTime: 46000,
+            disappearDuration: 1000
+        },
+        object: {
+            verticalAlign: 'top',
+            origin: {x: 1150, y: 950},
+            value: '1) Buy',
+            fontSize: 35
+        },
+        transformations: [{
+            presenceParameters: {
+                appearTime: 37000,
+                appearDuration: 1000
+            },
+            object: {
+                value: '1) Buy\n2) Sell'
+            }
+        }, {
+            presenceParameters: {
+                appearTime: 39000,
+                appearDuration: 1000
+            },
+            object: {
+                value: '1) Buy\n2) Sell\n3) Wait'
+            }
+        }, {
+            presenceParameters: {
+                appearTime: 41000,
+                appearDuration: 1000
+            },
+            object: {
+                value: '1) Buy\n2) Sell\n3) Wait\n4) Hold'
+            }
+        }]
+    }),
+    new TableCanvasAnimationParams({
+        presenceParameters: {
+            appearTime: 44000,
+            appearDuration: 2000
+        },
+        object: {
+            origin: {x: 240, y: 1350},
+            width: 1114.28,
+            height: 300,
+            fontSize: 30,
+            verticalTitles: true,
+            horizontalTitles: true,
+            columnWidthProportions: [0.5, 1, 1, 1, 1, 1, 1],
+            values: [
+                ['', '1', '2', '3', '4', '5', '6'],
+                ['Buy', '', '', '', '', '', ''],
+                ['Sell', '', '', '', '', '', ''],
+                ['Wait', '', '', '', '', '', ''],
+                ['Hold', '', '', '', '', '', '']
+            ]
+        },
+        selections: [
+            {
+                time: 50000,
+                duration: 2000,
+                selector: {
+                    rowTitles: 'all'
+                }
+            },
+            {
+                time: 55000,
+                duration: 2000,
+                selector: {
+                    colTitles: 'all'
+                }
+            },
+            {
+                time: 60000,
+                duration: 2000,
+                selector: {
+                    colTitles: [1]
+                }
             }
         ]
     }, p5)

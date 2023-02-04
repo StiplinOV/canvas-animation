@@ -10,5 +10,15 @@ export const cameras: cameraParams[] = [
         startTime: 10000,
         transformDuration: 1000,
         camera: {x: 0, y: 550}
+    },
+    {
+        startTime: 35000,
+        transformDuration: 1000,
+        camera: {x: 100, y: 700}
+    },
+    {
+        startTime: 45000,
+        transformDuration: 1000,
+        camera: {x: 120, y: 810, zoom: 0.9}
     }
 ]

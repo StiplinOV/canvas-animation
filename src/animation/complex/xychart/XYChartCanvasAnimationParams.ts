@@ -249,21 +249,21 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         }
     }
 
-    protected convertSelectorToDiscriminatorRegexp(selector: selectorType): RegExp {
+    protected convertSelectorToDiscriminatorRegexp(selector: selectorType): RegExp[] {
         if (!selector.lines && !selector.points) {
-            return /.*/
+            return [/.*/]
         }
         const result = []
         if (selector.lines === 'all') {
-            result.push('chartLine.*')
+            result.push(/chartLine.*/)
         }
         if (selector.points === 'all') {
-            result.push('chartPoint.*')
+            result.push(/chartPoint.*/)
         }
         if (Array.isArray(selector.points)) {
-            selector.points.forEach(p => result.push(`chartPoint ${p}'`))
+            selector.points.forEach(p => result.push(new RegExp(`chartPoint ${p}`)))
         }
-        return new RegExp(result.map(r => `(${r})`).join('|'))
+        return result
     }
 
 }

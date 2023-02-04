@@ -1,9 +1,9 @@
 import CanvasAnimation from '../CanvasAnimation'
 import p5Types from 'p5'
 import {toAppearancePercent} from '../../common/Utils'
-import SimpleCanvasAnimationParams from "./SimpleCanvasAnimationParams";
-import {ObjectParams} from "../CanvasAnimationParams";
-import AnimationStyle from "../../AnimationStyles";
+import SimpleCanvasAnimationParams from './SimpleCanvasAnimationParams'
+import {ObjectParams} from '../CanvasAnimationParams'
+import AnimationStyle from '../../AnimationStyles'
 
 export default abstract class SimpleCanvasAnimation<T extends ObjectParams, U extends SimpleCanvasAnimationParams<T> = SimpleCanvasAnimationParams<T>> extends CanvasAnimation<U> {
 

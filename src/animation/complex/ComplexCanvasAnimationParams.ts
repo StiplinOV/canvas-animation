@@ -146,7 +146,12 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
             animations.forEach((value, key) => {
                 const {appearTime, disappearTime} = value.getAppearanceParam()
                 if (time >= appearTime && time <= disappearTime) {
-                    if (!selector || this.convertSelectorToDiscriminatorRegexp(selector).test(key)) {
+                    if (selector) {
+                        const selectorDiscriminatorRegexps = this.convertSelectorToDiscriminatorRegexp(selector)
+                        if (new RegExp(selectorDiscriminatorRegexps.map(r => `(${r.source})`).join('|')).test(key)) {
+                            animationsToBeSelected.push(value)
+                        }
+                    } else {
                         animationsToBeSelected.push(value)
                     }
                 }
@@ -198,8 +203,8 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         return new ComplexCanvasAnimation(this, animationStyle)
     }
 
-    protected convertSelectorToDiscriminatorRegexp(selector: U): RegExp {
-        return /.*/
+    protected convertSelectorToDiscriminatorRegexp(selector: U): RegExp[] {
+        return [/.*/]
     }
 
 }

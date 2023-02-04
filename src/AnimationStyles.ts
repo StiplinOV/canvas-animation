@@ -1,4 +1,4 @@
-import {THE_STYLE} from "p5";
+import {THE_STYLE} from 'p5'
 
 export default interface AnimationStyle {
     backgroundColor: string
@@ -10,6 +10,7 @@ export default interface AnimationStyle {
     fontSize: number
     fontWeight: number
     strokeWeight: number
+    strokeBoldWeight: number
     cornerRadius: number
     objectRotation: number
     textStyle: THE_STYLE
@@ -24,9 +25,10 @@ const defaultAnimationStyle: AnimationStyle = {
     fontSize: 12,
     fontWeight: 0.5,
     strokeWeight: 1,
+    strokeBoldWeight: 4,
     cornerRadius: 0,
     objectRotation: 0,
-    textStyle: "normal"
+    textStyle: 'normal'
 }
 const createAnimationStyles = (): Record<string, Partial<AnimationStyle>> => ({
     default: defaultAnimationStyle,
@@ -36,6 +38,7 @@ const createAnimationStyles = (): Record<string, Partial<AnimationStyle>> => ({
         fontColor: '#A4978E',
         selectedColor: '#ff4000',
         strokeColor: '#BE9063'
+        // 132226
     }
 })
 export const getAnimationStyle = (key: keyof typeof animationStyles): AnimationStyle => {
