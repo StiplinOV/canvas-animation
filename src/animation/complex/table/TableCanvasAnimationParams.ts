@@ -12,14 +12,15 @@ interface onlyTableParamsType {
     fontSize?: number
     verticalTitles?: boolean
     horizontalTitles?: boolean
-    boldWeight?: number
     columnWidthProportions?: number[] | number[][]
+    boldHorizontalLines?: (number | [number, number])[]
+    boldVerticalLines?: (number | [number, number])[]
 }
 
 interface tableParamsType extends onlyTableParamsType, ObjectParams {
 }
 
-type selectorType = { rowTitles?: 'all' | number[], colTitles?: 'all' | number[] }
+type selectorType = { rowTitles?: 'all' | number[], colTitles?: 'all' | number[], values?: 'all' | [number, number][] }
 
 export default class TableCanvasAnimationParams extends ComplexCanvasAnimationParams<tableParamsType, selectorType> {
 
@@ -42,7 +43,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                         object: {
                             origin: {x: accumulatedWidth, y: stepHeight * (i + 1)},
                             endPoint: {x: accumulatedWidth + rowWidths[j], y: stepHeight * (i + 1)},
-                            bold: title ? 'bold' : 'normal'
+                            bold: this.isBoldHorizontalLine(object, i, j) ? 'bold' : 'normal'
                         }
                     }))
                 }
@@ -52,7 +53,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                         object: {
                             origin: {x: accumulatedWidth, y: i * stepHeight},
                             endPoint: {x: accumulatedWidth, y: (i + 1) * stepHeight},
-                            bold: title ? 'bold' : 'normal'
+                            bold: this.isBoldVerticalLine(object, i, j) ? 'bold' : 'normal'
                         }
                     }))
                 }
@@ -68,7 +69,6 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                 }))
             }
         }
-
         return result
     }
 
@@ -179,33 +179,123 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         return result
     }
 
+    private isBoldHorizontalLine(object: tableParamsType, i: number, j: number): boolean {
+        const {horizontalTitles, boldHorizontalLines} = object
+        if (Boolean(horizontalTitles) && i === 0) {
+            return true
+        }
+        if (boldHorizontalLines) {
+            for (let index = 0; index < boldHorizontalLines.length; index++) {
+                const value = boldHorizontalLines[index]
+                if (typeof value === 'number') {
+                    if (value === i) {
+                        return true
+                    }
+                } else {
+                    if (value[0] === i && value[1] === j) {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+
+    private isBoldVerticalLine(object: tableParamsType, i: number, j: number): boolean {
+        const {verticalTitles, boldVerticalLines} = object
+        if (Boolean(verticalTitles) && j === 0) {
+            return true
+        }
+        if (boldVerticalLines) {
+            for (let index = 0; index < boldVerticalLines.length; index++) {
+                const value = boldVerticalLines[index]
+                if (typeof value === 'number') {
+                    if (value === j) {
+                        return true
+                    }
+                } else {
+                    if (value[0] === i && value[1] === j) {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+
     public mergeWithTransformation(o: tableParamsType, t: Partial<tableParamsType>, p: number, animationStyle: AnimationStyle): onlyTableParamsType {
-        let {values, width, height, fontSize} = o
+        let {
+            values,
+            width,
+            height,
+            fontSize,
+            verticalTitles,
+            horizontalTitles,
+            columnWidthProportions,
+            boldHorizontalLines,
+            boldVerticalLines
+        } = o
         fontSize ??= animationStyle.fontSize
+        verticalTitles ??= false
+        columnWidthProportions ??= this.calculateRowsWidths(o)
+        boldHorizontalLines ??= []
+        boldVerticalLines ??= []
+        const sourceColumnWidthProportions: number[][] = []
+        const transformColumnWidthProportions: number[][] = []
+        columnWidthProportions.forEach((v) => {
+            if (typeof v === 'number') {
+                while (sourceColumnWidthProportions.length < values.length) {
+                    sourceColumnWidthProportions.push([])
+                }
+                sourceColumnWidthProportions.forEach(s => s.push(v))
+            } else {
+                sourceColumnWidthProportions.push(v)
+            }
+        })
+        t.columnWidthProportions?.forEach(v => {
+            if (typeof v === 'number') {
+                while (transformColumnWidthProportions.length < values.length) {
+                    transformColumnWidthProportions.push([])
+                }
+                transformColumnWidthProportions.forEach(s => s.push(v))
+            } else {
+                transformColumnWidthProportions.push(v)
+            }
+        })
         return {
             values: t.values ? calculateArrayPercentValue(values, t.values, p) : values,
             width: t.width ? calculatePercentValue(width, t.width, p) : width,
             height: t.height ? calculatePercentValue(height, t.height, p) : height,
-            fontSize: t.fontSize ? calculatePercentValue(fontSize, t.fontSize, p) : fontSize
+            fontSize: t.fontSize ? calculatePercentValue(fontSize, t.fontSize, p) : fontSize,
+            verticalTitles: typeof t.verticalTitles === 'boolean' && p >= 0.5 ? t.verticalTitles : verticalTitles,
+            horizontalTitles: typeof t.horizontalTitles === 'boolean' && p >= 0.5 ? t.horizontalTitles : horizontalTitles,
+            columnWidthProportions: t.columnWidthProportions ? calculateArrayPercentValue(sourceColumnWidthProportions, transformColumnWidthProportions, p) : columnWidthProportions,
+            boldHorizontalLines: t.boldHorizontalLines ? calculateArrayPercentValue(boldHorizontalLines, t.boldHorizontalLines, p) : boldHorizontalLines,
+            boldVerticalLines: t.boldVerticalLines ? calculateArrayPercentValue(boldVerticalLines, t.boldVerticalLines, p) : boldVerticalLines
         }
     }
 
     protected convertSelectorToDiscriminatorRegexp(selector: selectorType): RegExp[] {
-        if (!selector.rowTitles && !selector.colTitles) {
+        if (!selector.rowTitles && !selector.colTitles && !selector.values) {
             return [/.*/]
         }
-        const result = []
+        const result: RegExp[] = []
         if (selector.colTitles === 'all') {
             result.push(/title 0 [0-9]*/)
+        } else if (Array.isArray(selector.colTitles)) {
+            selector.colTitles.forEach(p => result.push(new RegExp(`title 0 ${p}`)))
         }
         if (selector.rowTitles === 'all') {
             result.push(/title [0-9]* 0/)
-        }
-        if (Array.isArray(selector.colTitles)) {
-            selector.colTitles.forEach(p => result.push(new RegExp(`title 0 ${p}`)))
-        }
-        if (Array.isArray(selector.rowTitles)) {
+        } else if (Array.isArray(selector.rowTitles)) {
             selector.rowTitles.forEach(p => result.push(new RegExp(`title ${p} 0`)))
+        }
+        if (selector.values === 'all') {
+            result.push(/value .*/)
+        } else if (Array.isArray(selector.values)) {
+            selector.values.forEach(p => {
+                result.push(new RegExp(`value ${p[0]} ${p[1]}`))
+            })
         }
         return result
     }

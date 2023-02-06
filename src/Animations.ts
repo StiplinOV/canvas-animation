@@ -72,7 +72,11 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
         selections: [
             {time: 15000, duration: 5000, type: 'sequentially', selector: {points: 'all'}},
             {time: 23000, duration: 500, selector: {points: [1]}},
-            {time: 25000, duration: 500, selector: {points: [4]}}
+            {time: 25000, duration: 500, selector: {points: [4]}},
+            {time: 60000, duration: 500, selector: {points: [0]}},
+            {time: 65000, duration: 500, selector: {yScaleValues: [7]}},
+            {time: 87000, duration: 500, selector: {points: [1]}},
+            {time: 92000, duration: 500, selector: {yScaleValues: [1]}}
         ],
         transformations: [
             {
@@ -222,23 +226,145 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
         selections: [
             {
                 time: 50000,
-                duration: 2000,
+                duration: 500,
                 selector: {
                     rowTitles: 'all'
                 }
             },
             {
                 time: 55000,
-                duration: 2000,
+                duration: 500,
                 selector: {
                     colTitles: 'all'
                 }
             },
             {
                 time: 60000,
-                duration: 2000,
+                duration: 500,
                 selector: {
                     colTitles: [1]
+                }
+            },
+            {
+                time: 87000,
+                duration: 500,
+                selector: {
+                    colTitles: [2]
+                }
+            },
+            {
+                time: 95000,
+                duration: 500,
+                selector: {
+                    colTitles: [1],
+                    rowTitles: [2],
+                    values: [[1, 2]]
+                }
+            },
+            {
+                time: 99000,
+                duration: 500,
+                selector: {
+                    colTitles: [1],
+                    rowTitles: [3],
+                    values: [[1, 3]]
+                }
+            }
+        ],
+        transformations: [
+            {
+                presenceParameters: {
+                    appearTime: 65000,
+                    appearDuration: 500
+                },
+                object: {
+                    values: [
+                        ['', '1', '2', '3', '4', '5', '6'],
+                        ['Buy', '-7', '', '', '', '', ''],
+                        ['Sell', '', '', '', '', '', ''],
+                        ['Wait', '', '', '', '', '', ''],
+                        ['Hold', '', '', '', '', '', '']
+                    ]
+                }
+            },
+            {
+                presenceParameters: {
+                    appearTime: 68000,
+                    appearDuration: 500
+                },
+                object: {
+                    values: [
+                        ['', '1', '2', '3', '4', '5', '6'],
+                        ['Buy', '-7', '', '', '', '', ''],
+                        ['Sell', '-∞', '', '', '', '', ''],
+                        ['Wait', '', '', '', '', '', ''],
+                        ['Hold', '', '', '', '', '', '']
+                    ]
+                }
+            },
+            {
+                presenceParameters: {
+                    appearTime: 71000,
+                    appearDuration: 500
+                },
+                object: {
+                    values: [
+                        ['', '1', '2', '3', '4', '5', '6'],
+                        ['Buy', '-7', '', '', '', '', ''],
+                        ['Sell', '-∞', '', '', '', '', ''],
+                        ['Wait', '0', '', '', '', '', ''],
+                        ['Hold', '', '', '', '', '', '']
+                    ]
+                }
+            },
+            {
+                presenceParameters: {
+                    appearTime: 74000,
+                    appearDuration: 500
+                },
+                object: {
+                    values: [
+                        ['', '1', '2', '3', '4', '5', '6'],
+                        ['Buy', '-7', '', '', '', '', ''],
+                        ['Sell', '-∞', '', '', '', '', ''],
+                        ['Wait', '0', '', '', '', '', ''],
+                        ['Hold', '-∞', '', '', '', '', '']
+                    ]
+                }
+            },
+            {
+                presenceParameters: {
+                    appearTime: 77000,
+                    appearDuration: 3500
+                },
+                object: {
+                    values: [
+                        ['', '1', '2', '3', '4', '5', '6'],
+                        ['Buy', '-7', '', '', '', '', ''],
+                        ['Sell', '-∞', '', '', '', '', ''],
+                        ['Wait', '0', '', '', '', '', ''],
+                        ['Hold', '-∞', '', '', '', '', ''],
+                        ['Max', '', '', '', '', '', '']
+                    ],
+                    height: 360,
+                    boldHorizontalLines: [4],
+                    boldVerticalLines: [[5, 0], [5, 1], [5, 2], [5, 3], [5, 4], [5, 5], [5, 6]]
+                }
+            },
+            {
+                presenceParameters: {
+                    appearTime: 83000,
+                    appearDuration: 500
+                },
+                object: {
+                    values: [
+                        ['', '1', '2', '3', '4', '5', '6'],
+                        ['Buy', '-7', '', '', '', '', ''],
+                        ['sell', '-∞', '', '', '', '', ''],
+                        ['Wait', '0', '', '', '', '', ''],
+                        ['Hold', '-∞', '', '', '', '', ''],
+                        ['Max', '0', '', '', '', '', '']
+                    ]
                 }
             }
         ]

@@ -32,7 +32,7 @@ interface onlyXyChartParamsType {
 interface xyChartParamsType extends onlyXyChartParamsType, ObjectParams {
 }
 
-type selectorType = { points?: 'all' | number[], lines?: 'all' }
+type selectorType = { points?: 'all' | number[], lines?: 'all', yScaleValues?: 'all' | number[] }
 
 export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimationParams<xyChartParamsType, selectorType> {
 
@@ -250,7 +250,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
     }
 
     protected convertSelectorToDiscriminatorRegexp(selector: selectorType): RegExp[] {
-        if (!selector.lines && !selector.points) {
+        if (!selector.lines && !selector.points && !selector.yScaleValues) {
             return [/.*/]
         }
         const result = []
@@ -259,9 +259,13 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         }
         if (selector.points === 'all') {
             result.push(/chartPoint.*/)
-        }
-        if (Array.isArray(selector.points)) {
+        } else if (Array.isArray(selector.points)) {
             selector.points.forEach(p => result.push(new RegExp(`chartPoint ${p}`)))
+        }
+        if (selector.yScaleValues === 'all') {
+            result.push(/yScaleValue.*/)
+        } else if (Array.isArray(selector.yScaleValues)) {
+            selector.yScaleValues.forEach(p => result.push(new RegExp(`yScaleValue ${p}`)))
         }
         return result
     }
