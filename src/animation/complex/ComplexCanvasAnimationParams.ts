@@ -136,7 +136,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
             disappearedObjectDisappearTime += disappearedObjectDisappearDuration * containedAnimationLength
         })
         this.setAnimationSelections(result)
-        return Array.from(result.values())
+        return Array.from(result.values()).sort((left, right) => left.getZIndex(0, animationStyle) - right.getZIndex(0, animationStyle))
     }
 
     private setAnimationSelections(animations: Map<string, CanvasAnimationParams>): void {

@@ -9,7 +9,6 @@ export default class LineCanvasAnimation extends SimpleCanvasAnimation<lineParam
         const {origin, endPoint} = o
         const endX = (endPoint.x - origin.x) * perc
         const endY = (endPoint.y - origin.y) * perc
-        o.bold && p5.strokeWeight(o.bold === 'normal' ? style.strokeWeight : style.strokeBoldWeight)
         p5.line(0, 0, endX, endY)
     }
 

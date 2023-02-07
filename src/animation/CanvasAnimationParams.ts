@@ -10,12 +10,36 @@ import {Point, ZeroPoint} from '../common/Point'
 import AnimationStyle from '../AnimationStyles'
 import CanvasAnimation from './CanvasAnimation'
 
+type weightType = number | 'normal' | 'bold'
+type colorType = string | 'primary' | 'secondary'
+
+export const weightToNumber = (weight: weightType, style: AnimationStyle): number => {
+    if (weight === 'normal') {
+        return style.strokeWeight
+    }
+    if (weight === 'bold') {
+        return style.strokeBoldWeight
+    }
+    return weight
+}
+
+export const colorToHex = (color: colorType, style: AnimationStyle): string => {
+    if (color === 'primary') {
+        return style.strokePrimaryColor
+    }
+    if (color === 'secondary') {
+        return style.strokeSecondaryColor
+    }
+    return color
+}
+
 export interface ObjectParams {
-    weight?: number
+    weight?: weightType
     zIndex?: number
     rotation?: number
     offset?: Point
     dashed?: number[]
+    strokeColor?: string | 'primary' | 'secondary'
     origin: Point
 }
 
@@ -120,8 +144,8 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
                 }
                 if (transformationObject.weight) {
                     result.weight = calculatePercentValue(
-                        result.weight ?? animationStyle.strokeWeight,
-                        transformationObject.weight, percent
+                        weightToNumber(result.weight ?? animationStyle.strokeWeight, animationStyle),
+                        weightToNumber(transformationObject.weight, animationStyle), percent
                     )
                 }
                 if (transformationObject.rotation) {

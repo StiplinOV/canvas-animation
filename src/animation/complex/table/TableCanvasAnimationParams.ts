@@ -4,6 +4,7 @@ import ComplexCanvasAnimationParams from '../ComplexCanvasAnimationParams'
 import LineCanvasAnimationParams from '../../simple/line/LineCanvasAnimationParams'
 import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
+import EllipseCanvasAnimationParams from '../../simple/ellipse/EllipseCanvasAnimationParams'
 
 interface onlyTableParamsType {
     values: string[][]
@@ -15,6 +16,7 @@ interface onlyTableParamsType {
     columnWidthProportions?: number[] | number[][]
     boldHorizontalLines?: (number | [number, number])[]
     boldVerticalLines?: (number | [number, number])[]
+    markedCells?: number[][]
 }
 
 interface tableParamsType extends onlyTableParamsType, ObjectParams {
@@ -27,40 +29,56 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
     getIncludedAnimationsByParameters(object: tableParamsType): Map<string, CanvasAnimationParams> {
         const result = new Map<string, CanvasAnimationParams>()
         const {values, height, horizontalTitles, verticalTitles} = object
-        const stepHeight = height / values.length
-        const rowsWidths = this.calculateRowsWidths(object)
+        const rowHeight = height / values.length
+        const rowColumnsWidths = this.calculateRowColumnsWidths(object)
+        const markedCells = object.markedCells ?? []
         let title = true
 
         for (let i = 0; i < values.length; i++) {
             let accumulatedWidth = 0
-            const rowWidths = rowsWidths[i]
-            for (let j = 0; j < rowWidths.length; j++) {
+            const columnWidths = rowColumnsWidths[i]
+            for (let j = 0; j < columnWidths.length; j++) {
                 title = (Boolean(verticalTitles) && j === 0) || (Boolean(horizontalTitles) && i === 0)
                 const textStyle = title ? 'bold' : 'normal'
+                const columnWidth = columnWidths[j]
 
                 if (i !== values.length - 1) {
                     result.set(`horizontal line ${i} ${j}`, new LineCanvasAnimationParams({
                         object: {
-                            origin: {x: accumulatedWidth, y: stepHeight * (i + 1)},
-                            endPoint: {x: accumulatedWidth + rowWidths[j], y: stepHeight * (i + 1)},
-                            bold: this.isBoldHorizontalLine(object, i, j) ? 'bold' : 'normal'
+                            origin: {x: accumulatedWidth, y: rowHeight * (i + 1)},
+                            endPoint: {x: accumulatedWidth + columnWidth, y: rowHeight * (i + 1)},
+                            weight: this.isBoldHorizontalLine(object, i, j) ? 'bold' : 'normal'
                         }
                     }))
                 }
-                accumulatedWidth += rowWidths[j]
-                if (j < rowWidths.length - 1) {
+                accumulatedWidth += columnWidth
+                if (j < columnWidths.length - 1) {
                     result.set(`vertical line ${i} ${j}`, new LineCanvasAnimationParams({
                         object: {
-                            origin: {x: accumulatedWidth, y: i * stepHeight},
-                            endPoint: {x: accumulatedWidth, y: (i + 1) * stepHeight},
-                            bold: this.isBoldVerticalLine(object, i, j) ? 'bold' : 'normal'
+                            origin: {x: accumulatedWidth, y: i * rowHeight},
+                            endPoint: {x: accumulatedWidth, y: (i + 1) * rowHeight},
+                            weight: this.isBoldVerticalLine(object, i, j) ? 'bold' : 'normal'
                         }
                     }))
                 }
+                markedCells.forEach(markedCell => {
+                    if (markedCell[0] === i && markedCell[1] === j) {
+                        result.set(`markedCell ${i} ${j}`, new EllipseCanvasAnimationParams({
+                            object: {
+                                origin: {x: accumulatedWidth - columnWidth / 2, y: rowHeight * i + (rowHeight / 2)},
+                                width: columnWidth * 0.8,
+                                height: rowHeight * 0.8,
+                                weight: 'bold',
+                                zIndex: -1,
+                                strokeColor: 'secondary'
+                            }
+                        }))
+                    }
+                })
                 result.set(title ? `title ${i} ${j}` : `value ${i} ${j}`, new TextCanvasAnimationParams({
                     object: {
                         fontSize: object.fontSize,
-                        origin: {x: accumulatedWidth - rowWidths[j] / 2, y: stepHeight * i + (stepHeight / 2)},
+                        origin: {x: accumulatedWidth - columnWidth / 2, y: rowHeight * i + (rowHeight / 2)},
                         value: values[i][j],
                         horizontalAlign: 'center',
                         verticalAlign: 'center',
@@ -72,11 +90,11 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         return result
     }
 
-    private calculateRowsWidths(object: tableParamsType): number[][] {
+    private calculateRowColumnsWidths(object: tableParamsType): number[][] {
         const result: number[][] = []
         const {values, width, columnWidthProportions} = object
         if (columnWidthProportions) {
-            return this.calculateRowsWidthsFromParam(object)
+            return this.calculateRowColumnsWidthsFromParam(object)
         }
         const mergedWidthsMap: Map<number, number[]> = new Map<number, number[]>()
         const verticalTitleWidth = this.calculateVerticalTitleWidth(object)
@@ -113,7 +131,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         return result
     }
 
-    private calculateRowsWidthsFromParam(object: tableParamsType): number[][] {
+    private calculateRowColumnsWidthsFromParam(object: tableParamsType): number[][] {
         const {width, columnWidthProportions} = object
         const result: number[][] = []
         if (!columnWidthProportions || columnWidthProportions.length === 0) {
@@ -233,13 +251,15 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
             horizontalTitles,
             columnWidthProportions,
             boldHorizontalLines,
-            boldVerticalLines
+            boldVerticalLines,
+            markedCells
         } = o
         fontSize ??= animationStyle.fontSize
         verticalTitles ??= false
-        columnWidthProportions ??= this.calculateRowsWidths(o)
+        columnWidthProportions ??= this.calculateRowColumnsWidths(o)
         boldHorizontalLines ??= []
         boldVerticalLines ??= []
+        markedCells ??= []
         const sourceColumnWidthProportions: number[][] = []
         const transformColumnWidthProportions: number[][] = []
         columnWidthProportions.forEach((v) => {
@@ -271,7 +291,8 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
             horizontalTitles: typeof t.horizontalTitles === 'boolean' && p >= 0.5 ? t.horizontalTitles : horizontalTitles,
             columnWidthProportions: t.columnWidthProportions ? calculateArrayPercentValue(sourceColumnWidthProportions, transformColumnWidthProportions, p) : columnWidthProportions,
             boldHorizontalLines: t.boldHorizontalLines ? calculateArrayPercentValue(boldHorizontalLines, t.boldHorizontalLines, p) : boldHorizontalLines,
-            boldVerticalLines: t.boldVerticalLines ? calculateArrayPercentValue(boldVerticalLines, t.boldVerticalLines, p) : boldVerticalLines
+            boldVerticalLines: t.boldVerticalLines ? calculateArrayPercentValue(boldVerticalLines, t.boldVerticalLines, p) : boldVerticalLines,
+            markedCells: t.markedCells ? calculateArrayPercentValue(markedCells, t.markedCells, p) : markedCells
         }
     }
 

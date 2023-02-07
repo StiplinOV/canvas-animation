@@ -8,7 +8,6 @@ import CanvasAnimation from '../../CanvasAnimation'
 
 export interface onlyLineParamsType {
     endPoint: Point
-    bold?: 'normal' | 'bold'
 }
 
 export interface lineParamsType extends ObjectParams, onlyLineParamsType {
@@ -18,8 +17,7 @@ export default class LineCanvasAnimationParams extends SimpleCanvasAnimationPara
 
     mergeWithTransformation(obj: lineParamsType, trans: Partial<lineParamsType>, perc: number): onlyLineParamsType {
         return {
-            endPoint: trans.endPoint ? calculatePointPercentValue(obj.endPoint, trans.endPoint, perc) : obj.endPoint,
-            bold: trans.bold && perc >= 0.5 ? trans.bold : obj.bold
+            endPoint: trans.endPoint ? calculatePointPercentValue(obj.endPoint, trans.endPoint, perc) : obj.endPoint
         }
     }
 

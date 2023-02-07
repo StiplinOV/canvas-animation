@@ -5,7 +5,8 @@ export default interface AnimationStyle {
     fillColor: string
     fontColor: string
     selectedColor: string
-    strokeColor: string
+    strokePrimaryColor: string
+    strokeSecondaryColor: string
     font: string
     fontSize: number
     fontWeight: number
@@ -20,7 +21,8 @@ const defaultAnimationStyle: AnimationStyle = {
     fillColor: '#FFFFFF',
     fontColor: '#000000',
     selectedColor: '#FF0000',
-    strokeColor: '#000000',
+    strokePrimaryColor: '#000000',
+    strokeSecondaryColor: '#FF0000',
     font: 'Verdana',
     fontSize: 12,
     fontWeight: 0.5,
@@ -37,7 +39,7 @@ const createAnimationStyles = (): Record<string, Partial<AnimationStyle>> => ({
         fillColor: '#132226',
         fontColor: '#A4978E',
         selectedColor: '#ff4000',
-        strokeColor: '#BE9063'
+        strokePrimaryColor: '#BE9063'
         // 132226
     }
 })
