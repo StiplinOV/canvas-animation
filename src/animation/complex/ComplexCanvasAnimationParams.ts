@@ -49,11 +49,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
             const animationsOnTransform = this.getIncludedAnimationsByParameters(objectOnTransform)
             const transformDuration = t.presenceParameters.appearDuration
             const transformationType = t.options?.type
-            const {
-                added,
-                deleted,
-                changed
-            } = this.getAnimationsSetDifference(prevAnimationSet, animationsOnTransform)
+            const {added, deleted, changed} = this.getAnimationsSetDifference(prevAnimationSet, animationsOnTransform)
 
             if (added.size) {
                 const addedLength = Array.from(added.values())
@@ -82,13 +78,17 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
                     numberOfDeleted += d.calculateContainedAnimationsFlatten(animationStyle).length
                 })
                 let deletedDisappearTime = t.presenceParameters.appearTime
-                deleted.forEach(d => {
-                    const containedAnimationLength = d.calculateContainedAnimationsFlatten(animationStyle).length
+                deleted.forEach((_, k) => {
+                    const deletedAnimation = result.get(k)
+                    if (!deletedAnimation) {
+                        return
+                    }
+                    const containedAnimationLength = deletedAnimation.calculateContainedAnimationsFlatten(animationStyle).length
                     let deletedDisappearDuration = transformDuration
                     if (transformationType === 'sequentially') {
                         deletedDisappearDuration = (transformDuration / numberOfDeleted) * containedAnimationLength
                     }
-                    d.setAppearanceParam({
+                    deletedAnimation.setAppearanceParam({
                         disappearTime: deletedDisappearTime,
                         disappearDuration: deletedDisappearDuration
                     })
