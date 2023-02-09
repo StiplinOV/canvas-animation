@@ -2,15 +2,15 @@ import p5Types from 'p5'
 import {needAppearObject} from '../common/Utils'
 import {ZeroPoint} from '../common/Point'
 import AnimationStyle from '../AnimationStyles'
-import CanvasAnimationParams from './CanvasAnimationParams'
+import CanvasAnimationParams, {ObjectParams} from './CanvasAnimationParams'
 
-export default abstract class CanvasAnimation<T extends CanvasAnimationParams = CanvasAnimationParams> {
+export default abstract class CanvasAnimation<T extends ObjectParams = ObjectParams, U extends CanvasAnimationParams<T> = CanvasAnimationParams<T>> {
 
-    public readonly params: T
+    public readonly params: U
 
     private readonly animationStyle: AnimationStyle
 
-    public constructor(params: T, animationStyle: AnimationStyle) {
+    public constructor(params: U, animationStyle: AnimationStyle) {
         this.params = params
         this.animationStyle = animationStyle
     }
@@ -28,10 +28,10 @@ export default abstract class CanvasAnimation<T extends CanvasAnimationParams = 
         p5.rotate(object.rotation ?? this.animationStyle.objectRotation)
         p5.translate(offset.x, offset.y)
         object.dashed && p5.drawingContext.setLineDash(object.dashed)
-        this.doDraw(p5, time, this.animationStyle)
+        this.doDraw(p5, time, object, this.animationStyle)
         p5.pop()
     }
 
-    protected abstract doDraw(p5: p5Types, time: number, animationStyle: AnimationStyle): void
+    protected abstract doDraw(p5: p5Types, time: number, object: T, animationStyle: AnimationStyle): void
 
 }
