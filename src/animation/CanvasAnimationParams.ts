@@ -94,6 +94,30 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
         return this.appearanceParam
     }
 
+    public setAppearTime(time: number): void {
+        this.setAppearanceParam({
+            appearTime: time
+        })
+    }
+
+    public setAppearDuration(duration: number): void {
+        this.setAppearanceParam({
+            appearDuration: duration
+        })
+    }
+
+    public setDisappearTime(time: number): void {
+        this.setAppearanceParam({
+            disappearTime: time
+        })
+    }
+
+    public setDisappearDuration(duration: number): void {
+        this.setAppearanceParam({
+            disappearDuration: duration
+        })
+    }
+
     public setAppearanceParam(param: Partial<appearanceParamType>): void {
         this.appearanceParam = toAppearanceParamType({
             ...this.appearanceParam,
@@ -186,7 +210,7 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
                 }
                 result = {
                     ...result,
-                    ...this.mergeWithTransformation(result, transformationObject, percent, animationStyle)
+                    ...this.mergeWithTransformation(result, transformationObject, percent, animationStyle, t.options)
                 }
             })
         return result
@@ -204,7 +228,7 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
         this.transformations.push(transformationParamToTransformation(transformation))
     }
 
-    public abstract mergeWithTransformation(obj: T, trans: Partial<T>, perc: number, animationStyle: AnimationStyle): Omit<T, keyof ObjectParams>
+    public abstract mergeWithTransformation(obj: T, trans: Partial<T>, perc: number, animationStyle: AnimationStyle, options?: U): Omit<T, keyof ObjectParams>
 
     public abstract toCanvasAnimation(animationStyle: AnimationStyle): CanvasAnimation
 

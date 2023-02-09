@@ -13,6 +13,15 @@ export interface appearanceParamType {
     disappearDuration: number
 }
 
+export type render2DArrayType = 'leftToRight' | 'upToDown'
+
+export const transfposeMatrix = <T>(matrixParam: T[][]): T[][] => {
+    const result: T[][] = Object.assign([], matrixParam)
+    if (result.length === 0) {
+        return result
+    }
+    return result[0].map((_, colIndex) => result.map(row => row[colIndex]))
+}
 export const convertPercentToFadeInFadeOut = (percent: number): number => 2 * Math.abs(0.5 - Math.abs(percent - 0.5))
 export const calculatePercentValue = (from: number, to: number, percent: number): number => from + (to - from) * percent
 export const calculatePointPercentValue = (from: Point, to: Point, percent: number): Point =>
@@ -54,6 +63,98 @@ export const calculateArrayPercentValue = <T>(from: T[], to: T[], percent: numbe
         }
     }
 }
+
+const shift2DArrayOneStepToDesiredStateLeftToRight = <T>(from: T[][], to: T[][]): T[][] => {
+    const result: T[][] = Object.assign([], from)
+    if (result.length > to.length) {
+        const lastRow = result[result.length - 1]
+        if (lastRow.length === 0) {
+            result.pop()
+            return shift2DArrayOneStepToDesiredStateLeftToRight(result, to)
+        }
+        if (lastRow.length === 1) {
+            result.pop()
+            return result
+        }
+        lastRow.pop()
+        return result
+    }
+    for (let i = result.length - 1; i >= 0; i--) {
+        const toRow = to[i]
+        const resultRow = result[i]
+        if (resultRow.length > toRow.length) {
+            resultRow.pop()
+            return result
+        }
+    }
+    for (let i = 0; i < result.length; i++) {
+        const resultRow = result[i]
+        const toRow = to[i]
+        // resultRow ВСЕГДА меньше или равен toRow
+        for (let j = 0; j < resultRow.length; j++) {
+            const resultValue = resultRow[j]
+            const toValue = toRow[j]
+            if (resultValue !== toValue) {
+                resultRow[j] = toValue
+                return result
+            }
+        }
+        if (toRow.length > resultRow.length) {
+            resultRow.push(toRow[resultRow.length])
+        }
+    }
+    if (to.length > result.length) {
+        result.push([])
+        return shift2DArrayOneStepToDesiredStateLeftToRight(result, to)
+    }
+    return result
+}
+
+export const calculate2DArrayPercentValue = <T>(from: T[][], to: T[][], percent: number, renderType?: render2DArrayType): T[][] => {
+    let numberOfStates = 0
+    for (let i = 0; i < Math.max(from.length, to.length); i++) {
+        let fromRow: T[] | null = null
+        let fromRowLength = 0
+        let toRow: T[] | null = null
+        let toRowLength = 0
+        if (from.length > i) {
+            fromRow = from[i]
+            fromRowLength = fromRow.length
+        }
+        if (to.length > i) {
+            toRow = to[i]
+            toRowLength = toRow.length
+        }
+        for (let j = 0; j < Math.max(fromRowLength, toRowLength); j++) {
+            let fromValue: T | null = null
+            let toValue: T | null = null
+            if (fromRowLength > i) {
+                fromValue = from[i][j]
+            }
+            if (toRowLength > i) {
+                toValue = to[i][j]
+            }
+            if (fromValue !== toValue) {
+                numberOfStates++
+            }
+        }
+    }
+    const currentState = calculatePercentValue(0, numberOfStates, percent)
+    let result: T[][] = Object.assign([], from)
+    if (renderType === 'leftToRight') {
+        for (let i = 0; i < currentState; i++) {
+            result = shift2DArrayOneStepToDesiredStateLeftToRight(result, to)
+        }
+        return result
+    }
+
+    result = transfposeMatrix(result)
+    for (let i = 0; i < currentState; i++) {
+        result = shift2DArrayOneStepToDesiredStateLeftToRight(result, transfposeMatrix(to))
+    }
+    return transfposeMatrix(result)
+}
+
 export const calculateTextPercentValue = (from: string, to: string, percent: number): string => {
     return calculateArrayPercentValue(from.split(''), to.split(''), percent).join('')
 }
@@ -129,4 +230,11 @@ export const rotateVector = (p5: p5Types, point: Point, angle: number): Point =>
         x: resultVector.x,
         y: resultVector.y
     }
+}
+export const requireValueFromMap = <K, V>(map: Map<K, V>, key: K): V => {
+    const value = map.get(key)
+    if (value) {
+        return value
+    }
+    throw new Error(`Key ${String(key)} is absent in map`)
 }

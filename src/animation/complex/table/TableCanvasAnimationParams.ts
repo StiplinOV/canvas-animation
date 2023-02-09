@@ -1,6 +1,11 @@
 import CanvasAnimationParams, {ObjectParams} from '../../CanvasAnimationParams'
-import {calculateArrayPercentValue, calculatePercentValue} from '../../../common/Utils'
-import ComplexCanvasAnimationParams from '../ComplexCanvasAnimationParams'
+import {
+    calculate2DArrayPercentValue,
+    calculateArrayPercentValue,
+    calculatePercentValue,
+    render2DArrayType
+} from '../../../common/Utils'
+import ComplexCanvasAnimationParams, {TransformOptions} from '../ComplexCanvasAnimationParams'
 import LineCanvasAnimationParams from '../../simple/line/LineCanvasAnimationParams'
 import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
@@ -23,8 +28,11 @@ interface tableParamsType extends onlyTableParamsType, ObjectParams {
 }
 
 type selectorType = { rowTitles?: 'all' | number[], colTitles?: 'all' | number[], values?: 'all' | [number, number][] }
+interface tableTransformOptionsType extends TransformOptions {
+    renderValues?: render2DArrayType
+}
 
-export default class TableCanvasAnimationParams extends ComplexCanvasAnimationParams<tableParamsType, selectorType> {
+export default class TableCanvasAnimationParams extends ComplexCanvasAnimationParams<tableParamsType, selectorType, tableTransformOptionsType> {
 
     getIncludedAnimationsByParameters(object: tableParamsType): Map<string, CanvasAnimationParams> {
         const result = new Map<string, CanvasAnimationParams>()
@@ -241,7 +249,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         return false
     }
 
-    public mergeWithTransformation(o: tableParamsType, t: Partial<tableParamsType>, p: number, animationStyle: AnimationStyle): onlyTableParamsType {
+    public mergeWithTransformation(o: tableParamsType, t: Partial<tableParamsType>, p: number, animationStyle: AnimationStyle, options: tableTransformOptionsType): onlyTableParamsType {
         let {
             values,
             width,
@@ -283,7 +291,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
             }
         })
         return {
-            values: t.values ? calculateArrayPercentValue(values, t.values, p) : values,
+            values: t.values ? calculate2DArrayPercentValue(values, t.values, p, 'upToDown') : values,
             width: t.width ? calculatePercentValue(width, t.width, p) : width,
             height: t.height ? calculatePercentValue(height, t.height, p) : height,
             fontSize: t.fontSize ? calculatePercentValue(fontSize, t.fontSize, p) : fontSize,
@@ -292,11 +300,11 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
             columnWidthProportions: t.columnWidthProportions ? calculateArrayPercentValue(sourceColumnWidthProportions, transformColumnWidthProportions, p) : columnWidthProportions,
             boldHorizontalLines: t.boldHorizontalLines ? calculateArrayPercentValue(boldHorizontalLines, t.boldHorizontalLines, p) : boldHorizontalLines,
             boldVerticalLines: t.boldVerticalLines ? calculateArrayPercentValue(boldVerticalLines, t.boldVerticalLines, p) : boldVerticalLines,
-            markedCells: t.markedCells ? calculateArrayPercentValue(markedCells, t.markedCells, p) : markedCells
+            markedCells: t.markedCells ? calculate2DArrayPercentValue(markedCells, t.markedCells, p) : markedCells
         }
     }
 
-    protected convertSelectorToDiscriminatorRegexp(selector: selectorType): RegExp[] {
+    protected convertSelectorToDiscriminatorRegexps(selector: selectorType): RegExp[] {
         if (!selector.rowTitles && !selector.colTitles && !selector.values) {
             return [/.*/]
         }

@@ -32,7 +32,7 @@ interface onlyXyChartParamsType {
 interface xyChartParamsType extends onlyXyChartParamsType, ObjectParams {
 }
 
-type selectorType = { points?: 'all' | number[], lines?: 'all', yScaleValues?: 'all' | number[] }
+type selectorType = { points?: 'all' | number[], lines?: 'all', xScaleValues?: 'all' | number[], yScaleValues?: 'all' | number[] }
 
 export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimationParams<xyChartParamsType, selectorType> {
 
@@ -249,8 +249,8 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         }
     }
 
-    protected convertSelectorToDiscriminatorRegexp(selector: selectorType): RegExp[] {
-        if (!selector.lines && !selector.points && !selector.yScaleValues) {
+    protected convertSelectorToDiscriminatorRegexps(selector: selectorType): RegExp[] {
+        if (!selector.lines && !selector.points && !selector.yScaleValues && !selector.xScaleValues) {
             return [/.*/]
         }
         const result = []
@@ -261,6 +261,11 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             result.push(/chartPoint.*/)
         } else if (Array.isArray(selector.points)) {
             selector.points.forEach(p => result.push(new RegExp(`chartPoint ${p}`)))
+        }
+        if (selector.xScaleValues === 'all') {
+            result.push(/xScaleValue.*/)
+        } else if (Array.isArray(selector.xScaleValues)) {
+            selector.xScaleValues.forEach(p => result.push(new RegExp(`xScaleValue ${p}`)))
         }
         if (selector.yScaleValues === 'all') {
             result.push(/yScaleValue.*/)

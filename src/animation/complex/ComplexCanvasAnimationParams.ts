@@ -3,6 +3,7 @@ import CanvasAnimationParams, {ObjectParams, Params, Selection} from '../CanvasA
 import p5Types from 'p5'
 import AnimationStyle from '../../AnimationStyles'
 import ComplexCanvasAnimation from './ComplexCanvasAnimation'
+import {requireValueFromMap} from '../../common/Utils'
 
 export interface ComplexCanvasAnimationSelection<T> extends Selection {
     type?: 'together' | 'sequentially'
@@ -10,14 +11,14 @@ export interface ComplexCanvasAnimationSelection<T> extends Selection {
 }
 
 type AnimationS2T = { source: CanvasAnimationParams, target: CanvasAnimationParams }
-type TransformOptions = { type: 'together' | 'sequentially' }
+export interface TransformOptions { type: 'together' | 'sequentially' }
 
-export default abstract class ComplexCanvasAnimationParams<T extends ObjectParams = ObjectParams, U = unknown>
-    extends CanvasAnimationParams<T, TransformOptions, ComplexCanvasAnimationSelection<U>> {
+export default abstract class ComplexCanvasAnimationParams<T extends ObjectParams = ObjectParams, U = unknown, V extends TransformOptions = TransformOptions>
+    extends CanvasAnimationParams<T, V, ComplexCanvasAnimationSelection<U>> {
 
     public readonly p5: p5Types
 
-    constructor(params: Params<T, TransformOptions, ComplexCanvasAnimationSelection<U>>, p5: p5Types) {
+    constructor(params: Params<T, V, ComplexCanvasAnimationSelection<U>>, p5: p5Types) {
         super(params)
         this.p5 = p5
     }
@@ -36,10 +37,8 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
 
         animationsOnAppearance.forEach((value, key) => {
             const containedAnimationLength = value.calculateContainedAnimationsFlatten(animationStyle).length
-            value.setAppearanceParam({
-                appearTime: appearedObjectAppearTime,
-                appearDuration: appearedObjectAppearDuration * containedAnimationLength
-            })
+            value.setAppearTime(appearedObjectAppearTime)
+            value.setAppearDuration(appearedObjectAppearDuration * containedAnimationLength)
             appearedObjectAppearTime += appearedObjectAppearDuration * containedAnimationLength
             result.set(key, value)
         })
@@ -62,10 +61,8 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
                     if (transformationType === 'sequentially') {
                         addedAppearDuration = (transformDuration / addedLength) * containedAnimationLength
                     }
-                    value.setAppearanceParam({
-                        appearTime: addedAppearTime,
-                        appearDuration: addedAppearDuration
-                    })
+                    value.setAppearTime(addedAppearTime)
+                    value.setAppearDuration(addedAppearDuration)
                     if (transformationType === 'sequentially') {
                         addedAppearTime += addedAppearDuration * containedAnimationLength
                     }
@@ -79,19 +76,14 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
                 })
                 let deletedDisappearTime = t.presenceParameters.appearTime
                 deleted.forEach((_, k) => {
-                    const deletedAnimation = result.get(k)
-                    if (!deletedAnimation) {
-                        return
-                    }
+                    const deletedAnimation = requireValueFromMap(result, k)
                     const containedAnimationLength = deletedAnimation.calculateContainedAnimationsFlatten(animationStyle).length
                     let deletedDisappearDuration = transformDuration
                     if (transformationType === 'sequentially') {
                         deletedDisappearDuration = (transformDuration / numberOfDeleted) * containedAnimationLength
                     }
-                    deletedAnimation.setAppearanceParam({
-                        disappearTime: deletedDisappearTime,
-                        disappearDuration: deletedDisappearDuration
-                    })
+                    deletedAnimation.setDisappearTime(deletedDisappearTime)
+                    deletedAnimation.setDisappearDuration(deletedDisappearDuration)
                     if (transformationType === 'sequentially') {
                         deletedDisappearTime += deletedDisappearDuration * containedAnimationLength
                     }
@@ -129,10 +121,8 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
 
         prevAnimationSet.forEach(o => {
             const containedAnimationLength = o.calculateContainedAnimationsFlatten(animationStyle).length
-            o.setAppearanceParam({
-                disappearTime: disappearedObjectDisappearTime,
-                disappearDuration: disappearedObjectDisappearDuration * containedAnimationLength
-            })
+            o.setDisappearTime(disappearedObjectDisappearTime)
+            o.setDisappearDuration(disappearedObjectDisappearDuration * containedAnimationLength)
             disappearedObjectDisappearTime += disappearedObjectDisappearDuration * containedAnimationLength
         })
         this.setAnimationSelections(result)
@@ -145,15 +135,13 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
             const animationsToBeSelected: CanvasAnimationParams[] = []
             animations.forEach((value, key) => {
                 const {appearTime, disappearTime} = value.getAppearanceParam()
-                if (time >= appearTime && time <= disappearTime) {
-                    if (selector) {
-                        const selectorDiscriminatorRegexps = this.convertSelectorToDiscriminatorRegexp(selector)
-                        if (new RegExp(selectorDiscriminatorRegexps.map(r => `(${r.source})`).join('|')).test(key)) {
-                            animationsToBeSelected.push(value)
-                        }
-                    } else {
-                        animationsToBeSelected.push(value)
-                    }
+                if (time < appearTime || time > disappearTime) {
+                    return
+                }
+                if (selector) {
+                    this.convertSelectorToDiscriminatorRegexp(selector).test(key) && animationsToBeSelected.push(value)
+                } else {
+                    animationsToBeSelected.push(value)
                 }
             })
             if (type === 'sequentially') {
@@ -203,7 +191,11 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         return new ComplexCanvasAnimation(this, animationStyle)
     }
 
-    protected convertSelectorToDiscriminatorRegexp(selector: U): RegExp[] {
+    private convertSelectorToDiscriminatorRegexp(selector: U): RegExp {
+        return new RegExp(this.convertSelectorToDiscriminatorRegexps(selector).map(r => `(${r.source})`).join('|'))
+    }
+
+    protected convertSelectorToDiscriminatorRegexps(selector: U): RegExp[] {
         return [/.*/]
     }
 
