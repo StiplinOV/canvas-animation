@@ -2,8 +2,8 @@ import CanvasAnimationParams, {ObjectParams, Params, Selection} from '../CanvasA
 import p5Types from 'p5'
 import AnimationStyle from '../../AnimationStyles'
 import SimpleCanvasAnimationParams from '../simple/SimpleCanvasAnimationParams'
-import SimpleCanvasAnimation from '../simple/SimpleCanvasAnimation'
 import {requireValueFromMap} from '../../common/Utils'
+import CanvasAnimation from '../CanvasAnimation'
 
 export interface ComplexCanvasAnimationSelection<T> extends Selection {
     type?: 'together' | 'sequentially'
@@ -88,7 +88,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
             changed.forEach((value, key) => {
                 let sourceToTargetAppearDuration = transformDuration
                 if (transformationType === 'sequentially') {
-                    sourceToTargetAppearDuration = (transformDuration / changed.size)
+                    sourceToTargetAppearDuration /= changed.size
                 }
                 initialIncludedAnimationParams.get(key)?.appendTransformation({
                     presenceParameters: {
@@ -192,7 +192,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         return [/.*/]
     }
 
-    toCanvasAnimations(animationStyle: AnimationStyle): SimpleCanvasAnimation[] {
+    toCanvasAnimations(animationStyle: AnimationStyle): CanvasAnimation[] {
         return this.toSimpleCanvasAnimationParams(animationStyle).sort((left, right) => left.getZIndex(0, animationStyle) - right.getZIndex(0, animationStyle)).flatMap(p => p.toCanvasAnimations(animationStyle))
     }
 

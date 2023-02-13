@@ -1,8 +1,8 @@
-import SimpleCanvasAnimation from '../SimpleCanvasAnimation'
 import p5Types from 'p5'
 import {rectangleParamsType} from './RectangleCanvasAnimationParams'
+import CanvasAnimation from '../../CanvasAnimation'
 
-export default class RectangleCanvasAnimation extends SimpleCanvasAnimation<rectangleParamsType> {
+export default class RectangleCanvasAnimation extends CanvasAnimation<rectangleParamsType> {
 
     drawObject(p5: p5Types, object: rectangleParamsType, percent: number): void {
         const {width, height, cornerRadius} = object

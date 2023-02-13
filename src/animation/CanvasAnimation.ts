@@ -1,9 +1,10 @@
 import p5Types from 'p5'
-import {addPoints, needAppearObject, rotateVector, subtractPoints} from '../common/Utils'
+import {addPoints, needAppearObject, rotateVector, subtractPoints, toAppearancePercent} from '../common/Utils'
 import AnimationStyle from '../AnimationStyles'
-import CanvasAnimationParams, {ObjectParams} from './CanvasAnimationParams'
+import {colorToHex, ObjectParams, weightToNumber} from './CanvasAnimationParams'
+import SimpleCanvasAnimationParams from './simple/SimpleCanvasAnimationParams'
 
-export default abstract class CanvasAnimation<T extends ObjectParams = ObjectParams, U extends CanvasAnimationParams<T> = CanvasAnimationParams<T>> {
+export default abstract class CanvasAnimation<T extends ObjectParams = ObjectParams, U extends SimpleCanvasAnimationParams<T> = SimpleCanvasAnimationParams<T>> {
 
     public readonly params: U
 
@@ -15,7 +16,8 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
     }
 
     public draw(p5: p5Types, time: number): void {
-        const object = this.params.calculateObjectParamsInTime(time, this.animationStyle)
+        const {animationStyle} = this
+        const object = this.params.calculateObjectParamsInTime(time, animationStyle)
         const {origin, rotations, dashed} = object
 
         if (!needAppearObject(time, this.params.getAppearanceParam())) {
@@ -38,10 +40,14 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
         p5.translate(result.x, result.y)
         p5.rotate(angle)
         dashed && p5.drawingContext.setLineDash(dashed)
-        this.doDraw(p5, time, object, this.animationStyle)
+        const selectionInfo = this.params.calculateSelectionInfo(time)
+        p5.strokeWeight(weightToNumber(object.weight ?? animationStyle.strokeWeight, animationStyle))
+        p5.stroke(colorToHex(object.strokeColor ?? animationStyle.strokePrimaryColor, animationStyle))
+        p5.fill(animationStyle.fillColor)
+        this.drawObject(p5, object, toAppearancePercent(time, this.params.getAppearanceParam()), selectionInfo.percent, animationStyle)
         p5.pop()
     }
 
-    protected abstract doDraw(p5: p5Types, time: number, object: T, animationStyle: AnimationStyle): void
+    public abstract drawObject(p5: p5Types, obj: T, perc: number, selectedPercent: number, animationStyle: AnimationStyle): void
 
 }

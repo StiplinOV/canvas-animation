@@ -10,7 +10,7 @@ import {
 } from '../common/Utils'
 import {Point} from '../common/Point'
 import AnimationStyle from '../AnimationStyles'
-import SimpleCanvasAnimation from './simple/SimpleCanvasAnimation'
+import CanvasAnimation from './CanvasAnimation'
 
 type weightType = number | 'normal' | 'bold'
 type colorType = string | 'primary' | 'secondary'
@@ -209,6 +209,6 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
 
     public abstract mergeWithTransformation(obj: T, trans: Partial<T>, perc: number, animationStyle: AnimationStyle, options?: U): Omit<T, keyof ObjectParams>
 
-    public abstract toCanvasAnimations(animationStyle: AnimationStyle): SimpleCanvasAnimation[]
+    public abstract toCanvasAnimations(animationStyle: AnimationStyle): CanvasAnimation[]
 
 }

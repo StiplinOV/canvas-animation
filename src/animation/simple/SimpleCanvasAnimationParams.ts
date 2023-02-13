@@ -1,6 +1,6 @@
 import CanvasAnimationParams, {ObjectParams, Selection} from '../CanvasAnimationParams'
 import AnimationStyle from '../../AnimationStyles'
-import SimpleCanvasAnimation from './SimpleCanvasAnimation'
+import CanvasAnimation from '../CanvasAnimation'
 
 interface SelectionInfo<U extends Selection = Selection> {
     selection?: U | null
@@ -29,10 +29,10 @@ export default abstract class SimpleCanvasAnimationParams<T extends ObjectParams
         return {selection, percent}
     }
 
-    toCanvasAnimations(animationStyle: AnimationStyle): SimpleCanvasAnimation[] {
+    toCanvasAnimations(animationStyle: AnimationStyle): CanvasAnimation[] {
         return [this.toCanvasAnimation(animationStyle)]
     }
 
-    protected abstract toCanvasAnimation(animationStyle: AnimationStyle): SimpleCanvasAnimation
+    protected abstract toCanvasAnimation(animationStyle: AnimationStyle): CanvasAnimation
 
 }

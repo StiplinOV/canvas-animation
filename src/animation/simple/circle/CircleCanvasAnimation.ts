@@ -1,10 +1,10 @@
 import p5Types from 'p5'
-import SimpleCanvasAnimation from '../SimpleCanvasAnimation'
 import {calculateColorPercentValue, calculatePercentValue, convertPercentToFadeInFadeOut} from '../../../common/Utils'
 import AnimationStyle from '../../../AnimationStyles'
 import {circleParamsType} from './CircleCanvasAnimationParams'
+import CanvasAnimation from '../../CanvasAnimation'
 
-export default class CircleCanvasAnimation extends SimpleCanvasAnimation<circleParamsType> {
+export default class CircleCanvasAnimation extends CanvasAnimation<circleParamsType> {
 
     public drawObject(p5: p5Types, object: circleParamsType, percent: number, selectedPercentParam: number, style: AnimationStyle): void {
         const selectedPercent = convertPercentToFadeInFadeOut(selectedPercentParam)

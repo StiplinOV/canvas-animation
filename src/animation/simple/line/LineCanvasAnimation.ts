@@ -1,9 +1,9 @@
 import p5Types from 'p5'
-import SimpleCanvasAnimation from '../SimpleCanvasAnimation'
 import {lineParamsType} from './LineCanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
+import CanvasAnimation from '../../CanvasAnimation'
 
-export default class LineCanvasAnimation extends SimpleCanvasAnimation<lineParamsType> {
+export default class LineCanvasAnimation extends CanvasAnimation<lineParamsType> {
 
     public drawObject(p5: p5Types, o: lineParamsType, perc: number, selectedPerc: number, style: AnimationStyle): void {
         const {origin, endPoint} = o

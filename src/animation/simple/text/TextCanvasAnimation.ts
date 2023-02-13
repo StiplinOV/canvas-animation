@@ -1,10 +1,10 @@
 import p5Types from 'p5'
-import SimpleCanvasAnimation from '../SimpleCanvasAnimation'
 import AnimationStyle from '../../../AnimationStyles'
 import {textParamsType} from './TextCanvasAnimationParams'
 import {calculateColorPercentValue, calculatePercentValue, convertPercentToFadeInFadeOut} from '../../../common/Utils'
+import CanvasAnimation from '../../CanvasAnimation'
 
-export default class TextCanvasAnimation extends SimpleCanvasAnimation<textParamsType> {
+export default class TextCanvasAnimation extends CanvasAnimation<textParamsType> {
 
     public drawObject(p5: p5Types, o: textParamsType, perc: number, selectedPerc: number, style: AnimationStyle): void {
         const {boxHeight, boxWidth, fontSize, value, horizontalAlign, verticalAlign, textStyle} = o
