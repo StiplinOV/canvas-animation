@@ -6,7 +6,7 @@ import SimpleCanvasAnimationParams from './simple/SimpleCanvasAnimationParams'
 
 export default abstract class CanvasAnimation<T extends ObjectParams = ObjectParams, U extends SimpleCanvasAnimationParams<T> = SimpleCanvasAnimationParams<T>> {
 
-    public readonly params: U
+    private readonly params: U
 
     private readonly animationStyle: AnimationStyle
 
@@ -49,5 +49,9 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
     }
 
     public abstract drawObject(p5: p5Types, obj: T, perc: number, selectedPercent: number, animationStyle: AnimationStyle): void
+
+    public getZIndex(time: number, animationStyle: AnimationStyle): number {
+        return this.params.getZIndex(time, animationStyle)
+    }
 
 }

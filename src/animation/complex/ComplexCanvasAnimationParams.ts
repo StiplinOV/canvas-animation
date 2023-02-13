@@ -26,7 +26,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         this.p5 = p5
     }
 
-    protected toSimpleCanvasAnimationParams(animationStyle: AnimationStyle): SimpleCanvasAnimationParams[] {
+    protected toSimpleCanvasAnimationParams(): SimpleCanvasAnimationParams[] {
         const object = this.getObject()
         const appearanceParam = this.getAppearanceParam()
         const initialIncludedAnimationParams = this.getIncludedAnimationParamsByParameter(object)
@@ -46,10 +46,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         this.getTransformations().forEach(t => {
             const transformDuration = t.presenceParameters.appearDuration
             const transformationType = t.options?.type
-            const nextObject = {
-                ...previousObject,
-                ...this.mergeWithTransformation(previousObject, t.object, 1, animationStyle, t.options)
-            }
+            const nextObject = {...previousObject, ...t.object}
             const nextObjectParams = this.getIncludedAnimationParamsByParameter(nextObject)
             const {added, deleted, changed} = this.getAnimationsSetDifference(prevObjectParams, nextObjectParams)
             // TODO возможно тут можно упростить, указав первый параметр - пустой и будет только added
@@ -193,7 +190,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
     }
 
     toCanvasAnimations(animationStyle: AnimationStyle): CanvasAnimation[] {
-        return this.toSimpleCanvasAnimationParams(animationStyle).sort((left, right) => left.getZIndex(0, animationStyle) - right.getZIndex(0, animationStyle)).flatMap(p => p.toCanvasAnimations(animationStyle))
+        return this.toSimpleCanvasAnimationParams().flatMap(p => p.toCanvasAnimations(animationStyle))
     }
 
 }

@@ -1,6 +1,13 @@
-import CanvasAnimationParams, {ObjectParams, Selection} from '../CanvasAnimationParams'
+import CanvasAnimationParams, {ObjectParams, Selection, weightToNumber} from '../CanvasAnimationParams'
 import AnimationStyle from '../../AnimationStyles'
 import CanvasAnimation from '../CanvasAnimation'
+import {
+    calculatePercentValue,
+    calculatePointPercentValue, calculateRotationsPercentValue,
+    needAppearObject,
+    toAppearanceParamType,
+    toAppearancePercent
+} from "../../common/Utils";
 
 interface SelectionInfo<U extends Selection = Selection> {
     selection?: U | null
@@ -8,6 +15,65 @@ interface SelectionInfo<U extends Selection = Selection> {
 }
 
 export default abstract class SimpleCanvasAnimationParams<T extends ObjectParams = ObjectParams> extends CanvasAnimationParams<T> {
+
+    public calculateObjectParamsInTime(time: number, animationStyle: AnimationStyle): T {
+        const sourceObject = this.getObject()
+        let result = {...sourceObject}
+        this.getTransformations()
+            .filter(t => needAppearObject(time, toAppearanceParamType(t.presenceParameters)))
+            .forEach((t) => {
+                const transformationObject = t.object
+                const percent = toAppearancePercent(time, toAppearanceParamType(t.presenceParameters))
+                if (transformationObject.origin) {
+                    result.origin = calculatePointPercentValue(result.origin, transformationObject.origin, percent)
+                }
+                if (transformationObject.zIndex) {
+                    result.zIndex = calculatePercentValue(result.zIndex ?? 0, transformationObject.zIndex, percent)
+                }
+                if (transformationObject.weight) {
+                    result.weight = calculatePercentValue(
+                        weightToNumber(result.weight ?? animationStyle.strokeWeight, animationStyle),
+                        weightToNumber(transformationObject.weight, animationStyle), percent
+                    )
+                }
+                if (transformationObject.rotations) {
+                    result.rotations = calculateRotationsPercentValue(
+                        result.rotations ?? [],
+                        transformationObject.rotations ?? [],
+                        percent
+                    )
+                }
+                const transformDashed = transformationObject.dashed
+                const resultDashed = result.dashed ?? []
+                if (transformDashed && (transformDashed.length || resultDashed.length)) {
+                    let resultLength = 1
+                    if (resultDashed.length) {
+                        resultLength *= resultDashed.length
+                    }
+                    if (transformDashed.length) {
+                        resultLength *= transformDashed.length
+                    }
+
+                    const sourceCopy = []
+                    const transformCopy = []
+                    for (let i = 0; i < resultLength; i++) {
+                        sourceCopy.push(resultDashed.length ? resultDashed[i % resultDashed.length] : 0)
+                        transformCopy.push(transformDashed.length ? transformDashed[i % transformDashed.length] : 0)
+                    }
+                    for (let i = 0; i < resultLength; i++) {
+                        sourceCopy[i] = calculatePercentValue(sourceCopy[i], transformCopy[i], percent)
+                    }
+                    result.dashed = sourceCopy
+                }
+                result = {
+                    ...result,
+                    ...this.mergeWithTransformation(result, transformationObject, percent, animationStyle)
+                }
+            })
+        return result
+    }
+
+    public abstract mergeWithTransformation(obj: T, trans: Partial<T>, perc: number, animationStyle: AnimationStyle): Omit<T, keyof ObjectParams>
 
     public calculateSelectionInfo(time: number): SelectionInfo {
         const selections = this.getSelections()

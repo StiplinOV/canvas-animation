@@ -96,14 +96,4 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
         return result
     }
 
-    // TODO percent выглядит как бред?
-    mergeWithTransformation(obj: arrowParamsType, trans: Partial<arrowParamsType>, perc: number): onlyArrowParamsType {
-        const {endPoint, startType, endType} = obj
-        return {
-            endPoint: trans.endPoint ? calculatePointPercentValue(endPoint, trans.endPoint, perc) : endPoint,
-            startType: trans.startType ? (perc >= 0.5 ? trans.startType : startType) : startType,
-            endType: trans.endType ? (perc >= 0.5 ? trans.endType : endType) : endType
-        }
-    }
-
 }

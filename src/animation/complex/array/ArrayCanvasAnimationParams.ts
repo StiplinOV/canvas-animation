@@ -114,21 +114,4 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
         return height / numberOfParts
     }
 
-    public mergeWithTransformation(o: arrayParamsType, t: Partial<arrayParamsType>, p: number): onlyArrayParamsType {
-        let {value, width, height, title, indexTitle, firstIndex} = o
-        value ??= []
-        width ??= this.calculateWidth(o)
-        title ??= ''
-        indexTitle ??= ''
-        firstIndex ??= 0
-        return {
-            value: t.value ? calculateArrayPercentValue(value, t.value, p) : value,
-            width: t.width ? calculatePercentValue(width, t.width, p) : width,
-            height: t.height ? calculatePercentValue(height, t.height, p) : height,
-            title: t.title ? calculateTextPercentValue(title, t.title, p) : title,
-            indexTitle: t.indexTitle ? calculateTextPercentValue(indexTitle, t.indexTitle, p) : indexTitle,
-            firstIndex: t.firstIndex ? Math.floor(calculatePercentValue(firstIndex, t.firstIndex, p)) : firstIndex
-        }
-    }
-
 }

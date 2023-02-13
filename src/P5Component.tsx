@@ -28,11 +28,7 @@ export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => 
         cnv.position(0, 0)
         cnv.style('border: 1px solid')
         cameras.sort((left, right) => left.startTime - right.startTime)
-        animations.push(
-            ...canvasAnimations(p5)
-                .sort((left, right) => left.getZIndex(0, animationStyle) - right.getZIndex(0, animationStyle))
-                .flatMap(p => p.toCanvasAnimations(animationStyle))
-        )
+        animations.push(...canvasAnimations(p5).flatMap(p => p.toCanvasAnimations(animationStyle)))
     }
 
     const draw = (p5: p5Types): void => {
@@ -43,9 +39,10 @@ export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => 
         camera.rotation && p5.rotate(camera.rotation)
         p5.translate(-camera.x * zoom, -camera.y * zoom)
         p5.scale(zoom)
-        animations.forEach(a => {
-            a.draw(p5, millis)
-        })
+        animations.sort((l, r) => l.getZIndex(millis, animationStyle) - r.getZIndex(millis, animationStyle))
+            .forEach(a => {
+                a.draw(p5, millis)
+            })
     }
 
     // @ts-expect-error need fidure it out

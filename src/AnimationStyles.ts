@@ -15,6 +15,7 @@ export default interface AnimationStyle {
     cornerRadius: number
     objectRotation: number
     textStyle: THE_STYLE
+    zIndex: number
 }
 const defaultAnimationStyle: AnimationStyle = {
     backgroundColor: '#FFFFFF',
@@ -30,7 +31,8 @@ const defaultAnimationStyle: AnimationStyle = {
     strokeBoldWeight: 4,
     cornerRadius: 0,
     objectRotation: 0,
-    textStyle: 'normal'
+    textStyle: 'normal',
+    zIndex: 0
 }
 const createAnimationStyles = (): Record<string, Partial<AnimationStyle>> => ({
     default: defaultAnimationStyle,

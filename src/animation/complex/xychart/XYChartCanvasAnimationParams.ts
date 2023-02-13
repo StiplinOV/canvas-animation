@@ -262,28 +262,6 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         }
     }
 
-    mergeWithTransformation(obj: xyChartParamsType, t: Partial<xyChartParamsType>, p: number): onlyXyChartParamsType {
-        let {width, height, xScale, yScale, xAxisName, yAxisName, chartPoints, chartLines, chartYRanges} = obj
-        xScale ??= []
-        yScale ??= []
-        xAxisName ??= ''
-        yAxisName ??= ''
-        chartPoints ??= []
-        chartLines ??= []
-        chartYRanges ??= []
-        return {
-            width: t.width ? calculatePercentValue(width, t.width, p) : width,
-            height: t.height ? calculatePercentValue(height, t.height, p) : height,
-            xScale: t.xScale ? calculateArrayPercentValue(xScale, t.xScale, p) : xScale,
-            yScale: t.yScale ? calculateArrayPercentValue(yScale, t.yScale, p) : yScale,
-            xAxisName: t.xAxisName ? calculateTextPercentValue(xAxisName, t.xAxisName, p) : xAxisName,
-            yAxisName: t.yAxisName ? calculateTextPercentValue(yAxisName, t.yAxisName, p) : yAxisName,
-            chartPoints: t.chartPoints ? calculateArrayPercentValue(chartPoints, t.chartPoints, p) : chartPoints,
-            chartLines: t.chartLines ? calculateArrayPercentValue(chartLines, t.chartLines, p) : chartLines,
-            chartYRanges: t.chartYRanges ? calculateArrayPercentValue(chartYRanges, t.chartYRanges, p) : chartYRanges
-        }
-    }
-
     protected convertSelectorToDiscriminatorRegexps(selector: selectorType): RegExp[] {
         if (!selector.lines && !selector.points && !selector.yScaleValues && !selector.xScaleValues) {
             return [/.*/]

@@ -135,61 +135,15 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
     }
 
     public getZIndex(time: number, animationStyle: AnimationStyle): number {
-        return this.calculateObjectParamsInTime(time, animationStyle).zIndex ?? 0
-    }
-
-    public calculateObjectParamsInTime(time: number, animationStyle: AnimationStyle, percentParam?: number): T {
-        const sourceObject = this.object
-        let result = {...sourceObject}
+        let result = this.object.zIndex ?? animationStyle.zIndex
         this.getTransformations()
             .filter(t => needAppearObject(time, toAppearanceParamType(t.presenceParameters)))
             .forEach((t) => {
                 const transformationObject = t.object
-                const percent = percentParam ?? toAppearancePercent(time, toAppearanceParamType(t.presenceParameters))
-                if (transformationObject.origin) {
-                    result.origin = calculatePointPercentValue(result.origin, transformationObject.origin, percent)
-                }
-                if (transformationObject.zIndex) {
-                    result.zIndex = calculatePercentValue(result.zIndex ?? 0, transformationObject.zIndex, percent)
-                }
-                if (transformationObject.weight) {
-                    result.weight = calculatePercentValue(
-                        weightToNumber(result.weight ?? animationStyle.strokeWeight, animationStyle),
-                        weightToNumber(transformationObject.weight, animationStyle), percent
-                    )
-                }
-                if (transformationObject.rotations) {
-                    result.rotations = calculateRotationsPercentValue(
-                        result.rotations ?? [],
-                        transformationObject.rotations ?? [],
-                        percent
-                    )
-                }
-                const transformDashed = transformationObject.dashed
-                const resultDashed = result.dashed ?? []
-                if (transformDashed && (transformDashed.length || resultDashed.length)) {
-                    let resultLength = 1
-                    if (resultDashed.length) {
-                        resultLength *= resultDashed.length
-                    }
-                    if (transformDashed.length) {
-                        resultLength *= transformDashed.length
-                    }
+                const percent = toAppearancePercent(time, toAppearanceParamType(t.presenceParameters))
 
-                    const sourceCopy = []
-                    const transformCopy = []
-                    for (let i = 0; i < resultLength; i++) {
-                        sourceCopy.push(resultDashed.length ? resultDashed[i % resultDashed.length] : 0)
-                        transformCopy.push(transformDashed.length ? transformDashed[i % transformDashed.length] : 0)
-                    }
-                    for (let i = 0; i < resultLength; i++) {
-                        sourceCopy[i] = calculatePercentValue(sourceCopy[i], transformCopy[i], percent)
-                    }
-                    result.dashed = sourceCopy
-                }
-                result = {
-                    ...result,
-                    ...this.mergeWithTransformation(result, transformationObject, percent, animationStyle, t.options)
+                if (transformationObject.zIndex) {
+                    result = calculatePercentValue(result, transformationObject.zIndex, percent)
                 }
             })
         return result
@@ -206,8 +160,6 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
     public appendTransformation(transformation: TransformationParam<T, U>): void {
         this.transformations.push(transformationParamToTransformation(transformation))
     }
-
-    public abstract mergeWithTransformation(obj: T, trans: Partial<T>, perc: number, animationStyle: AnimationStyle, options?: U): Omit<T, keyof ObjectParams>
 
     public abstract toCanvasAnimations(animationStyle: AnimationStyle): CanvasAnimation[]
 
