@@ -126,20 +126,6 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
         })
     }
 
-    public calculateContainedAnimationsFlatten(animationStyle: AnimationStyle): CanvasAnimationParams[] {
-        let containedAnimations = this.calculateContainedAnimations(animationStyle)
-        let containedAnimationsFlatten = containedAnimations.flatMap(a => a.calculateContainedAnimations(animationStyle))
-        while (containedAnimations.length !== containedAnimationsFlatten.length) {
-            containedAnimations = containedAnimationsFlatten
-            containedAnimationsFlatten = containedAnimations.flatMap(a => a.calculateContainedAnimations(animationStyle))
-        }
-        return containedAnimationsFlatten
-    }
-
-    public calculateContainedAnimations(animationStyle: AnimationStyle): CanvasAnimationParams[] {
-        return [this]
-    }
-
     protected getSelections(): V[] {
         return this.selections
     }
@@ -157,7 +143,6 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
         let result = {...sourceObject}
         this.getTransformations()
             .filter(t => needAppearObject(time, toAppearanceParamType(t.presenceParameters)))
-            .sort((l, r) => l.presenceParameters.appearTime - r.presenceParameters.appearTime)
             .forEach((t) => {
                 const transformationObject = t.object
                 const percent = percentParam ?? toAppearancePercent(time, toAppearanceParamType(t.presenceParameters))

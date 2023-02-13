@@ -16,7 +16,7 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
 
     public draw(p5: p5Types, time: number): void {
         const object = this.params.calculateObjectParamsInTime(time, this.animationStyle)
-        const {origin, rotations} = object
+        const {origin, rotations, dashed} = object
 
         if (!needAppearObject(time, this.params.getAppearanceParam())) {
             return
@@ -37,7 +37,7 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
         }
         p5.translate(result.x, result.y)
         p5.rotate(angle)
-        object.dashed && p5.drawingContext.setLineDash(object.dashed)
+        dashed && p5.drawingContext.setLineDash(dashed)
         this.doDraw(p5, time, object, this.animationStyle)
         p5.pop()
     }
