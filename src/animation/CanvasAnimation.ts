@@ -1,6 +1,5 @@
 import p5Types from 'p5'
-import {needAppearObject} from '../common/Utils'
-import {ZeroPoint} from '../common/Point'
+import {addPoints, needAppearObject, rotateVector, subtractPoints} from '../common/Utils'
 import AnimationStyle from '../AnimationStyles'
 import CanvasAnimationParams, {ObjectParams} from './CanvasAnimationParams'
 
@@ -17,16 +16,27 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
 
     public draw(p5: p5Types, time: number): void {
         const object = this.params.calculateObjectParamsInTime(time, this.animationStyle)
-        const offset = object.offset ?? ZeroPoint
-        const rotationAxis = object.origin
+        const {origin, rotations} = object
 
         if (!needAppearObject(time, this.params.getAppearanceParam())) {
             return
         }
         p5.push()
-        p5.translate(rotationAxis.x, rotationAxis.y)
-        p5.rotate(object.rotation ?? this.animationStyle.objectRotation)
-        p5.translate(offset.x, offset.y)
+        const rotationsCopy = rotations?.map(r => ({...r})) ?? []
+
+        let result = origin
+        const angle = rotationsCopy.reduce((l, r) => l + r.angle, 0)
+        for (let i = 0; i < rotationsCopy.length; i++) {
+            const rotation = rotationsCopy[i]
+            const vectorPoint = subtractPoints(result, rotation.axis)
+            result = addPoints(rotateVector(p5, vectorPoint, rotation.angle), rotation.axis)
+            for (let j = i; j < rotationsCopy.length; j++) {
+                const nextRotation = rotationsCopy[j]
+                nextRotation.axis = rotateVector(p5, nextRotation.axis, rotation.angle)
+            }
+        }
+        p5.translate(result.x, result.y)
+        p5.rotate(angle)
         object.dashed && p5.drawingContext.setLineDash(object.dashed)
         this.doDraw(p5, time, object, this.animationStyle)
         p5.pop()

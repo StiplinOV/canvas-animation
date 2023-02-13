@@ -3,7 +3,6 @@ import {ObjectParams} from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
 import CircleCanvasAnimation from './CircleCanvasAnimation'
-import CanvasAnimation from '../../CanvasAnimation'
 
 interface onlyCircleParamsType {
     diameter: number
@@ -20,7 +19,7 @@ export default class CircleCanvasAnimationParams extends SimpleCanvasAnimationPa
         }
     }
 
-    toCanvasAnimation(animationStyle: AnimationStyle): CanvasAnimation {
+    protected toCanvasAnimation(animationStyle: AnimationStyle): CircleCanvasAnimation {
         return new CircleCanvasAnimation(this, animationStyle)
     }
 

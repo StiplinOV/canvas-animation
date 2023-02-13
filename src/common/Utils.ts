@@ -14,6 +14,10 @@ export interface appearanceParamType {
 }
 
 export type render2DArrayType = 'leftToRight' | 'upToDown'
+export type rotationType = {
+    axis: Point
+    angle: number
+}
 
 export const transfposeMatrix = <T>(matrixParam: T[][]): T[][] => {
     const result: T[][] = Object.assign([], matrixParam)
@@ -33,7 +37,7 @@ export const calculateArrayPercentValue = <T>(from: T[], to: T[], percent: numbe
     let toStartsWithFrom = true
     let fromStartsWithTo = true
     for (let i = 0; i < Math.min(from.length, to.length); i++) {
-        if (from[i] !== to[i]) {
+        if (JSON.stringify(from[i]) !== JSON.stringify(to[i])) {
             toStartsWithFrom = false
             fromStartsWithTo = false
             break
@@ -170,6 +174,15 @@ export const calculateColorPercentValue = (from: string, to: string, percent: nu
     const b = Math.round(calculatePercentValue(fromNumB, toNumB, percent)).toString(16).padStart(2, '0')
 
     return `#${r}${g}${b}`
+}
+export const calculateRotationPercentValue = (from: rotationType, to: rotationType, percent: number): rotationType => {
+    return {
+        axis: calculatePointPercentValue(from.axis, to.axis, percent),
+        angle: calculatePercentValue(from.angle, to.angle, percent)
+    }
+}
+export const calculateRotationsPercentValue = (from: rotationType[], to: rotationType[], percent: number): rotationType[] => {
+    return calculateArrayPercentValue(from, to, percent)
 }
 
 export const toAppearanceParamType = (values: Partial<appearanceParamType>): appearanceParamType => ({

@@ -1,8 +1,14 @@
-import CanvasAnimationParams, {ObjectParams} from '../../CanvasAnimationParams'
-import {calculateArrayPercentValue, calculatePercentValue, calculateTextPercentValue} from '../../../common/Utils'
+import {ObjectParams} from '../../CanvasAnimationParams'
+import {
+    addPoints,
+    calculateArrayPercentValue,
+    calculatePercentValue,
+    calculateTextPercentValue
+} from '../../../common/Utils'
 import ComplexCanvasAnimationParams from '../ComplexCanvasAnimationParams'
 import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
 import RectangleCanvasAnimationParams from '../../simple/rectangle/RectangleCanvasAnimationParams'
+import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
 
 interface onlyArrayParamsType {
     value: string[]
@@ -18,9 +24,9 @@ interface arrayParamsType extends onlyArrayParamsType, ObjectParams {
 
 export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationParams<arrayParamsType> {
 
-    getIncludedAnimationsByParameters(object: arrayParamsType): Map<string, CanvasAnimationParams> {
-        const result = new Map<string, CanvasAnimationParams>()
-        const {title, value, indexTitle, firstIndex} = object
+    protected getIncludedAnimationParamsByParameter(object: arrayParamsType): Map<string, SimpleCanvasAnimationParams> {
+        const result = new Map<string, SimpleCanvasAnimationParams>()
+        const {title, value, indexTitle, firstIndex, origin, rotations} = object
         const partHeight = this.calculatePartHeight(object)
         const width = this.calculateWidth(object)
         const arrayRectangleWidth = (width - (value.length - 1) * partHeight) / value.length
@@ -29,10 +35,11 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
             result.set('array title', new TextCanvasAnimationParams({
                 object: {
                     value: title,
-                    origin: {x: width / 2, y: partShift},
+                    origin: addPoints(origin, {x: width / 2, y: partShift}),
                     fontSize: partHeight,
                     horizontalAlign: 'center',
-                    verticalAlign: 'top'
+                    verticalAlign: 'top',
+                    rotations
                 }
             }))
             partShift += partHeight * 2
@@ -40,32 +47,35 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
         value.forEach((value, index) => {
             result.set(`value rect ${index}`, new RectangleCanvasAnimationParams({
                 object: {
-                    origin: {x: index * (arrayRectangleWidth + partHeight), y: partShift},
+                    origin: addPoints(origin, {x: index * (arrayRectangleWidth + partHeight), y: partShift}),
                     width: arrayRectangleWidth,
                     height: partHeight * 3,
-                    cornerRadius: 20
+                    cornerRadius: 20,
+                    rotations
                 }
             }))
             result.set(`value text ${index}`, new TextCanvasAnimationParams({
                 object: {
                     value,
-                    origin: {
+                    origin: addPoints(origin, {
                         x: index * (arrayRectangleWidth + partHeight) + arrayRectangleWidth / 2,
                         y: partShift + partHeight * 2
-                    },
+                    }),
                     fontSize: partHeight,
                     horizontalAlign: 'center',
-                    zIndex: 1
+                    zIndex: 1,
+                    rotations
                 }
             }))
             result.set(`index text ${index}`, new TextCanvasAnimationParams({
                 object: {
                     value: String(index + (firstIndex ?? 0)),
-                    origin: {
+                    origin: addPoints(origin, {
                         x: index * (arrayRectangleWidth + partHeight) + arrayRectangleWidth / 2,
                         y: partShift + partHeight * 4
-                    },
-                    horizontalAlign: 'center'
+                    }),
+                    horizontalAlign: 'center',
+                    rotations
                 }
             }))
         })
@@ -74,9 +84,10 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
             result.set('index title', new TextCanvasAnimationParams({
                 object: {
                     value: indexTitle,
-                    origin: {x: width / 2, y: partShift},
+                    origin: addPoints(origin, {x: width / 2, y: partShift}),
                     fontSize: partHeight / 2,
-                    horizontalAlign: 'center'
+                    horizontalAlign: 'center',
+                    rotations
                 }
             }))
         }

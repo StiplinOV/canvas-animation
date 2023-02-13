@@ -3,7 +3,6 @@ import {ObjectParams} from '../../CanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import RectangleCanvasAnimation from './RectangleCanvasAnimation'
-import CanvasAnimation from '../../CanvasAnimation'
 
 interface onlyRectangleParamsType {
     width: number
@@ -28,7 +27,7 @@ export default class RectangleCanvasAnimationParams extends SimpleCanvasAnimatio
         }
     }
 
-    toCanvasAnimation(animationStyle: AnimationStyle): CanvasAnimation {
+    protected toCanvasAnimation(animationStyle: AnimationStyle): RectangleCanvasAnimation {
         return new RectangleCanvasAnimation(this, animationStyle)
     }
 

@@ -4,7 +4,6 @@ import {ObjectParams} from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
 import TextCanvasAnimation from './TextCanvasAnimation'
-import CanvasAnimation from '../../CanvasAnimation'
 
 interface onlyTextParamsType {
     value: string
@@ -35,7 +34,7 @@ export default class TextCanvasAnimationParams extends SimpleCanvasAnimationPara
         }
     }
 
-    toCanvasAnimation(animationStyle: AnimationStyle): CanvasAnimation {
+    protected toCanvasAnimation(animationStyle: AnimationStyle): TextCanvasAnimation {
         return new TextCanvasAnimation(this, animationStyle)
     }
 

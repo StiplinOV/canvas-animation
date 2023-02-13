@@ -14,7 +14,7 @@ interface ComponentProps {
 export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => {
 
     const animations: CanvasAnimation[] = []
-    const animationStyle = getAnimationStyle('custom')
+    const animationStyle = getAnimationStyle('default')
 
     const preload = (p5: p5Types): void => {
     }
@@ -31,7 +31,7 @@ export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => 
         animations.push(
             ...canvasAnimations(p5)
                 .sort((left, right) => left.getZIndex(0, animationStyle) - right.getZIndex(0, animationStyle))
-                .map(p => p.toCanvasAnimation(animationStyle))
+                .flatMap(p => p.toCanvasAnimations(animationStyle))
         )
     }
 

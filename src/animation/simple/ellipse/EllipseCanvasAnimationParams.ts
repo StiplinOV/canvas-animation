@@ -3,7 +3,6 @@ import {ObjectParams} from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
 import EllipseCanvasAnimation from './EllipseCanvasAnimation'
-import CanvasAnimation from '../../CanvasAnimation'
 
 interface onlyEllipseParamsType {
     width: number
@@ -22,7 +21,7 @@ export default class EllipseCanvasAnimationParams extends SimpleCanvasAnimationP
         }
     }
 
-    toCanvasAnimation(animationStyle: AnimationStyle): CanvasAnimation {
+    protected toCanvasAnimation(animationStyle: AnimationStyle): EllipseCanvasAnimation {
         return new EllipseCanvasAnimation(this, animationStyle)
     }
 

@@ -4,7 +4,6 @@ import {ObjectParams} from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
 import LineCanvasAnimation from './LineCanvasAnimation'
-import CanvasAnimation from '../../CanvasAnimation'
 
 export interface onlyLineParamsType {
     endPoint: Point
@@ -21,7 +20,7 @@ export default class LineCanvasAnimationParams extends SimpleCanvasAnimationPara
         }
     }
 
-    toCanvasAnimation(animationStyle: AnimationStyle): CanvasAnimation {
+    protected toCanvasAnimation(animationStyle: AnimationStyle): LineCanvasAnimation {
         return new LineCanvasAnimation(this, animationStyle)
     }
 

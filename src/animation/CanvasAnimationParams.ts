@@ -2,13 +2,15 @@ import {
     appearanceParamType,
     calculatePercentValue,
     calculatePointPercentValue,
+    calculateRotationsPercentValue,
     needAppearObject,
+    rotationType,
     toAppearanceParamType,
     toAppearancePercent
 } from '../common/Utils'
-import {Point, ZeroPoint} from '../common/Point'
+import {Point} from '../common/Point'
 import AnimationStyle from '../AnimationStyles'
-import CanvasAnimation from './CanvasAnimation'
+import SimpleCanvasAnimation from './simple/SimpleCanvasAnimation'
 
 type weightType = number | 'normal' | 'bold'
 type colorType = string | 'primary' | 'secondary'
@@ -36,11 +38,10 @@ export const colorToHex = (color: colorType, style: AnimationStyle): string => {
 export interface ObjectParams {
     weight?: weightType
     zIndex?: number
-    rotation?: number
-    offset?: Point
     dashed?: number[]
     strokeColor?: string | 'primary' | 'secondary'
     origin: Point
+    rotations?: rotationType[]
 }
 
 export interface Selection {
@@ -172,17 +173,10 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
                         weightToNumber(transformationObject.weight, animationStyle), percent
                     )
                 }
-                if (transformationObject.rotation) {
-                    result.rotation = calculatePercentValue(
-                        result.rotation ?? animationStyle.objectRotation,
-                        transformationObject.rotation,
-                        percent
-                    )
-                }
-                if (transformationObject.offset) {
-                    result.offset = calculatePointPercentValue(
-                        result.offset ?? ZeroPoint,
-                        transformationObject.offset,
+                if (transformationObject.rotations) {
+                    result.rotations = calculateRotationsPercentValue(
+                        result.rotations ?? [],
+                        transformationObject.rotations ?? [],
                         percent
                     )
                 }
@@ -221,7 +215,7 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
     }
 
     protected getTransformations(): Transformation<T, U>[] {
-        return this.transformations
+        return this.transformations.sort((l, r) => l.presenceParameters.appearTime - r.presenceParameters.appearTime)
     }
 
     public appendTransformation(transformation: TransformationParam<T, U>): void {
@@ -230,6 +224,6 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
 
     public abstract mergeWithTransformation(obj: T, trans: Partial<T>, perc: number, animationStyle: AnimationStyle, options?: U): Omit<T, keyof ObjectParams>
 
-    public abstract toCanvasAnimation(animationStyle: AnimationStyle): CanvasAnimation
+    public abstract toCanvasAnimations(animationStyle: AnimationStyle): SimpleCanvasAnimation[]
 
 }

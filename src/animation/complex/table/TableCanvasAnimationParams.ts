@@ -1,5 +1,6 @@
-import CanvasAnimationParams, {ObjectParams} from '../../CanvasAnimationParams'
+import {ObjectParams} from '../../CanvasAnimationParams'
 import {
+    addPoints,
     calculate2DArrayPercentValue,
     calculateArrayPercentValue,
     calculatePercentValue,
@@ -10,6 +11,7 @@ import LineCanvasAnimationParams from '../../simple/line/LineCanvasAnimationPara
 import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
 import EllipseCanvasAnimationParams from '../../simple/ellipse/EllipseCanvasAnimationParams'
+import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
 
 interface onlyTableParamsType {
     values: string[][]
@@ -28,15 +30,16 @@ interface tableParamsType extends onlyTableParamsType, ObjectParams {
 }
 
 type selectorType = { rowTitles?: 'all' | number[], colTitles?: 'all' | number[], values?: 'all' | [number, number][] }
+
 interface tableTransformOptionsType extends TransformOptions {
     renderValues?: render2DArrayType
 }
 
 export default class TableCanvasAnimationParams extends ComplexCanvasAnimationParams<tableParamsType, selectorType, tableTransformOptionsType> {
 
-    getIncludedAnimationsByParameters(object: tableParamsType): Map<string, CanvasAnimationParams> {
-        const result = new Map<string, CanvasAnimationParams>()
-        const {values, height, horizontalTitles, verticalTitles} = object
+    protected getIncludedAnimationParamsByParameter(object: tableParamsType): Map<string, SimpleCanvasAnimationParams> {
+        const result = new Map<string, SimpleCanvasAnimationParams>()
+        const {values, height, horizontalTitles, verticalTitles, origin, rotations} = object
         const rowHeight = height / values.length
         const rowColumnsWidths = this.calculateRowColumnsWidths(object)
         const markedCells = object.markedCells ?? []
@@ -53,9 +56,10 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                 if (i !== values.length - 1) {
                     result.set(`horizontal line ${i} ${j}`, new LineCanvasAnimationParams({
                         object: {
-                            origin: {x: accumulatedWidth, y: rowHeight * (i + 1)},
-                            endPoint: {x: accumulatedWidth + columnWidth, y: rowHeight * (i + 1)},
-                            weight: this.isBoldHorizontalLine(object, i, j) ? 'bold' : 'normal'
+                            origin: addPoints(origin, {x: accumulatedWidth, y: rowHeight * (i + 1)}),
+                            endPoint: addPoints(origin, {x: accumulatedWidth + columnWidth, y: rowHeight * (i + 1)}),
+                            weight: this.isBoldHorizontalLine(object, i, j) ? 'bold' : 'normal',
+                            rotations
                         }
                     }))
                 }
@@ -63,9 +67,10 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                 if (j < columnWidths.length - 1) {
                     result.set(`vertical line ${i} ${j}`, new LineCanvasAnimationParams({
                         object: {
-                            origin: {x: accumulatedWidth, y: i * rowHeight},
-                            endPoint: {x: accumulatedWidth, y: (i + 1) * rowHeight},
-                            weight: this.isBoldVerticalLine(object, i, j) ? 'bold' : 'normal'
+                            origin: addPoints(origin, {x: accumulatedWidth, y: i * rowHeight}),
+                            endPoint: addPoints(origin, {x: accumulatedWidth, y: (i + 1) * rowHeight}),
+                            weight: this.isBoldVerticalLine(object, i, j) ? 'bold' : 'normal',
+                            rotations
                         }
                     }))
                 }
@@ -73,12 +78,13 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                     if (markedCell[0] === i && markedCell[1] === j) {
                         result.set(`markedCell ${i} ${j}`, new EllipseCanvasAnimationParams({
                             object: {
-                                origin: {x: accumulatedWidth - columnWidth / 2, y: rowHeight * i + (rowHeight / 2)},
+                                origin: addPoints(origin, {x: accumulatedWidth - columnWidth / 2, y: rowHeight * i + (rowHeight / 2)}),
                                 width: columnWidth * 0.8,
                                 height: rowHeight * 0.8,
                                 weight: 'bold',
                                 zIndex: -1,
-                                strokeColor: 'secondary'
+                                strokeColor: 'secondary',
+                                rotations
                             }
                         }))
                     }
@@ -86,11 +92,12 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                 result.set(title ? `title ${i} ${j}` : `value ${i} ${j}`, new TextCanvasAnimationParams({
                     object: {
                         fontSize: object.fontSize,
-                        origin: {x: accumulatedWidth - columnWidth / 2, y: rowHeight * i + (rowHeight / 2)},
+                        origin: addPoints(origin, {x: accumulatedWidth - columnWidth / 2, y: rowHeight * i + (rowHeight / 2)}),
                         value: values[i][j],
                         horizontalAlign: 'center',
                         verticalAlign: 'center',
-                        textStyle
+                        textStyle,
+                        rotations
                     }
                 }))
             }
