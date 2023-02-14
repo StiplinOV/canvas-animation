@@ -1,15 +1,8 @@
 import {ObjectParams} from '../../CanvasAnimationParams'
-import {
-    addPoints,
-    calculate2DArrayPercentValue,
-    calculateArrayPercentValue,
-    calculatePercentValue,
-    render2DArrayType
-} from '../../../common/Utils'
+import {addPoints, render2DArrayType} from '../../../common/Utils'
 import ComplexCanvasAnimationParams, {TransformOptions} from '../ComplexCanvasAnimationParams'
 import LineCanvasAnimationParams from '../../simple/line/LineCanvasAnimationParams'
 import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
-import AnimationStyle from '../../../AnimationStyles'
 import EllipseCanvasAnimationParams from '../../simple/ellipse/EllipseCanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
 
@@ -78,7 +71,10 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                     if (markedCell[0] === i && markedCell[1] === j) {
                         result.set(`markedCell ${i} ${j}`, new EllipseCanvasAnimationParams({
                             object: {
-                                origin: addPoints(origin, {x: accumulatedWidth - columnWidth / 2, y: rowHeight * i + (rowHeight / 2)}),
+                                origin: addPoints(origin, {
+                                    x: accumulatedWidth - columnWidth / 2,
+                                    y: rowHeight * i + (rowHeight / 2)
+                                }),
                                 width: columnWidth * 0.8,
                                 height: rowHeight * 0.8,
                                 weight: 'bold',
@@ -92,7 +88,10 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                 result.set(title ? `title ${i} ${j}` : `value ${i} ${j}`, new TextCanvasAnimationParams({
                     object: {
                         fontSize: object.fontSize,
-                        origin: addPoints(origin, {x: accumulatedWidth - columnWidth / 2, y: rowHeight * i + (rowHeight / 2)}),
+                        origin: addPoints(origin, {
+                            x: accumulatedWidth - columnWidth / 2,
+                            y: rowHeight * i + (rowHeight / 2)
+                        }),
                         value: values[i][j],
                         horizontalAlign: 'center',
                         verticalAlign: 'center',

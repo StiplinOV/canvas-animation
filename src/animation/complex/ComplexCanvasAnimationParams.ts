@@ -49,7 +49,6 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
             const nextObject = {...previousObject, ...t.object}
             const nextObjectParams = this.getIncludedAnimationParamsByParameter(nextObject)
             const {added, deleted, changed} = this.getAnimationsSetDifference(prevObjectParams, nextObjectParams)
-            // TODO возможно тут можно упростить, указав первый параметр - пустой и будет только added
             if (added.size) {
                 let addedAppearTime = t.presenceParameters.appearTime
                 added.forEach((value, key) => {
