@@ -197,7 +197,8 @@ export const needAppearObject = (time: number, appearanceParam: appearanceParamT
     }
     return appearanceParam.disappearTime + appearanceParam.disappearDuration > time
 }
-export const toAppearancePercent = (time: number, appearanceParam: appearanceParamType): number => {
+export const toAppearancePercent = (time: number, appearanceParams: Partial<appearanceParamType>): number => {
+    const appearanceParam = toAppearanceParamType(appearanceParams)
     const {appearTime, appearDuration, disappearTime, disappearDuration} = appearanceParam
     if (time < appearTime) {
         return 0
@@ -209,6 +210,7 @@ export const toAppearancePercent = (time: number, appearanceParam: appearancePar
     }
     return 1
 }
+
 
 export const addPoints = (term1: Point, term2: Coordinates, ...terms: Coordinates[]): Point => {
     let resultX = term1.x + (term2.x ?? 0)

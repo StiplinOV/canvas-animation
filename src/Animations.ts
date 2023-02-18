@@ -8,7 +8,7 @@ import ArrayCanvasAnimationParams from './animation/complex/array/ArrayCanvasAni
 export const canvasWidth = 1280
 export const canvasHeight = 800
 export const timeDivider = 1000000
-export const timeMultiplier = 4
+export const timeMultiplier = 10
 export const startTime = 0
 
 export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) => [
@@ -83,10 +83,8 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
         ],
         transformations: [
             {
-                presenceParameters: {
-                    appearTime: 21000,
-                    appearDuration: 500
-                },
+                time: 21000,
+                duration: 500,
                 object: {
                     chartPoints: [
                         {x: 1, y: 7},
@@ -99,10 +97,8 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 }
             },
             {
-                presenceParameters: {
-                    appearTime: 22000,
-                    appearDuration: 1000
-                },
+                time: 22000,
+                duration: 1000,
                 object: {
                     chartPoints: [
                         {x: 1, y: 7},
@@ -115,31 +111,23 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 }
             },
             {
-                presenceParameters: {
-                    appearTime: 27000,
-                    appearDuration: 2000
-                },
+                time: 27000,
+                duration: 2000,
                 object: {chartYRanges: [{yCoords: [1, 6], value: 'Profit is 5'}]}
             },
             {
-                presenceParameters: {
-                    appearTime: 35000,
-                    appearDuration: 2000
-                },
+                time: 35000,
+                duration: 2000,
                 object: {chartYRanges: []}
             },
             {
-                presenceParameters: {
-                    appearTime: 44000,
-                    appearDuration: 2000
-                },
+                time: 44000,
+                duration: 2000,
                 object: {width: 1200}
             },
             {
-                presenceParameters: {
-                    appearTime: 113000,
-                    appearDuration: 1000
-                },
+                time: 113000,
+                duration: 1000,
                 object: {width: 905}
             }
         ]
@@ -185,26 +173,20 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
             fontSize: 35
         },
         transformations: [{
-            presenceParameters: {
-                appearTime: 37000,
-                appearDuration: 1000
-            },
+            time: 37000,
+            duration: 1000,
             object: {
                 value: '1) Buy\n2) Sell'
             }
         }, {
-            presenceParameters: {
-                appearTime: 39000,
-                appearDuration: 1000
-            },
+            time: 39000,
+            duration: 1000,
             object: {
                 value: '1) Buy\n2) Sell\n3) Wait'
             }
         }, {
-            presenceParameters: {
-                appearTime: 41000,
-                appearDuration: 1000
-            },
+            time: 41000,
+            duration: 1000,
             object: {
                 value: '1) Buy\n2) Sell\n3) Wait\n4) Hold'
             }
@@ -305,10 +287,8 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
         ],
         transformations: [
             {
-                presenceParameters: {
-                    appearTime: 65000,
-                    appearDuration: 500
-                },
+                time: 65000,
+                duration: 500,
                 object: {
                     values: [
                         ['', '1', '2', '3', '4', '5', '6'],
@@ -320,10 +300,8 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 }
             },
             {
-                presenceParameters: {
-                    appearTime: 68000,
-                    appearDuration: 500
-                },
+                time: 68000,
+                duration: 500,
                 object: {
                     values: [
                         ['', '1', '2', '3', '4', '5', '6'],
@@ -335,10 +313,8 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 }
             },
             {
-                presenceParameters: {
-                    appearTime: 71000,
-                    appearDuration: 500
-                },
+                time: 71000,
+                duration: 500,
                 object: {
                     values: [
                         ['', '1', '2', '3', '4', '5', '6'],
@@ -350,10 +326,8 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 }
             },
             {
-                presenceParameters: {
-                    appearTime: 74000,
-                    appearDuration: 500
-                },
+                time: 74000,
+                duration: 500,
                 object: {
                     values: [
                         ['', '1', '2', '3', '4', '5', '6'],
@@ -365,10 +339,8 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 }
             },
             {
-                presenceParameters: {
-                    appearTime: 77000,
-                    appearDuration: 3500
-                },
+                time: 77000,
+                duration: 3500,
                 object: {
                     values: [
                         ['', '1', '2', '3', '4', '5', '6'],
@@ -384,10 +356,8 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 }
             },
             {
-                presenceParameters: {
-                    appearTime: 83000,
-                    appearDuration: 500
-                },
+                time: 83000,
+                duration: 500,
                 object: {
                     values: [
                         ['', '1', '2', '3', '4', '5', '6'],
@@ -400,27 +370,23 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 }
             },
             {
-                presenceParameters: {
-                    appearTime: 103000,
-                    appearDuration: 1000
-                },
+                time: 103000,
+                duration: 1000,
                 object: {
                     markedCells: [[2, 1], [3, 1]]
                 },
-                options: {type: 'sequentially'}
+                options: {
+                    type: 'sequentially'
+                }
             },
             {
-                presenceParameters: {
-                    appearTime: 111000,
-                    appearDuration: 500
-                },
+                time: 111000,
+                duration: 500,
                 object: {markedCells: [[2, 1], [3, 1]]}
             },
             {
-                presenceParameters: {
-                    appearTime: 113000,
-                    appearDuration: 1000
-                },
+                time: 113000,
+                duration: 1000,
                 object: {
                     width: 1320,
                     values: [
@@ -436,10 +402,8 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 }
             },
             {
-                presenceParameters: {
-                    appearTime: 116000,
-                    appearDuration: 1000
-                },
+                time: 116000,
+                duration: 1000,
                 object: {
                     values: [
                         ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -452,10 +416,8 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 }
             },
             {
-                presenceParameters: {
-                    appearTime: 118000,
-                    appearDuration: 1000
-                },
+                time: 118000,
+                duration: 1000,
                 object: {
                     values: [
                         ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -468,25 +430,19 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 }
             },
             {
-                presenceParameters: {
-                    appearTime: 120000,
-                    appearDuration: 500
-                },
+                time: 120000,
+                duration: 500,
                 object: {markedCells: []}
             },
             {
-                presenceParameters: {
-                    appearTime: 128000,
-                    appearDuration: 500
-                },
+                time: 128000,
+                duration: 500,
                 object: {markedCells: [[1, 1], [4, 1]]},
                 options: {type: 'sequentially'}
             },
             {
-                presenceParameters: {
-                    appearTime: 132000,
-                    appearDuration: 2000
-                },
+                time: 132000,
+                duration: 2000,
                 object: {
                     values: [
                         ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -499,10 +455,8 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 }
             },
             {
-                presenceParameters: {
-                    appearTime: 137000,
-                    appearDuration: 500
-                },
+                time: 137000,
+                duration: 500,
                 object: {
                     values: [
                         ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -516,18 +470,14 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 }
             },
             {
-                presenceParameters: {
-                    appearTime: 140000,
-                    appearDuration: 500
-                },
+                time: 140000,
+                duration: 500,
                 object: {markedCells: [[1, 1], [4, 1]]},
                 options: {type: 'sequentially'}
             },
             {
-                presenceParameters: {
-                    appearTime: 145000,
-                    appearDuration: 2000
-                },
+                time: 145000,
+                duration: 2000,
                 object: {
                     values: [
                         ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -540,10 +490,8 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 }
             },
             {
-                presenceParameters: {
-                    appearTime: 148000,
-                    appearDuration: 500
-                },
+                time: 148000,
+                duration: 500,
                 object: {
                     values: [
                         ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -556,18 +504,14 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 }
             },
             {
-                presenceParameters: {
-                    appearTime: 152000,
-                    appearDuration: 500
-                },
+                time: 152000,
+                duration: 500,
                 object: {markedCells: [[2, 1], [3, 1]]},
                 options: {type: 'sequentially'}
             },
             {
-                presenceParameters: {
-                    appearTime: 155000,
-                    appearDuration: 2000
-                },
+                time: 155000,
+                duration: 2000,
                 object: {
                     values: [
                         ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -580,10 +524,8 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 }
             },
             {
-                presenceParameters: {
-                    appearTime: 158000,
-                    appearDuration: 500
-                },
+                time: 158000,
+                duration: 500,
                 object: {
                     values: [
                         ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -596,10 +538,8 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 }
             },
             {
-                presenceParameters: {
-                    appearTime: 161000,
-                    appearDuration: 500
-                },
+                time: 161000,
+                duration: 500,
                 object: {
                     values: [
                         ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -612,17 +552,13 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 }
             },
             {
-                presenceParameters: {
-                    appearTime: 163000,
-                    appearDuration: 500
-                },
+                time: 163000,
+                duration: 500,
                 object: {markedCells: []}
             },
             {
-                presenceParameters: {
-                    appearTime: 165000,
-                    appearDuration: 10000
-                },
+                time: 165000,
+                duration: 10000,
                 object: {
                     values: [
                         ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -638,10 +574,8 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 }
             },
             {
-                presenceParameters: {
-                    appearTime: 180000,
-                    appearDuration: 500
-                },
+                time: 180000,
+                duration: 500,
                 object: {
                     values: [
                         ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],

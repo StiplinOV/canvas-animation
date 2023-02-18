@@ -3,9 +3,8 @@ import AnimationStyle from '../../AnimationStyles'
 import CanvasAnimation from '../CanvasAnimation'
 import {
     calculatePercentValue,
-    calculatePointPercentValue, calculateRotationsPercentValue,
-    needAppearObject,
-    toAppearanceParamType,
+    calculatePointPercentValue,
+    calculateRotationsPercentValue,
     toAppearancePercent
 } from "../../common/Utils";
 
@@ -20,10 +19,13 @@ export default abstract class SimpleCanvasAnimationParams<T extends ObjectParams
         const sourceObject = this.getObject()
         let result = {...sourceObject}
         this.getTransformations()
-            .filter(t => needAppearObject(time, toAppearanceParamType(t.presenceParameters)))
+            .filter(t => time >= t.time)
             .forEach((t) => {
                 const transformationObject = t.object
-                const percent = toAppearancePercent(time, toAppearanceParamType(t.presenceParameters))
+                const percent = toAppearancePercent(time, {
+                    appearTime: t.time,
+                    appearDuration: t.duration
+                })
                 if (transformationObject.origin) {
                     result.origin = calculatePointPercentValue(result.origin, transformationObject.origin, percent)
                 }

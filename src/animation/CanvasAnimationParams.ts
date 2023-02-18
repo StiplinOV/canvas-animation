@@ -1,9 +1,6 @@
 import {
     appearanceParamType,
     calculatePercentValue,
-    calculatePointPercentValue,
-    calculateRotationsPercentValue,
-    needAppearObject,
     rotationType,
     toAppearanceParamType,
     toAppearancePercent
@@ -49,21 +46,24 @@ export interface Selection {
     duration?: number
 }
 
-type Transformation<T extends ObjectParams, U> = {
+export type Transformation<T extends ObjectParams, U> = {
     object: Partial<T>
-    presenceParameters: appearanceParamType
+    time: number
+    duration: number
     options?: U
 }
 
 type TransformationParam<T extends ObjectParams, U> = {
     object: Partial<T>
-    presenceParameters?: & Partial<appearanceParamType>
+    time?: number
+    duration?: number
     options?: U
 }
 
 const transformationParamToTransformation = <T extends ObjectParams, U>(t: TransformationParam<T, U>): Transformation<T, U> => ({
     ...t,
-    presenceParameters: toAppearanceParamType(t?.presenceParameters ?? {}),
+    time: t.time ?? 0,
+    duration: t.duration ?? 0,
     options: t.options
 })
 
@@ -137,10 +137,13 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
     public getZIndex(time: number, animationStyle: AnimationStyle): number {
         let result = this.object.zIndex ?? animationStyle.zIndex
         this.getTransformations()
-            .filter(t => needAppearObject(time, toAppearanceParamType(t.presenceParameters)))
+            .filter(t => time >= t.time)
             .forEach((t) => {
                 const transformationObject = t.object
-                const percent = toAppearancePercent(time, toAppearanceParamType(t.presenceParameters))
+                const percent = toAppearancePercent(time, {
+                    appearTime: t.time,
+                    appearDuration: t.duration
+                })
 
                 if (transformationObject.zIndex) {
                     result = calculatePercentValue(result, transformationObject.zIndex, percent)
@@ -154,7 +157,7 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
     }
 
     protected getTransformations(): Transformation<T, U>[] {
-        return this.transformations.sort((l, r) => l.presenceParameters.appearTime - r.presenceParameters.appearTime)
+        return this.transformations.sort((l, r) => l.time - r.time)
     }
 
     public appendTransformation(transformation: TransformationParam<T, U>): void {

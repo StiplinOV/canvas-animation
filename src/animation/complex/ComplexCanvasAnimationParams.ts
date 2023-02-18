@@ -1,4 +1,4 @@
-import CanvasAnimationParams, {ObjectParams, Params, Selection} from '../CanvasAnimationParams'
+import CanvasAnimationParams, {ObjectParams, Params, Selection, Transformation} from '../CanvasAnimationParams'
 import p5Types from 'p5'
 import AnimationStyle from '../../AnimationStyles'
 import SimpleCanvasAnimationParams from '../simple/SimpleCanvasAnimationParams'
@@ -14,6 +14,12 @@ type AnimationS2T = { source: SimpleCanvasAnimationParams, target: SimpleCanvasA
 
 export interface TransformOptions {
     type: 'together' | 'sequentially'
+}
+
+export type AnimationsSetDifferenceType = {
+    added: Map<string, SimpleCanvasAnimationParams>
+    deleted: Map<string, SimpleCanvasAnimationParams>
+    changed: Map<string, AnimationS2T>
 }
 
 export default abstract class ComplexCanvasAnimationParams<T extends ObjectParams = ObjectParams, U = unknown, V extends TransformOptions = TransformOptions>
@@ -44,59 +50,11 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         let previousObject = object
         let prevObjectParams = initialIncludedAnimationParams
         this.getTransformations().forEach(t => {
-            const transformDuration = t.presenceParameters.appearDuration
-            const transformationType = t.options?.type
             const nextObject = {...previousObject, ...t.object}
             const nextObjectParams = this.getIncludedAnimationParamsByParameter(nextObject)
-            const {added, deleted, changed} = this.getAnimationsSetDifference(prevObjectParams, nextObjectParams)
-            if (added.size) {
-                let addedAppearTime = t.presenceParameters.appearTime
-                added.forEach((value, key) => {
-                    let addedAppearDuration = transformDuration
-                    if (transformationType === 'sequentially') {
-                        addedAppearDuration = (transformDuration / added.size)
-                    }
-                    value.setAppearTime(addedAppearTime)
-                    value.setAppearDuration(addedAppearDuration)
-                    if (transformationType === 'sequentially') {
-                        addedAppearTime += addedAppearDuration
-                    }
-                    initialIncludedAnimationParams.set(key, value)
-                })
-            }
-            if (deleted.size) {
-                let deletedDisappearTime = t.presenceParameters.appearTime
-                deleted.forEach((_, k) => {
-                    const deletedAnimation = requireValueFromMap(initialIncludedAnimationParams, k)
-                    let deletedDisappearDuration = transformDuration
-                    if (transformationType === 'sequentially') {
-                        deletedDisappearDuration = (transformDuration / deleted.size)
-                    }
-                    deletedAnimation.setDisappearTime(deletedDisappearTime)
-                    deletedAnimation.setDisappearDuration(deletedDisappearDuration)
-                    if (transformationType === 'sequentially') {
-                        deletedDisappearTime += deletedDisappearDuration
-                    }
-                })
-            }
-
-            let sourceToTargetAppearTime = t.presenceParameters.appearTime
-            changed.forEach((value, key) => {
-                let sourceToTargetAppearDuration = transformDuration
-                if (transformationType === 'sequentially') {
-                    sourceToTargetAppearDuration /= changed.size
-                }
-                initialIncludedAnimationParams.get(key)?.appendTransformation({
-                    presenceParameters: {
-                        appearTime: sourceToTargetAppearTime,
-                        appearDuration: sourceToTargetAppearDuration
-                    },
-                    object: value.target.getObject()
-                })
-                if (transformationType === 'sequentially') {
-                    sourceToTargetAppearTime += sourceToTargetAppearDuration
-                }
-            })
+            const transformSimpleAnimationsDifference = this.getAnimationsSetDifference(prevObjectParams, nextObjectParams)
+            //TODO start
+            this.applySimpleTransformAnimations(initialIncludedAnimationParams, t, transformSimpleAnimationsDifference)
 
             previousObject = nextObject
             prevObjectParams = nextObjectParams
@@ -112,6 +70,63 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         })
         this.setAnimationSelections(initialIncludedAnimationParams)
         return Array.from(initialIncludedAnimationParams.values())
+    }
+
+    protected applySimpleTransformAnimations(
+        animations: Map<string, SimpleCanvasAnimationParams>,
+        transformation: Transformation<T, V>,
+        diff: AnimationsSetDifferenceType
+    ): void {
+        const {added, deleted, changed} = diff
+        const {time, duration, options} = transformation
+        const type = options?.type
+        if (added.size) {
+            let addedAppearTime = time
+            added.forEach((value, key) => {
+                let addedAppearDuration = duration
+                if (type === 'sequentially') {
+                    addedAppearDuration = (duration / added.size)
+                }
+                value.setAppearTime(addedAppearTime)
+                value.setAppearDuration(addedAppearDuration)
+                if (type === 'sequentially') {
+                    addedAppearTime += addedAppearDuration
+                }
+
+                animations.set(key, value)
+            })
+        }
+        if (deleted.size) {
+            let deletedDisappearTime = time
+            deleted.forEach((_, k) => {
+                const deletedAnimation = requireValueFromMap(animations, k)
+                let deletedDisappearDuration = duration
+                if (type === 'sequentially') {
+                    deletedDisappearDuration = (duration / deleted.size)
+                }
+                deletedAnimation.setDisappearTime(deletedDisappearTime)
+                deletedAnimation.setDisappearDuration(deletedDisappearDuration)
+                if (type === 'sequentially') {
+                    deletedDisappearTime += deletedDisappearDuration
+                }
+            })
+        }
+
+        let sourceToTargetAppearTime = time
+        changed.forEach((value, key) => {
+            let sourceToTargetAppearDuration = duration
+            if (type === 'sequentially') {
+                sourceToTargetAppearDuration /= changed.size
+            }
+            animations.get(key)?.appendTransformation({
+                time: sourceToTargetAppearTime,
+                duration: sourceToTargetAppearDuration,
+                object: value.target.getObject()
+            })
+            if (type === 'sequentially') {
+                sourceToTargetAppearTime += sourceToTargetAppearDuration
+            }
+        })
     }
 
     public getIncludedAnimationParams(): Map<string, SimpleCanvasAnimationParams> {
@@ -156,12 +171,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
     getAnimationsSetDifference(
         left: Map<string, SimpleCanvasAnimationParams>,
         right: Map<string, SimpleCanvasAnimationParams>
-    ):
-        {
-            added: Map<string, SimpleCanvasAnimationParams>
-            deleted: Map<string, SimpleCanvasAnimationParams>
-            changed: Map<string, AnimationS2T>
-        } {
+    ): AnimationsSetDifferenceType {
         const added = new Map<string, SimpleCanvasAnimationParams>()
         const deleted = new Map<string, SimpleCanvasAnimationParams>()
         const changedSourceToTarget: Map<string, AnimationS2T> = new Map<string, AnimationS2T>()
