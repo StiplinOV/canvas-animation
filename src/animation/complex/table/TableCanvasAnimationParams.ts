@@ -28,7 +28,10 @@ interface tableParamsType extends ObjectParams {
 type selectorType = { rowTitles?: 'all' | number[], colTitles?: 'all' | number[], values?: 'all' | [number, number][] }
 
 interface TableTransformOptionsType extends TransformOptions {
-    renderValues?: render2DArrayType
+    renderValues?: {
+        direction?: render2DArrayType
+        immediacy?: boolean
+    }
 }
 
 const cellValueRegexp = /title|value (\d+) (\d+)/
@@ -294,14 +297,15 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         if (!options?.renderValues || options.type === "together") {
             return super.calculateAddedTransformAnimationsAppearParams(added, time, duration, options)
         }
+        const immediacy = options.renderValues?.immediacy
         const result = new Map<string, AddedAppearParamType>()
         let addedAppearTime = time
         this.sortKeysAccordingToOption(options, new Set(added.keys())).forEach(key => {
             const value = requireValueFromMap(added, key)
-            let addedAppearDuration = (duration / added.size)
+            const addedAppearDuration = duration / added.size
             result.set(key, {
                 appearTime: addedAppearTime,
-                appearDuration: addedAppearDuration,
+                appearDuration: immediacy ? 0 : addedAppearDuration,
                 params: value
             })
             addedAppearTime += addedAppearDuration
@@ -318,13 +322,14 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         if (!options?.renderValues || options.type === "together") {
             return super.calculateDeletedTransformAnimationsDisappearParams(deleted, time, duration, options)
         }
+        const immediacy = options.renderValues?.immediacy
         const result = new Map<string, DeletedDisappearParamType>()
         let deletedDisappearTime = time
         this.sortKeysAccordingToOption(options, deleted).reverse().forEach(k => {
-            let deletedDisappearDuration = (duration / deleted.size)
+            const deletedDisappearDuration = duration / deleted.size
             result.set(k, {
                 disappearTime: deletedDisappearTime,
-                disappearDuration: deletedDisappearDuration
+                disappearDuration: immediacy ? 0 : deletedDisappearDuration
             })
             deletedDisappearTime += deletedDisappearDuration
         })
@@ -340,15 +345,16 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         if (!options?.renderValues || options.type === "together") {
             return super.calculateChangedTransformAnimationsTransformParams(changed, time, duration, options)
         }
+        const immediacy = options.renderValues?.immediacy
         const result = new Map<string, ChangedTransformParamType>()
         let s2tAppearTime = time
 
         this.sortKeysAccordingToOption(options, new Set(changed.keys())).forEach(key => {
             const value = requireValueFromMap(changed, key)
-            let s2tAppearDuration = duration / changed.size
+            const s2tAppearDuration = duration / changed.size
             result.set(key, {
                 time: s2tAppearTime,
-                duration: s2tAppearDuration,
+                duration: immediacy ? 0 : s2tAppearDuration,
                 s2t: value
             })
             s2tAppearTime += s2tAppearDuration
@@ -358,8 +364,8 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
 
     private sortKeysAccordingToOption(options: TableTransformOptionsType, keysParam: Set<string>): string[] {
         const keys = Array.from(keysParam.keys())
-        const {renderValues} = options
-        if (!renderValues) {
+        const direction = options.renderValues?.direction
+        if (!direction) {
             return keys
         }
         return keys.sort((l, r) => {
@@ -377,7 +383,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
             const lCol = Number(lColStr)
             const rRow = Number(rRowStr)
             const rCol = Number(rColStr)
-            if (renderValues === "leftToRight") {
+            if (direction === "leftToRight") {
                 if (lRow > rRow) {
                     return 1
                 }
@@ -391,7 +397,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                     return -1
                 }
             }
-            if (renderValues === "upToDown") {
+            if (direction === "upToDown") {
                 if (lCol > rCol) {
                     return 1
                 }
