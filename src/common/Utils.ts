@@ -212,7 +212,6 @@ export const toAppearancePercent = (time: number, appearanceParams: Partial<appe
     return 1
 }
 
-
 export const addPoints = (term1: Point, term2: Coordinates, ...terms: Coordinates[]): Point => {
     let resultX = term1.x + (term2.x ?? 0)
     let resultY = term1.y + (term2.y ?? 0)

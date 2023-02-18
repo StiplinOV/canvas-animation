@@ -6,7 +6,7 @@ import {
     calculatePointPercentValue,
     calculateRotationsPercentValue,
     toAppearancePercent
-} from "../../common/Utils";
+} from '../../common/Utils'
 
 interface SelectionInfo<U extends Selection = Selection> {
     selection?: U | null

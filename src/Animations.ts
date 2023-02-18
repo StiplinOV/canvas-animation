@@ -572,7 +572,7 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 options: {
                     type: 'sequentially',
                     renderValues: {
-                        direction: "upToDown",
+                        direction: 'upToDown',
                         immediacy: true
                     }
                 }

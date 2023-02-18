@@ -25,7 +25,6 @@
     "react"
   ],
   "ignorePatterns": [
-    "**/*",
     "**/src/setupTests.ts",
     "**/src/reportWebVitals.ts",
     "**/src/react-app-env.d.ts",

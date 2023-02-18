@@ -23,19 +23,19 @@ export type AnimationsSetDifferenceType = {
 }
 
 export type AddedAppearParamType = {
-    appearTime: number,
-    appearDuration: number,
+    appearTime: number
+    appearDuration: number
     params: SimpleCanvasAnimationParams
 }
 
 export type DeletedDisappearParamType = {
-    disappearTime: number,
+    disappearTime: number
     disappearDuration: number
 }
 
 export type ChangedTransformParamType = {
-    time: number,
-    duration: number,
+    time: number
+    duration: number
     s2t: AnimationS2T
 }
 

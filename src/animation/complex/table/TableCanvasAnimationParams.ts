@@ -294,7 +294,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         duration: number,
         options?: TableTransformOptionsType
     ): Map<string, AddedAppearParamType> {
-        if (!options?.renderValues || options.type === "together") {
+        if (!options?.renderValues || options.type === 'together') {
             return super.calculateAddedTransformAnimationsAppearParams(added, time, duration, options)
         }
         const immediacy = options.renderValues?.immediacy
@@ -319,7 +319,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         duration: number,
         options?: TableTransformOptionsType
     ): Map<string, DeletedDisappearParamType> {
-        if (!options?.renderValues || options.type === "together") {
+        if (!options?.renderValues || options.type === 'together') {
             return super.calculateDeletedTransformAnimationsDisappearParams(deleted, time, duration, options)
         }
         const immediacy = options.renderValues?.immediacy
@@ -342,7 +342,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         duration: number,
         options?: TableTransformOptionsType
     ): Map<string, ChangedTransformParamType> {
-        if (!options?.renderValues || options.type === "together") {
+        if (!options?.renderValues || options.type === 'together') {
             return super.calculateChangedTransformAnimationsTransformParams(changed, time, duration, options)
         }
         const immediacy = options.renderValues?.immediacy
@@ -383,7 +383,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
             const lCol = Number(lColStr)
             const rRow = Number(rRowStr)
             const rCol = Number(rColStr)
-            if (direction === "leftToRight") {
+            if (direction === 'leftToRight') {
                 if (lRow > rRow) {
                     return 1
                 }
@@ -397,7 +397,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                     return -1
                 }
             }
-            if (direction === "upToDown") {
+            if (direction === 'upToDown') {
                 if (lCol > rCol) {
                     return 1
                 }

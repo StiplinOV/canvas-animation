@@ -1,6 +1,5 @@
 import {
     addPoints,
-    calculatePointPercentValue,
     getVectorAngle,
     rotateVector,
     subtractPoints
