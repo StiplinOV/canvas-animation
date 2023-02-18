@@ -148,10 +148,10 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             }))
             result.set(`chartPointValue ${index}`, new TextCanvasAnimationParams({
                 object: {
-                    origin: addPoints(origin, {
+                    origin: {
                         x: pointCoordinate.x,
                         y: pointCoordinate.y + (textPosition === 'below' ? 10 : -10)
-                    }),
+                    },
                     value: value.text,
                     horizontalAlign: 'center',
                     verticalAlign: textPosition === 'below' ? 'top' : 'bottom',
@@ -215,7 +215,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                         rotations
                     }
                 }, this.p5).getIncludedAnimationParams().forEach((v, k) => {
-                result.set(`objectChartRangeArrow ${index}` + k, v)
+                result.set(`objectChartRangeArrow ${index} ${k}`, v)
             })
             const objChartRangeValueOrigin = {x: endXCoord, y: (firstPointY + secondPointY) / 2}
             result.set(`objectChartRangeValue ${index}`, new TextCanvasAnimationParams({

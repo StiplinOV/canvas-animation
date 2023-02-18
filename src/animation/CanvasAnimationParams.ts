@@ -156,7 +156,7 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
         return this.object
     }
 
-    protected getTransformations(): Transformation<T, U>[] {
+    public getTransformations(): Transformation<T, U>[] {
         return this.transformations.sort((l, r) => l.time - r.time)
     }
 

@@ -9,7 +9,7 @@ export const canvasWidth = 1280
 export const canvasHeight = 800
 export const timeDivider = 1000000
 export const timeMultiplier = 4
-export const startTime = 180000
+export const startTime = 0
 
 export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) => [
     new TextCanvasAnimationParams({
