@@ -6,7 +6,7 @@ import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationPara
 import EllipseCanvasAnimationParams from '../../simple/ellipse/EllipseCanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
 
-interface onlyTableParamsType {
+interface tableParamsType extends ObjectParams {
     values: string[][]
     width: number
     height: number
@@ -17,9 +17,6 @@ interface onlyTableParamsType {
     boldHorizontalLines?: (number | [number, number])[]
     boldVerticalLines?: (number | [number, number])[]
     markedCells?: number[][]
-}
-
-interface tableParamsType extends onlyTableParamsType, ObjectParams {
 }
 
 type selectorType = { rowTitles?: 'all' | number[], colTitles?: 'all' | number[], values?: 'all' | [number, number][] }

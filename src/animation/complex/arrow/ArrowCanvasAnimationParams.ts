@@ -13,12 +13,9 @@ import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParam
 const arrowBaseLength = 10
 const arrowBaseWidth = 10
 
-export interface onlyArrowParamsType extends onlyLineParamsType {
+interface arrowParamsType extends onlyLineParamsType, ObjectParams {
     startType?: 'Arrow' | 'None'
     endType?: 'Arrow' | 'None'
-}
-
-interface arrowParamsType extends onlyArrowParamsType, ObjectParams {
 }
 
 export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationParams<arrowParamsType> {

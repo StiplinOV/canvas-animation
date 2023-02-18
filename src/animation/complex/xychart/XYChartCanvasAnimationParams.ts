@@ -1,10 +1,5 @@
 import {Point} from '../../../common/Point'
-import {
-    addPoints,
-    calculateArrayPercentValue,
-    calculatePercentValue,
-    calculateTextPercentValue
-} from '../../../common/Utils'
+import {addPoints} from '../../../common/Utils'
 import {ObjectParams} from '../../CanvasAnimationParams'
 import ComplexCanvasAnimationParams from '../ComplexCanvasAnimationParams'
 import ArrowCanvasAnimationParams from '../arrow/ArrowCanvasAnimationParams'
@@ -23,7 +18,7 @@ type scaleType = { position: number, value: string }
 type chartPointType = { point: Point, text: string }
 type chartYRangeType = { yCoords: [number, number], value: string }
 
-interface onlyXyChartParamsType {
+interface xyChartParamsType extends ObjectParams {
     width: number
     height: number
     xScale?: (scaleType | number)[]
@@ -33,9 +28,6 @@ interface onlyXyChartParamsType {
     chartPoints?: (chartPointType | Point)[]
     chartLines?: [Point, Point][]
     chartYRanges?: chartYRangeType[]
-}
-
-interface xyChartParamsType extends onlyXyChartParamsType, ObjectParams {
 }
 
 type selectorType = { points?: 'all' | number[], lines?: 'all', xScaleValues?: 'all' | number[], yScaleValues?: 'all' | number[] }
