@@ -613,34 +613,34 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
             verticalAlign: 'top',
             font: 'Courier New',
             fontSize: 20,
-            value: '    public int maxProfit(int[] prices) {\n' +
-                '        if(prices.length == 1) {\n' +
-                '            return 0;\n' +
-                '        }\n' +
-                '        int[] buy = new int[prices.length];\n' +
-                '        int[] sell = new int[prices.length];\n' +
-                '        int[] hold = new int[prices.length];\n' +
-                '        int[] wait = new int[prices.length];\n' +
+            value: 'public int maxProfit(int[] prices) {\n' +
+                '\tif(prices.length == 1) {\n' +
+                '\t\treturn 0;\n' +
+                '\t}\n' +
+                '\tint[] buy = new int[prices.length];\n' +
+                '\tint[] sell = new int[prices.length];\n' +
+                '\tint[] hold = new int[prices.length];\n' +
+                '\tint[] wait = new int[prices.length];\n' +
                 '\n' +
-                '        buy[0] = - prices[0];\n' +
-                '        sell[0] = -500000;\n' +
-                '        hold[0] = -500000;\n' +
-                '        wait[0] = 0;\n' +
+                '\tbuy[0] = - prices[0];\n' +
+                '\tsell[0] = -500000;\n' +
+                '\thold[0] = -500000;\n' +
+                '\twait[0] = 0;\n' +
                 '\n' +
-                '        for (int i = 1; i < prices.length; i++) {\n' +
-                '            buy[i] = Math.max(sell[i - 1], wait[i - 1]) - prices[i];\n' +
-                '            sell[i] = Math.max(buy[i - 1], hold[i - 1]) + prices[i];\n' +
-                '            hold[i] = Math.max(hold[i - 1], buy[i - 1]);\n' +
-                '            wait[i] = Math.max(wait[i - 1], sell[i  - 1]);\n' +
-                '        }\n' +
+                '\tfor (int i = 1; i < prices.length; i++) {\n' +
+                '\t\tbuy[i] = Math.max(sell[i - 1], wait[i - 1]) - prices[i];\n' +
+                '\t\tsell[i] = Math.max(buy[i - 1], hold[i - 1]) + prices[i];\n' +
+                '\t\thold[i] = Math.max(hold[i - 1], buy[i - 1]);\n' +
+                '\t\twait[i] = Math.max(wait[i - 1], sell[i  - 1]);\n' +
+                '\t}\n' +
                 '\n' +
-                '        return Math.max(\n' +
-                '           Math.max(buy[prices.length - 1],\n' +
-                '           sell[prices.length - 1]),\n' +
-                '           Math.max(hold[prices.length - 1],\n' +
-                '           wait[prices.length - 1])\n' +
-                '        );\n' +
-                '    }'
+                '\treturn Math.max(\n' +
+                '\t\tMath.max(buy[prices.length - 1],\n' +
+                '\t\tsell[prices.length - 1]),\n' +
+                '\t\tMath.max(hold[prices.length - 1],\n' +
+                '\t\twait[prices.length - 1])\n' +
+                '\t);\n' +
+                '}'
         }
     })
 ]
