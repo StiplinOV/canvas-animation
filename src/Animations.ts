@@ -558,7 +558,7 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
             },
             {
                 time: 165000,
-                duration: 10000,
+                duration: 100000,
                 object: {
                     values: [
                         ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -570,7 +570,8 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                     ]
                 },
                 options: {
-                    type: 'sequentially'
+                    type: 'sequentially',
+                    renderValues: "upToDown"
                 }
             },
             {

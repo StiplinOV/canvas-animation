@@ -1,6 +1,12 @@
 import {ObjectParams} from '../../CanvasAnimationParams'
-import {addPoints, render2DArrayType} from '../../../common/Utils'
-import ComplexCanvasAnimationParams, {TransformOptions} from '../ComplexCanvasAnimationParams'
+import {addPoints, render2DArrayType, requireValueFromMap} from '../../../common/Utils'
+import ComplexCanvasAnimationParams, {
+    AddedAppearParamType,
+    AnimationS2T,
+    ChangedTransformParamType,
+    DeletedDisappearParamType,
+    TransformOptions
+} from '../ComplexCanvasAnimationParams'
 import LineCanvasAnimationParams from '../../simple/line/LineCanvasAnimationParams'
 import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
 import EllipseCanvasAnimationParams from '../../simple/ellipse/EllipseCanvasAnimationParams'
@@ -21,11 +27,13 @@ interface tableParamsType extends ObjectParams {
 
 type selectorType = { rowTitles?: 'all' | number[], colTitles?: 'all' | number[], values?: 'all' | [number, number][] }
 
-interface tableTransformOptionsType extends TransformOptions {
+interface TableTransformOptionsType extends TransformOptions {
     renderValues?: render2DArrayType
 }
 
-export default class TableCanvasAnimationParams extends ComplexCanvasAnimationParams<tableParamsType, selectorType, tableTransformOptionsType> {
+const cellValueRegexp = /title|value (\d+) (\d+)/
+
+export default class TableCanvasAnimationParams extends ComplexCanvasAnimationParams<tableParamsType, selectorType, TableTransformOptionsType> {
 
     protected getIncludedAnimationParamsByParameter(object: tableParamsType): Map<string, SimpleCanvasAnimationParams> {
         const result = new Map<string, SimpleCanvasAnimationParams>()
@@ -275,6 +283,130 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
             })
         }
         return result
+    }
+
+    protected calculateAddedTransformAnimationsAppearParams(
+        added: Map<string, SimpleCanvasAnimationParams>,
+        time: number,
+        duration: number,
+        options?: TableTransformOptionsType
+    ): Map<string, AddedAppearParamType> {
+        if (!options?.renderValues || options.type === "together") {
+            return super.calculateAddedTransformAnimationsAppearParams(added, time, duration, options)
+        }
+        const result = new Map<string, AddedAppearParamType>()
+        let addedAppearTime = time
+        this.sortKeysAccordingToOption(options, new Set(added.keys())).forEach(key => {
+            const value = requireValueFromMap(added, key)
+            let addedAppearDuration = (duration / added.size)
+            result.set(key, {
+                appearTime: addedAppearTime,
+                appearDuration: addedAppearDuration,
+                params: value
+            })
+            addedAppearTime += addedAppearDuration
+        })
+        return result
+    }
+
+    protected calculateDeletedTransformAnimationsDisappearParams(
+        deleted: Set<string>,
+        time: number,
+        duration: number,
+        options?: TableTransformOptionsType
+    ): Map<string, DeletedDisappearParamType> {
+        if (!options?.renderValues || options.type === "together") {
+            return super.calculateDeletedTransformAnimationsDisappearParams(deleted, time, duration, options)
+        }
+        const result = new Map<string, DeletedDisappearParamType>()
+        let deletedDisappearTime = time
+        this.sortKeysAccordingToOption(options, deleted).reverse().forEach(k => {
+            let deletedDisappearDuration = (duration / deleted.size)
+            result.set(k, {
+                disappearTime: deletedDisappearTime,
+                disappearDuration: deletedDisappearDuration
+            })
+            deletedDisappearTime += deletedDisappearDuration
+        })
+        return result
+    }
+
+    protected calculateChangedTransformAnimationsTransformParams(
+        changed: Map<string, AnimationS2T>,
+        time: number,
+        duration: number,
+        options?: TableTransformOptionsType
+    ): Map<string, ChangedTransformParamType> {
+        if (!options?.renderValues || options.type === "together") {
+            return super.calculateChangedTransformAnimationsTransformParams(changed, time, duration, options)
+        }
+        const result = new Map<string, ChangedTransformParamType>()
+        let s2tAppearTime = time
+
+        this.sortKeysAccordingToOption(options, new Set(changed.keys())).forEach(key => {
+            const value = requireValueFromMap(changed, key)
+            let s2tAppearDuration = duration / changed.size
+            result.set(key, {
+                time: s2tAppearTime,
+                duration: s2tAppearDuration,
+                s2t: value
+            })
+            s2tAppearTime += s2tAppearDuration
+        })
+        return result
+    }
+
+    private sortKeysAccordingToOption(options: TableTransformOptionsType, keysParam: Set<string>): string[] {
+        const keys = Array.from(keysParam.keys())
+        const {renderValues} = options
+        if (!renderValues) {
+            return keys
+        }
+        return keys.sort((l, r) => {
+            if (!cellValueRegexp.test(l) && !cellValueRegexp.test(r)) {
+                return 0
+            }
+            const lRegexpExtractArray = cellValueRegexp.exec(l)
+            const rRegexpExtractArray = cellValueRegexp.exec(r)
+            if (!lRegexpExtractArray || !rRegexpExtractArray) {
+                return 0
+            }
+            const [, lRowStr, lColStr] = lRegexpExtractArray
+            const [, rRowStr, rColStr] = rRegexpExtractArray
+            const lRow = Number(lRowStr)
+            const lCol = Number(lColStr)
+            const rRow = Number(rRowStr)
+            const rCol = Number(rColStr)
+            if (renderValues === "leftToRight") {
+                if (lRow > rRow) {
+                    return 1
+                }
+                if (lRow < rRow) {
+                    return -1
+                }
+                if (lCol > rCol) {
+                    return 1
+                }
+                if (lCol < rCol) {
+                    return -1
+                }
+            }
+            if (renderValues === "upToDown") {
+                if (lCol > rCol) {
+                    return 1
+                }
+                if (lCol < rCol) {
+                    return -1
+                }
+                if (lRow > rRow) {
+                    return 1
+                }
+                if (lRow < rRow) {
+                    return -1
+                }
+            }
+            return 0
+        })
     }
 
 }

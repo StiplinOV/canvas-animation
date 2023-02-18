@@ -48,19 +48,20 @@ export const calculateArrayPercentValue = <T>(from: T[], to: T[], percent: numbe
         fromStartsWithTo = from.length >= to.length
     }
     if (toStartsWithFrom) {
-        const numberOfStates = to.length - from.length
+        const numberOfStates = to.length - from.length + 1
         const currentState = Math.floor(calculatePercentValue(1, numberOfStates, percent))
         return to.slice(0, from.length + currentState)
     } else if (fromStartsWithTo) {
-        const numberOfStates = from.length - to.length
+        const numberOfStates = from.length - to.length + 1
         const currentState = Math.floor(calculatePercentValue(1, numberOfStates, percent))
         return to.slice(0, from.length - currentState)
     } else {
-        const numberOfStates = from.length + to.length
+        const numberOfStates = from.length + to.length + 1
+
         const currentState = Math.floor(calculatePercentValue(1, numberOfStates, percent))
-        if (currentState >= 0 && currentState <= from.length - 1) {
-            return from.slice(0, from.length - currentState)
-        } else if (currentState >= from.length + 1 && currentState <= from.length + to.length) {
+        if (currentState >= 0 && currentState <= from.length) {
+            return from.slice(0, from.length - currentState + 1)
+        } else if (currentState > from.length + 1 && currentState <= numberOfStates) {
             return to.slice(0, currentState - from.length)
         } else {
             return []

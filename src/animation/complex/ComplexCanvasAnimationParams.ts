@@ -10,7 +10,7 @@ export interface ComplexCanvasAnimationSelection<T> extends Selection {
     selector?: T
 }
 
-type AnimationS2T = { source: SimpleCanvasAnimationParams, target: SimpleCanvasAnimationParams }
+export type AnimationS2T = { source: SimpleCanvasAnimationParams, target: SimpleCanvasAnimationParams }
 
 export interface TransformOptions {
     type: 'together' | 'sequentially'
@@ -115,7 +115,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
             }))
     }
 
-    private calculateAddedTransformAnimationsAppearParams(
+    protected calculateAddedTransformAnimationsAppearParams(
         added: Map<string, SimpleCanvasAnimationParams>,
         time: number,
         duration: number,
@@ -141,7 +141,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         return result
     }
 
-    private calculateDeletedTransformAnimationsDisappearParams(
+    protected calculateDeletedTransformAnimationsDisappearParams(
         deleted: Set<string>,
         time: number,
         duration: number,
@@ -166,7 +166,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         return result
     }
 
-    private calculateChangedTransformAnimationsTransformParams(
+    protected calculateChangedTransformAnimationsTransformParams(
         changed: Map<string, AnimationS2T>,
         time: number,
         duration: number,
