@@ -1,5 +1,16 @@
 import {THE_STYLE} from 'p5'
 
+export type WebSafeFontsType =
+    'Arial'
+    | 'Verdana'
+    | 'Tahoma'
+    | 'Trebuchet MS'
+    | 'Times New Roman'
+    | 'Georgia'
+    | 'Garamond'
+    | 'Courier New'
+    | 'Brush Script MT'
+
 export default interface AnimationStyle {
     backgroundColor: string
     fillColor: string
@@ -7,7 +18,7 @@ export default interface AnimationStyle {
     selectedColor: string
     strokePrimaryColor: string
     strokeSecondaryColor: string
-    font: string
+    font: WebSafeFontsType
     fontSize: number
     fontWeight: number
     strokeWeight: number

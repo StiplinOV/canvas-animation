@@ -13,7 +13,7 @@ export default class TextCanvasAnimation extends CanvasAnimation<textParamsType>
         textSize = calculatePercentValue(textSize, textSize * 1.5, selectedPercent)
 
         p5.strokeWeight(style.fontWeight)
-        p5.textFont(style.font)
+        p5.textFont(o.font ?? style.font)
         p5.fill(calculateColorPercentValue(style.fontColor, style.selectedColor, selectedPercent))
         p5.textSize(textSize)
         p5.textStyle(textStyle ?? style.textStyle)

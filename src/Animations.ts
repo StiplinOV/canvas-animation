@@ -8,8 +8,8 @@ import ArrayCanvasAnimationParams from './animation/complex/array/ArrayCanvasAni
 export const canvasWidth = 1280
 export const canvasHeight = 800
 export const timeDivider = 1000000
-export const timeMultiplier = 10
-export const startTime = 0
+export const timeMultiplier = 4
+export const startTime = 180000
 
 export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) => [
     new TextCanvasAnimationParams({
@@ -113,10 +113,20 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
             {
                 time: 27000,
                 duration: 2000,
-                object: {chartYRanges: [{yCoords: [1, 6], value: 'Profit is 5'}]}
+                object: {chartYRanges: [{yCoords: [1, 5], value: 'Profit is 4'}]}
             },
             {
                 time: 35000,
+                duration: 2000,
+                object: {chartYRanges: [{yCoords: [3, 6], value: 'Profit is 3'}]}
+            },
+            {
+                time: 40000,
+                duration: 2000,
+                object: {chartYRanges: [{yCoords: [1, 6], value: 'Profit is 7'}]}
+            },
+            {
+                time: 42000,
                 duration: 2000,
                 object: {chartYRanges: []}
             },
@@ -472,7 +482,7 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
             {
                 time: 140000,
                 duration: 500,
-                object: {markedCells: [[1, 1], [4, 1]]},
+                object: {markedCells: [[2, 1], [3, 1]]},
                 options: {type: 'sequentially'}
             },
             {
@@ -483,7 +493,7 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                         ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
                         ['Buy', '-7', '-1', '', '', '', '', 'Max(Sell[n-1], Wait[n-1]) - Price[n]'],
                         ['Sell', '-∞', '-6', '', '', '', '', 'Max(Buy[n-1], Hold[n-1]) + Price[n]'],
-                        ['Wait', '0', '', '', '', '', '', 'Max(Buy[n-1], Hold[n-1])'],
+                        ['Wait', '0', '', '', '', '', '', 'Max(Sell[n-1], Wait[n-1])'],
                         ['Hold', '-∞', '', '', '', '', '', ''],
                         ['Max', '0', '', '', '', '', '', '']
                     ]
@@ -497,7 +507,7 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                         ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
                         ['Buy', '-7', '-1', '', '', '', '', 'Max(Sell[n-1], Wait[n-1]) - Price[n]'],
                         ['Sell', '-∞', '-6', '', '', '', '', 'Max(Buy[n-1], Hold[n-1]) + Price[n]'],
-                        ['Wait', '0', '-7', '', '', '', '', 'Max(Buy[n-1], Hold[n-1])'],
+                        ['Wait', '0', '0', '', '', '', '', 'Max(Sell[n-1], Wait[n-1])'],
                         ['Hold', '-∞', '', '', '', '', '', ''],
                         ['Max', '0', '', '', '', '', '', '']
                     ]
@@ -506,7 +516,7 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
             {
                 time: 152000,
                 duration: 500,
-                object: {markedCells: [[2, 1], [3, 1]]},
+                object: {markedCells: [[1, 1], [4, 1]]},
                 options: {type: 'sequentially'}
             },
             {
@@ -517,8 +527,8 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                         ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
                         ['Buy', '-7', '-1', '', '', '', '', 'Max(Sell[n-1], Wait[n-1]) - Price[n]'],
                         ['Sell', '-∞', '-6', '', '', '', '', 'Max(Buy[n-1], Hold[n-1]) + Price[n]'],
-                        ['Wait', '0', '-7', '', '', '', '', 'Max(Buy[n-1], Hold[n-1])'],
-                        ['Hold', '-∞', '', '', '', '', '', 'Max(Sell[n-1], Wait[n-1])'],
+                        ['Wait', '0', '0', '', '', '', '', 'Max(Sell[n-1], Wait[n-1])'],
+                        ['Hold', '-∞', '', '', '', '', '', 'Max(Buy[n-1], Hold[n-1])'],
                         ['Max', '0', '', '', '', '', '', '']
                     ]
                 }
@@ -531,8 +541,8 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                         ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
                         ['Buy', '-7', '-1', '', '', '', '', 'Max(Sell[n-1], Wait[n-1]) - Price[n]'],
                         ['Sell', '-∞', '-6', '', '', '', '', 'Max(Buy[n-1], Hold[n-1]) + Price[n]'],
-                        ['Wait', '0', '-7', '', '', '', '', 'Max(Buy[n-1], Hold[n-1])'],
-                        ['Hold', '-∞', '0', '', '', '', '', 'Max(Sell[n-1], Wait[n-1])'],
+                        ['Wait', '0', '0', '', '', '', '', 'Max(Sell[n-1], Wait[n-1])'],
+                        ['Hold', '-∞', '-7', '', '', '', '', 'Max(Buy[n-1], Hold[n-1])'],
                         ['Max', '0', '', '', '', '', '', '']
                     ]
                 }
@@ -545,8 +555,8 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                         ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
                         ['Buy', '-7', '-1', '', '', '', '', 'Max(Sell[n-1], Wait[n-1]) - Price[n]'],
                         ['Sell', '-∞', '-6', '', '', '', '', 'Max(Buy[n-1], Hold[n-1]) + Price[n]'],
-                        ['Wait', '0', '-7', '', '', '', '', 'Max(Buy[n-1], Hold[n-1])'],
-                        ['Hold', '-∞', '0', '', '', '', '', 'Max(Sell[n-1], Wait[n-1])'],
+                        ['Wait', '0', '0', '', '', '', '', 'Max(Sell[n-1], Wait[n-1])'],
+                        ['Hold', '-∞', '-7', '', '', '', '', 'Max(Buy[n-1], Hold[n-1])'],
                         ['Max', '0', '0', '', '', '', '', '']
                     ]
                 }
@@ -558,15 +568,15 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
             },
             {
                 time: 165000,
-                duration: 100000,
+                duration: 10000,
                 object: {
                     values: [
                         ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
-                        ['Buy', '-7', '-1', '-5', '-4', '-3', '6', 'Max(Sell[n-1], Wait[n-1]) - Price[n]'],
-                        ['Sell', '-∞', '-6', '4', '3', '10', '7', 'Max(Buy[n-1], Hold[n-1]) + Price[n]'],
-                        ['Wait', '0', '-7', '-1', '0', '4', '3', 'Max(Buy[n-1], Hold[n-1])'],
-                        ['Hold', '-∞', '0', '0', '4', '3', '10', 'Max(Sell[n-1], Wait[n-1])'],
-                        ['Max', '0', '0', '4', '4', '10', '10', '']
+                        ['Buy', '-7', '-1', '-1', '1', '-2', '5', 'Max(Sell[n-1], Wait[n-1]) - Price[n]'],
+                        ['Sell', '-∞', '-6', '4', '3', '7', '5', 'Max(Buy[n-1], Hold[n-1]) + Price[n]'],
+                        ['Wait', '0', '-7', '-6', '4', '4', '7', 'Max(Sell[n-1], Wait[n-1])'],
+                        ['Hold', '-∞', '0', '0', '0', '1', '1', 'Max(Buy[n-1], Hold[n-1])'],
+                        ['Max', '0', '0', '4', '4', '7', '7', '']
                     ]
                 },
                 options: {
@@ -583,14 +593,54 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 object: {
                     values: [
                         ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
-                        ['Buy', '-7', '-1', '-5', '-4', '-3', '6', 'Max(Sell[n-1], Wait[n-1]) - Price[n]'],
-                        ['Sell', '-∞', '-6', '4', '3', '10', '7', 'Max(Buy[n-1], Hold[n-1]) + Price[n]'],
-                        ['Wait', '0', '-7', '-1', '0', '4', '3', 'Max(Buy[n-1], Hold[n-1])'],
-                        ['Hold', '-∞', '0', '0', '4', '3', '10', 'Max(Sell[n-1], Wait[n-1])'],
-                        ['Max', '0', '0', '4', '4', '10', '10', 'Max = 10']
+                        ['Buy', '-7', '-1', '-1', '1', '-2', '5', 'Max(Sell[n-1], Wait[n-1]) - Price[n]'],
+                        ['Sell', '-∞', '-6', '4', '3', '7', '5', 'Max(Buy[n-1], Hold[n-1]) + Price[n]'],
+                        ['Wait', '0', '-7', '-6', '4', '4', '7', 'Max(Sell[n-1], Wait[n-1])'],
+                        ['Hold', '-∞', '0', '0', '0', '1', '1', 'Max(Buy[n-1], Hold[n-1])'],
+                        ['Max', '0', '0', '4', '4', '7', '7', 'MAX = 7']
                     ]
                 }
             }
         ]
-    }, p5)
+    }, p5),
+    new TextCanvasAnimationParams({
+        presenceParameters: {
+            appearTime: 200000,
+            appearDuration: 10000
+        },
+        object: {
+            origin: {x: 400, y: 1850},
+            verticalAlign: 'top',
+            font: 'Courier New',
+            fontSize: 20,
+            value: '    public int maxProfit(int[] prices) {\n' +
+                '        if(prices.length == 1) {\n' +
+                '            return 0;\n' +
+                '        }\n' +
+                '        int[] buy = new int[prices.length];\n' +
+                '        int[] sell = new int[prices.length];\n' +
+                '        int[] hold = new int[prices.length];\n' +
+                '        int[] wait = new int[prices.length];\n' +
+                '\n' +
+                '        buy[0] = - prices[0];\n' +
+                '        sell[0] = -500000;\n' +
+                '        hold[0] = -500000;\n' +
+                '        wait[0] = 0;\n' +
+                '\n' +
+                '        for (int i = 1; i < prices.length; i++) {\n' +
+                '            buy[i] = Math.max(sell[i - 1], wait[i - 1]) - prices[i];\n' +
+                '            sell[i] = Math.max(buy[i - 1], hold[i - 1]) + prices[i];\n' +
+                '            hold[i] = Math.max(hold[i - 1], buy[i - 1]);\n' +
+                '            wait[i] = Math.max(wait[i - 1], sell[i  - 1]);\n' +
+                '        }\n' +
+                '\n' +
+                '        return Math.max(\n' +
+                '           Math.max(buy[prices.length - 1],\n' +
+                '           sell[prices.length - 1]),\n' +
+                '           Math.max(hold[prices.length - 1],\n' +
+                '           wait[prices.length - 1])\n' +
+                '        );\n' +
+                '    }'
+        }
+    })
 ]
