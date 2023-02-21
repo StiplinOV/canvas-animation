@@ -2,7 +2,7 @@ import {THE_STYLE} from 'p5'
 import {calculateArrayPercentValue, calculatePercentValue} from '../../../common/Utils'
 import {ObjectParams} from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
-import AnimationStyle from '../../../AnimationStyles'
+import AnimationStyle, {WebSafeFontsType} from '../../../AnimationStyles'
 import HighlightedSyntaxCanvasAnimation from "./HighlightedSyntaxCanvasAnimation";
 
 type textValueSegmentType = {
@@ -16,6 +16,7 @@ type textValueParamType = (textValueSegmentType | "newline")[]
 interface onlyTextParamsType {
     value: textValueParamType
     fontSize?: number
+    font?: WebSafeFontsType
 }
 
 export interface textParamsType extends ObjectParams, onlyTextParamsType {
@@ -29,6 +30,7 @@ export default class HighlightedSyntaxCanvasAnimationParams extends SimpleCanvas
         return {
             value: trans.value ? this.calculateValuePercentValue(obj.value, trans.value, perc) : obj.value,
             fontSize: trans.fontSize ? calculatePercentValue(fontSize, trans.fontSize, perc) : fontSize,
+            font: (trans.font && perc >= 0.5) ? trans.font : obj.font
         }
     }
 

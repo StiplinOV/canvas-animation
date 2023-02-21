@@ -24,7 +24,7 @@ export default class HighlightedSyntaxCanvasAnimation extends CanvasAnimation<te
             const {color, value, textStyle} = part
 
             p5.strokeWeight(style.fontWeight)
-            p5.textFont(style.monospaceFont)
+            p5.textFont(o.font || style.font)
             p5.textSize(fontSize)
             p5.textStyle(textStyle)
             p5.fill(color)
