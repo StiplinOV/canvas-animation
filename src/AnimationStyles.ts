@@ -1,5 +1,7 @@
 import {THE_STYLE} from 'p5'
 
+export const COURIER_NEW_FONT = 'Courier New'
+
 export type WebSafeFontsType =
     'Arial'
     | 'Verdana'
@@ -8,7 +10,7 @@ export type WebSafeFontsType =
     | 'Times New Roman'
     | 'Georgia'
     | 'Garamond'
-    | 'Courier New'
+    | typeof COURIER_NEW_FONT
     | 'Brush Script MT'
 
 export default interface AnimationStyle {
@@ -21,6 +23,7 @@ export default interface AnimationStyle {
     font: WebSafeFontsType
     fontSize: number
     fontWeight: number
+    monospaceFont: string,
     strokeWeight: number
     strokeBoldWeight: number
     cornerRadius: number
@@ -38,6 +41,7 @@ const defaultAnimationStyle: AnimationStyle = {
     font: 'Verdana',
     fontSize: 12,
     fontWeight: 0.5,
+    monospaceFont: COURIER_NEW_FONT,
     strokeWeight: 1,
     strokeBoldWeight: 4,
     cornerRadius: 0,
