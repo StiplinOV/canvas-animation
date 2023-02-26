@@ -56,9 +56,11 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<high
                 p5.fill(backgroundTextColor)
                 p5.rect(x, y - fontSize + 4, textWidth, fontSize)
             }
-            !dry && p5.fill(textColor)
-            p5.stroke(animationStyle.backgroundColor)
-            !dry && p5.text(value, x, y)
+            if (!dry) {
+                p5.fill(textColor)
+                p5.stroke(o.backgroundColor ?? animationStyle.backgroundColor)
+                p5.text(value, x, y)
+            }
             x += textWidth
             width = Math.max(width, x)
         }
