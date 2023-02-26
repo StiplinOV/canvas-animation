@@ -1,11 +1,18 @@
 import React from 'react'
 import Sketch from 'react-p5'
 import p5Types from 'p5'
-import {canvasAnimations, canvasHeight, canvasWidth, startTime, timeDivider, timeMultiplier} from './Animations'
+import {
+    animationStyle,
+    canvasAnimations,
+    canvasHeight,
+    canvasWidth,
+    startTime,
+    timeDivider,
+    timeMultiplier
+} from './Animations'
 import {camera, cameraParams} from './camera/CameraParams'
 import {cameras} from './Cameras'
 import CanvasAnimation from './animation/CanvasAnimation'
-import {getAnimationStyle} from './AnimationStyles'
 
 interface ComponentProps {
     some?: string
@@ -14,7 +21,6 @@ interface ComponentProps {
 export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => {
 
     const animations: CanvasAnimation[] = []
-    const animationStyle = getAnimationStyle('default')
 
     const preload = (p5: p5Types): void => {
     }

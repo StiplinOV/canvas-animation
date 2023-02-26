@@ -4,12 +4,16 @@ import TextCanvasAnimationParams from './animation/simple/text/TextCanvasAnimati
 import CanvasAnimationParams from './animation/CanvasAnimationParams'
 import TableCanvasAnimationParams from './animation/complex/table/TableCanvasAnimationParams'
 import ArrayCanvasAnimationParams from './animation/complex/array/ArrayCanvasAnimationParams'
+import HighlightedSyntaxCanvasAnimationParams
+    from './animation/complex/highlightedsyntax/HighlightedSyntaxCanvasAnimationParams'
+import {getAnimationStyle} from './AnimationStyles'
 
 export const canvasWidth = 1280
 export const canvasHeight = 800
 export const timeDivider = 1000000
-export const timeMultiplier = 4
+export const timeMultiplier = 1
 export const startTime = 0
+export const animationStyle = getAnimationStyle('default')
 
 export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) => [
     new TextCanvasAnimationParams({
@@ -603,20 +607,20 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
             }
         ]
     }, p5),
-    new TextCanvasAnimationParams({
+    new HighlightedSyntaxCanvasAnimationParams({
         presenceParameters: {
-            appearTime: 200000,
+            appearTime: 191000,
             appearDuration: 10000
         },
         object: {
             origin: {x: 400, y: 1850},
-            verticalAlign: 'top',
-            font: 'Courier New',
             fontSize: 20,
+            language: 'Java',
             value: 'public int maxProfit(int[] prices) {\n' +
-                '\tif(prices.length == 1) {\n' +
+                '\tif (prices.length == 1) {\n' +
                 '\t\treturn 0;\n' +
                 '\t}\n' +
+                '\n' +
                 '\tint[] buy = new int[prices.length];\n' +
                 '\tint[] sell = new int[prices.length];\n' +
                 '\tint[] hold = new int[prices.length];\n' +
@@ -627,6 +631,7 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 '\thold[0] = -500000;\n' +
                 '\twait[0] = 0;\n' +
                 '\n' +
+                '\n//TODO жопа какая\n' +
                 '\tfor (int i = 1; i < prices.length; i++) {\n' +
                 '\t\tbuy[i] = Math.max(sell[i - 1], wait[i - 1]) - prices[i];\n' +
                 '\t\tsell[i] = Math.max(buy[i - 1], hold[i - 1]) + prices[i];\n' +
@@ -642,5 +647,5 @@ export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) =
                 '\t);\n' +
                 '}'
         }
-    })
+    }, p5, animationStyle)
 ]

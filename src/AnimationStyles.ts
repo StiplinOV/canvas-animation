@@ -1,4 +1,5 @@
 import {THE_STYLE} from 'p5'
+import {HighlightedStyleName} from './animation/complex/highlightedsyntax/HighlightedSyntaxCanvasAnimationParams'
 
 export const COURIER_NEW_FONT = 'Courier New'
 
@@ -23,7 +24,8 @@ export default interface AnimationStyle {
     font: WebSafeFontsType
     fontSize: number
     fontWeight: number
-    monospaceFont: string,
+    monospaceFont: string
+    highlightTextStyle: HighlightedStyleName
     strokeWeight: number
     strokeBoldWeight: number
     cornerRadius: number
@@ -31,6 +33,7 @@ export default interface AnimationStyle {
     textStyle: THE_STYLE
     zIndex: number
 }
+
 const defaultAnimationStyle: AnimationStyle = {
     backgroundColor: '#FFFFFF',
     fillColor: '#FFFFFF',
@@ -42,6 +45,7 @@ const defaultAnimationStyle: AnimationStyle = {
     fontSize: 12,
     fontWeight: 0.5,
     monospaceFont: COURIER_NEW_FONT,
+    highlightTextStyle: 'darcula',
     strokeWeight: 1,
     strokeBoldWeight: 4,
     cornerRadius: 0,

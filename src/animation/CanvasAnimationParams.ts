@@ -67,7 +67,7 @@ const transformationParamToTransformation = <T extends ObjectParams, U>(t: Trans
     options: t.options
 })
 
-export type Params<T extends ObjectParams, U, V extends Selection = Selection> = {
+export type Params<T extends ObjectParams, U = unknown, V extends Selection = Selection> = {
     transformations?: TransformationParam<T, U>[]
     selections?: V[]
     object: T

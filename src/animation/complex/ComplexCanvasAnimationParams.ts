@@ -5,7 +5,7 @@ import SimpleCanvasAnimationParams from '../simple/SimpleCanvasAnimationParams'
 import {requireValueFromMap} from '../../common/Utils'
 import CanvasAnimation from '../CanvasAnimation'
 
-export interface ComplexCanvasAnimationSelection<T> extends Selection {
+export interface ComplexCanvasAnimationSelection<T = unknown> extends Selection {
     type?: 'together' | 'sequentially'
     selector?: T
 }
