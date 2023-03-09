@@ -7,6 +7,7 @@ import {
     calculateRotationsPercentValue,
     toAppearancePercent
 } from '../../common/Utils'
+import { ZeroPoint } from '../../common/Point'
 
 interface SelectionInfo<U extends Selection = Selection> {
     selection?: U | null
@@ -40,8 +41,8 @@ export default abstract class SimpleCanvasAnimationParams<T extends ObjectParams
                 }
                 if (transformationObject.rotations) {
                     result.rotations = calculateRotationsPercentValue(
-                        result.rotations ?? [],
-                        transformationObject.rotations ?? [],
+                        result.rotations ?? [{axis: ZeroPoint, angle: 0}],
+                        transformationObject.rotations,
                         percent
                     )
                 }

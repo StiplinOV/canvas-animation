@@ -12,7 +12,8 @@ export const canvasWidth = 1280
 export const canvasHeight = 800
 export const timeDivider = 1000000
 export const timeMultiplier = 1
-export const startTime = 0
+export const startTime = 190000
+export const endTime = 210000
 export const animationStyle = getAnimationStyle('default')
 
 export const canvasAnimations: (p5: p5Types) => CanvasAnimationParams[] = (p5) => [

@@ -1,54 +1,68 @@
 import React from 'react'
 import Sketch from 'react-p5'
 import p5Types from 'p5'
-import {
-    animationStyle,
-    canvasAnimations,
-    canvasHeight,
-    canvasWidth,
-    startTime,
-    timeDivider,
-    timeMultiplier
-} from './Animations'
-import {camera, cameraParams} from './camera/CameraParams'
-import {cameras} from './Cameras'
+import { animationStyle, canvasAnimations } from './Animations'
+import { camera, cameraParams } from './camera/CameraParams'
+import { cameras } from './Cameras'
 import CanvasAnimation from './animation/CanvasAnimation'
 
-interface ComponentProps {
-    some?: string
+interface Props {
+    canvasWidth: number
+    canvasHeight: number
+    top: number
+    left: number
+    onTimeChange: (newValue: number) => void
+    time: number
+    play: boolean
+    timeMultiplier: number
 }
 
-export const P5Component: React.FC<ComponentProps> = (props: ComponentProps) => {
+export const P5Component: React.FC<Props> = (props: Props) => {
 
-    const animations: CanvasAnimation[] = []
+    const [animations, setAnimations] = React.useState<CanvasAnimation[]>([])
+    const [millisSinceLastPlay, setMillisSinceLastPlay] = React.useState<number>(0)
+    const [playedBefore, setPlayedBefore] = React.useState<boolean>(false)
 
     const preload = (p5: p5Types): void => {
     }
 
     const setup = (p5: p5Types): void => {
-        const cnv = p5.createCanvas(canvasWidth, canvasHeight)
+        const cnv = p5.createCanvas(props.canvasWidth, props.canvasHeight)
         // p5.drawingContext.shadowOffsetX = 3
         // p5.drawingContext.shadowOffsetY = -3
         // p5.drawingContext.shadowBlur = 5
         // p5.drawingContext.shadowColor = '#000000'
-        cnv.position(0, 0)
+        cnv.position(props.left, props.top)
         cnv.style('border: 1px solid')
         cameras.sort((left, right) => left.startTime - right.startTime)
-        animations.push(...canvasAnimations(p5).flatMap(p => p.toCanvasAnimations(animationStyle)))
+        setAnimations(canvasAnimations(p5).flatMap(p => p.toCanvasAnimations(animationStyle)))
     }
 
     const draw = (p5: p5Types): void => {
-        const millis = startTime + (p5.millis() * timeMultiplier) % timeDivider
-        const camera = getActualCamera(millis)
+        const millis = p5.millis()
+        let { time } = props
+        if (props.play) {
+            if (playedBefore) {
+                time += props.timeMultiplier * (millis - millisSinceLastPlay)
+            }
+            setMillisSinceLastPlay(millis)
+        }
+
+        const camera = getActualCamera(time)
         const zoom = camera.zoom ?? 1
         p5.background(animationStyle.backgroundColor)
         camera.rotation && p5.rotate(camera.rotation)
         p5.translate(-camera.x * zoom, -camera.y * zoom)
         p5.scale(zoom)
-        animations.sort((l, r) => l.getZIndex(millis, animationStyle) - r.getZIndex(millis, animationStyle))
+        animations
+            .sort((l, r) => l.getZIndex(time, animationStyle) - r.getZIndex(time, animationStyle))
             .forEach(a => {
-                a.draw(p5, millis)
+                a.draw(p5, time)
             })
+        setPlayedBefore(props.play)
+        if (props.play && playedBefore) {
+            props.onTimeChange(time)
+        }
     }
 
     // @ts-expect-error need fidure it out
@@ -94,7 +108,12 @@ const getActualCamera = (time: number): camera => {
         const y = prevY + (actualCamera.y - prevY) * transformPercent
         const zoom = prevZoom + (actualZoom - prevZoom) * transformPercent
         const rotation = prevRotation + ((actualCamera.rotation ?? 0) - prevRotation) * transformPercent
-        return {x, y, zoom, rotation}
+        return {
+            x,
+            y,
+            zoom,
+            rotation
+        }
     }
     return actualCamera
 }

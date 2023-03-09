@@ -1,45 +1,61 @@
-import React, {ReactElement} from 'react'
+import React, { ReactElement } from 'react'
 import './App.css'
-import {P5Component} from './P5Component'
+import { canvasHeight, canvasWidth, endTime } from './Animations'
+import { useWindowDimensions } from './hook/UseWindowDimensions'
+import { Button } from '@mui/material'
+import { AnimationPlayer } from './components/player/AnimationPlayer'
 
 const chunks: Blob[] = []
 let recorder: MediaRecorder | null = null
 
-function App(): ReactElement {
+const App = (): ReactElement => {
+
+    const canvasTop = 10
+    const { width } = useWindowDimensions()
+    const left = (width - canvasWidth) / 2
 
     return (
         <>
             <div className="App">
-                <P5Component/>
-            </div>
-            <button
-                type="button"
-                style={{position: 'absolute', top: 900}}
-                onClick={() => {
-                    if (recorder) {
-                        recorder.stop()
-                    } else {
-                        const stream = document.querySelector('canvas')?.captureStream(30)
-                        if (!stream) {
-                            return
-                        }
-                        recorder = new MediaRecorder(stream)
-                        recorder.ondataavailable = e => {
-                            if (e.data.size) {
-                                chunks.push(e.data)
+                <AnimationPlayer
+                    top={canvasTop}
+                    left={left}
+                    canvasHeight={canvasHeight}
+                    canvasWidth={canvasWidth}
+                    endTime={endTime}
+                />
+                <Button
+                    type="button"
+                    style={{
+                        position: 'absolute',
+                        top: 900
+                    }}
+                    onClick={() => {
+                        if (recorder) {
+                            recorder.stop()
+                        } else {
+                            const stream = document.querySelector('canvas')?.captureStream(30)
+                            if (!stream) {
+                                return
                             }
+                            recorder = new MediaRecorder(stream)
+                            recorder.ondataavailable = e => {
+                                if (e.data.size) {
+                                    chunks.push(e.data)
+                                }
+                            }
+                            recorder.onstop = exportVideo
+                            recorder.start()
                         }
-                        recorder.onstop = exportVideo
-                        recorder.start()
-                    }
-                }}
-            >Export Video
-            </button>
+                    }}
+                >Export Video
+                </Button>
+            </div>
         </>
     )
 }
 
-function exportVideo(e: Event): void {
+function exportVideo (e: Event): void {
     const blob = new Blob(chunks)
     const vid = document.createElement('video')
     vid.id = 'recorded'

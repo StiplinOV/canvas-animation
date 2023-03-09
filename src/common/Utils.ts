@@ -1,4 +1,4 @@
-import {Point} from './Point'
+import { Point, ZeroPoint } from './Point'
 import p5Types from 'p5'
 
 interface Coordinates {
@@ -183,7 +183,24 @@ export const calculateRotationPercentValue = (from: rotationType, to: rotationTy
     }
 }
 export const calculateRotationsPercentValue = (from: rotationType[], to: rotationType[], percent: number): rotationType[] => {
-    return calculateArrayPercentValue(from, to, percent)
+    const result: rotationType[] = []
+    while (from.length < to.length) {
+        from.push({
+            axis: ZeroPoint,
+            angle: 0
+        })
+    }
+    while (to.length < from.length) {
+        to.push({
+            axis: ZeroPoint,
+            angle: 0
+        })
+    }
+    for (let i = 0; i < from.length; i++) {
+        result.push(calculateRotationPercentValue(from[i], to[i], percent))
+    }
+
+    return result
 }
 
 export const toAppearanceParamType = (values: Partial<appearanceParamType>): appearanceParamType => ({
