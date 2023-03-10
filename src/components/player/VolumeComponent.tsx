@@ -11,15 +11,16 @@ interface Props {
 }
 
 export const VolumeComponent = (props: Props): JSX.Element => {
-    const { volume } = props
     const [volumeBeforeMute, setVolumeBeforeMute] = React.useState<number>(100)
-
+    const [volume, setVolume] = React.useState<number>(props.volume)
     return <>
         <IconButton onClick={() => {
             if (volume === 0) {
+                setVolume(volumeBeforeMute)
                 props.onVolumeChange(volumeBeforeMute)
             } else {
                 setVolumeBeforeMute(volume)
+                setVolume(0)
                 props.onVolumeChange(0)
             }
         }}>
@@ -27,8 +28,11 @@ export const VolumeComponent = (props: Props): JSX.Element => {
         </IconButton>
         <Box width={props.volumeSliderWidth}>
             <Slider
-                value={props.volume}
+                value={volume}
                 onChange={(event: Event, newValue: number | number[]) => {
+                    typeof newValue === 'number' && setVolume(newValue)
+                }}
+                onChangeCommitted={(event, newValue: number | number[]) => {
                     typeof newValue === 'number' && props.onVolumeChange(newValue)
                 }}
                 size={'small'}

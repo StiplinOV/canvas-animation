@@ -295,7 +295,7 @@ const styles = {
 
 export type HighlightedStyleName = keyof typeof styles
 
-interface highlightedSyntaxParamsType extends ObjectParams {
+export interface highlightedSyntaxParamsType extends ObjectParams {
     value: string
     language: keyof typeof languageDefs
     highlightStyle?: HighlightedStyleName

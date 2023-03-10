@@ -5,7 +5,7 @@ import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationPara
 import RectangleCanvasAnimationParams from '../../simple/rectangle/RectangleCanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
 
-interface arrayParamsType extends ObjectParams {
+export interface arrayParamsType extends ObjectParams {
     value: string[]
     height: number
     width?: number

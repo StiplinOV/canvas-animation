@@ -1,4 +1,4 @@
-import CanvasAnimationParams, {ObjectParams, Selection, weightToNumber} from '../CanvasAnimationParams'
+import CanvasAnimationParams, { ObjectParams, Selection, weightToNumber } from '../CanvasAnimationParams'
 import AnimationStyle from '../../AnimationStyles'
 import CanvasAnimation from '../CanvasAnimation'
 import {
@@ -16,9 +16,9 @@ interface SelectionInfo<U extends Selection = Selection> {
 
 export default abstract class SimpleCanvasAnimationParams<T extends ObjectParams = ObjectParams> extends CanvasAnimationParams<T> {
 
-    public calculateObjectParamsInTime(time: number, animationStyle: AnimationStyle): T {
+    public calculateObjectParamsInTime (time: number, animationStyle: AnimationStyle): T {
         const sourceObject = this.getObject()
-        let result = {...sourceObject}
+        let result = { ...sourceObject }
         this.getTransformations()
             .filter(t => time >= t.time)
             .forEach((t) => {
@@ -41,7 +41,10 @@ export default abstract class SimpleCanvasAnimationParams<T extends ObjectParams
                 }
                 if (transformationObject.rotations) {
                     result.rotations = calculateRotationsPercentValue(
-                        result.rotations ?? [{axis: ZeroPoint, angle: 0}],
+                        result.rotations ?? [{
+                            axis: ZeroPoint,
+                            angle: 0
+                        }],
                         transformationObject.rotations,
                         percent
                     )
@@ -76,9 +79,9 @@ export default abstract class SimpleCanvasAnimationParams<T extends ObjectParams
         return result
     }
 
-    public abstract mergeWithTransformation(obj: T, trans: Partial<T>, perc: number, animationStyle: AnimationStyle): Omit<T, keyof ObjectParams>
+    public abstract mergeWithTransformation (obj: T, trans: Partial<T>, perc: number, animationStyle: AnimationStyle): Omit<T, keyof ObjectParams>
 
-    public calculateSelectionInfo(time: number): SelectionInfo {
+    public calculateSelectionInfo (time: number): SelectionInfo {
         const selections = this.getSelections()
         let selected = false
         let percent = 0
@@ -95,13 +98,16 @@ export default abstract class SimpleCanvasAnimationParams<T extends ObjectParams
                 }
             }
         }
-        return {selection, percent}
+        return {
+            selection,
+            percent
+        }
     }
 
-    toCanvasAnimations(animationStyle: AnimationStyle): CanvasAnimation[] {
+    toCanvasAnimations (animationStyle: AnimationStyle): CanvasAnimation[] {
         return [this.toCanvasAnimation(animationStyle)]
     }
 
-    protected abstract toCanvasAnimation(animationStyle: AnimationStyle): CanvasAnimation
+    protected abstract toCanvasAnimation (animationStyle: AnimationStyle): CanvasAnimation
 
 }

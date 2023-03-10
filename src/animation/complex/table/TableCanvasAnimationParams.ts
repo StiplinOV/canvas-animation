@@ -12,7 +12,7 @@ import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationPara
 import EllipseCanvasAnimationParams from '../../simple/ellipse/EllipseCanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
 
-interface tableParamsType extends ObjectParams {
+export interface tableParamsType extends ObjectParams {
     values: string[][]
     width: number
     height: number
@@ -25,9 +25,9 @@ interface tableParamsType extends ObjectParams {
     markedCells?: number[][]
 }
 
-type selectorType = { rowTitles?: 'all' | number[], colTitles?: 'all' | number[], values?: 'all' | [number, number][] }
+export type tableSelectorType = { rowTitles?: 'all' | number[], colTitles?: 'all' | number[], values?: 'all' | [number, number][] }
 
-interface TableTransformOptionsType extends TransformOptions {
+export interface tableTransformOptionsType extends TransformOptions {
     renderValues?: {
         direction?: render2DArrayType
         immediacy?: boolean
@@ -36,7 +36,7 @@ interface TableTransformOptionsType extends TransformOptions {
 
 const cellValueRegexp = /title|value (\d+) (\d+)/
 
-export default class TableCanvasAnimationParams extends ComplexCanvasAnimationParams<tableParamsType, selectorType, TableTransformOptionsType> {
+export default class TableCanvasAnimationParams extends ComplexCanvasAnimationParams<tableParamsType, tableSelectorType, tableTransformOptionsType> {
 
     protected getIncludedAnimationParamsByParameter(object: tableParamsType): Map<string, SimpleCanvasAnimationParams> {
         const result = new Map<string, SimpleCanvasAnimationParams>()
@@ -263,7 +263,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         return false
     }
 
-    protected convertSelectorToDiscriminatorRegexps(selector: selectorType): RegExp[] {
+    protected convertSelectorToDiscriminatorRegexps(selector: tableSelectorType): RegExp[] {
         if (!selector.rowTitles && !selector.colTitles && !selector.values) {
             return [/.*/]
         }
@@ -292,7 +292,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         added: Map<string, SimpleCanvasAnimationParams>,
         time: number,
         duration: number,
-        options?: TableTransformOptionsType
+        options?: tableTransformOptionsType
     ): Map<string, AddedAppearParamType> {
         if (!options?.renderValues || options.type === 'together') {
             return super.calculateAddedTransformAnimationsAppearParams(added, time, duration, options)
@@ -317,7 +317,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         deleted: Set<string>,
         time: number,
         duration: number,
-        options?: TableTransformOptionsType
+        options?: tableTransformOptionsType
     ): Map<string, DeletedDisappearParamType> {
         if (!options?.renderValues || options.type === 'together') {
             return super.calculateDeletedTransformAnimationsDisappearParams(deleted, time, duration, options)
@@ -340,7 +340,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         changed: Map<string, AnimationS2T>,
         time: number,
         duration: number,
-        options?: TableTransformOptionsType
+        options?: tableTransformOptionsType
     ): Map<string, ChangedTransformParamType> {
         if (!options?.renderValues || options.type === 'together') {
             return super.calculateChangedTransformAnimationsTransformParams(changed, time, duration, options)
@@ -362,7 +362,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         return result
     }
 
-    private sortKeysAccordingToOption(options: TableTransformOptionsType, keysParam: Set<string>): string[] {
+    private sortKeysAccordingToOption(options: tableTransformOptionsType, keysParam: Set<string>): string[] {
         const keys = Array.from(keysParam.keys())
         const direction = options.renderValues?.direction
         if (!direction) {

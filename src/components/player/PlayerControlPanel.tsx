@@ -9,18 +9,20 @@ import { AnimationTimeComponent } from './AnimationTimeComponent'
 
 interface Props {
     style?: React.CSSProperties
+    onClickDownloadButton: () => void
     width: number
     volumeSliderWidth: number
     maxTime: number
     time: number
     onTimeChange: (newValue: number) => void
-    onTimeChangeCommited: () => void
+    onTimeChangeCommited: (newValue: number) => void
     volume: number
     onVolumeChange: (newValue: number) => void
     play: boolean
     onPlayChange: (newValue: boolean) => void
     velocityMultiplier: number
     onVelocityMultiplierChange: (newValue: number) => void
+    velocityMultiplierChangeDisabled?: boolean
     velocityMultipliers: number[]
 }
 
@@ -30,7 +32,6 @@ export const PlayerControlPanel = (props: Props): JSX.Element => {
         velocityMultipliers,
         onVelocityMultiplierChange
     } = props
-    const [volumeSliderValue, setVolumeSliderValue] = React.useState<number>(0)
     const timeSliderMaxTime = props.maxTime / 1000
 
     return (
@@ -52,12 +53,17 @@ export const PlayerControlPanel = (props: Props): JSX.Element => {
                     size={'small'}
                     max={timeSliderMaxTime}
                     min={0}
-                    onChangeCommitted={props.onTimeChangeCommited}
+                    onChangeCommitted={(event, newValue: number | number[]) => {
+                        if (typeof newValue === 'number') {
+                            const time = (props.maxTime * newValue) / timeSliderMaxTime
+                            props.onTimeChangeCommited(time)
+                        }
+                    }}
                 />
                 <AnimationTimeComponent time={props.time} maxTime={props.maxTime}/>
                 <VolumeComponent
-                    volume={volumeSliderValue}
-                    onVolumeChange={setVolumeSliderValue}
+                    volume={props.volume}
+                    onVolumeChange={props.onVolumeChange}
                     volumeSliderWidth={props.volumeSliderWidth}
                 />
                 <AnimationVelocityComponent
@@ -65,8 +71,9 @@ export const PlayerControlPanel = (props: Props): JSX.Element => {
                     velocityMultiplier={velocityMultiplier}
                     onVelocityMultiplierChange={onVelocityMultiplierChange}
                     velocityMultipliers={velocityMultipliers}
+                    velocityMultiplierChangeDisabled={props.velocityMultiplierChangeDisabled}
                 />
-                <IconButton disabled={props.play}>
+                <IconButton disabled={props.play} onClick={props.onClickDownloadButton}>
                     <Download fontSize="large"/>
                 </IconButton>
             </Stack>

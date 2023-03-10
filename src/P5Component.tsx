@@ -5,6 +5,7 @@ import { animationStyle, canvasAnimations } from './Animations'
 import { camera, cameraParams } from './camera/CameraParams'
 import { cameras } from './Cameras'
 import CanvasAnimation from './animation/CanvasAnimation'
+import { BestTimeToBuyAndSellStock } from './lessons/BestTimeToBuyAndSellStock'
 
 interface Props {
     canvasWidth: number
@@ -35,7 +36,7 @@ export const P5Component: React.FC<Props> = (props: Props) => {
         cnv.position(props.left, props.top)
         cnv.style('border: 1px solid')
         cameras.sort((left, right) => left.startTime - right.startTime)
-        setAnimations(canvasAnimations(p5).flatMap(p => p.toCanvasAnimations(animationStyle)))
+        setAnimations(canvasAnimations(BestTimeToBuyAndSellStock, p5).flatMap(p => p.toCanvasAnimations(animationStyle)))
     }
 
     const draw = (p5: p5Types): void => {

@@ -18,7 +18,7 @@ type scaleType = { position: number, value: string }
 type chartPointType = { point: Point, text: string }
 type chartYRangeType = { yCoords: [number, number], value: string }
 
-interface xyChartParamsType extends ObjectParams {
+export interface xyChartParamsType extends ObjectParams {
     width: number
     height: number
     xScale?: (scaleType | number)[]
@@ -30,9 +30,9 @@ interface xyChartParamsType extends ObjectParams {
     chartYRanges?: chartYRangeType[]
 }
 
-type selectorType = { points?: 'all' | number[], lines?: 'all', xScaleValues?: 'all' | number[], yScaleValues?: 'all' | number[] }
+export type xyChartSelectorType = { points?: 'all' | number[], lines?: 'all', xScaleValues?: 'all' | number[], yScaleValues?: 'all' | number[] }
 
-export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimationParams<xyChartParamsType, selectorType> {
+export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimationParams<xyChartParamsType, xyChartSelectorType> {
 
     protected getIncludedAnimationParamsByParameter(object: xyChartParamsType): Map<string, SimpleCanvasAnimationParams> {
         const result = new Map<string, SimpleCanvasAnimationParams>()
@@ -254,7 +254,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         }
     }
 
-    protected convertSelectorToDiscriminatorRegexps(selector: selectorType): RegExp[] {
+    protected convertSelectorToDiscriminatorRegexps(selector: xyChartSelectorType): RegExp[] {
         if (!selector.lines && !selector.points && !selector.yScaleValues && !selector.xScaleValues) {
             return [/.*/]
         }
