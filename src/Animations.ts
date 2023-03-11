@@ -16,7 +16,6 @@ import HighlightedTextCanvasAnimationParams
 import LineCanvasAnimationParams from './animation/simple/line/LineCanvasAnimationParams'
 import RectangleCanvasAnimationParams from './animation/simple/rectangle/RectangleCanvasAnimationParams'
 
-export const endTime = 210000
 export const animationStyle = getAnimationStyle('default')
 
 export const canvasAnimations: (json: AnimationsJsonType, p5: p5Types) => CanvasAnimationParams[] = (json, p5) => {

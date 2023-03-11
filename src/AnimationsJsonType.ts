@@ -17,6 +17,7 @@ import {
     tableTransformOptionsType
 } from './animation/complex/table/TableCanvasAnimationParams'
 import { xyChartParamsType, xyChartSelectorType } from './animation/complex/xychart/XYChartCanvasAnimationParams'
+import { CameraParams } from './camera/CameraParams'
 
 export type AnimationsJsonType = {
     array?: Params<arrayParamsType, TransformOptions, ComplexCanvasAnimationSelection>[]
@@ -30,4 +31,14 @@ export type AnimationsJsonType = {
     table?: Params<tableParamsType, tableTransformOptionsType, ComplexCanvasAnimationSelection<tableSelectorType>>[]
     text?: Params<textParamsType>[]
     xyChart?: Params<xyChartParamsType, TransformOptions, ComplexCanvasAnimationSelection<xyChartSelectorType>>[]
+}
+
+export type LessonJsonType = {
+    canvasDimensions: {
+        width: number
+        height: number
+    }
+    endTime: number
+    cameras: CameraParams[]
+    animations: AnimationsJsonType
 }

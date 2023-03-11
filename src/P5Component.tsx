@@ -2,25 +2,25 @@ import React from 'react'
 import Sketch from 'react-p5'
 import p5Types from 'p5'
 import { animationStyle, canvasAnimations } from './Animations'
-import { camera, cameraParams } from './camera/CameraParams'
-import { cameras } from './Cameras'
+import { Camera, CameraParams } from './camera/CameraParams'
 import CanvasAnimation from './animation/CanvasAnimation'
 import { BestTimeToBuyAndSellStock } from './lessons/BestTimeToBuyAndSellStock'
+import { LessonJsonType } from './AnimationsJsonType'
 
 interface Props {
-    canvasWidth: number
-    canvasHeight: number
     top: number
     left: number
     onTimeChange: (newValue: number) => void
     time: number
     play: boolean
     timeMultiplier: number
+    lesson: LessonJsonType
 }
 
 export const P5Component: React.FC<Props> = (props: Props) => {
 
     const [animations, setAnimations] = React.useState<CanvasAnimation[]>([])
+    const [cameras, setCameras] = React.useState<CameraParams[]>([])
     const [millisSinceLastPlay, setMillisSinceLastPlay] = React.useState<number>(0)
     const [playedBefore, setPlayedBefore] = React.useState<boolean>(false)
 
@@ -28,7 +28,11 @@ export const P5Component: React.FC<Props> = (props: Props) => {
     }
 
     const setup = (p5: p5Types): void => {
-        const cnv = p5.createCanvas(props.canvasWidth, props.canvasHeight)
+        const {
+            animations,
+            cameras
+        } = BestTimeToBuyAndSellStock
+        const cnv = p5.createCanvas(props.lesson.canvasDimensions.width, props.lesson.canvasDimensions.height)
         // p5.drawingContext.shadowOffsetX = 3
         // p5.drawingContext.shadowOffsetY = -3
         // p5.drawingContext.shadowBlur = 5
@@ -36,7 +40,8 @@ export const P5Component: React.FC<Props> = (props: Props) => {
         cnv.position(props.left, props.top)
         cnv.style('border: 1px solid')
         cameras.sort((left, right) => left.startTime - right.startTime)
-        setAnimations(canvasAnimations(BestTimeToBuyAndSellStock, p5).flatMap(p => p.toCanvasAnimations(animationStyle)))
+        setAnimations(canvasAnimations(animations, p5).flatMap(p => p.toCanvasAnimations(animationStyle)))
+        setCameras(cameras)
     }
 
     const draw = (p5: p5Types): void => {
@@ -49,7 +54,7 @@ export const P5Component: React.FC<Props> = (props: Props) => {
             setMillisSinceLastPlay(millis)
         }
 
-        const camera = getActualCamera(time)
+        const camera = getActualCamera(cameras, time)
         const zoom = camera.zoom ?? 1
         p5.background(animationStyle.backgroundColor)
         camera.rotation && p5.rotate(camera.rotation)
@@ -70,8 +75,8 @@ export const P5Component: React.FC<Props> = (props: Props) => {
     return <Sketch setup={setup} preload={preload} draw={draw}/>
 }
 
-const getActualCamera = (time: number): camera => {
-    let actualCameraParamCandidate: cameraParams = {
+const getActualCamera = (cameras: CameraParams[], time: number): Camera => {
+    let actualCameraParamCandidate: CameraParams = {
         startTime: 0,
         camera: {
             x: 0,

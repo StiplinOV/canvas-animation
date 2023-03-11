@@ -1,12 +1,12 @@
-export interface camera {
+export interface Camera {
     x: number
     y: number
     zoom?: number
     rotation?: number
 }
 
-export interface cameraParams {
+export interface CameraParams {
     startTime: number
     transformDuration?: number
-    camera: camera
+    camera: Camera
 }

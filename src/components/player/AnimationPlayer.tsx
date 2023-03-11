@@ -3,17 +3,18 @@ import { PlayerControlPanel } from './PlayerControlPanel'
 import React from 'react'
 import { ExportModalWindow } from './ExportModalWindow'
 import audioPlay from 'audio-play'
+import { LessonJsonType } from '../../AnimationsJsonType'
 
 interface Props {
     top: number
     left: number
-    canvasWidth: number
-    canvasHeight: number
-    endTime: number
+    lesson: LessonJsonType
 }
 
 export const AnimationPlayer = (props: Props): JSX.Element => {
-    const sliderTop = props.canvasHeight + props.top + 30
+    const {endTime} = props.lesson
+    const {width, height} = props.lesson.canvasDimensions
+    const sliderTop = height + props.top + 30
     const [volumeSliderValue, setVolumeSliderValue] = React.useState<number>(0)
     const [inTimeChanging, setInTimeChanging] = React.useState<boolean>(false)
     const [time, setTime] = React.useState<number>(0)
@@ -38,14 +39,13 @@ export const AnimationPlayer = (props: Props): JSX.Element => {
 
     return <>
         <P5Component
-            canvasWidth={props.canvasWidth}
-            canvasHeight={props.canvasHeight}
+            lesson={props.lesson}
             top={props.top}
             left={props.left}
             time={time}
             onTimeChange={(newValue: number) => {
                 setTime(newValue)
-                if (newValue >= props.endTime) {
+                if (newValue >= endTime) {
                     if (rendering) {
                         setRendering(false)
                         if (recorder) {
@@ -68,8 +68,8 @@ export const AnimationPlayer = (props: Props): JSX.Element => {
                 left: props.left
             }}
             volumeSliderWidth={100}
-            width={props.canvasWidth}
-            maxTime={props.endTime}
+            width={width}
+            maxTime={endTime}
             volume={volumeSliderValue}
             onVolumeChange={(newValue) => {
                 setVolumeSliderValue(newValue)
@@ -85,7 +85,7 @@ export const AnimationPlayer = (props: Props): JSX.Element => {
             onTimeChange={(newValue: number) => {
                 setInTimeChanging(true)
                 setTime(newValue)
-                if (newValue > props.endTime) {
+                if (newValue > endTime) {
                     setPlay(false)
                 }
             }}
@@ -108,7 +108,7 @@ export const AnimationPlayer = (props: Props): JSX.Element => {
                         throw new Error(reason)
                     })
                 }
-                if (time >= props.endTime) {
+                if (time >= endTime) {
                     setTime(0)
                 }
                 setPlay(newValue)
