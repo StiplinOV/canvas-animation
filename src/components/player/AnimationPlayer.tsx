@@ -27,6 +27,7 @@ export const AnimationPlayer = (props: Props): JSX.Element => {
     const [renderingAborted, setRenderingAborted] = React.useState<boolean>(false)
     const [audioPlayHandleState, setAudioPlayHandleState] = React.useState<audioPlay.AudioPlayHandle | null>()
     const [velocityMultiplierChangeDisabled, setVelocityMultiplierChangeDisabled] = React.useState<boolean>()
+    const {sound} = props.lesson
 
     if (audioPlayHandleState) {
         if (play && !inTimeChanging) {
@@ -75,7 +76,7 @@ export const AnimationPlayer = (props: Props): JSX.Element => {
                 setVolumeSliderValue(newValue)
                 audioPlayHandleState?.pause()
                 setAudioPlayHandleState(null)
-                createAudioPlayHandle(time, velocityMultiplier, newValue).then(audioPlayHandle => {
+                createAudioPlayHandle(time, velocityMultiplier, newValue, sound).then(audioPlayHandle => {
                     setAudioPlayHandleState(audioPlayHandle)
                 }).catch(reason => {
                     throw new Error(reason)
@@ -93,7 +94,7 @@ export const AnimationPlayer = (props: Props): JSX.Element => {
                 setInTimeChanging(false)
                 audioPlayHandleState?.pause()
                 setAudioPlayHandleState(null)
-                createAudioPlayHandle(newValue, velocityMultiplier, volumeSliderValue).then(audioPlayHandle => {
+                createAudioPlayHandle(newValue, velocityMultiplier, volumeSliderValue, sound).then(audioPlayHandle => {
                     setAudioPlayHandleState(audioPlayHandle)
                 }).catch(reason => {
                     throw new Error(reason)
@@ -102,7 +103,7 @@ export const AnimationPlayer = (props: Props): JSX.Element => {
             play={play}
             onPlayChange={newValue => {
                 if (newValue) {
-                    createAudioPlayHandle(time, velocityMultiplier, volumeSliderValue).then(audioPlayHandle => {
+                    createAudioPlayHandle(time, velocityMultiplier, volumeSliderValue, sound).then(audioPlayHandle => {
                         setAudioPlayHandleState(audioPlayHandle)
                     }).catch(reason => {
                         throw new Error(reason)
@@ -118,7 +119,7 @@ export const AnimationPlayer = (props: Props): JSX.Element => {
                 setVelocityMultiplier(newValue)
                 audioPlayHandleState?.pause()
                 setAudioPlayHandleState(null)
-                createAudioPlayHandle(time, newValue, volumeSliderValue).then(audioPlayHandle => {
+                createAudioPlayHandle(time, newValue, volumeSliderValue, sound).then(audioPlayHandle => {
                     setAudioPlayHandleState(audioPlayHandle)
                 }).catch(reason => {
                     throw new Error(reason)
@@ -165,9 +166,7 @@ export const AnimationPlayer = (props: Props): JSX.Element => {
     </>
 }
 
-const createAudioPlayHandle = async (time: number, rate: number, volume: number): Promise<audioPlay.AudioPlayHandle> => {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const sound = require('../../audio/Lofi_Jazz_Cafe_Cozy_Evening.mp3')
+const createAudioPlayHandle = async (time: number, rate: number, volume: number, sound: URL): Promise<audioPlay.AudioPlayHandle> => {
     const AudioContext = window.AudioContext
     const audioCtx = new AudioContext()
     return await fetch(sound)

@@ -1,6 +1,7 @@
 import { LessonJsonType } from '../AnimationsJsonType'
 
 export const BestTimeToBuyAndSellStock: LessonJsonType = {
+    sound: require('../../audio/Lofi_Jazz_Cafe_Cozy_Evening.mp3'),
     canvasDimensions: {
         width: 1280,
         height: 720

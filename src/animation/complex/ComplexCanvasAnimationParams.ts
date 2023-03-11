@@ -69,6 +69,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         this.getTransformations().forEach(t => {
             const nextObject = {...previousObject, ...t.object}
             const nextObjectParams = this.getIncludedAnimationParamsByParameter(nextObject)
+
             const transformSimpleAnimationsDifference = this.getAnimationsSetDifference(prevObjectParams, nextObjectParams)
             this.applySimpleTransformAnimations(initialIncludedAnimationParams, t, transformSimpleAnimationsDifference)
 

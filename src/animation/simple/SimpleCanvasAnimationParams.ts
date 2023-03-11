@@ -1,7 +1,8 @@
 import CanvasAnimationParams, { ObjectParams, Selection, weightToNumber } from '../CanvasAnimationParams'
-import AnimationStyle from '../../AnimationStyles'
+import AnimationStyle, { getFillColor, getStrokeColor } from '../../AnimationStyles'
 import CanvasAnimation from '../CanvasAnimation'
 import {
+    calculateColorPercentValue,
     calculatePercentValue,
     calculatePointPercentValue,
     calculateRotationsPercentValue,
@@ -27,6 +28,20 @@ export default abstract class SimpleCanvasAnimationParams<T extends ObjectParams
                     appearTime: t.time,
                     appearDuration: t.duration
                 })
+                if (transformationObject.fillColor) {
+                    result.fillColor = calculateColorPercentValue(
+                        getFillColor(animationStyle, result.fillColor),
+                        getFillColor(animationStyle, transformationObject.fillColor),
+                        percent
+                    )
+                }
+                if (transformationObject.strokeColor) {
+                    result.fillColor = calculateColorPercentValue(
+                        getStrokeColor(animationStyle, result.strokeColor),
+                        getStrokeColor(animationStyle, transformationObject.strokeColor),
+                        percent
+                    )
+                }
                 if (transformationObject.origin) {
                     result.origin = calculatePointPercentValue(result.origin, transformationObject.origin, percent)
                 }

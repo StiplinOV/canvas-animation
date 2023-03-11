@@ -34,6 +34,7 @@ export type AnimationsJsonType = {
 }
 
 export type LessonJsonType = {
+    sound: URL
     canvasDimensions: {
         width: number
         height: number

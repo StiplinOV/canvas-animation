@@ -6,11 +6,10 @@ import {
     toAppearancePercent
 } from '../common/Utils'
 import {Point} from '../common/Point'
-import AnimationStyle from '../AnimationStyles'
+import AnimationStyle, { ColorType } from '../AnimationStyles'
 import CanvasAnimation from './CanvasAnimation'
 
 type weightType = number | 'normal' | 'bold'
-type colorType = string | 'primary' | 'secondary'
 
 export const weightToNumber = (weight: weightType, style: AnimationStyle): number => {
     if (weight === 'normal') {
@@ -22,21 +21,12 @@ export const weightToNumber = (weight: weightType, style: AnimationStyle): numbe
     return weight
 }
 
-export const colorToHex = (color: colorType, style: AnimationStyle): string => {
-    if (color === 'primary') {
-        return style.strokePrimaryColor
-    }
-    if (color === 'secondary') {
-        return style.strokeSecondaryColor
-    }
-    return color
-}
-
 export interface ObjectParams {
     weight?: weightType
     zIndex?: number
     dashed?: number[]
-    strokeColor?: string | 'primary' | 'secondary'
+    strokeColor?: ColorType
+    fillColor?: ColorType
     origin: Point
     rotations?: rotationType[]
 }

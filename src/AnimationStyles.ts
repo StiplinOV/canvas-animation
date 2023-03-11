@@ -2,6 +2,7 @@ import {THE_STYLE} from 'p5'
 import {HighlightedStyleName} from './animation/complex/highlightedsyntax/HighlightedSyntaxCanvasAnimationParams'
 
 export const COURIER_NEW_FONT = 'Courier New'
+export type ColorType = string | 'primary' | 'secondary'
 
 export type WebSafeFontsType =
     'Arial'
@@ -16,11 +17,12 @@ export type WebSafeFontsType =
 
 export default interface AnimationStyle {
     backgroundColor: string
-    fillColor: string
     fontColor: string
+    fillColor: string
+    strokeColor: string
+    primaryColor: string
+    secondaryColor: string
     selectedColor: string
-    strokePrimaryColor: string
-    strokeSecondaryColor: string
     font: WebSafeFontsType
     fontSize: number
     fontWeight: number
@@ -36,18 +38,19 @@ export default interface AnimationStyle {
 
 const defaultAnimationStyle: AnimationStyle = {
     backgroundColor: '#FFFFFF',
-    fillColor: '#FFFFFF',
     fontColor: '#000000',
+    fillColor: '#FFFFFF',
+    strokeColor: '#000000',
+    primaryColor: '#637899',
+    secondaryColor: '#ff4d00',
     selectedColor: '#FF0000',
-    strokePrimaryColor: '#000000',
-    strokeSecondaryColor: '#FF0000',
     font: 'Verdana',
     fontSize: 12,
     fontWeight: 0.5,
     monospaceFont: COURIER_NEW_FONT,
     highlightTextStyle: 'darcula',
     strokeWeight: 1,
-    strokeBoldWeight: 4,
+    strokeBoldWeight: 3,
     cornerRadius: 0,
     objectRotation: 0,
     textStyle: 'normal',
@@ -57,11 +60,9 @@ const createAnimationStyles = (): Record<string, Partial<AnimationStyle>> => ({
     default: defaultAnimationStyle,
     custom: {
         backgroundColor: '#132226',
-        fillColor: '#132226',
         fontColor: '#A4978E',
         selectedColor: '#ff4000',
-        strokePrimaryColor: '#BE9063'
-        // 132226
+        primaryColor: '#BE9063'
     }
 })
 export const getAnimationStyle = (key: keyof typeof animationStyles): AnimationStyle => {
@@ -70,4 +71,24 @@ export const getAnimationStyle = (key: keyof typeof animationStyles): AnimationS
         ...defaultAnimationStyle,
         ...animationStyles[key]
     }
+}
+
+export const getStrokeColor = (animationStyle: AnimationStyle, color?: ColorType): string => {
+    if (color === 'primary') {
+        return animationStyle.primaryColor
+    }
+    if (color === 'secondary') {
+        return animationStyle.secondaryColor
+    }
+    return color ?? animationStyle.strokeColor
+}
+
+export const getFillColor = (animationStyle: AnimationStyle, color?: ColorType): string => {
+    if (color === 'primary') {
+        return animationStyle.primaryColor
+    }
+    if (color === 'secondary') {
+        return animationStyle.secondaryColor
+    }
+    return color ?? animationStyle.fillColor
 }

@@ -4,7 +4,6 @@ import p5Types from 'p5'
 import { animationStyle, canvasAnimations } from './Animations'
 import { Camera, CameraParams } from './camera/CameraParams'
 import CanvasAnimation from './animation/CanvasAnimation'
-import { BestTimeToBuyAndSellStock } from './lessons/BestTimeToBuyAndSellStock'
 import { LessonJsonType } from './AnimationsJsonType'
 
 interface Props {
@@ -23,6 +22,7 @@ export const P5Component: React.FC<Props> = (props: Props) => {
     const [cameras, setCameras] = React.useState<CameraParams[]>([])
     const [millisSinceLastPlay, setMillisSinceLastPlay] = React.useState<number>(0)
     const [playedBefore, setPlayedBefore] = React.useState<boolean>(false)
+    const {lesson} = props
 
     const preload = (p5: p5Types): void => {
     }
@@ -31,8 +31,8 @@ export const P5Component: React.FC<Props> = (props: Props) => {
         const {
             animations,
             cameras
-        } = BestTimeToBuyAndSellStock
-        const cnv = p5.createCanvas(props.lesson.canvasDimensions.width, props.lesson.canvasDimensions.height)
+        } = lesson
+        const cnv = p5.createCanvas(lesson.canvasDimensions.width, lesson.canvasDimensions.height)
         // p5.drawingContext.shadowOffsetX = 3
         // p5.drawingContext.shadowOffsetY = -3
         // p5.drawingContext.shadowBlur = 5
