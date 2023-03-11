@@ -8,6 +8,7 @@ import LineCanvasAnimationParams from '../../simple/line/LineCanvasAnimationPara
 import CircleCanvasAnimationParams from '../../simple/circle/CircleCanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
 import RectangleCanvasAnimationParams from '../../simple/rectangle/RectangleCanvasAnimationParams'
+import { ColorType } from '../../../AnimationStyles'
 
 const coordinateDashWidth = 20
 const toScaleType = (value: scaleType | number): scaleType => {
@@ -52,6 +53,11 @@ export interface xyChartParamsType extends ObjectParams {
     chartYRanges?: chartYRangeType[]
     bars?: bar[]
     barWidth?: number
+    barColor?: ColorType
+    backgroundSelectedRectangleAreas?: {
+        cornerPoints: [Point, Point]
+        color?: ColorType
+    }[]
 }
 
 export type xyChartSelectorType = {
@@ -82,6 +88,8 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         const chartPointsDiameter = coordinateDashWidth / 2
         const bars = object.bars ?? []
         const barWidth = (width / (xScale.length + 1)) / 3
+        const backgroundSelectedRectangleAreas = object.backgroundSelectedRectangleAreas ?? []
+
         new ArrowCanvasAnimationParams({
             object: {
                 origin,
@@ -201,7 +209,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             const x = this.getXForValue(object, value.x)
             const y = this.getYForValue(object, value.y)
             const zeroY = this.getYForValue(object, 0)
-            const width = value.width ?? barWidth
+            const width = value.width ?? object.barWidth ?? barWidth
             const yStepHeight = height / yScale.length
 
             result.set(`chartBar ${index}`, new RectangleCanvasAnimationParams({
@@ -212,7 +220,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     },
                     width,
                     height: zeroY - y,
-                    fillColor: value.selected ? 'secondary' : 'primary'
+                    fillColor: value.selected ? 'secondary' : object.barColor ?? 'primary'
                 }
             }))
             if (value.point) {
@@ -356,6 +364,28 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                         axis: objChartRangeValueOrigin,
                         angle: -Math.PI / 2
                     }]
+                }
+            }))
+        })
+        backgroundSelectedRectangleAreas.forEach((value, index) => {
+            const x0 = this.getXForValue(object, value.cornerPoints[0].x)
+            const x1 = this.getXForValue(object, value.cornerPoints[1].x)
+            const y0 = this.getYForValue(object, value.cornerPoints[0].y)
+            const y1 = this.getYForValue(object, value.cornerPoints[1].y)
+
+            const leftUpCornerPoint = {
+                x: Math.min(x0, x1),
+                y: Math.min(y0, y1)
+            }
+            const width = Math.abs(x0 - x1)
+            const height = Math.abs(y0 - y1)
+            result.set(`backgroundSelectedRectangleArea ${index}`, new RectangleCanvasAnimationParams({
+                object: {
+                    origin: leftUpCornerPoint,
+                    width,
+                    height,
+                    fillColor: value.color,
+                    zIndex: -1
                 }
             }))
         })

@@ -98,7 +98,8 @@ export const ContainerWithMostWater: LessonJsonType = {
                             x: 9,
                             y: 7
                         }
-                    ]
+                    ],
+                    barColor: '#000000'
                 },
                 transformations: [
                     {
@@ -143,6 +144,18 @@ export const ContainerWithMostWater: LessonJsonType = {
                                     x: 9,
                                     y: 7,
                                     selected: true
+                                }
+                            ],
+                            backgroundSelectedRectangleAreas: [
+                                {
+                                    cornerPoints: [{
+                                        x: 2,
+                                        y: 7
+                                    }, {
+                                        x: 9,
+                                        y: 0
+                                    }],
+                                    color: '#94CDEF'
                                 }
                             ]
                         }
