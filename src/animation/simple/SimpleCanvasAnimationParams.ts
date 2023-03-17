@@ -50,8 +50,8 @@ export default abstract class SimpleCanvasAnimationParams<T extends ObjectParams
                 }
                 if (transformationObject.weight) {
                     result.weight = calculatePercentValue(
-                        weightToNumber(result.weight ?? animationStyle.strokeWeight, animationStyle),
-                        weightToNumber(transformationObject.weight, animationStyle), percent
+                        weightToNumber(animationStyle, result.weight),
+                        weightToNumber(animationStyle, transformationObject.weight), percent
                     )
                 }
                 if (transformationObject.rotations) {

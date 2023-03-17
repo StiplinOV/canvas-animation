@@ -1,7 +1,7 @@
 import p5Types from 'p5'
 import {
     addPoints,
-    calculateColorPercentValue,
+    calculateColorPercentValue, calculatePercentValue,
     needAppearObject,
     rotateVector,
     subtractPoints,
@@ -52,7 +52,12 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
         p5.rotate(angle)
         dashed && p5.drawingContext.setLineDash(dashed)
         const selectionInfo = this.params.calculateSelectionInfo(time)
-        p5.strokeWeight(weightToNumber(object.weight ?? animationStyle.strokeWeight, animationStyle))
+        const weight = calculatePercentValue(
+            weightToNumber(animationStyle, object.weight),
+            weightToNumber(animationStyle, object.weight) * 2,
+            selectionInfo.percent
+        )
+        p5.strokeWeight(weight)
         p5.stroke(getStrokeColor(animationStyle, object.strokeColor))
         p5.fill(
             calculateColorPercentValue(

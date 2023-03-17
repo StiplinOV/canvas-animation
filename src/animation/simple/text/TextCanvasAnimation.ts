@@ -1,5 +1,5 @@
 import p5Types from 'p5'
-import AnimationStyle from '../../../AnimationStyles'
+import AnimationStyle, { getFontColor } from '../../../AnimationStyles'
 import {textParamsType} from './TextCanvasAnimationParams'
 import {calculateColorPercentValue, calculatePercentValue, convertPercentToFadeInFadeOut} from '../../../common/Utils'
 import CanvasAnimation from '../../CanvasAnimation'
@@ -15,7 +15,7 @@ export default class TextCanvasAnimation extends CanvasAnimation<textParamsType>
         p5.strokeWeight(style.fontWeight)
         p5.stroke('#FFFFFF')
         p5.textFont(o.font ?? style.font)
-        p5.fill(calculateColorPercentValue(style.fontColor, style.selectedColor, selectedPercent))
+        p5.fill(calculateColorPercentValue(getFontColor(style, o.fillColor), style.selectedColor, selectedPercent))
         p5.textSize(textSize)
         p5.textStyle(textStyle ?? style.textStyle)
         p5.textAlign(horizontalAlign ?? p5.LEFT, verticalAlign ?? p5.BOTTOM)

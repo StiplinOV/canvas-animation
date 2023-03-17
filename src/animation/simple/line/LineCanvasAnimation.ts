@@ -1,11 +1,11 @@
 import p5Types from 'p5'
-import {lineParamsType} from './LineCanvasAnimationParams'
+import {LineParamsType} from './LineCanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
 import CanvasAnimation from '../../CanvasAnimation'
 
-export default class LineCanvasAnimation extends CanvasAnimation<lineParamsType> {
+export default class LineCanvasAnimation extends CanvasAnimation<LineParamsType> {
 
-    public drawObject(p5: p5Types, o: lineParamsType, perc: number, selectedPerc: number, style: AnimationStyle): void {
+    public drawObject(p5: p5Types, o: LineParamsType, perc: number, selectedPerc: number, style: AnimationStyle): void {
         const {origin, endPoint} = o
         const endX = (endPoint.x - origin.x) * perc
         const endY = (endPoint.y - origin.y) * perc

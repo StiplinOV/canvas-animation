@@ -28,6 +28,9 @@ export default interface AnimationStyle {
     fontWeight: number
     monospaceFont: string
     highlightTextStyle: HighlightedStyleName
+    vertexFontSize: number
+    vertexDiameter: number
+    edgeFontSize: number
     strokeWeight: number
     strokeBoldWeight: number
     cornerRadius: number
@@ -54,6 +57,9 @@ const defaultAnimationStyle: AnimationStyle = {
     cornerRadius: 0,
     objectRotation: 0,
     textStyle: 'normal',
+    vertexDiameter: 60,
+    vertexFontSize: 30,
+    edgeFontSize: 20,
     zIndex: 0
 }
 const createAnimationStyles = (): Record<string, Partial<AnimationStyle>> => ({
@@ -91,4 +97,14 @@ export const getFillColor = (animationStyle: AnimationStyle, color?: ColorType):
         return animationStyle.secondaryColor
     }
     return color ?? animationStyle.fillColor
+}
+
+export const getFontColor = (animationStyle: AnimationStyle, color?: ColorType): string => {
+    if (color === 'primary') {
+        return animationStyle.primaryColor
+    }
+    if (color === 'secondary') {
+        return animationStyle.secondaryColor
+    }
+    return color ?? animationStyle.fontColor
 }

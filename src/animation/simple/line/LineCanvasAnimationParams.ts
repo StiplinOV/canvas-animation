@@ -5,16 +5,16 @@ import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
 import LineCanvasAnimation from './LineCanvasAnimation'
 
-export interface onlyLineParamsType {
+export interface OnlyLineParamsType {
     endPoint: Point
 }
 
-export interface lineParamsType extends ObjectParams, onlyLineParamsType {
+export interface LineParamsType extends ObjectParams, OnlyLineParamsType {
 }
 
-export default class LineCanvasAnimationParams extends SimpleCanvasAnimationParams<lineParamsType> {
+export default class LineCanvasAnimationParams extends SimpleCanvasAnimationParams<LineParamsType> {
 
-    mergeWithTransformation(obj: lineParamsType, trans: Partial<lineParamsType>, perc: number): onlyLineParamsType {
+    mergeWithTransformation(obj: LineParamsType, trans: Partial<LineParamsType>, perc: number): OnlyLineParamsType {
         return {
             endPoint: trans.endPoint ? calculatePointPercentValue(obj.endPoint, trans.endPoint, perc) : obj.endPoint
         }

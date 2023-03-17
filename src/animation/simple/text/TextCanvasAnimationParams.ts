@@ -5,7 +5,7 @@ import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle, {WebSafeFontsType} from '../../../AnimationStyles'
 import TextCanvasAnimation from './TextCanvasAnimation'
 
-interface onlyTextParamsType {
+interface OnlyTextParamsType {
     value: string
     fontSize?: number
     boxWidth?: number
@@ -16,12 +16,12 @@ interface onlyTextParamsType {
     verticalAlign?: VERT_ALIGN
 }
 
-export interface textParamsType extends ObjectParams, onlyTextParamsType {
+export interface textParamsType extends ObjectParams, OnlyTextParamsType {
 }
 
 export default class TextCanvasAnimationParams extends SimpleCanvasAnimationParams<textParamsType> {
 
-    mergeWithTransformation(obj: textParamsType, trans: Partial<textParamsType>, perc: number, style: AnimationStyle): onlyTextParamsType {
+    mergeWithTransformation(obj: textParamsType, trans: Partial<textParamsType>, perc: number, style: AnimationStyle): OnlyTextParamsType {
         let {fontSize, boxWidth, boxHeight} = obj
         fontSize ??= style.fontSize
         boxHeight = boxHeight && trans.boxHeight ? calculatePercentValue(boxHeight, trans.boxHeight, perc) : boxHeight

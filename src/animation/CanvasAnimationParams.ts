@@ -11,14 +11,14 @@ import CanvasAnimation from './CanvasAnimation'
 
 type weightType = number | 'normal' | 'bold'
 
-export const weightToNumber = (weight: weightType, style: AnimationStyle): number => {
+export const weightToNumber = (style: AnimationStyle, weight?: weightType): number => {
     if (weight === 'normal') {
         return style.strokeWeight
     }
     if (weight === 'bold') {
         return style.strokeBoldWeight
     }
-    return weight
+    return weight ?? style.strokeWeight
 }
 
 export interface ObjectParams {

@@ -1,8 +1,5 @@
-import {ObjectParams, Params} from '../../CanvasAnimationParams'
-import ComplexCanvasAnimationParams, {
-    ComplexCanvasAnimationSelection,
-    TransformOptions
-} from '../ComplexCanvasAnimationParams'
+import {ObjectParams} from '../../CanvasAnimationParams'
+import ComplexCanvasAnimationParams from '../ComplexCanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
 import HighlightedTextCanvasAnimationParams, {
     highlightedTextValueSegmentType
@@ -148,10 +145,9 @@ import {
     xt256,
     zenburn
 } from 'react-syntax-highlighter/dist/esm/styles/hljs'
-import p5Types from 'p5'
-import AnimationStyle from '../../../AnimationStyles'
 import {animationStyle} from '../../../Animations'
 import HighlightedSyntaxCanvasAnimationRenderer from './HighlightedSyntaxCanvasAnimationRenderer'
+import React from 'react'
 
 const languageDefs = {
     AccessLog,
@@ -304,13 +300,6 @@ export interface highlightedSyntaxParamsType extends ObjectParams {
 
 export default class HighlightedSyntaxCanvasAnimationParams extends ComplexCanvasAnimationParams<highlightedSyntaxParamsType> {
 
-    private readonly animationStyle: AnimationStyle
-
-    constructor(params: Params<highlightedSyntaxParamsType, TransformOptions, ComplexCanvasAnimationSelection>, p5: p5Types, animationStyle: AnimationStyle) {
-        super(params, p5)
-        this.animationStyle = animationStyle
-    }
-
     protected getIncludedAnimationParamsByParameter(object: highlightedSyntaxParamsType): Map<string, SimpleCanvasAnimationParams> {
         const result = new Map<string, SimpleCanvasAnimationParams>()
 
@@ -340,7 +329,7 @@ export default class HighlightedSyntaxCanvasAnimationParams extends ComplexCanva
     }
 
     private getStyle(object: highlightedSyntaxParamsType): Record<string, React.CSSProperties> {
-        return styles[object.highlightStyle ?? this.animationStyle.highlightTextStyle]
+        return styles[object.highlightStyle ?? this.getAnimationStyle().highlightTextStyle]
     }
 
 }

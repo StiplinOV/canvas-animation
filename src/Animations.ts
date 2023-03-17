@@ -15,6 +15,8 @@ import HighlightedTextCanvasAnimationParams
     from './animation/simple/highligtedtext/HighlightedTextCanvasAnimationParams'
 import LineCanvasAnimationParams from './animation/simple/line/LineCanvasAnimationParams'
 import RectangleCanvasAnimationParams from './animation/simple/rectangle/RectangleCanvasAnimationParams'
+import GraphDataStructureParams from './animation/complex/datastructure/tree/GraphDataStructureParams'
+import BezierCanvasAnimationParams from './animation/simple/bezier/BezierCanvasAnimationParams'
 
 export const animationStyle = getAnimationStyle('default')
 
@@ -24,11 +26,13 @@ export const canvasAnimations: (json: AnimationsJsonType, p5: p5Types) => Canvas
         if (key === 'circle') {
             result.push(...json.circle?.map(c => new CircleCanvasAnimationParams(c)) ?? [])
         } else if (key === 'array') {
-            result.push(...json.array?.map(c => new ArrayCanvasAnimationParams(c, p5)) ?? [])
+            result.push(...json.array?.map(c => new ArrayCanvasAnimationParams(c, p5, animationStyle)) ?? [])
         } else if (key === 'arrow') {
-            result.push(...json.arrow?.map(c => new ArrowCanvasAnimationParams(c, p5)) ?? [])
+            result.push(...json.arrow?.map(c => new ArrowCanvasAnimationParams(c, p5, animationStyle)) ?? [])
         } else if (key === 'ellipse') {
             result.push(...json.ellipse?.map(c => new EllipseCanvasAnimationParams(c)) ?? [])
+        } else if (key === 'bezier') {
+            result.push(...json.bezier?.map(c => new BezierCanvasAnimationParams(c)) ?? [])
         } else if (key === 'highlightedSyntax') {
             result.push(...json.highlightedSyntax?.map(c => new HighlightedSyntaxCanvasAnimationParams(c, p5, animationStyle)) ?? [])
         } else if (key === 'highlightedText') {
@@ -38,11 +42,13 @@ export const canvasAnimations: (json: AnimationsJsonType, p5: p5Types) => Canvas
         } else if (key === 'rectangle') {
             result.push(...json.rectangle?.map(c => new RectangleCanvasAnimationParams(c)) ?? [])
         } else if (key === 'table') {
-            result.push(...json.table?.map(c => new TableCanvasAnimationParams(c, p5)) ?? [])
+            result.push(...json.table?.map(c => new TableCanvasAnimationParams(c, p5, animationStyle)) ?? [])
         } else if (key === 'text') {
             result.push(...json.text?.map(c => new TextCanvasAnimationParams(c)) ?? [])
         } else if (key === 'xyChart') {
-            result.push(...json.xyChart?.map(c => new XYChartCanvasAnimationParams(c, p5)) ?? [])
+            result.push(...json.xyChart?.map(c => new XYChartCanvasAnimationParams(c, p5, animationStyle)) ?? [])
+        } else if (key === 'graphDataStructure') {
+            result.push(...json.graphDataStructure?.map(c => new GraphDataStructureParams(c, p5, animationStyle)) ?? [])
         } else {
             throw new Error(`Wrong JSON. Unexpected key ${key}`)
         }

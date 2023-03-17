@@ -101,7 +101,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                 weight: 2,
                 rotations
             }
-        }, this.p5).getIncludedAnimationParams().forEach((v, k) => {
+        }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
             result.set('xArrow ' + k, v)
         })
         new ArrowCanvasAnimationParams({
@@ -115,7 +115,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                 weight: 2,
                 rotations
             }
-        }, this.p5).getIncludedAnimationParams().forEach((v, k) => {
+        }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
             result.set('yArrow ' + k, v)
         })
         result.set('xText', new TextCanvasAnimationParams({
@@ -238,7 +238,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                         weight: 'bold',
                         strokeColor: 'secondary'
                     }
-                }, this.p5).getIncludedAnimationParams().forEach((v, k) => {
+                }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
                     result.set(`chartBarPoint ${index}` + k, v)
                 })
             }
@@ -347,7 +347,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                         weight: 2,
                         rotations
                     }
-                }, this.p5).getIncludedAnimationParams().forEach((v, k) => {
+                }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
                 result.set(`objectChartRangeArrow ${index} ${k}`, v)
             })
             const objChartRangeValueOrigin = {
