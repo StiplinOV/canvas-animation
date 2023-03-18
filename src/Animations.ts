@@ -17,6 +17,7 @@ import LineCanvasAnimationParams from './animation/simple/line/LineCanvasAnimati
 import RectangleCanvasAnimationParams from './animation/simple/rectangle/RectangleCanvasAnimationParams'
 import GraphDataStructureParams from './animation/complex/datastructure/tree/GraphDataStructureParams'
 import BezierCanvasAnimationParams from './animation/simple/bezier/BezierCanvasAnimationParams'
+import MatrixCanvasAnimationParams from './animation/complex/matrix/MatrixCanvasAnimationParams'
 
 export const animationStyle = getAnimationStyle('default')
 
@@ -27,6 +28,8 @@ export const canvasAnimations: (json: AnimationsJsonType, p5: p5Types) => Canvas
             result.push(...json.circle?.map(c => new CircleCanvasAnimationParams(c)) ?? [])
         } else if (key === 'array') {
             result.push(...json.array?.map(c => new ArrayCanvasAnimationParams(c, p5, animationStyle)) ?? [])
+        } else if (key === 'matrix') {
+            result.push(...json.matrix?.map(c => new MatrixCanvasAnimationParams(c, p5, animationStyle)) ?? [])
         } else if (key === 'arrow') {
             result.push(...json.arrow?.map(c => new ArrowCanvasAnimationParams(c, p5, animationStyle)) ?? [])
         } else if (key === 'ellipse') {

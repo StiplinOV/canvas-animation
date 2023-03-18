@@ -5,7 +5,7 @@ import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationPara
 import RectangleCanvasAnimationParams from '../../simple/rectangle/RectangleCanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
 
-export interface arrayParamsType extends ObjectParams {
+export interface ArrayParamsType extends ObjectParams {
     value: string[]
     height: number
     width?: number
@@ -14,9 +14,9 @@ export interface arrayParamsType extends ObjectParams {
     firstIndex?: number
 }
 
-export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationParams<arrayParamsType> {
+export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationParams<ArrayParamsType> {
 
-    protected getIncludedAnimationParamsByParameter(object: arrayParamsType): Map<string, SimpleCanvasAnimationParams> {
+    protected getIncludedAnimationParamsByParameter(object: ArrayParamsType): Map<string, SimpleCanvasAnimationParams> {
         const result = new Map<string, SimpleCanvasAnimationParams>()
         const {title, value, indexTitle, firstIndex, origin, rotations} = object
         const partHeight = this.calculatePartHeight(object)
@@ -87,14 +87,14 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
         return result
     }
 
-    private calculateWidth(object: arrayParamsType): number {
+    private calculateWidth(object: ArrayParamsType): number {
         const {value} = object
         const partHeight = this.calculatePartHeight(object)
         const arrayHeight = partHeight * 3
         return object.width ?? (value.length * arrayHeight + (value.length - 1) * partHeight)
     }
 
-    private calculatePartHeight(object: arrayParamsType): number {
+    private calculatePartHeight(object: ArrayParamsType): number {
         const {title, indexTitle, height} = object
         let numberOfParts = 5
         if (title) {

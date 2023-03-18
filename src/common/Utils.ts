@@ -263,6 +263,12 @@ export const addPoints = (term1: Point, term2: Coordinates, ...terms: Coordinate
         y: resultY
     }
 }
+export const swapPointXY = (point: Point): Point => {
+    return {
+        x: point.y,
+        y: point.x
+    }
+}
 export const calculatePointBetween = (l: Point, r: Point): Point => {
     return {
         x: (l.x + r.x) / 2,

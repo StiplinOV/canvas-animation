@@ -4,7 +4,7 @@ import ComplexCanvasAnimationParams from '../../ComplexCanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../../../simple/SimpleCanvasAnimationParams'
 import CircleCanvasAnimationParams from '../../../simple/circle/CircleCanvasAnimationParams'
 import TextCanvasAnimationParams from '../../../simple/text/TextCanvasAnimationParams'
-import { addPoints, getVectorAngle, mergeValueToMap, requireValueFromMap } from '../../../../common/Utils'
+import { addPoints, getVectorAngle, mergeValueToMap, requireValueFromMap, swapPointXY } from '../../../../common/Utils'
 import { THE_STYLE } from 'p5'
 import AnimationStyle, { ColorType, WebSafeFontsType } from '../../../../AnimationStyles'
 import ArrowCanvasAnimationParams, { ArrowParamsType, ArrowType } from '../../arrow/ArrowCanvasAnimationParams'
@@ -49,6 +49,7 @@ export interface GraphDataStructureParamsType extends ObjectParams {
     edges: EdgeType[]
     vertexStyle?: VertexStyle
     edgeStyle?: EdgeStyle
+    transpose?: boolean
 }
 
 export default class GraphDataStructureParams extends ComplexCanvasAnimationParams<GraphDataStructureParamsType> {
@@ -66,6 +67,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
         const vertexIdMap = this.createVertexIdMap(object)
         const edgeIdMap = this.createEdgeIdMap(object)
         const pointedToItselfVertexIdEdgeMap = new Map<string, EdgeType>()
+        const {transpose} = object
 
         vertexIdMap.forEach((v, k) => {
             const vertexDiameter = v.style?.diameter ?? vertexStyle?.diameter ?? animationStyle.vertexDiameter
@@ -79,7 +81,10 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
         dagre.layout(dagreGraph)
 
         dagreGraph.nodes().forEach(id => {
-            const dagreNode = dagreGraph.node(id)
+            let dagreNode: Point = dagreGraph.node(id)
+            if (transpose) {
+                dagreNode = swapPointXY(dagreNode)
+            }
             const vertex = requireValueFromMap(vertexIdMap, id)
             const style = this.calculateVertexStyle(animationStyle, vertexStyle, vertex.style)
 
@@ -111,8 +116,12 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
             }))
         })
         dagreGraph.edges().forEach((e) => {
-            const vNode = dagreGraph.node(e.v)
-            const wNode = dagreGraph.node(e.w)
+            let vNode: Point = dagreGraph.node(e.v)
+            let wNode: Point = dagreGraph.node(e.w)
+            if (transpose) {
+                vNode = swapPointXY(vNode)
+                wNode = swapPointXY(wNode)
+            }
             const edge = requireValueFromMap(edgeIdMap, JSON.stringify({
                 sourceId: e.v,
                 targetId: e.w
@@ -143,7 +152,10 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
             })
         })
         pointedToItselfVertexIdEdgeMap.forEach((edge, vertexId) => {
-            const dagreNode = dagreGraph.node(vertexId)
+            let dagreNode: Point = dagreGraph.node(vertexId)
+            if (transpose) {
+                dagreNode = swapPointXY(dagreNode)
+            }
             const points = this.calculateBezierPoints(
                 vertexEdgeAnglesMap.get(vertexId) ?? new Set<number>(),
                 this.calculateVertexStyle(animationStyle, vertexStyle, vertexIdMap.get(vertexId)?.style).diameter

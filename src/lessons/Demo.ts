@@ -1,31 +1,5 @@
 import { LessonJsonType } from '../AnimationsJsonType'
 
-const e = (): any => {
-    const a = [
-        [1, 2],
-        [2, 3],
-        [3, 4],
-        [4, 5],
-        [5, 6],
-        [6, 1],
-        [2, 6],
-        [3, 6],
-        [4, 6],
-        [5, 6],
-        [6, 7],
-        [6, 8],
-        [6, 9]
-    ]
-    for (let i = 1; i < 9; i++) {
-        a.push([i, i])
-    }
-    return a.map(v => ({
-        sourceId: `${v[0]}`,
-        label: v[0] === v[1] ? 'label' : 'other',
-        targetId: `${v[1]}`
-    }))
-}
-
 export const Demo: LessonJsonType = {
     sound: require('./Lofi_Jazz_Cafe_Cozy_Evening.mp3'),
     canvasDimensions: {
@@ -33,83 +7,140 @@ export const Demo: LessonJsonType = {
         height: 720
     },
     endTime: 210000,
-    cameras: [{
-        startTime: 1,
-        camera: {
-            x: 0,
-            y: 50,
-            zoom: 0.8
-        }
-    }],
+    cameras: [],
     animations: {
-        graphDataStructure: [{
-            presenceParameters: {
-                appearDuration: 0
-            },
-            object: {
-                origin: {
-                    x: 90,
-                    y: 100
+        graphDataStructure: [
+            {
+                presenceParameters: {
+                   appearDuration: 1000,
                 },
-                edgeStyle: {
-                    sourceType: 'Arrow',
-                    targetType: 'Arrow'
+                object: {
+                    origin: {
+                        x: 100,
+                        y: 100
+                    },
+                    edgeStyle: {
+                        targetType: 'Arrow'
+                    },
+                    transpose: true,
+                    vertices: [
+                        { id: "1", label: "1" },
+                        { id: "3", label: "3" },
+                        { id: "4", label: "4" },
+                        { id: "5", label: "5" },
+                        { id: "6", label: "6" },
+                        { id: "7", label: "7" },
+                        { id: "8", label: "8" },
+                        { id: "9", label: "9" },
+                        { id: "10", label: "10" }
+                    ],
+                    edges: [
+                        { sourceId: "1", targetId: "3"},
+                        { sourceId: "3", targetId: "4"},
+                        { sourceId: "4", targetId: "5"},
+                        { sourceId: "6", targetId: "7"},
+                        { sourceId: "7", targetId: "8"},
+                        { sourceId: "8", targetId: "9"},
+                        { sourceId: "9", targetId: "10"},
+                    ]
                 },
-                vertices: [
-                    {
-                        id: '1',
-                        label: '1'
-                    },
-                    {
-                        id: '2',
-                        label: '2'
-                    },
-                    {
-                        id: '3',
-                        label: '3'
-                    },
-                    {
-                        id: '4',
-                        label: '4',
-                        style: {
-                            diameter: 100
-                        }
-                    },
-                    {
-                        id: '5',
-                        label: '5'
-                    },
-                    {
-                        id: '6',
-                        label: '6'
-                    },
-                    {
-                        id: '7',
-                        label: '7'
-                    },
-                    {
-                        id: '8',
-                        label: '8'
-                    },
-                    {
-                        id: '9',
-                        label: '9'
-                    }
-                ],
-                edges: []
-            },
-            transformations: [
-                {
-                    options: {
-                        type: 'sequentially'
-                    },
-                    time: 0,
-                    duration: 2000,
+                transformations: [{
+                    time: 2000,
+                    duration: 1000,
                     object: {
-                        edges: e()
+                        vertices: [
+                            { id: "1", label: "1" },
+                            { id: "2", label: "2" },
+                            { id: "3", label: "3" },
+                            { id: "4", label: "4" },
+                            { id: "5", label: "5" },
+                            { id: "6", label: "6" },
+                            { id: "7", label: "7" },
+                            { id: "8", label: "8" },
+                            { id: "9", label: "9" },
+                            { id: "10", label: "10" }
+                        ],
+                        edges: [
+                            { sourceId: "1", targetId: "2"},
+                            { sourceId: "2", targetId: "3"},
+                            { sourceId: "3", targetId: "4"},
+                            { sourceId: "4", targetId: "5"},
+                            { sourceId: "6", targetId: "7"},
+                            { sourceId: "7", targetId: "8"},
+                            { sourceId: "8", targetId: "9"},
+                            { sourceId: "9", targetId: "10"},
+                        ]
+                    }
+                }]
+            }
+        ],
+        matrix: [{
+            presenceParameters: {
+                appearTime: 200000,
+                appearDuration: 1000
+            },
+            selections: [
+                {
+                    time: 2000,
+                    duration: 1000,
+                    selector: {
+                        elements: [
+                            {
+                                x: 0,
+                                y: 0
+                            },
+                            {
+                                x: 1,
+                                y: 0
+                            },
+                            {
+                                x: 0,
+                                y: 1
+                            },
+                            {
+                                x: 1,
+                                y: 1
+                            },
+                        ]
                     }
                 }
-            ]
+            ],
+            object: {
+                origin: {
+                    x: 315,
+                    y: 10
+                },
+                title: 'Number of Islands',
+                values: [
+                    [1, 1, 0, 0, 0],
+                    [1, 1, 0, 0, 0],
+                    [0, 0, 1, 0, 0],
+                    [0, 0, 0, 1, 1],
+                ],
+                valueStyle: new Map([
+                    [
+                        0,
+                        {
+                            value: '0',
+                            style: {
+                                fontColor: '#FFFFFF',
+                                backgroundColor: '#419ad9'
+                            }
+                        }
+                    ],
+                    [
+                        1,
+                        {
+                            value: '1',
+                            style: {
+                                fontColor: '#000000',
+                                backgroundColor: '#ead35a'
+                            }
+                        }
+                    ]
+                ]),
+                height: 650
+            }
         }]
     }
 }

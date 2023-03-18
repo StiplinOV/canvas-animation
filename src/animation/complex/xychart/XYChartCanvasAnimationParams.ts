@@ -41,7 +41,7 @@ type bar = {
     selected?: boolean
 }
 
-export interface xyChartParamsType extends ObjectParams {
+export interface XyChartParamsType extends ObjectParams {
     width: number
     height: number
     xScale?: (scaleType | number)[]
@@ -60,7 +60,7 @@ export interface xyChartParamsType extends ObjectParams {
     }[]
 }
 
-export type xyChartSelectorType = {
+export type XyChartSelectorType = {
     points?: 'all' | number[]
     lines?: 'all'
     xScaleValues?: 'all' | number[]
@@ -68,9 +68,9 @@ export type xyChartSelectorType = {
     bars?: 'all' | number[]
 }
 
-export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimationParams<xyChartParamsType, xyChartSelectorType> {
+export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimationParams<XyChartParamsType, XyChartSelectorType> {
 
-    protected getIncludedAnimationParamsByParameter (object: xyChartParamsType): Map<string, SimpleCanvasAnimationParams> {
+    protected getIncludedAnimationParamsByParameter (object: XyChartParamsType): Map<string, SimpleCanvasAnimationParams> {
         const result = new Map<string, SimpleCanvasAnimationParams>()
         const {
             height,
@@ -392,21 +392,21 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         return result
     }
 
-    private getXForValue (object: xyChartParamsType, xValue: number): number {
+    private getXForValue (object: XyChartParamsType, xValue: number): number {
         return this.convertPointToCoordinate(object, {
             x: xValue,
             y: 0
         }).x
     }
 
-    private getYForValue (object: xyChartParamsType, yValue: number): number {
+    private getYForValue (object: XyChartParamsType, yValue: number): number {
         return this.convertPointToCoordinate(object, {
             x: 0,
             y: yValue
         }).y
     }
 
-    private convertPointToCoordinate (object: xyChartParamsType, point: Point): Point {
+    private convertPointToCoordinate (object: XyChartParamsType, point: Point): Point {
         const xScale = object.xScale?.map(value => toScaleType(value)) ?? []
         const yScale = object.yScale?.map(value => toScaleType(value)) ?? []
         const lastXScaleValue = xScale[xScale.length - 1].position
@@ -421,7 +421,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         }
     }
 
-    protected convertSelectorToDiscriminatorRegexps (selector: xyChartSelectorType): RegExp[] {
+    protected convertSelectorToDiscriminatorRegexps (selector: XyChartSelectorType): RegExp[] {
         if (!selector.lines && !selector.points && !selector.yScaleValues && !selector.xScaleValues && !selector.bars) {
             return [/.*/]
         }

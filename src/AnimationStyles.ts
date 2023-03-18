@@ -25,6 +25,7 @@ export default interface AnimationStyle {
     selectedColor: string
     font: WebSafeFontsType
     fontSize: number
+    titleFontSize: number,
     fontWeight: number
     monospaceFont: string
     highlightTextStyle: HighlightedStyleName
@@ -49,6 +50,7 @@ const defaultAnimationStyle: AnimationStyle = {
     selectedColor: '#FF0000',
     font: 'Verdana',
     fontSize: 12,
+    titleFontSize: 40,
     fontWeight: 0.5,
     monospaceFont: COURIER_NEW_FONT,
     highlightTextStyle: 'darcula',

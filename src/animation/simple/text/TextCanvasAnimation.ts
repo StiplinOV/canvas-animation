@@ -1,15 +1,22 @@
 import p5Types from 'p5'
 import AnimationStyle, { getFontColor } from '../../../AnimationStyles'
-import {textParamsType} from './TextCanvasAnimationParams'
-import {calculateColorPercentValue, calculatePercentValue, convertPercentToFadeInFadeOut} from '../../../common/Utils'
+import { textParamsType } from './TextCanvasAnimationParams'
+import { calculateColorPercentValue, calculatePercentValue } from '../../../common/Utils'
 import CanvasAnimation from '../../CanvasAnimation'
 
 export default class TextCanvasAnimation extends CanvasAnimation<textParamsType> {
 
-    public drawObject(p5: p5Types, o: textParamsType, perc: number, selectedPerc: number, style: AnimationStyle): void {
-        const {boxHeight, boxWidth, fontSize, value, horizontalAlign, verticalAlign, textStyle} = o
+    public drawObject (p5: p5Types, o: textParamsType, perc: number, selectedPercent: number, style: AnimationStyle): void {
+        const {
+            boxHeight,
+            boxWidth,
+            fontSize,
+            value,
+            horizontalAlign,
+            verticalAlign,
+            textStyle
+        } = o
         let textSize = fontSize ?? p5.textSize()
-        const selectedPercent = convertPercentToFadeInFadeOut(selectedPerc)
         textSize = calculatePercentValue(textSize, textSize * 1.5, selectedPercent)
 
         p5.strokeWeight(style.fontWeight)

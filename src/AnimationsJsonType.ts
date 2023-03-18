@@ -1,5 +1,5 @@
 import { textParamsType } from './animation/simple/text/TextCanvasAnimationParams'
-import { arrayParamsType } from './animation/complex/array/ArrayCanvasAnimationParams'
+import { ArrayParamsType } from './animation/complex/array/ArrayCanvasAnimationParams'
 import { circleParamsType } from './animation/simple/circle/CircleCanvasAnimationParams'
 import { ellipseParamsType } from './animation/simple/ellipse/EllipseCanvasAnimationParams'
 import { Params } from './animation/CanvasAnimationParams'
@@ -16,13 +16,15 @@ import {
     tableSelectorType,
     tableTransformOptionsType
 } from './animation/complex/table/TableCanvasAnimationParams'
-import { xyChartParamsType, xyChartSelectorType } from './animation/complex/xychart/XYChartCanvasAnimationParams'
+import { XyChartParamsType, XyChartSelectorType } from './animation/complex/xychart/XYChartCanvasAnimationParams'
 import { CameraParams } from './camera/CameraParams'
 import { GraphDataStructureParamsType } from './animation/complex/datastructure/tree/GraphDataStructureParams'
 import { BezierParamsType } from './animation/simple/bezier/BezierCanvasAnimationParams'
+import { MatrixParamsType, MatrixSelectorType } from './animation/complex/matrix/MatrixCanvasAnimationParams'
 
 export type AnimationsJsonType = {
-    array?: Params<arrayParamsType, TransformOptions, ComplexCanvasAnimationSelection>[]
+    array?: Params<ArrayParamsType, TransformOptions, ComplexCanvasAnimationSelection>[]
+    matrix?: Params<MatrixParamsType, TransformOptions, ComplexCanvasAnimationSelection<MatrixSelectorType>>[]
     arrow?: Params<ArrowParamsType, TransformOptions, ComplexCanvasAnimationSelection>[]
     circle?: Params<circleParamsType>[]
     ellipse?: Params<ellipseParamsType>[]
@@ -33,7 +35,7 @@ export type AnimationsJsonType = {
     rectangle?: Params<rectangleParamsType>[]
     table?: Params<tableParamsType, tableTransformOptionsType, ComplexCanvasAnimationSelection<tableSelectorType>>[]
     text?: Params<textParamsType>[]
-    xyChart?: Params<xyChartParamsType, TransformOptions, ComplexCanvasAnimationSelection<xyChartSelectorType>>[]
+    xyChart?: Params<XyChartParamsType, TransformOptions, ComplexCanvasAnimationSelection<XyChartSelectorType>>[]
     graphDataStructure?: Params<GraphDataStructureParamsType, TransformOptions, ComplexCanvasAnimationSelection>[]
 }
 
