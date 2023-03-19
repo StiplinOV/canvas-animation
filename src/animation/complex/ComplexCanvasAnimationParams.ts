@@ -69,11 +69,13 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         })
         let previousObject = object
         let prevObjectParams = initialIncludedAnimationParams
+        console.log(initialIncludedAnimationParams.get("value rect 5"))
         this.getTransformations().forEach(t => {
             const nextObject = {...previousObject, ...t.object}
             const nextObjectParams = this.getIncludedAnimationParamsByParameter(nextObject)
 
             const transformSimpleAnimationsDifference = this.getAnimationsSetDifference(prevObjectParams, nextObjectParams)
+            console.log(transformSimpleAnimationsDifference)
             this.applySimpleTransformAnimations(initialIncludedAnimationParams, t, transformSimpleAnimationsDifference)
 
             previousObject = nextObject
@@ -89,6 +91,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
             disappearedObjectDisappearTime += disappearedObjectDisappearDuration
         })
         this.setAnimationSelections(initialIncludedAnimationParams)
+        console.log(initialIncludedAnimationParams)
         return Array.from(initialIncludedAnimationParams.values())
     }
 

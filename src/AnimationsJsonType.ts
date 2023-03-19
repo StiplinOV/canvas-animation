@@ -18,11 +18,13 @@ import {
 } from './animation/complex/table/TableCanvasAnimationParams'
 import { XyChartParamsType, XyChartSelectorType } from './animation/complex/xychart/XYChartCanvasAnimationParams'
 import { CameraParams } from './camera/CameraParams'
-import { GraphDataStructureParamsType } from './animation/complex/datastructure/tree/GraphDataStructureParams'
+import { GraphDataStructureParamsType } from './animation/complex/datastructure/graph/GraphDataStructureParams'
 import { BezierParamsType } from './animation/simple/bezier/BezierCanvasAnimationParams'
 import { MatrixParamsType, MatrixSelectorType } from './animation/complex/matrix/MatrixCanvasAnimationParams'
 
 export type AnimationsJsonType = {
+    //TODO числовая прямая с интервалами
+    //TODO dequeue
     array?: Params<ArrayParamsType, TransformOptions, ComplexCanvasAnimationSelection>[]
     matrix?: Params<MatrixParamsType, TransformOptions, ComplexCanvasAnimationSelection<MatrixSelectorType>>[]
     arrow?: Params<ArrowParamsType, TransformOptions, ComplexCanvasAnimationSelection>[]

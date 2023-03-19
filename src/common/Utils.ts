@@ -327,7 +327,7 @@ export const rotateVector = (p5: p5Types, point: Point, angle: number): Point =>
 }
 export const requireValueFromMap = <K, V> (map: Map<K, V>, key: K): V => {
     const value = map.get(key)
-    if (value) {
+    if (value !== undefined) {
         return value
     }
     throw new Error(`Key ${String(key)} is absent in map`)

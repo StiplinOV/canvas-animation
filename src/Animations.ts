@@ -15,7 +15,7 @@ import HighlightedTextCanvasAnimationParams
     from './animation/simple/highligtedtext/HighlightedTextCanvasAnimationParams'
 import LineCanvasAnimationParams from './animation/simple/line/LineCanvasAnimationParams'
 import RectangleCanvasAnimationParams from './animation/simple/rectangle/RectangleCanvasAnimationParams'
-import GraphDataStructureParams from './animation/complex/datastructure/tree/GraphDataStructureParams'
+import GraphDataStructureParams from './animation/complex/datastructure/graph/GraphDataStructureParams'
 import BezierCanvasAnimationParams from './animation/simple/bezier/BezierCanvasAnimationParams'
 import MatrixCanvasAnimationParams from './animation/complex/matrix/MatrixCanvasAnimationParams'
 
