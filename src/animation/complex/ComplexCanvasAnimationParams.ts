@@ -2,7 +2,7 @@ import CanvasAnimationParams, {ObjectParams, Params, Selection, Transformation} 
 import p5Types from 'p5'
 import AnimationStyle from '../../AnimationStyles'
 import SimpleCanvasAnimationParams from '../simple/SimpleCanvasAnimationParams'
-import {requireValueFromMap} from '../../common/Utils'
+import { needAppearObject, requireValueFromMap } from '../../common/Utils'
 import CanvasAnimation from '../CanvasAnimation'
 
 export interface ComplexCanvasAnimationSelection<T = unknown> extends Selection {
@@ -57,41 +57,37 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         const appearanceParam = this.getAppearanceParam()
         const initialIncludedAnimationParams = this.getIncludedAnimationParamsByParameter(object)
 
-        let containedObjectAppearTime = appearanceParam.appearTime
-        const containedObjectAppearDuration = appearanceParam.appearDuration / initialIncludedAnimationParams.size
+        appearanceParam.appears.forEach(appear => {
+            let containedObjectAppearTime = appear.time
+            const containedObjectAppearDuration = appear.duration / initialIncludedAnimationParams.size
 
-        initialIncludedAnimationParams.forEach(p => {
-            p.setAppearanceParam({
-                appearTime: containedObjectAppearTime,
-                appearDuration: containedObjectAppearDuration
+            initialIncludedAnimationParams.forEach(p => {
+                p.appendAppearTime(containedObjectAppearTime, containedObjectAppearDuration)
+                containedObjectAppearTime += containedObjectAppearDuration
             })
-            containedObjectAppearTime += containedObjectAppearDuration
         })
         let previousObject = object
         let prevObjectParams = initialIncludedAnimationParams
-        console.log(initialIncludedAnimationParams.get("value rect 5"))
         this.getTransformations().forEach(t => {
             const nextObject = {...previousObject, ...t.object}
             const nextObjectParams = this.getIncludedAnimationParamsByParameter(nextObject)
 
             const transformSimpleAnimationsDifference = this.getAnimationsSetDifference(prevObjectParams, nextObjectParams)
-            console.log(transformSimpleAnimationsDifference)
             this.applySimpleTransformAnimations(initialIncludedAnimationParams, t, transformSimpleAnimationsDifference)
 
             previousObject = nextObject
             prevObjectParams = nextObjectParams
         })
+        appearanceParam.disappears.forEach(disappear => {
+            const disappearedObjectDisappearDuration = disappear.duration / prevObjectParams.size
+            let disappearedObjectDisappearTime = disappear.time
 
-        const disappearedObjectDisappearDuration = appearanceParam.disappearDuration / prevObjectParams.size
-        let disappearedObjectDisappearTime = appearanceParam.disappearTime
-
-        prevObjectParams.forEach(o => {
-            o.setDisappearTime(disappearedObjectDisappearTime)
-            o.setDisappearDuration(disappearedObjectDisappearDuration)
-            disappearedObjectDisappearTime += disappearedObjectDisappearDuration
+            prevObjectParams.forEach(o => {
+                o.appendDisappearTime(disappearedObjectDisappearTime, disappearedObjectDisappearDuration)
+                disappearedObjectDisappearTime += disappearedObjectDisappearDuration
+            })
         })
         this.setAnimationSelections(initialIncludedAnimationParams)
-        console.log(initialIncludedAnimationParams)
         return Array.from(initialIncludedAnimationParams.values())
     }
 
@@ -104,15 +100,13 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         const {time, duration, options} = transformation
         this.calculateAddedTransformAnimationsAppearParams(added, time, duration, options).forEach((value, key) => {
             const {params} = value
-            params.setAppearTime(value.appearTime)
-            params.setAppearDuration(value.appearDuration)
+            params.appendAppearTime(value.appearTime, value.appearDuration)
             animations.set(key, params)
         })
         this.calculateDeletedTransformAnimationsDisappearParams(new Set(deleted.keys()), time, duration, options)
             .forEach((value, key) => {
                 const deletedAnimation = requireValueFromMap(animations, key)
-                deletedAnimation.setDisappearTime(value.disappearTime)
-                deletedAnimation.setDisappearDuration(value.disappearDuration)
+                deletedAnimation.appendDisappearTime(value.disappearTime, value.disappearDuration)
             })
         this.calculateChangedTransformAnimationsTransformParams(changed, time, duration, options)
             .forEach((value, key) => animations.get(key)?.appendTransformation({
@@ -210,8 +204,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
             const {type, selector, time, duration} = selection
             const animationsToBeSelected: CanvasAnimationParams[] = []
             animations.forEach((value, key) => {
-                const {appearTime, disappearTime} = value.getAppearanceParam()
-                if (time < appearTime || time > disappearTime) {
+                if (!needAppearObject(time, value.getAppearanceParam())) {
                     return
                 }
                 if (selector) {

@@ -6,7 +6,7 @@ import { useWindowDimensions } from './hook/UseWindowDimensions'
 import { Demo } from './lessons/Demo'
 
 const App = (): ReactElement => {
-    const lesson = Demo
+    const lesson = BestTimeToBuyAndSellStock
     const canvasTop = 50
     const left = (useWindowDimensions().width - lesson.canvasDimensions.width) / 2
 

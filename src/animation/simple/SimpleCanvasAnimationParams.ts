@@ -25,8 +25,11 @@ export default abstract class SimpleCanvasAnimationParams<T extends ObjectParams
             .forEach((t) => {
                 const transformationObject = t.object
                 const percent = toAppearancePercent(time, {
-                    appearTime: t.time,
-                    appearDuration: t.duration
+                    appears: [{
+                        time: t.time,
+                        duration: t.duration
+                    }],
+                    disappears: []
                 })
                 if (transformationObject.fillColor) {
                     result.fillColor = calculateColorPercentValue(

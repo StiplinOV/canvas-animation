@@ -27,8 +27,10 @@ export const Demo: LessonJsonType = {
             // },
             {
                 presenceParameters: {
-                    appearTime: 0,
-                    appearDuration: 1000
+                    appears: [{
+                        time: 0,
+                        duration: 1000
+                    }]
                 },
                 object: {
                     origin: {

@@ -170,16 +170,20 @@ export const ContainerWithMostWater: LessonJsonType = {
                     type: 'sequentially'
                 }],
                 presenceParameters: {
-                    appearTime: 0,
-                    appearDuration: 4000
+                    appears: [{
+                        time: 0,
+                        duration: 4000
+                    }]
                 }
             }
         ],
         highlightedSyntax: [
             {
                 presenceParameters: {
-                    appearTime: 15000,
-                    appearDuration: 10000
+                    appears: [{
+                        time: 15000,
+                        duration: 10000
+                    }]
                 },
                 object: {
                     origin: {

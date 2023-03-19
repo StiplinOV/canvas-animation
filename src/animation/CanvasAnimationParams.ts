@@ -1,9 +1,8 @@
 import {
-    appearanceParamType,
+    PresenceParamsType,
     calculatePercentValue,
     rotationType,
-    toAppearanceParamType,
-    toAppearancePercent
+    toAppearancePercent, toAppearanceParamType
 } from '../common/Utils'
 import {Point} from '../common/Point'
 import AnimationStyle, { ColorType } from '../AnimationStyles'
@@ -61,14 +60,14 @@ export type Params<T extends ObjectParams, U = unknown, V extends Selection = Se
     transformations?: TransformationParam<T, U>[]
     selections?: V[]
     object: T
-    presenceParameters?: & Partial<appearanceParamType>
+    presenceParameters?: & Partial<PresenceParamsType>
 }
 
 export default abstract class CanvasAnimationParams<T extends ObjectParams = ObjectParams,
     U = unknown,
     V extends Selection = Selection> {
 
-    private appearanceParam: appearanceParamType
+    private appearanceParam: PresenceParamsType
     private readonly transformations: Transformation<T, U>[]
     private readonly selections: V[]
     private readonly object: T
@@ -81,35 +80,25 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
         this.object = params.object
     }
 
-    public getAppearanceParam(): appearanceParamType {
+    public getAppearanceParam(): PresenceParamsType {
         return this.appearanceParam
     }
 
-    public setAppearTime(time: number): void {
-        this.setAppearanceParam({
-            appearTime: time
+    public appendAppearTime(time: number, duration: number): void {
+        this.appearanceParam.appears.push({
+            time,
+            duration
         })
     }
 
-    public setAppearDuration(duration: number): void {
-        this.setAppearanceParam({
-            appearDuration: duration
+    public appendDisappearTime(time: number, duration: number): void {
+        this.appearanceParam.disappears.push({
+            time,
+            duration
         })
     }
 
-    public setDisappearTime(time: number): void {
-        this.setAppearanceParam({
-            disappearTime: time
-        })
-    }
-
-    public setDisappearDuration(duration: number): void {
-        this.setAppearanceParam({
-            disappearDuration: duration
-        })
-    }
-
-    public setAppearanceParam(param: Partial<appearanceParamType>): void {
+    public setAppearanceParam(param: Partial<PresenceParamsType>): void {
         this.appearanceParam = toAppearanceParamType({
             ...this.appearanceParam,
             ...param
@@ -131,8 +120,11 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
             .forEach((t) => {
                 const transformationObject = t.object
                 const percent = toAppearancePercent(time, {
-                    appearTime: t.time,
-                    appearDuration: t.duration
+                    appears: [{
+                        time: t.time,
+                        duration: t.duration
+                    }],
+                    disappears: [],
                 })
 
                 if (transformationObject.zIndex) {

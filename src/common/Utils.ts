@@ -1,16 +1,68 @@
 import { Point, ZeroPoint } from './Point'
 import p5Types from 'p5'
 
+/*
+        TreeMap<Integer, Integer> inMap = new TreeMap<>();
+        for (int[] interval : intervals) {
+            int left = interval[0];
+            int right = interval[1];
+            if (inMap.containsKey(left)) {
+                inMap.put(left, Math.max(right, inMap.get(left)));
+            } else {
+                inMap.put(left, right);
+            }
+        }
+        TreeMap<Integer, Integer> outMap = new TreeMap<>();
+        Integer curLeft = inMap.firstKey();
+        int curRight = inMap.get(curLeft);
+
+        Integer nextLeft = inMap.higherKey(curLeft);
+        while (nextLeft != null) {
+            Integer nextRight = inMap.get(nextLeft);
+            if (curRight >= nextLeft) {
+                curRight = Math.max(curRight, nextRight);
+                inMap.remove(nextLeft);
+                nextLeft = inMap.higherKey(curLeft);
+                continue;
+            } else {
+                outMap.put(curLeft, curRight);
+            }
+            curRight = nextRight;
+            curLeft = nextLeft;
+            nextLeft = inMap.higherKey(curLeft);
+        }
+        outMap.put(curLeft, curRight);
+        int[][] result = new int[outMap.size()][2];
+        int i = 0;
+        for (Map.Entry<Integer, Integer> entry : outMap.entrySet()) {
+            result[i][0] = entry.getKey();
+            result[i][1] = entry.getValue();
+            i++;
+        }
+        return result;
+    }
+ */
+
 interface Coordinates {
     x?: number
     y?: number
 }
 
-export interface appearanceParamType {
+export interface EventTimeParam {
+    time: number
+    duration: number
+}
+
+export interface PresenceParamType {
     appearTime: number
     appearDuration: number
     disappearTime: number
     disappearDuration: number
+}
+
+export interface PresenceParamsType {
+    appears: EventTimeParam[]
+    disappears: EventTimeParam[]
 }
 
 export type render2DArrayType = 'leftToRight' | 'upToDown'
@@ -19,13 +71,6 @@ export type rotationType = {
     angle: number
 }
 
-export const transfposeMatrix = <T> (matrixParam: T[][]): T[][] => {
-    const result: T[][] = Object.assign([], matrixParam)
-    if (result.length === 0) {
-        return result
-    }
-    return result[0].map((_, colIndex) => result.map(row => row[colIndex]))
-}
 export const convertPercentToFadeInFadeOut = (percent: number): number => 2 * Math.abs(0.5 - Math.abs(percent - 0.5))
 export const calculatePercentValue = (from: number, to: number, percent: number): number => from + (to - from) * percent
 export const calculatePointPercentValue = (from: Point, to: Point, percent: number): Point =>
@@ -130,51 +175,6 @@ const shift2DArrayOneStepToDesiredStateLeftToRight = <T> (from: T[][], to: T[][]
     return result
 }
 
-export const calculate2DArrayPercentValue = <T> (from: T[][], to: T[][], percent: number, renderType?: render2DArrayType): T[][] => {
-    let numberOfStates = 0
-    for (let i = 0; i < Math.max(from.length, to.length); i++) {
-        let fromRow: T[] | null = null
-        let fromRowLength = 0
-        let toRow: T[] | null = null
-        let toRowLength = 0
-        if (from.length > i) {
-            fromRow = from[i]
-            fromRowLength = fromRow.length
-        }
-        if (to.length > i) {
-            toRow = to[i]
-            toRowLength = toRow.length
-        }
-        for (let j = 0; j < Math.max(fromRowLength, toRowLength); j++) {
-            let fromValue: T | null = null
-            let toValue: T | null = null
-            if (fromRowLength > i) {
-                fromValue = from[i][j]
-            }
-            if (toRowLength > i) {
-                toValue = to[i][j]
-            }
-            if (fromValue !== toValue) {
-                numberOfStates++
-            }
-        }
-    }
-    const currentState = calculatePercentValue(0, numberOfStates, percent)
-    let result: T[][] = Object.assign([], from)
-    if (renderType === 'leftToRight') {
-        for (let i = 0; i < currentState; i++) {
-            result = shift2DArrayOneStepToDesiredStateLeftToRight(result, to)
-        }
-        return result
-    }
-
-    result = transfposeMatrix(result)
-    for (let i = 0; i < currentState; i++) {
-        result = shift2DArrayOneStepToDesiredStateLeftToRight(result, transfposeMatrix(to))
-    }
-    return transfposeMatrix(result)
-}
-
 export const calculateTextPercentValue = (from: string, to: string, percent: number): string => {
     return calculateArrayPercentValue(from.split(''), to.split(''), percent).join('')
 }
@@ -218,20 +218,63 @@ export const calculateRotationsPercentValue = (from: rotationType[], to: rotatio
     return result
 }
 
-export const toAppearanceParamType = (values: Partial<appearanceParamType>): appearanceParamType => ({
-    appearTime: values.appearTime ?? 0,
-    appearDuration: values.appearDuration ?? 0,
-    disappearTime: values.disappearTime ?? Number.MAX_VALUE,
-    disappearDuration: values.disappearDuration ?? 0
+export const toAppearanceParamType = (values: Partial<PresenceParamsType>): PresenceParamsType => ({
+    appears: values.appears ?? [],
+    disappears: values.disappears ?? []
 })
-export const needAppearObject = (time: number, appearanceParam: appearanceParamType): boolean => {
-    if (appearanceParam.appearTime > time) {
+export const toPresenceParam = (time: number, appearanceParam: PresenceParamsType): PresenceParamType => {
+    let appearTimes: number[] = []
+    let disappearTimes: number[] = []
+    const appearTimeDurations = new Map<number, number>()
+    const disappearTimeDurations = new Map<number, number>()
+    appearanceParam.appears.forEach(a => {
+        appearTimes.push(a.time)
+        appearTimeDurations.set(a.time, a.duration)
+    })
+    appearanceParam.disappears.forEach(d => {
+        disappearTimes.push(d.time)
+        disappearTimeDurations.set(d.time, d.duration)
+    })
+    appearTimes = appearTimes.sort()
+    disappearTimes = disappearTimes.sort()
+
+    let appearTime = Number.MAX_VALUE
+    let disappearTime = Number.MAX_VALUE
+    for (let i = 0; i < appearTimes.length; i++) {
+        appearTime = appearTimes[i]
+        if (appearTime === time) {
+            appearTime = time
+            break
+        } else if (appearTime > time) {
+            if (i > 0) {
+                appearTime = appearTimes[i - 1]
+            }
+            break
+        }
+    }
+    for (let i = 0; i < disappearTimes.length; i++) {
+        if (disappearTimes[i] > appearTime) {
+            disappearTime = disappearTimes[i]
+            break
+        }
+    }
+
+    return {
+        appearTime,
+        disappearTime,
+        appearDuration: appearTimeDurations.get(appearTime) || 0,
+        disappearDuration: disappearTimeDurations.get(disappearTime) || 0
+    }
+}
+export const needAppearObject = (time: number, appearanceParams: PresenceParamsType): boolean => {
+    const presenceParam = toPresenceParam(time, appearanceParams)
+    if (presenceParam.appearTime > time) {
         return false
     }
-    return appearanceParam.disappearTime + appearanceParam.disappearDuration > time
+    return presenceParam.disappearTime + presenceParam.disappearDuration > time
 }
-export const toAppearancePercent = (time: number, appearanceParams: Partial<appearanceParamType>): number => {
-    const appearanceParam = toAppearanceParamType(appearanceParams)
+export const toAppearancePercent = (time: number, appearanceParams: PresenceParamsType): number => {
+    const appearanceParam = toPresenceParam(time, appearanceParams)
     const {
         appearTime,
         appearDuration,
@@ -344,3 +387,4 @@ export const mergeValueToMap = <K, V, C extends V[] | Set<V>> (m: Map<K, C>, k: 
         collection.add(v)
     }
 }
+

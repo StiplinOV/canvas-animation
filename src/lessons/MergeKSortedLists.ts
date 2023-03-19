@@ -12,7 +12,10 @@ export const Demo: LessonJsonType = {
         graphDataStructure: [
             {
                 presenceParameters: {
-                    appearDuration: 1000,
+                    appears: [{
+                        time: 0,
+                        duration: 1000
+                    }]
                 },
                 object: {
                     origin: {
