@@ -99,9 +99,20 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         const {added, deleted, changed} = diff
         const {time, duration, options} = transformation
         this.calculateAddedTransformAnimationsAppearParams(added, time, duration, options).forEach((value, key) => {
-            const {params} = value
-            params.appendAppearTime(value.appearTime, value.appearDuration)
-            animations.set(key, params)
+            const params = value.params
+            const pastParams = animations.get(key)
+
+            if (pastParams) {
+                pastParams.appendAppearTime(value.appearTime, value.appearDuration)
+                pastParams.appendTransformation({
+                    time: value.appearTime,
+                    duration: value.appearDuration,
+                    object: params.getObject()
+                })
+            } else {
+                params.appendAppearTime(value.appearTime, value.appearDuration)
+                animations.set(key, params)
+            }
         })
         this.calculateDeletedTransformAnimationsDisappearParams(new Set(deleted.keys()), time, duration, options)
             .forEach((value, key) => {

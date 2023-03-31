@@ -16,7 +16,7 @@ export default class TextCanvasAnimation extends CanvasAnimation<textParamsType>
             verticalAlign,
             textStyle
         } = o
-        let textSize = fontSize ?? p5.textSize()
+        let textSize = fontSize ?? style.fontSize
         textSize = calculatePercentValue(textSize, textSize * 1.5, selectedPercent)
 
         p5.strokeWeight(style.fontWeight)

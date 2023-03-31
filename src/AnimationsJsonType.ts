@@ -20,11 +20,11 @@ import { XyChartParamsType, XyChartSelectorType } from './animation/complex/xych
 import { CameraParams } from './camera/CameraParams'
 import { GraphDataStructureParamsType } from './animation/complex/datastructure/graph/GraphDataStructureParams'
 import { BezierParamsType } from './animation/simple/bezier/BezierCanvasAnimationParams'
-import { MatrixParamsType, MatrixSelectorType } from './animation/complex/matrix/MatrixCanvasAnimationParams'
+import { MatrixParamsType, MatrixSelectorType } from './animation/complex/array/MatrixCanvasAnimationParams'
+import { NumberLineParamsType } from './animation/complex/numberline/NumberLineParams'
 
 export type AnimationsJsonType = {
-    //TODO числовая прямая с интервалами
-    //TODO dequeue
+    // TODO dequeue
     array?: Params<ArrayParamsType, TransformOptions, ComplexCanvasAnimationSelection>[]
     matrix?: Params<MatrixParamsType, TransformOptions, ComplexCanvasAnimationSelection<MatrixSelectorType>>[]
     arrow?: Params<ArrowParamsType, TransformOptions, ComplexCanvasAnimationSelection>[]
@@ -39,6 +39,7 @@ export type AnimationsJsonType = {
     text?: Params<textParamsType>[]
     xyChart?: Params<XyChartParamsType, TransformOptions, ComplexCanvasAnimationSelection<XyChartSelectorType>>[]
     graphDataStructure?: Params<GraphDataStructureParamsType, TransformOptions, ComplexCanvasAnimationSelection>[]
+    numberLine?: Params<NumberLineParamsType, TransformOptions, ComplexCanvasAnimationSelection>[]
 }
 
 export type LessonJsonType = {

@@ -1,7 +1,9 @@
 import p5Types from 'p5'
 import {
     addPoints,
-    calculateColorPercentValue, calculatePercentValue, convertPercentToFadeInFadeOut,
+    calculateColorPercentValue,
+    calculatePercentValue,
+    convertPercentToFadeInFadeOut,
     needAppearObject,
     rotateVector,
     subtractPoints,

@@ -39,7 +39,7 @@ export default abstract class SimpleCanvasAnimationParams<T extends ObjectParams
                     )
                 }
                 if (transformationObject.strokeColor) {
-                    result.fillColor = calculateColorPercentValue(
+                    result.strokeColor = calculateColorPercentValue(
                         getStrokeColor(animationStyle, result.strokeColor),
                         getStrokeColor(animationStyle, transformationObject.strokeColor),
                         percent

@@ -17,7 +17,8 @@ import LineCanvasAnimationParams from './animation/simple/line/LineCanvasAnimati
 import RectangleCanvasAnimationParams from './animation/simple/rectangle/RectangleCanvasAnimationParams'
 import GraphDataStructureParams from './animation/complex/datastructure/graph/GraphDataStructureParams'
 import BezierCanvasAnimationParams from './animation/simple/bezier/BezierCanvasAnimationParams'
-import MatrixCanvasAnimationParams from './animation/complex/matrix/MatrixCanvasAnimationParams'
+import MatrixCanvasAnimationParams from './animation/complex/array/MatrixCanvasAnimationParams'
+import NumberLineCanvasAnimationParams from './animation/complex/numberline/NumberLineParams'
 
 export const animationStyle = getAnimationStyle('default')
 
@@ -52,6 +53,8 @@ export const canvasAnimations: (json: AnimationsJsonType, p5: p5Types) => Canvas
             result.push(...json.xyChart?.map(c => new XYChartCanvasAnimationParams(c, p5, animationStyle)) ?? [])
         } else if (key === 'graphDataStructure') {
             result.push(...json.graphDataStructure?.map(c => new GraphDataStructureParams(c, p5, animationStyle)) ?? [])
+        } else if (key === 'numberLine') {
+            result.push(...json.numberLine?.map(c => new NumberLineCanvasAnimationParams(c, p5, animationStyle)) ?? [])
         } else {
             throw new Error(`Wrong JSON. Unexpected key ${key}`)
         }

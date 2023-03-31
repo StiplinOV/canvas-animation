@@ -93,7 +93,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 presenceParameters: {
                     appears: [{
                         time: 30000,
-                        duration: 500,
+                        duration: 500
                     }],
                     disappears: [{
                         time: 35000,
@@ -113,7 +113,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 presenceParameters: {
                     appears: [{
                         time: 32000,
-                        duration: 500,
+                        duration: 500
                     }],
                     disappears: [{
                         time: 35000,
@@ -133,7 +133,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 presenceParameters: {
                     appears: [{
                         time: 35000,
-                        duration: 1000,
+                        duration: 1000
                     }],
                     disappears: [{
                         time: 46000,
@@ -181,7 +181,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                         x: 240,
                         y: 600
                     },
-                    value: ['7', '1', '5', '3', '6', '4'],
+                    values: ['7', '1', '5', '3', '6', '4'],
                     height: 300,
                     width: 800,
                     title: 'Array of stock prices',
@@ -191,7 +191,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 presenceParameters: {
                     appears: [{
                         time: 5000,
-                        duration: 4000,
+                        duration: 4000
                     }],
                     disappears: [{
                         time: 35000,
@@ -461,7 +461,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 appears: [{
                     time: 44000,
                     duration: 2000
-                }],
+                }]
             },
             object: {
                 origin: {
@@ -869,7 +869,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     appears: [{
                         time: 191000,
                         duration: 10000
-                    }],
+                    }]
                 },
                 object: {
                     origin: {

@@ -2,17 +2,20 @@ import { ObjectParams } from '../../CanvasAnimationParams'
 import { addPoints } from '../../../common/Utils'
 import ComplexCanvasAnimationParams from '../ComplexCanvasAnimationParams'
 import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
-import RectangleCanvasAnimationParams from '../../simple/rectangle/RectangleCanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
+import ArrayElement, { ElementStyle, ElementType } from './ArrayElement'
 
 export interface ArrayParamsType extends ObjectParams {
-    value: string[]
+    values: (ElementType | string | boolean | number)[]
+    valueIds?: (null | string)[]
     height: number
     width?: number
     title?: string
     indexTitle?: string
     firstIndex?: number
     hideIndices?: boolean
+    elementStyle?: ElementStyle
+    valueStyle?: Map<number, ElementType>
 }
 
 export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationParams<ArrayParamsType> {
@@ -21,16 +24,17 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
         const result = new Map<string, SimpleCanvasAnimationParams>()
         const {
             title,
-            value,
+            values,
             indexTitle,
             firstIndex,
             origin,
             rotations,
-            hideIndices
+            hideIndices,
+            valueIds
         } = object
         const partHeight = this.calculatePartHeight(object)
         const width = this.calculateWidth(object)
-        const arrayRectangleWidth = (width - (value.length - 1) * partHeight) / value.length
+        const arrayRectangleWidth = (width - (values.length - 1) * partHeight) / values.length
         let partShift = 0
         if (title) {
             result.set('array title', new TextCanvasAnimationParams({
@@ -48,32 +52,33 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
             }))
             partShift += partHeight * 2
         }
-        value.forEach((value, index) => {
-            result.set(`value rect ${index}`, new RectangleCanvasAnimationParams({
+        values.forEach((valueParam, index) => {
+            let value = valueParam
+            if (typeof value === 'number') {
+                const element = object.valueStyle?.get(value)
+                if (element) {
+                    value = {
+                        style: element.style,
+                        label: element.label ?? ''
+                    }
+                }
+            }
+
+            new ArrayElement({
                 object: {
                     origin: addPoints(origin, {
                         x: index * (arrayRectangleWidth + partHeight),
                         y: partShift
                     }),
-                    width: arrayRectangleWidth,
-                    height: partHeight * 3,
-                    cornerRadius: 20,
-                    rotations
-                }
-            }))
-            result.set(`value text ${index}`, new TextCanvasAnimationParams({
-                object: {
                     value,
-                    origin: addPoints(origin, {
-                        x: index * (arrayRectangleWidth + partHeight) + arrayRectangleWidth / 2,
-                        y: partShift + partHeight * 2
-                    }),
-                    fontSize: partHeight,
-                    horizontalAlign: 'center',
-                    zIndex: 1,
-                    rotations
+                    width: arrayRectangleWidth,
+                    height: partHeight * 3
                 }
-            }))
+            }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
+                const id = valueIds ? valueIds[index] : null
+                const indexPart = id ?? `[${index}]`
+                result.set(`${k} ${indexPart}`, v)
+            })
             !hideIndices && result.set(`index text ${index}`, new TextCanvasAnimationParams({
                 object: {
                     value: String(index + (firstIndex ?? 0)),
@@ -107,10 +112,10 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
     }
 
     private calculateWidth (object: ArrayParamsType): number {
-        const { value } = object
+        const { values } = object
         const partHeight = this.calculatePartHeight(object)
         const arrayHeight = partHeight * 3
-        return object.width ?? (value.length * arrayHeight + (value.length - 1) * partHeight)
+        return object.width ?? (values.length * arrayHeight + (values.length - 1) * partHeight)
     }
 
     private calculatePartHeight (object: ArrayParamsType): number {

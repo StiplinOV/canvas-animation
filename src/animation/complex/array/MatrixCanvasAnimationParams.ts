@@ -1,25 +1,10 @@
 import { ObjectParams } from '../../CanvasAnimationParams'
 import { addPoints } from '../../../common/Utils'
 import ComplexCanvasAnimationParams from '../ComplexCanvasAnimationParams'
-import RectangleCanvasAnimationParams from '../../simple/rectangle/RectangleCanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
-import { ColorType } from '../../../AnimationStyles'
 import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
-import { THE_STYLE } from 'p5'
 import { Point } from '../../../common/Point'
-
-type ElementStyle = {
-    backgroundColor?: ColorType,
-    strokeColor?: ColorType,
-    fontColor?: ColorType
-    fontSize?: number
-    textStyle?: THE_STYLE
-}
-
-type ElementType = {
-    value?: string
-    style?: ElementStyle
-}
+import ArrayElement, { ElementStyle, ElementType } from './ArrayElement'
 
 export interface MatrixParamsType extends ObjectParams {
     values: (ElementType | string | boolean | number)[][]
@@ -68,74 +53,36 @@ export default class MatrixCanvasAnimationParams extends ComplexCanvasAnimationP
                     value: title,
                     horizontalAlign: 'center',
                     verticalAlign: 'center',
-                    fontSize: fontSize
+                    fontSize
                 }
             }))
         }
         for (let i = 0; i < values.length; i++) {
             const row = values[i]
             for (let j = 0; j < row.length; j++) {
-                const value = row[j]
-                let elementStyle: ElementStyle = {
-                    backgroundColor: animationStyle.backgroundColor,
-                    strokeColor: animationStyle.strokeColor,
-                    fontColor: animationStyle.fontColor,
-                }
-                elementStyle = {
-                    ...elementStyle,
-                    ...object.elementStyle
-                }
-                let label = ''
-                if (typeof value === 'string') {
-                    label = value
-                } else if (typeof value === 'boolean') {
-                    if (value) {
-                        elementStyle.backgroundColor = 'primary'
-                    }
-                } else if (typeof value === 'number') {
+                let value = row[j]
+                if (typeof value === 'number') {
                     const element = object.valueStyle?.get(value)
                     if (element) {
-                        elementStyle = {
-                            ...elementStyle,
-                            ...element.style
+                        value = {
+                            style: element.style,
+                            label: element.label ?? ''
                         }
-                        label = element.value ?? label
-                    } else {
-                        label = String(value)
-                    }
-                } else {
-                    label = value.value ?? label
-                    elementStyle = {
-                        ...elementStyle,
-                        ...value.style
                     }
                 }
-                result.set(`square [${i}][${j}]`, new RectangleCanvasAnimationParams({
+                new ArrayElement({
                     object: {
                         origin: addPoints(origin, {
                             x: colGap + j * (valueWidth + colGap),
                             y: topX + i * (valueHeight + rowGap)
                         }),
+                        value,
                         width: valueWidth,
-                        height: valueHeight,
-                        fillColor: elementStyle.backgroundColor,
-                        strokeColor: elementStyle.strokeColor
+                        height: valueHeight
                     }
-                }))
-                result.set(`label [${i}][${j}]`, new TextCanvasAnimationParams({
-                    object: {
-                        origin: addPoints(origin, {
-                            x: colGap + j * (valueWidth + colGap) + valueWidth / 2,
-                            y: topX + i * (valueHeight + rowGap) + valueHeight / 2
-                        }),
-                        horizontalAlign: 'center',
-                        verticalAlign: 'center',
-                        fontSize: elementStyle.fontSize ?? fontSize,
-                        fillColor: elementStyle.fontColor,
-                        textStyle: elementStyle.textStyle,
-                        value: label
-                    }
-                }))
+                }, this.p5, animationStyle).getIncludedAnimationParams().forEach((v, k) => {
+                    result.set(`${k} [${i}][${j}]`, v)
+                })
             }
         }
 

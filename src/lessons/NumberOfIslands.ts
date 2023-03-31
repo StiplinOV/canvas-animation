@@ -37,7 +37,7 @@ export const NumberOfIslands: LessonJsonType = {
                             {
                                 x: 1,
                                 y: 1
-                            },
+                            }
                         ]
                     }
                 }
@@ -52,7 +52,7 @@ export const NumberOfIslands: LessonJsonType = {
                     [1, 1, 0, 0, 0],
                     [1, 1, 0, 0, 0],
                     [0, 0, 1, 0, 0],
-                    [0, 0, 0, 1, 1],
+                    [0, 0, 0, 1, 1]
                 ],
                 valueStyle: new Map([
                     [

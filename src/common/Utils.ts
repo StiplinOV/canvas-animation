@@ -129,52 +129,6 @@ export const calculatePointsPercentValue = (from: Point[], to: Point[], percent:
     return result
 }
 
-const shift2DArrayOneStepToDesiredStateLeftToRight = <T> (from: T[][], to: T[][]): T[][] => {
-    const result: T[][] = Object.assign([], from)
-    if (result.length > to.length) {
-        const lastRow = result[result.length - 1]
-        if (lastRow.length === 0) {
-            result.pop()
-            return shift2DArrayOneStepToDesiredStateLeftToRight(result, to)
-        }
-        if (lastRow.length === 1) {
-            result.pop()
-            return result
-        }
-        lastRow.pop()
-        return result
-    }
-    for (let i = result.length - 1; i >= 0; i--) {
-        const toRow = to[i]
-        const resultRow = result[i]
-        if (resultRow.length > toRow.length) {
-            resultRow.pop()
-            return result
-        }
-    }
-    for (let i = 0; i < result.length; i++) {
-        const resultRow = result[i]
-        const toRow = to[i]
-        // resultRow ВСЕГДА меньше или равен toRow
-        for (let j = 0; j < resultRow.length; j++) {
-            const resultValue = resultRow[j]
-            const toValue = toRow[j]
-            if (resultValue !== toValue) {
-                resultRow[j] = toValue
-                return result
-            }
-        }
-        if (toRow.length > resultRow.length) {
-            resultRow.push(toRow[resultRow.length])
-        }
-    }
-    if (to.length > result.length) {
-        result.push([])
-        return shift2DArrayOneStepToDesiredStateLeftToRight(result, to)
-    }
-    return result
-}
-
 export const calculateTextPercentValue = (from: string, to: string, percent: number): string => {
     return calculateArrayPercentValue(from.split(''), to.split(''), percent).join('')
 }
@@ -235,8 +189,8 @@ export const toPresenceParam = (time: number, appearanceParam: PresenceParamsTyp
         disappearTimes.push(d.time)
         disappearTimeDurations.set(d.time, d.duration)
     })
-    appearTimes = appearTimes.sort()
-    disappearTimes = disappearTimes.sort()
+    appearTimes = appearTimes.sort((l, r) => l - r)
+    disappearTimes = disappearTimes.sort((l, r) => l - r)
 
     let appearTime = Number.MAX_VALUE
     let disappearTime = Number.MAX_VALUE
@@ -262,8 +216,8 @@ export const toPresenceParam = (time: number, appearanceParam: PresenceParamsTyp
     return {
         appearTime,
         disappearTime,
-        appearDuration: appearTimeDurations.get(appearTime) || 0,
-        disappearDuration: disappearTimeDurations.get(disappearTime) || 0
+        appearDuration: appearTimeDurations.get(appearTime) ?? 0,
+        disappearDuration: disappearTimeDurations.get(disappearTime) ?? 0
     }
 }
 export const needAppearObject = (time: number, appearanceParams: PresenceParamsType): boolean => {
@@ -387,4 +341,3 @@ export const mergeValueToMap = <K, V, C extends V[] | Set<V>> (m: Map<K, C>, k: 
         collection.add(v)
     }
 }
-

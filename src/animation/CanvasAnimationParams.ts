@@ -60,7 +60,7 @@ export type Params<T extends ObjectParams, U = unknown, V extends Selection = Se
     transformations?: TransformationParam<T, U>[]
     selections?: V[]
     object: T
-    presenceParameters?: & Partial<PresenceParamsType>
+    presenceParameters?: Partial<PresenceParamsType>
 }
 
 export default abstract class CanvasAnimationParams<T extends ObjectParams = ObjectParams,
@@ -124,7 +124,7 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
                         time: t.time,
                         duration: t.duration
                     }],
-                    disappears: [],
+                    disappears: []
                 })
 
                 if (transformationObject.zIndex) {

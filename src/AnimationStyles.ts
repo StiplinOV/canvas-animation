@@ -2,7 +2,7 @@ import {THE_STYLE} from 'p5'
 import {HighlightedStyleName} from './animation/complex/highlightedsyntax/HighlightedSyntaxCanvasAnimationParams'
 
 export const COURIER_NEW_FONT = 'Courier New'
-export type ColorType = string | 'primary' | 'secondary'
+export type ColorType = string | 'primary' | 'secondary' | 'background'
 
 export type WebSafeFontsType =
     'Arial'
@@ -25,7 +25,7 @@ export default interface AnimationStyle {
     selectedColor: string
     font: WebSafeFontsType
     fontSize: number
-    titleFontSize: number,
+    titleFontSize: number
     fontWeight: number
     monospaceFont: string
     highlightTextStyle: HighlightedStyleName
@@ -49,7 +49,7 @@ const defaultAnimationStyle: AnimationStyle = {
     secondaryColor: '#ff4d00',
     selectedColor: '#FF0000',
     font: 'Verdana',
-    fontSize: 12,
+    fontSize: 14,
     titleFontSize: 40,
     fontWeight: 0.5,
     monospaceFont: COURIER_NEW_FONT,
@@ -88,6 +88,9 @@ export const getStrokeColor = (animationStyle: AnimationStyle, color?: ColorType
     if (color === 'secondary') {
         return animationStyle.secondaryColor
     }
+    if (color === 'background') {
+        return animationStyle.backgroundColor
+    }
     return color ?? animationStyle.strokeColor
 }
 
@@ -98,6 +101,9 @@ export const getFillColor = (animationStyle: AnimationStyle, color?: ColorType):
     if (color === 'secondary') {
         return animationStyle.secondaryColor
     }
+    if (color === 'background') {
+        return animationStyle.backgroundColor
+    }
     return color ?? animationStyle.fillColor
 }
 
@@ -107,6 +113,9 @@ export const getFontColor = (animationStyle: AnimationStyle, color?: ColorType):
     }
     if (color === 'secondary') {
         return animationStyle.secondaryColor
+    }
+    if (color === 'background') {
+        return animationStyle.backgroundColor
     }
     return color ?? animationStyle.fontColor
 }

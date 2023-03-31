@@ -23,6 +23,7 @@ export const P5Component: React.FC<Props> = (props: Props) => {
     const [millisSinceLastPlay, setMillisSinceLastPlay] = React.useState<number>(0)
     const [playedBefore, setPlayedBefore] = React.useState<boolean>(false)
     const {lesson} = props
+    // let vid: p5Types.Element
 
     const preload = (p5: p5Types): void => {
     }
@@ -42,6 +43,8 @@ export const P5Component: React.FC<Props> = (props: Props) => {
         cameras.sort((left, right) => left.startTime - right.startTime)
         setAnimations(canvasAnimations(animations, p5).flatMap(p => p.toCanvasAnimations(animationStyle)))
         setCameras(cameras)
+        // vid = p5.createVideo("./lessons/9cb2eb1d-1dec-4f47-9501-eb37ba1e9572.mp4").
+        //vid.loop()
     }
 
     const draw = (p5: p5Types): void => {
@@ -57,6 +60,7 @@ export const P5Component: React.FC<Props> = (props: Props) => {
         const camera = getActualCamera(cameras, time)
         const zoom = camera.zoom ?? 1
         p5.background(animationStyle.backgroundColor)
+        // p5.image(vid, 10, 10)
         camera.rotation && p5.rotate(camera.rotation)
         p5.translate(-camera.x * zoom, -camera.y * zoom)
         p5.scale(zoom)

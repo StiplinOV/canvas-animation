@@ -9,57 +9,122 @@ export const Demo: LessonJsonType = {
     endTime: 210000,
     cameras: [],
     animations: {
-        array: [
-            // {
-            //     presenceParameters: {
-            //         appearDuration: 1000
-            //     },
-            //     object: {
-            //         origin: {
-            //             x: 100,
-            //             y: 100
-            //         },
-            //         value: ['50', '32', '14', '14', '33', '33'],
-            //         height: 200,
-            //         title: 'Title',
-            //         indexTitle: 'Index title'
-            //     }
-            // },
-            {
-                presenceParameters: {
-                    appears: [{
-                        time: 0,
-                        duration: 1000
-                    }]
+        numberLine: [{
+            presenceParameters: {
+                appears: [{
+                    time: 0,
+                    duration: 3000
+                }]
+            },
+            object: {
+                origin: {
+                    x: 100,
+                    y: 500
                 },
-                object: {
-                    origin: {
-                        x: 100,
-                        y: 400
-                    },
-                    value: ['50', '32', '14', '14', '33', '33'],
-                    height: 200,
-                    hideIndices: true,
-                    title: 'Title',
-                    indexTitle: 'Index title'
-                },
-                transformations: [
+                width: 1000,
+                scale: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                fontSize: 15,
+                ranges: [
                     {
-                        time: 3000,
-                        duration: 500,
-                        object: {
-                            value: ['50', '32', '14', '14', '33'],
-                        }
+                        coords: [1, 3],
+                        layer: 0
                     },
                     {
-                        time: 4000,
-                        duration: 500,
-                        object: {
-                            value: ['33', '50', '32', '14', '14', '33'],
-                        }
+                        coords: [1, 4],
+                        layer: 1
+                    },
+                    {
+                        coords: [2, 6],
+                        layer: 2
+                    },
+                    {
+                        coords: [4, 5],
+                        layer: 0
+                    },
+                    {
+                        coords: [8, 10],
+                        layer: 0
+                    },
+                    {
+                        coords: [15, 18],
+                        layer: 0
                     }
                 ]
-            }
-        ]
+            },
+            transformations: [
+                {
+                    time: 4000,
+                    duration: 500,
+                    object: {
+                        ranges: [
+                            {
+                                coords: [1, 4],
+                                layer: 0
+                            },
+                            {
+                                coords: [2, 6],
+                                layer: 2
+                            },
+                            {
+                                coords: [4, 5],
+                                layer: 0
+                            },
+                            {
+                                coords: [8, 10],
+                                layer: 0
+                            },
+                            {
+                                coords: [15, 18],
+                                layer: 0
+                            }
+                        ]
+                    }
+                },
+                {
+                    time: 6000,
+                    duration: 500,
+                    object: {
+                        ranges: [
+                            {
+                                coords: [1, 5],
+                                layer: 0
+                            },
+                            {
+                                coords: [2, 6],
+                                layer: 2
+                            },
+                            {
+                                coords: [8, 10],
+                                layer: 0
+                            },
+                            {
+                                coords: [15, 18],
+                                layer: 0
+                            }
+                        ]
+                    }
+                },
+                {
+                    time: 8000,
+                    duration: 500,
+                    object: {
+                        ranges: [
+                            {
+                                coords: [1, 6],
+                                layer: 0
+                            },
+                            {
+                                coords: [8, 10],
+                                layer: 0
+                            },
+                            {
+                                coords: [15, 18],
+                                layer: 0
+                            }
+                        ]
+                    }
+                }
+            ]
+        }]
     }
 }

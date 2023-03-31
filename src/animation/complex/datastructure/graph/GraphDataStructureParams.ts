@@ -12,7 +12,7 @@ import { v4 } from 'uuid'
 import { Point } from '../../../../common/Point'
 
 type VerticesEdges = {
-    vertices: VertexType[],
+    vertices: VertexType[]
     edges: EdgeType[]
 }
 
@@ -78,7 +78,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
         this.getVertexEdgeSet(vertexIdMap, object.edges).forEach((set, index) => {
             const prevMaxX = maxX
             const prevMaxY = maxY
-            let offset = {
+            const offset = {
                 x: transpose ? 0 : maxX + index * 110,
                 y: transpose ? maxY + index * 110 : 0
             }
@@ -225,7 +225,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
                     }
                     cur = stack.pop()
                 }
-                currentGroup++;
+                currentGroup++
             }
         })
 

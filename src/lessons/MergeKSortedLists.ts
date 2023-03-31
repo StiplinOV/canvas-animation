@@ -100,7 +100,7 @@ export const Demo: LessonJsonType = {
                         {
                             sourceId: '9',
                             targetId: '10'
-                        },
+                        }
                     ]
                 },
                 transformations: [{
@@ -139,7 +139,7 @@ export const Demo: LessonJsonType = {
                             {
                                 sourceId: '9',
                                 targetId: '10'
-                            },
+                            }
                         ]
                     }
                 }, {
@@ -178,7 +178,7 @@ export const Demo: LessonJsonType = {
                             {
                                 sourceId: '9',
                                 targetId: '10'
-                            },
+                            }
                         ]
                     }
                 }, {
@@ -217,11 +217,11 @@ export const Demo: LessonJsonType = {
                             {
                                 sourceId: '4',
                                 targetId: '10'
-                            },
+                            }
                         ]
                     }
                 }]
             }
-        ],
+        ]
     }
 }
