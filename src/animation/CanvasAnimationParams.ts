@@ -8,9 +8,11 @@ import {Point} from '../common/Point'
 import AnimationStyle, { ColorType } from '../AnimationStyles'
 import CanvasAnimation from './CanvasAnimation'
 
-type weightType = number | 'normal' | 'bold'
+type WeightType = number | 'normal' | 'bold'
 
-export const weightToNumber = (style: AnimationStyle, weight?: weightType): number => {
+export type LayoutType = 'absolute' | 'fixed'
+
+export const weightToNumber = (style: AnimationStyle, weight?: WeightType): number => {
     if (weight === 'normal') {
         return style.strokeWeight
     }
@@ -21,7 +23,7 @@ export const weightToNumber = (style: AnimationStyle, weight?: weightType): numb
 }
 
 export interface ObjectParams {
-    weight?: weightType
+    weight?: WeightType
     zIndex?: number
     dashed?: number[]
     strokeColor?: ColorType
@@ -61,6 +63,7 @@ export type Params<T extends ObjectParams, U = unknown, V extends Selection = Se
     selections?: V[]
     object: T
     presenceParameters?: Partial<PresenceParamsType>
+    layout?: LayoutType
 }
 
 export default abstract class CanvasAnimationParams<T extends ObjectParams = ObjectParams,
@@ -71,6 +74,7 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
     private readonly transformations: Transformation<T, U>[]
     private readonly selections: V[]
     private readonly object: T
+    private readonly layout: LayoutType
 
     public constructor(params: Params<T, U, V>) {
         const transformations = params.transformations ?? []
@@ -78,6 +82,7 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
         this.selections = params.selections ?? []
         this.transformations = transformations.map(t => transformationParamToTransformation(t))
         this.object = params.object
+        this.layout = params.layout ?? 'absolute'
     }
 
     public getAppearanceParam(): PresenceParamsType {
@@ -147,5 +152,9 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
     }
 
     public abstract toCanvasAnimations(animationStyle: AnimationStyle): CanvasAnimation[]
+
+    public getLayout(): LayoutType {
+        return this.layout
+    }
 
 }

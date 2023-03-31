@@ -10,7 +10,7 @@ import {
     toAppearancePercent
 } from '../common/Utils'
 import AnimationStyle, { getFillColor, getStrokeColor } from '../AnimationStyles'
-import { ObjectParams, weightToNumber } from './CanvasAnimationParams'
+import { LayoutType, ObjectParams, weightToNumber } from './CanvasAnimationParams'
 import SimpleCanvasAnimationParams from './simple/SimpleCanvasAnimationParams'
 
 export default abstract class CanvasAnimation<T extends ObjectParams = ObjectParams, U extends SimpleCanvasAnimationParams<T> = SimpleCanvasAnimationParams<T>> {
@@ -77,6 +77,10 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
 
     public getZIndex (time: number, animationStyle: AnimationStyle): number {
         return this.params.getZIndex(time, animationStyle)
+    }
+
+    public getLayout(): LayoutType {
+        return this.params.getLayout()
     }
 
 }

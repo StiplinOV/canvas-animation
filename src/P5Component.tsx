@@ -22,7 +22,7 @@ export const P5Component: React.FC<Props> = (props: Props) => {
     const [cameras, setCameras] = React.useState<CameraParams[]>([])
     const [millisSinceLastPlay, setMillisSinceLastPlay] = React.useState<number>(0)
     const [playedBefore, setPlayedBefore] = React.useState<boolean>(false)
-    const {lesson} = props
+    const { lesson } = props
     // let vid: p5Types.Element
 
     const preload = (p5: p5Types): void => {
@@ -62,13 +62,17 @@ export const P5Component: React.FC<Props> = (props: Props) => {
         p5.background(animationStyle.backgroundColor)
         // p5.image(vid, 10, 10)
         camera.rotation && p5.rotate(camera.rotation)
-        p5.translate(-camera.x * zoom, -camera.y * zoom)
-        p5.scale(zoom)
-        animations
-            .sort((l, r) => l.getZIndex(time, animationStyle) - r.getZIndex(time, animationStyle))
-            .forEach(a => {
-                a.draw(p5, time)
-            })
+        animations.sort((l, r) => l.getZIndex(time, animationStyle) - r.getZIndex(time, animationStyle)).forEach(a => {
+            if (a.getLayout() === 'absolute') {
+                p5.translate(-camera.x * zoom, -camera.y * zoom)
+                p5.scale(zoom)
+            }
+            a.draw(p5, time)
+            if (a.getLayout() === 'absolute') {
+                p5.scale(1 / zoom)
+                p5.translate(camera.x * zoom, camera.y * zoom)
+            }
+        })
         setPlayedBefore(props.play)
         if (props.play && playedBefore) {
             props.onTimeChange(time)
