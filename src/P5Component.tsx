@@ -43,8 +43,6 @@ export const P5Component: React.FC<Props> = (props: Props) => {
         cameras.sort((left, right) => left.startTime - right.startTime)
         setAnimations(canvasAnimations(animations, p5).flatMap(p => p.toCanvasAnimations(animationStyle)))
         setCameras(cameras)
-        // vid = p5.createVideo("./lessons/9cb2eb1d-1dec-4f47-9501-eb37ba1e9572.mp4").
-        //vid.loop()
     }
 
     const draw = (p5: p5Types): void => {

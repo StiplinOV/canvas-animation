@@ -82,7 +82,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     fillColor: 'secondary',
                     strokeColor: 'secondary',
                     fontSize: 40,
-                    zIndex: 100,
+                    zIndex: 100
                 },
                 presenceParameters: {
                     appears: [{
