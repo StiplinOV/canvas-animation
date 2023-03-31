@@ -72,26 +72,6 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
     animations: {
         text: [
             {
-                layout: 'fixed',
-                object: {
-                    value: 'раз два три четыре пять',
-                    origin: {
-                        x: 100,
-                        y: 100
-                    },
-                    fillColor: 'secondary',
-                    strokeColor: 'secondary',
-                    fontSize: 40,
-                    zIndex: 100
-                },
-                presenceParameters: {
-                    appears: [{
-                        time: 0,
-                        duration: 0
-                    }]
-                }
-            },
-            {
                 object: {
                     value: 'Best Time to Buy and Sell Stock',
                     origin: {
