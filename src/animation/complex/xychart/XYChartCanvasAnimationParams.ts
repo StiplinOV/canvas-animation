@@ -20,7 +20,7 @@ const toScaleType = (value: scaleType | number): scaleType => {
     }
     return value
 }
-const toChartPointType = (value: chartPointType | Point): chartPointType => {
+const toChartPointType = (value: ChartPointType | Point): ChartPointType => {
     if ('point' in value) {
         return value
     }
@@ -29,16 +29,34 @@ const toChartPointType = (value: chartPointType | Point): chartPointType => {
         text: ''
     }
 }
+const chartRangesCoordsComparator = (l: ChartRangeType, r: ChartRangeType) => {
+    const [firstLeft, firstRight] = l.coords.sort()
+    const [secondLeft, secondRight] = r.coords.sort()
+    if (firstLeft <= secondLeft && firstRight >= secondRight) {
+        return 1
+    }
+    if (secondLeft <= firstLeft && secondRight >= firstRight) {
+        return -1
+    }
+    if (firstRight < secondLeft) {
+        return 1
+    }
+    if (secondRight < firstRight) {
+        return -1
+    }
+    return 0
+}
 
 type scaleType = { position: number, value: string }
-type chartPointType = { point: Point, text: string }
-type chartYRangeType = { yCoords: [number, number], value: string }
-type bar = {
+type ChartPointType = { point: Point, text: string }
+type ChartRangeType = { coords: [number, number], value: string }
+type Bar = {
     x: number
     y: number
     width?: number
-    point?: boolean
-    selected?: boolean
+    pointer?: boolean
+    type?: 'selected' | 'transparent'
+    zIndex?: number
 }
 
 export interface XyChartParamsType extends ObjectParams {
@@ -46,17 +64,21 @@ export interface XyChartParamsType extends ObjectParams {
     height: number
     xScale?: (scaleType | number)[]
     yScale?: (scaleType | number)[]
+    hideXAxis?: boolean
+    hideYAxis?: boolean
     xAxisName?: string
     yAxisName?: string
-    chartPoints?: (chartPointType | Point)[]
+    chartPoints?: (ChartPointType | Point)[]
     chartLines?: [Point, Point][]
-    chartYRanges?: chartYRangeType[]
-    bars?: bar[]
+    chartYRanges?: ChartRangeType[]
+    chartXRanges?: ChartRangeType[]
+    bars?: Bar[]
     barWidth?: number
     barColor?: ColorType
     backgroundSelectedRectangleAreas?: {
         cornerPoints: [Point, Point]
         color?: ColorType
+        zIndex?: number
     }[]
 }
 
@@ -74,143 +96,37 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         const result = new Map<string, SimpleCanvasAnimationParams>()
         const {
             height,
-            width,
-            origin
+            width
         } = object
         const rotations = object.rotations ?? []
         const xScale = object.xScale?.map(value => toScaleType(value)) ?? []
         const yScale = object.yScale?.map(value => toScaleType(value)) ?? []
-        const xAxisName = object.xAxisName ?? ''
-        const yAxisName = object.yAxisName ?? ''
-        const objChartPoints = object.chartPoints?.map(value => toChartPointType(value)) ?? []
-        const objChartLines = object.chartLines ?? []
-        const objChartYRanges = object.chartYRanges ?? []
+        let objChartPoints: ChartPointType[] = []
+        let objChartLines: [Point, Point][] = []
+        if (object.xScale && object.yScale) {
+            objChartPoints = object.chartPoints?.map(value => toChartPointType(value)) ?? []
+            objChartLines = object.chartLines ?? []
+        }
         const chartPointsDiameter = coordinateDashWidth / 2
         const bars = object.bars ?? []
         const barWidth = (width / (xScale.length + 1)) / 3
         const backgroundSelectedRectangleAreas = object.backgroundSelectedRectangleAreas ?? []
 
-        new ArrowCanvasAnimationParams({
-            object: {
-                origin,
-                endPoint: addPoints(origin, {
-                    x: width,
-                    y: 0
-                }),
-                endType: 'Arrow',
-                weight: 2,
-                rotations
-            }
-        }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
-            result.set('xArrow ' + k, v)
-        })
-        new ArrowCanvasAnimationParams({
-            object: {
-                origin,
-                endPoint: addPoints(origin, {
-                    x: 0,
-                    y: -height
-                }),
-                endType: 'Arrow',
-                weight: 2,
-                rotations
-            }
-        }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
-            result.set('yArrow ' + k, v)
-        })
-        result.set('xText', new TextCanvasAnimationParams({
-            object: {
-                origin: addPoints(origin, {
-                    x: width / 2,
-                    y: coordinateDashWidth * 2
-                }),
-                value: xAxisName,
-                fontSize: 20,
-                horizontalAlign: 'center',
-                verticalAlign: 'top',
-                rotations
-            }
-        }))
-        const yTextOrigin = addPoints(origin, {
-            x: -coordinateDashWidth * 2,
-            y: -height / 2
-        })
-        result.set('yText', new TextCanvasAnimationParams({
-            object: {
-                origin: yTextOrigin,
-                value: yAxisName,
-                fontSize: 20,
-                horizontalAlign: 'center',
-                verticalAlign: 'bottom',
-                rotations: [...rotations, {
-                    axis: yTextOrigin,
-                    angle: -Math.PI / 2
-                }]
-            }
-        }))
+        this.getXCoordinateAxisParams(object).forEach((v, k) => result.set(k, v))
+        this.getYCoordinateAxisParams(object).forEach((v, k) => result.set(k, v))
 
-        xScale.forEach((value, index) => {
-            const x = this.getXForValue(object, value.position)
-            result.set(`xScaleLine ${index}`, new LineCanvasAnimationParams({
-                object: {
-                    origin: {
-                        x,
-                        y: -coordinateDashWidth / 2 + origin.y
-                    },
-                    endPoint: {
-                        x,
-                        y: coordinateDashWidth / 2 + origin.y
-                    },
-                    rotations
-                }
-            }))
-            result.set(`xScaleValue ${index}`, new TextCanvasAnimationParams({
-                object: {
-                    origin: {
-                        x,
-                        y: Number(coordinateDashWidth) + origin.y
-                    },
-                    value: value.value,
-                    verticalAlign: 'top',
-                    horizontalAlign: 'center',
-                    rotations
-                }
-            }))
-        })
-        yScale.forEach((value, index) => {
-            const y = this.getYForValue(object, value.position)
-            result.set(`yScaleLine ${index}`, new LineCanvasAnimationParams({
-                object: {
-                    origin: {
-                        x: -coordinateDashWidth / 2 + origin.x,
-                        y
-                    },
-                    endPoint: {
-                        x: coordinateDashWidth / 2 + origin.x,
-                        y
-                    },
-                    rotations
-                }
-            }))
-            result.set(`yScaleValue ${index}`, new TextCanvasAnimationParams({
-                object: {
-                    origin: {
-                        x: -Number(coordinateDashWidth) + origin.x,
-                        y
-                    },
-                    value: value.value,
-                    verticalAlign: 'center',
-                    horizontalAlign: 'center',
-                    rotations
-                }
-            }))
-        })
         bars.forEach((value, index) => {
             const x = this.getXForValue(object, value.x)
             const y = this.getYForValue(object, value.y)
             const zeroY = this.getYForValue(object, 0)
             const width = value.width ?? object.barWidth ?? barWidth
-            const yStepHeight = height / yScale.length
+            const yStepHeight = yScale.length ? height / yScale.length : 0
+            let fillColor = object.barColor ?? 'primary'
+            if (value.type === 'selected') {
+                fillColor = 'secondary'
+            } else if (value.type === 'transparent') {
+                fillColor = 'background'
+            }
 
             result.set(`chartBar ${index}`, new RectangleCanvasAnimationParams({
                 object: {
@@ -220,10 +136,11 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     },
                     width,
                     height: zeroY - y,
-                    fillColor: value.selected ? 'secondary' : object.barColor ?? 'primary'
+                    fillColor,
+                    zIndex: value.zIndex ?? 1
                 }
             }))
-            if (value.point) {
+            if (value.pointer) {
                 new ArrowCanvasAnimationParams({
                     object: {
                         origin: {
@@ -236,7 +153,8 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                         },
                         endType: 'Arrow',
                         weight: 'bold',
-                        strokeColor: 'secondary'
+                        strokeColor: 'secondary',
+                        zIndex: value.zIndex
                     }
                 }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
                     result.set(`chartBarPoint ${index}` + k, v)
@@ -283,27 +201,206 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                 rotations
             }
         })))
-        objChartYRanges.sort((l, r) => {
-            const [firstLeft, firstRight] = l.yCoords.sort()
-            const [secondLeft, secondRight] = r.yCoords.sort()
-            if (firstLeft <= secondLeft && firstRight >= secondRight) {
-                return 1
+
+        this.getChartYRangeParams(object).forEach((v, k) => result.set(k, v))
+        this.getChartXRangeParams(object).forEach((v, k) => result.set(k, v))
+
+        backgroundSelectedRectangleAreas.forEach((value, index) => {
+            const x0 = this.getXForValue(object, value.cornerPoints[0].x)
+            const x1 = this.getXForValue(object, value.cornerPoints[1].x)
+            const y0 = this.getYForValue(object, value.cornerPoints[0].y)
+            const y1 = this.getYForValue(object, value.cornerPoints[1].y)
+
+            const leftUpCornerPoint = {
+                x: Math.min(x0, x1),
+                y: Math.min(y0, y1)
             }
-            if (secondLeft <= firstLeft && secondRight >= firstRight) {
-                return -1
+            const width = Math.abs(x0 - x1)
+            const height = Math.abs(y0 - y1)
+            result.set(`backgroundSelectedRectangleArea ${index}`, new RectangleCanvasAnimationParams({
+                object: {
+                    origin: leftUpCornerPoint,
+                    width,
+                    height,
+                    fillColor: value.color,
+                    zIndex: value.zIndex ?? -1
+                }
+            }))
+        })
+        return result
+    }
+
+    private getXCoordinateAxisParams (object: XyChartParamsType): Map<string, SimpleCanvasAnimationParams> {
+        const result = new Map<string, SimpleCanvasAnimationParams>()
+        const {
+            width,
+            origin
+        } = object
+        const rotations = object.rotations ?? []
+        const xScale = object.xScale?.map(value => toScaleType(value)) ?? []
+        const xAxisName = object.xAxisName ?? ''
+
+        if (!object.hideXAxis) {
+            new ArrowCanvasAnimationParams({
+                object: {
+                    origin,
+                    endPoint: addPoints(origin, {
+                        x: width,
+                        y: 0
+                    }),
+                    endType: 'Arrow',
+                    weight: 2,
+                    rotations
+                }
+            }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
+                result.set('xArrow ' + k, v)
+            })
+        }
+
+        result.set('xText', new TextCanvasAnimationParams({
+            object: {
+                origin: addPoints(origin, {
+                    x: width / 2,
+                    y: coordinateDashWidth * 2
+                }),
+                value: xAxisName,
+                fontSize: 20,
+                horizontalAlign: 'center',
+                verticalAlign: 'top',
+                rotations
             }
-            if (firstRight < secondLeft) {
-                return 1
+        }))
+        xScale.forEach((value, index) => {
+            const x = this.getXForValue(object, value.position)
+            if (!object.hideXAxis) {
+                result.set(`xScaleLine ${index}`, new LineCanvasAnimationParams({
+                    object: {
+                        origin: {
+                            x,
+                            y: -coordinateDashWidth / 2 + origin.y
+                        },
+                        endPoint: {
+                            x,
+                            y: coordinateDashWidth / 2 + origin.y
+                        },
+                        zIndex: -1,
+                        rotations
+                    }
+                }))
             }
-            if (secondRight < firstRight) {
-                return -1
+            result.set(`xScaleValue ${index}`, new TextCanvasAnimationParams({
+                object: {
+                    origin: {
+                        x,
+                        y: Number(coordinateDashWidth) + origin.y
+                    },
+                    value: value.value,
+                    verticalAlign: 'top',
+                    horizontalAlign: 'center',
+                    rotations
+                }
+            }))
+        })
+
+        return result
+    }
+
+    private getYCoordinateAxisParams (object: XyChartParamsType): Map<string, SimpleCanvasAnimationParams> {
+        const result = new Map<string, SimpleCanvasAnimationParams>()
+        const {
+            height,
+            origin
+        } = object
+        const rotations = object.rotations ?? []
+        const yScale = object.yScale?.map(value => toScaleType(value)) ?? []
+        const yAxisName = object.yAxisName ?? ''
+
+        if (!object.hideYAxis) {
+            new ArrowCanvasAnimationParams({
+                object: {
+                    origin,
+                    endPoint: addPoints(origin, {
+                        x: 0,
+                        y: -height
+                    }),
+                    endType: 'Arrow',
+                    weight: 2,
+                    rotations
+                }
+            }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
+                result.set('yArrow ' + k, v)
+            })
+        }
+
+        const yTextOrigin = addPoints(origin, {
+            x: -coordinateDashWidth * 2,
+            y: -height / 2
+        })
+        result.set('yText', new TextCanvasAnimationParams({
+            object: {
+                origin: yTextOrigin,
+                value: yAxisName,
+                fontSize: 20,
+                horizontalAlign: 'center',
+                verticalAlign: 'bottom',
+                rotations: [...rotations, {
+                    axis: yTextOrigin,
+                    angle: -Math.PI / 2
+                }]
             }
-            return 0
-        }).forEach((objChartRange, index) => {
-            const firstPointY = this.getYForValue(object, objChartRange.yCoords[0])
-            const secondPointY = this.getYForValue(object, objChartRange.yCoords[1])
-            const endXCoord = width + index * 20 + origin.x
-            result.set(`objectChartRangeFirstLine ${index}`, new LineCanvasAnimationParams({
+        }))
+
+        yScale.forEach((value, index) => {
+            const y = this.getYForValue(object, value.position)
+            if (!object.hideYAxis) {
+                result.set(`yScaleLine ${index}`, new LineCanvasAnimationParams({
+                    object: {
+                        origin: {
+                            x: -coordinateDashWidth / 2 + origin.x,
+                            y
+                        },
+                        endPoint: {
+                            x: coordinateDashWidth / 2 + origin.x,
+                            y
+                        },
+                        zIndex: -1,
+                        rotations
+                    }
+                }))
+            }
+            result.set(`yScaleValue ${index}`, new TextCanvasAnimationParams({
+                object: {
+                    origin: {
+                        x: -Number(coordinateDashWidth) + origin.x,
+                        y
+                    },
+                    value: value.value,
+                    verticalAlign: 'center',
+                    horizontalAlign: 'center',
+                    rotations
+                }
+            }))
+        })
+        return result
+    }
+
+    private getChartYRangeParams (object: XyChartParamsType): Map<string, SimpleCanvasAnimationParams> {
+        const result = new Map<string, SimpleCanvasAnimationParams>()
+        const {
+            width,
+            origin
+        } = object
+        const rotations = object.rotations ?? []
+        let objChartYRanges: ChartRangeType[] = []
+        if (object.xScale && object.yScale) {
+            objChartYRanges = object.chartYRanges ?? []
+        }
+
+        objChartYRanges.sort(chartRangesCoordsComparator).forEach((objChartRange, index) => {
+            const firstPointY = this.getYForValue(object, objChartRange.coords[0])
+            const secondPointY = this.getYForValue(object, objChartRange.coords[1])
+            const endXCoord = width + index * 20 + origin.x + 60
+            result.set(`objectChartYRangeFirstLine ${index}`, new LineCanvasAnimationParams({
                 object: {
                     origin: {
                         x: origin.x,
@@ -317,7 +414,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     rotations
                 }
             }))
-            result.set(`objectChartRangeSecondLine ${index}`, new LineCanvasAnimationParams({
+            result.set(`objectChartYRangeSecondLine ${index}`, new LineCanvasAnimationParams({
                 object: {
                     origin: {
                         x: origin.x,
@@ -348,13 +445,13 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                         rotations
                     }
                 }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
-                result.set(`objectChartRangeArrow ${index} ${k}`, v)
+                result.set(`objectChartYRangeArrow ${index} ${k}`, v)
             })
             const objChartRangeValueOrigin = {
                 x: endXCoord,
                 y: (firstPointY + secondPointY) / 2
             }
-            result.set(`objectChartRangeValue ${index}`, new TextCanvasAnimationParams({
+            result.set(`objectChartYRangeValue ${index}`, new TextCanvasAnimationParams({
                 object: {
                     origin: objChartRangeValueOrigin,
                     value: objChartRange.value,
@@ -367,28 +464,85 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                 }
             }))
         })
-        backgroundSelectedRectangleAreas.forEach((value, index) => {
-            const x0 = this.getXForValue(object, value.cornerPoints[0].x)
-            const x1 = this.getXForValue(object, value.cornerPoints[1].x)
-            const y0 = this.getYForValue(object, value.cornerPoints[0].y)
-            const y1 = this.getYForValue(object, value.cornerPoints[1].y)
 
-            const leftUpCornerPoint = {
-                x: Math.min(x0, x1),
-                y: Math.min(y0, y1)
-            }
-            const width = Math.abs(x0 - x1)
-            const height = Math.abs(y0 - y1)
-            result.set(`backgroundSelectedRectangleArea ${index}`, new RectangleCanvasAnimationParams({
+        return result
+    }
+
+    private getChartXRangeParams (object: XyChartParamsType): Map<string, SimpleCanvasAnimationParams> {
+        const result = new Map<string, SimpleCanvasAnimationParams>()
+        const { origin } = object
+        const rotations = object.rotations ?? []
+        let objChartXRanges: ChartRangeType[] = []
+        if (object.xScale && object.yScale) {
+            objChartXRanges = object.chartXRanges ?? []
+        }
+
+        objChartXRanges.sort(chartRangesCoordsComparator).forEach((objChartRange, index) => {
+            const firstPointX = this.getXForValue(object, objChartRange.coords[0])
+            const secondPointX = this.getXForValue(object, objChartRange.coords[1])
+            const startYCoord = index * 20 + origin.y + 60
+            result.set(`objectChartXRangeFirstLine ${index}`, new LineCanvasAnimationParams({
                 object: {
-                    origin: leftUpCornerPoint,
-                    width,
-                    height,
-                    fillColor: value.color,
-                    zIndex: -1
+                    origin: {
+                        x: firstPointX,
+                        y: origin.y
+                    },
+                    endPoint: {
+                        x: firstPointX,
+                        y: startYCoord + 20
+                    },
+                    dashed: [5, 10, 30, 10],
+                    rotations
+                }
+            }))
+            result.set(`objectChartXRangeSecondLine ${index}`, new LineCanvasAnimationParams({
+                object: {
+                    origin: {
+                        x: secondPointX,
+                        y: origin.y
+                    },
+                    endPoint: {
+                        x: secondPointX,
+                        y: startYCoord + 20
+                    },
+                    dashed: [5, 10, 30, 10],
+                    rotations
+                }
+            }))
+            new ArrowCanvasAnimationParams(
+                {
+                    object: {
+                        origin: {
+                            x: firstPointX ,
+                            y: startYCoord
+                        },
+                        endPoint: {
+                            x: secondPointX ,
+                            y: startYCoord
+                        },
+                        startType: 'Arrow',
+                        endType: 'Arrow',
+                        weight: 2,
+                        rotations
+                    }
+                }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
+                result.set(`objectChartXRangeArrow ${index} ${k}`, v)
+            })
+            const objChartRangeValueOrigin = {
+                x: (firstPointX + secondPointX) / 2,
+                y: startYCoord
+            }
+            result.set(`objectChartXRangeValue ${index}`, new TextCanvasAnimationParams({
+                object: {
+                    origin: objChartRangeValueOrigin,
+                    value: objChartRange.value,
+                    horizontalAlign: 'center',
+                    fontSize: 20,
+                    rotations
                 }
             }))
         })
+
         return result
     }
 
@@ -407,18 +561,21 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
     }
 
     private convertPointToCoordinate (object: XyChartParamsType, point: Point): Point {
-        const xScale = object.xScale?.map(value => toScaleType(value)) ?? []
-        const yScale = object.yScale?.map(value => toScaleType(value)) ?? []
-        const lastXScaleValue = xScale[xScale.length - 1].position
-        const lastYScaleValue = yScale[yScale.length - 1].position
-        const averageXGap = lastXScaleValue / xScale.length
-        const averageYGap = lastYScaleValue / yScale.length
-        const xScaleMax = xScale.length > 0 ? (lastXScaleValue + averageXGap) : 0
-        const yScaleMax = yScale.length > 0 ? (lastYScaleValue + averageYGap) : 0
         return {
-            x: object.origin.x + (point.x * object.width / xScaleMax),
-            y: object.origin.y + (-point.y * object.height / yScaleMax)
+            x: this.scaleCoordinateValue(object.width, object.xScale || [], object.origin.x, point.x),
+            y: this.scaleCoordinateValue(object.height, object.yScale || [], object.origin.y, -point.y)
         }
+    }
+
+    private scaleCoordinateValue (length: number, scaleParam: (scaleType | number)[], originCoord: number, coord: number): number {
+        if (scaleParam.length === 0) {
+            return 0
+        }
+        const scale = scaleParam.map(value => toScaleType(value))
+        const lastScaleValue = scale[scale.length - 1].position
+        const averageGap = lastScaleValue / scale.length
+        const scaleMax = scale.length > 0 ? (lastScaleValue + averageGap) : 0
+        return originCoord + (coord * length / scaleMax)
     }
 
     protected convertSelectorToDiscriminatorRegexps (selector: XyChartSelectorType): RegExp[] {

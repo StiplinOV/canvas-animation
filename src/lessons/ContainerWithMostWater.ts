@@ -7,10 +7,34 @@ export const ContainerWithMostWater: LessonJsonType = {
         height: 720
     },
     endTime: 210000,
-    cameras: [],
+    cameras: [{
+        startTime: 27000,
+        transformDuration: 500,
+        camera: {
+            x: 100,
+            y: 0
+        }
+    }, {
+        startTime: 68000,
+        transformDuration: 500,
+        camera: {
+            x: 0,
+            y: 0
+        }
+    }],
     animations: {
         xyChart: [
             {
+                presenceParameters: {
+                    appears: [{
+                        time: 0,
+                        duration: 2000,
+                    }],
+                    disappears: [{
+                        time: 70000,//70000
+                        duration: 2000,
+                    }]
+                },
                 object: {
                     origin: {
                         x: 200,
@@ -19,10 +43,6 @@ export const ContainerWithMostWater: LessonJsonType = {
                     width: 900,
                     height: 500,
                     xScale: [
-                        {
-                            position: 0,
-                            value: ''
-                        },
                         {
                             position: 1,
                             value: ''
@@ -58,7 +78,7 @@ export const ContainerWithMostWater: LessonJsonType = {
                         {
                             position: 9,
                             value: ''
-                        }
+                        },
                     ],
                     yScale: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                     bars: [
@@ -68,7 +88,7 @@ export const ContainerWithMostWater: LessonJsonType = {
                         },
                         {
                             x: 2,
-                            y: 8
+                            y: 8,
                         },
                         {
                             x: 3,
@@ -96,33 +116,35 @@ export const ContainerWithMostWater: LessonJsonType = {
                         },
                         {
                             x: 9,
-                            y: 7
+                            y: 7,
                         }
                     ],
-                    barColor: '#000000'
                 },
                 transformations: [
                     {
-                        time: 10000,
+                        time: 6000,
                         duration: 1000,
                         object: {
                             bars: [
                                 {
                                     x: 1,
-                                    y: 1
+                                    y: 1,
+                                    type: 'selected'
                                 },
                                 {
                                     x: 2,
                                     y: 8,
-                                    selected: true
+                                    zIndex: -2
                                 },
                                 {
                                     x: 3,
-                                    y: 6
+                                    y: 6,
+                                    zIndex: -2
                                 },
                                 {
                                     x: 4,
-                                    y: 2
+                                    y: 2,
+                                    type: 'selected'
                                 },
                                 {
                                     x: 5,
@@ -143,7 +165,436 @@ export const ContainerWithMostWater: LessonJsonType = {
                                 {
                                     x: 9,
                                     y: 7,
-                                    selected: true
+                                }
+                            ],
+                            backgroundSelectedRectangleAreas: [
+                                {
+                                    cornerPoints: [{
+                                        x: 1,
+                                        y: 1
+                                    }, {
+                                        x: 4,
+                                        y: 0
+                                    }],
+                                    color: '#94CDEF'
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        time: 9000,
+                        duration: 1000,
+                        object: {
+                            bars: [
+                                {
+                                    x: 1,
+                                    y: 1,
+                                },
+                                {
+                                    x: 2,
+                                    y: 8,
+                                    type: 'selected'
+                                },
+                                {
+                                    x: 3,
+                                    y: 6,
+                                    zIndex: -2
+                                },
+                                {
+                                    x: 4,
+                                    y: 2,
+                                    zIndex: -2
+                                },
+                                {
+                                    x: 5,
+                                    y: 5,
+                                    zIndex: -2
+                                },
+                                {
+                                    x: 6,
+                                    y: 4,
+                                    zIndex: -2
+                                },
+                                {
+                                    x: 7,
+                                    y: 8,
+                                    type: 'selected'
+                                },
+                                {
+                                    x: 8,
+                                    y: 3
+                                },
+                                {
+                                    x: 9,
+                                    y: 7,
+                                }
+                            ],
+                            backgroundSelectedRectangleAreas: [
+                                {
+                                    cornerPoints: [{
+                                        x: 2,
+                                        y: 8
+                                    }, {
+                                        x: 7,
+                                        y: 0
+                                    }],
+                                    color: '#94CDEF'
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        time: 11000,
+                        duration: 1000,
+                        object: {
+                            bars: [
+                                {
+                                    x: 1,
+                                    y: 1,
+                                },
+                                {
+                                    x: 2,
+                                    y: 8,
+                                },
+                                {
+                                    x: 3,
+                                    y: 6
+                                },
+                                {
+                                    x: 4,
+                                    y: 2,
+                                    type: 'selected'
+                                },
+                                {
+                                    x: 5,
+                                    y: 5,
+                                    zIndex: -2
+                                },
+                                {
+                                    x: 6,
+                                    y: 4,
+                                    zIndex: -2
+                                },
+                                {
+                                    x: 7,
+                                    y: 8,
+                                    zIndex: -2
+                                },
+                                {
+                                    x: 8,
+                                    y: 3,
+                                    type: 'selected'
+                                },
+                                {
+                                    x: 9,
+                                    y: 7,
+                                }
+                            ],
+                            backgroundSelectedRectangleAreas: [
+                                {
+                                    cornerPoints: [{
+                                        x: 4,
+                                        y: 2
+                                    }, {
+                                        x: 8,
+                                        y: 0
+                                    }],
+                                    color: '#94CDEF'
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        time: 13000,
+                        duration: 1000,
+                        options: {
+                            type: 'sequentially'
+                        },
+                        object: {
+                            chartXRanges: [{
+                                coords: [4, 8],
+                                value: ''
+                            }],
+                            chartYRanges: [{
+                                coords: [0, 2],
+                                value: ''
+                            }],
+                            bars: [
+                                {
+                                    x: 1,
+                                    y: 1,
+                                },
+                                {
+                                    x: 2,
+                                    y: 8,
+                                },
+                                {
+                                    x: 3,
+                                    y: 6
+                                },
+                                {
+                                    x: 4,
+                                    y: 2,
+                                    type: 'selected',
+                                    pointer: true
+                                },
+                                {
+                                    x: 5,
+                                    y: 5,
+                                    zIndex: -2
+                                },
+                                {
+                                    x: 6,
+                                    y: 4,
+                                    zIndex: -2
+                                },
+                                {
+                                    x: 7,
+                                    y: 8,
+                                    zIndex: -2
+                                },
+                                {
+                                    x: 8,
+                                    y: 3,
+                                    type: 'selected'
+                                },
+                                {
+                                    x: 9,
+                                    y: 7,
+                                }
+                            ],
+                            // backgroundSelectedRectangleAreas: []
+                        }
+                    },
+                    {
+                        time: 16000,
+                        duration: 500,
+                        object: {
+                            chartXRanges: [],
+                            chartYRanges: [],
+                            bars: [
+                                {
+                                    x: 1,
+                                    y: 1,
+                                },
+                                {
+                                    x: 2,
+                                    y: 8,
+                                },
+                                {
+                                    x: 3,
+                                    y: 6
+                                },
+                                {
+                                    x: 4,
+                                    y: 2,
+                                },
+                                {
+                                    x: 5,
+                                    y: 5,
+                                },
+                                {
+                                    x: 6,
+                                    y: 4,
+                                },
+                                {
+                                    x: 7,
+                                    y: 8,
+                                },
+                                {
+                                    x: 8,
+                                    y: 3,
+                                },
+                                {
+                                    x: 9,
+                                    y: 7,
+                                }
+                            ],
+                            backgroundSelectedRectangleAreas: []
+                        }
+                    },
+                    {
+                        time: 26000,
+                        duration: 500,
+                        object: {
+                            bars: [
+                                {
+                                    x: 1,
+                                    y: 1,
+                                    type: 'selected',
+                                    zIndex: 3
+                                },
+                                {
+                                    x: 2,
+                                    y: 8,
+                                },
+                                {
+                                    x: 3,
+                                    y: 6
+                                },
+                                {
+                                    x: 4,
+                                    y: 2,
+                                },
+                                {
+                                    x: 5,
+                                    y: 5,
+                                },
+                                {
+                                    x: 6,
+                                    y: 4,
+                                },
+                                {
+                                    x: 7,
+                                    y: 8,
+                                },
+                                {
+                                    x: 8,
+                                    y: 3,
+                                },
+                                {
+                                    x: 9,
+                                    y: 7,
+                                    type: 'selected',
+                                    zIndex: 3
+                                }
+                            ],
+                        }
+                    },
+                    {
+                        time: 27000,
+                        duration: 500,
+                        object: {
+                            backgroundSelectedRectangleAreas: [
+                                {
+                                    cornerPoints: [{
+                                        x: 1,
+                                        y: 1
+                                    }, {
+                                        x: 9,
+                                        y: 0
+                                    }],
+                                    color: '#94CDEF',
+                                    zIndex: 2
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        time: 28000,
+                        duration: 500,
+                        object: {
+                            chartXRanges: [{
+                                coords: [1, 9],
+                                value: '8'
+                            }],
+                            chartYRanges: [{
+                                coords: [0, 1],
+                                value: '1'
+                            }],
+                        }
+                    },
+                    {
+                        time: 29500,
+                        duration: 500,
+                        object: {
+                            chartXRanges: [],
+                            chartYRanges: [],
+                        }
+                    },
+                    {
+                        time: 32000,
+                        duration: 500,
+                        object: {
+                            bars: [
+                                {
+                                    x: 1,
+                                    y: 1,
+                                    type: 'selected',
+                                    zIndex: 3,
+                                    pointer: true
+                                },
+                                {
+                                    x: 2,
+                                    y: 8,
+                                },
+                                {
+                                    x: 3,
+                                    y: 6
+                                },
+                                {
+                                    x: 4,
+                                    y: 2,
+                                },
+                                {
+                                    x: 5,
+                                    y: 5,
+                                },
+                                {
+                                    x: 6,
+                                    y: 4,
+                                },
+                                {
+                                    x: 7,
+                                    y: 8,
+                                },
+                                {
+                                    x: 8,
+                                    y: 3,
+                                },
+                                {
+                                    x: 9,
+                                    y: 7,
+                                    type: 'selected',
+                                    zIndex: 3
+                                }
+                            ],
+                        }
+                    },
+                    {
+                        time: 42000,
+                        duration: 500,
+                        object: {
+                            bars: [
+                                {
+                                    x: 1,
+                                    y: 1,
+                                },
+                                {
+                                    x: 2,
+                                    y: 8,
+                                    type: 'selected',
+                                    zIndex: 3,
+                                },
+                                {
+                                    x: 3,
+                                    y: 6
+                                },
+                                {
+                                    x: 4,
+                                    y: 2,
+                                },
+                                {
+                                    x: 5,
+                                    y: 5,
+                                },
+                                {
+                                    x: 6,
+                                    y: 4,
+                                },
+                                {
+                                    x: 7,
+                                    y: 8,
+                                },
+                                {
+                                    x: 8,
+                                    y: 3,
+                                },
+                                {
+                                    x: 9,
+                                    y: 7,
+                                    type: 'selected',
+                                    zIndex: 3
                                 }
                             ],
                             backgroundSelectedRectangleAreas: [
@@ -155,40 +606,579 @@ export const ContainerWithMostWater: LessonJsonType = {
                                         x: 9,
                                         y: 0
                                     }],
-                                    color: '#94CDEF'
+                                    color: '#94CDEF',
+                                    zIndex: 2
                                 }
                             ]
                         }
-                    }
+                    },
+                    {
+                        time: 44000,
+                        duration: 500,
+                        object: {
+                            chartXRanges: [{
+                                coords: [2, 9],
+                                value: '7'
+                            }],
+                            chartYRanges: [{
+                                coords: [0, 7],
+                                value: '7'
+                            }],
+                        }
+                    },
+                    {
+                        time: 47000,
+                        duration: 500,
+                        object: {
+                            chartXRanges: [],
+                            chartYRanges: [],
+                        }
+                    },
+                    {
+                        time: 48000,
+                        duration: 500,
+                        object: {
+                            backgroundSelectedRectangleAreas: []
+                        }
+                    },
+                    {
+                        time: 49000,
+                        duration: 500,
+                        object: {
+                            bars: [
+                                {
+                                    x: 1,
+                                    y: 1,
+                                },
+                                {
+                                    x: 2,
+                                    y: 8,
+                                    type: 'selected',
+                                    zIndex: 3,
+                                },
+                                {
+                                    x: 3,
+                                    y: 6
+                                },
+                                {
+                                    x: 4,
+                                    y: 2,
+                                },
+                                {
+                                    x: 5,
+                                    y: 5,
+                                },
+                                {
+                                    x: 6,
+                                    y: 4,
+                                },
+                                {
+                                    x: 7,
+                                    y: 8,
+                                },
+                                {
+                                    x: 8,
+                                    y: 3,
+                                },
+                                {
+                                    x: 9,
+                                    y: 7,
+                                    type: 'selected',
+                                    pointer: true,
+                                    zIndex: 3
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        time: 52000,
+                        duration: 500,
+                        object: {
+                            bars: [
+                                {
+                                    x: 1,
+                                    y: 1,
+                                },
+                                {
+                                    x: 2,
+                                    y: 8,
+                                    type: 'selected',
+                                    zIndex: 3,
+                                },
+                                {
+                                    x: 3,
+                                    y: 6
+                                },
+                                {
+                                    x: 4,
+                                    y: 2,
+                                },
+                                {
+                                    x: 5,
+                                    y: 5,
+                                },
+                                {
+                                    x: 6,
+                                    y: 4,
+                                },
+                                {
+                                    x: 7,
+                                    y: 8,
+                                    type: 'selected',
+                                    pointer: true,
+                                    zIndex: 3
+                                },
+                                {
+                                    x: 8,
+                                    y: 3,
+                                },
+                                {
+                                    x: 9,
+                                    y: 7,
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        time: 55000,
+                        duration: 500,
+                        object: {
+                            bars: [
+                                {
+                                    x: 1,
+                                    y: 1,
+                                },
+                                {
+                                    x: 2,
+                                    y: 8,
+                                    type: 'selected',
+                                    zIndex: 3,
+                                },
+                                {
+                                    x: 3,
+                                    y: 6
+                                },
+                                {
+                                    x: 4,
+                                    y: 2,
+                                },
+                                {
+                                    x: 5,
+                                    y: 5,
+                                },
+                                {
+                                    x: 6,
+                                    y: 4,
+                                },
+                                {
+                                    x: 7,
+                                    y: 8,
+                                    type: 'selected',
+                                    zIndex: 3
+                                },
+                                {
+                                    x: 8,
+                                    y: 3,
+                                },
+                                {
+                                    x: 9,
+                                    y: 7,
+                                }
+                            ],
+                            chartXRanges: [{
+                                coords: [2, 7],
+                                value: '5'
+                            }],
+                            chartYRanges: [{
+                                coords: [0, 8],
+                                value: '8'
+                            }],
+                            backgroundSelectedRectangleAreas: [
+                                {
+                                    cornerPoints: [{
+                                        x: 2,
+                                        y: 8
+                                    }, {
+                                        x: 7,
+                                        y: 0
+                                    }],
+                                    color: '#94CDEF',
+                                    zIndex: 2
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        time: 60000,
+                        duration: 500,
+                        object: {
+                            chartXRanges: [],
+                            chartYRanges: [],
+                            backgroundSelectedRectangleAreas: []
+                        }
+                    },
+                    {
+                        time: 68000,
+                        duration: 500,
+                        object: {
+                            bars: [
+                                {
+                                    x: 1,
+                                    y: 1,
+                                },
+                                {
+                                    x: 2,
+                                    y: 8,
+                                },
+                                {
+                                    x: 3,
+                                    y: 6
+                                },
+                                {
+                                    x: 4,
+                                    y: 2,
+                                },
+                                {
+                                    x: 5,
+                                    y: 5,
+                                },
+                                {
+                                    x: 6,
+                                    y: 4,
+                                },
+                                {
+                                    x: 7,
+                                    y: 8,
+                                },
+                                {
+                                    x: 8,
+                                    y: 3,
+                                },
+                                {
+                                    x: 9,
+                                    y: 7,
+                                }
+                            ],
+                        }
+                    },
                 ],
                 selections: [{
-                    time: 5000,
-                    duration: 4000,
+                    time: 17000,
+                    duration: 200,
                     selector: {
-                        bars: 'all'
-                    },
-                    type: 'sequentially'
-                }],
-                presenceParameters: {
-                    appears: [{
-                        time: 0,
-                        duration: 4000
-                    }]
-                }
+                        bars: [0, 1]
+                    }
+                }, {
+                    time: 17200,
+                    duration: 200,
+                    selector: {
+                        bars: [0, 2]
+                    }
+                }, {
+                    time: 17400,
+                    duration: 200,
+                    selector: {
+                        bars: [0, 3]
+                    }
+                }, {
+                    time: 17600,
+                    duration: 200,
+                    selector: {
+                        bars: [0, 4]
+                    }
+                }, {
+                    time: 17800,
+                    duration: 200,
+                    selector: {
+                        bars: [0, 4]
+                    }
+                }, {
+                    time: 18000,
+                    duration: 200,
+                    selector: {
+                        bars: [0, 5]
+                    }
+                }, {
+                    time: 18200,
+                    duration: 200,
+                    selector: {
+                        bars: [0, 6]
+                    }
+                }, {
+                    time: 18400,
+                    duration: 200,
+                    selector: {
+                        bars: [0, 7]
+                    }
+                }, {
+                    time: 18600,
+                    duration: 200,
+                    selector: {
+                        bars: [0, 8]
+                    }
+                }, {
+                    time: 18800,
+                    duration: 200,
+                    selector: {
+                        bars: [1, 2]
+                    }
+                }, {
+                    time: 19000,
+                    duration: 200,
+                    selector: {
+                        bars: [1, 3]
+                    }
+                }, {
+                    time: 19200,
+                    duration: 200,
+                    selector: {
+                        bars: [1, 4]
+                    }
+                }, {
+                    time: 19400,
+                    duration: 200,
+                    selector: {
+                        bars: [1, 5]
+                    }
+                }, {
+                    time: 19600,
+                    duration: 200,
+                    selector: {
+                        bars: [1, 6]
+                    }
+                }, {
+                    time: 19800,
+                    duration: 200,
+                    selector: {
+                        bars: [1, 7]
+                    }
+                }, {
+                    time: 20000,
+                    duration: 200,
+                    selector: {
+                        bars: [1, 8]
+                    }
+                }, {
+                    time: 20200,
+                    duration: 200,
+                    selector: {
+                        bars: [2, 3]
+                    }
+                }, {
+                    time: 20400,
+                    duration: 200,
+                    selector: {
+                        bars: [2, 4]
+                    }
+                }, {
+                    time: 20600,
+                    duration: 200,
+                    selector: {
+                        bars: [2, 5]
+                    }
+                }, {
+                    time: 20800,
+                    duration: 200,
+                    selector: {
+                        bars: [2, 6]
+                    }
+                }, {
+                    time: 21000,
+                    duration: 200,
+                    selector: {
+                        bars: [2, 7]
+                    }
+                }, {
+                    time: 21200,
+                    duration: 200,
+                    selector: {
+                        bars: [2, 8]
+                    }
+                }, {
+                    time: 21400,
+                    duration: 200,
+                    selector: {
+                        bars: [3, 4]
+                    }
+                }, {
+                    time: 21600,
+                    duration: 200,
+                    selector: {
+                        bars: [3, 5]
+                    }
+                }, {
+                    time: 21800,
+                    duration: 200,
+                    selector: {
+                        bars: [3, 6]
+                    }
+                }, {
+                    time: 22000,
+                    duration: 200,
+                    selector: {
+                        bars: [3, 7]
+                    }
+                }, {
+                    time: 22200,
+                    duration: 200,
+                    selector: {
+                        bars: [3, 8]
+                    }
+                }, {
+                    time: 22400,
+                    duration: 200,
+                    selector: {
+                        bars: [4, 5]
+                    }
+                }, {
+                    time: 22600,
+                    duration: 200,
+                    selector: {
+                        bars: [4, 6]
+                    }
+                }, {
+                    time: 22800,
+                    duration: 200,
+                    selector: {
+                        bars: [4, 7]
+                    }
+                }, {
+                    time: 23000,
+                    duration: 200,
+                    selector: {
+                        bars: [4, 8]
+                    }
+                }, {
+                    time: 23200,
+                    duration: 200,
+                    selector: {
+                        bars: [5, 6]
+                    }
+                }, {
+                    time: 23400,
+                    duration: 200,
+                    selector: {
+                        bars: [5, 7]
+                    }
+                }, {
+                    time: 23600,
+                    duration: 200,
+                    selector: {
+                        bars: [5, 8]
+                    }
+                }, {
+                    time: 23800,
+                    duration: 200,
+                    selector: {
+                        bars: [6, 7]
+                    }
+                }, {
+                    time: 24000,
+                    duration: 200,
+                    selector: {
+                        bars: [6, 8]
+                    }
+                }, {
+                    time: 24200,
+                    duration: 200,
+                    selector: {
+                        bars: [7, 8]
+                    }
+                }, {
+                    time: 34000,
+                    duration: 500,
+                    selector: {
+                        bars: [1]
+                    }
+                },{
+                    time: 39000,
+                    duration: 500,
+                    selector: {
+                        bars: [6]
+                    }
+                },{
+                    time: 65000,
+                    duration: 500,
+                    selector: {
+                        bars: [2, 5]
+                    }
+                },{
+                    time: 66000,
+                    duration: 500,
+                    selector: {
+                        bars: [3, 4]
+                    }
+                }]
             }
         ],
+        text: [{
+            presenceParameters: {
+                appears: [{
+                    time: 29000,
+                    duration: 500
+                }],
+                disappears: [{
+                    time: 70000,
+                    duration: 500
+                }]
+            },
+            object: {
+                fontSize: 28,
+                origin: {
+                    x: 1200,
+                    y: 200
+                },
+                value: '1 x 8 = 8',
+                font: 'Courier New'
+            },
+            transformations: [{
+                time: 30000,
+                duration: 500,
+                object: {
+                    value: '1 x 8 = 8\n---------\nmax = 8'
+                }
+            },{
+                time: 46000,
+                duration: 500,
+                object: {
+                    value: '1 x 8 = 8\n7 x 7 = 49'
+                }
+            },{
+                time: 47000,
+                duration: 500,
+                object: {
+                    value: '1 x 8 = 8\n7 x 7 = 49\n----------\nmax = 49'
+                }
+            },{
+                time: 58000,
+                duration: 500,
+                object: {
+                    value: '1 x 8 = 8\n7 x 7 = 49\n5 x 8 = 40\n----------\nmax = 49'
+                }
+            },{
+                time: 68000,
+                duration: 500,
+                object: {
+                    origin: {
+                        x: 570,
+                        y: 650
+                    },
+                    value: 'max = 49'
+                }
+            }]
+        }],
         highlightedSyntax: [
             {
                 presenceParameters: {
                     appears: [{
-                        time: 15000,
+                        time: 73000,
                         duration: 10000
                     }]
                 },
                 object: {
                     origin: {
-                        x: 30,
-                        y: 30
+                        x: 200,
+                        y: 50
                     },
                     fontSize: 22,
                     language: 'Java',

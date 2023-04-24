@@ -58,6 +58,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         const initialIncludedAnimationParams = this.getIncludedAnimationParamsByParameter(object)
 
         appearanceParam.appears.forEach(appear => {
+            //TODO add type
             let containedObjectAppearTime = appear.time
             const containedObjectAppearDuration = appear.duration / initialIncludedAnimationParams.size
 
@@ -82,7 +83,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
             const disappearedObjectDisappearDuration = disappear.duration / prevObjectParams.size
             let disappearedObjectDisappearTime = disappear.time
 
-            prevObjectParams.forEach(o => {
+            initialIncludedAnimationParams.forEach((o, k) => {
                 o.appendDisappearTime(disappearedObjectDisappearTime, disappearedObjectDisappearDuration)
                 disappearedObjectDisappearTime += disappearedObjectDisappearDuration
             })

@@ -17,12 +17,12 @@ export default class RectangleCanvasAnimationParams extends SimpleCanvasAnimatio
 
     mergeWithTransformation(obj: rectangleParamsType, trans: Partial<rectangleParamsType>, perc: number, style: AnimationStyle): onlyRectangleParamsType {
         let cornerRadius = obj.cornerRadius ?? style.cornerRadius
-        if (trans.cornerRadius) {
+        if (trans.cornerRadius !== undefined) {
             cornerRadius = calculatePercentValue(cornerRadius, trans.cornerRadius, perc)
         }
         return {
-            width: trans.width ? calculatePercentValue(obj.width, trans.width, perc) : obj.width,
-            height: trans.height ? calculatePercentValue(obj.height, trans.height, perc) : obj.height,
+            width: trans.width === undefined ? obj.width : calculatePercentValue(obj.width, trans.width, perc),
+            height: trans.height === undefined ? obj.height : calculatePercentValue(obj.height, trans.height, perc),
             cornerRadius
         }
     }

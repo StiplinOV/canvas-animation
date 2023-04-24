@@ -48,7 +48,7 @@ export default abstract class SimpleCanvasAnimationParams<T extends ObjectParams
                 if (transformationObject.origin) {
                     result.origin = calculatePointPercentValue(result.origin, transformationObject.origin, percent)
                 }
-                if (transformationObject.zIndex) {
+                if (transformationObject.zIndex !== undefined) {
                     result.zIndex = calculatePercentValue(result.zIndex ?? 0, transformationObject.zIndex, percent)
                 }
                 if (transformationObject.weight) {

@@ -410,7 +410,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                         duration: 2000,
                         object: {
                             chartYRanges: [{
-                                yCoords: [1, 5],
+                                coords: [1, 5],
                                 value: 'Profit is 4'
                             }]
                         }
@@ -420,7 +420,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                         duration: 2000,
                         object: {
                             chartYRanges: [{
-                                yCoords: [3, 6],
+                                coords: [3, 6],
                                 value: 'Profit is 3'
                             }]
                         }
@@ -430,7 +430,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                         duration: 2000,
                         object: {
                             chartYRanges: [{
-                                yCoords: [1, 6],
+                                coords: [1, 6],
                                 value: 'Profit is 7'
                             }]
                         }
