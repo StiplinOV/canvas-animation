@@ -1,11 +1,11 @@
 import {Renderer} from 'highlight-ts'
-import {highlightedTextValueSegmentType} from '../../simple/highligtedtext/HighlightedTextCanvasAnimationParams'
+import {HighlightedTextValueSegmentType} from '../../simple/highligtedtext/HighlightedTextCanvasAnimationParams'
 import {THE_STYLE} from 'p5'
 import {Property} from 'csstype'
 import AnimationStyle from '../../../AnimationStyles'
 import React from 'react'
 
-export default class HighlightedSyntaxCanvasAnimationRenderer implements Renderer<highlightedTextValueSegmentType[]> {
+export default class HighlightedSyntaxCanvasAnimationRenderer implements Renderer<HighlightedTextValueSegmentType[]> {
 
     private readonly style: Record<string, React.CSSProperties>
 
@@ -16,10 +16,10 @@ export default class HighlightedSyntaxCanvasAnimationRenderer implements Rendere
         this.animationStyle = animationStyle
     }
 
-    text(chunkParam: string): highlightedTextValueSegmentType[] {
+    text(chunkParam: string): HighlightedTextValueSegmentType[] {
         const properties: React.CSSProperties = this.style.hljs
         const chunks = chunkParam.split('\n')
-        const result: highlightedTextValueSegmentType[] = []
+        const result: HighlightedTextValueSegmentType[] = []
         for (let i = 0; i < chunks.length; i++) {
             const chunk = chunks[i]
             result.push({
@@ -36,12 +36,12 @@ export default class HighlightedSyntaxCanvasAnimationRenderer implements Rendere
         return result
     }
 
-    wrap(className: string, chunk: highlightedTextValueSegmentType[]): highlightedTextValueSegmentType[] {
+    wrap(className: string, chunk: HighlightedTextValueSegmentType[]): HighlightedTextValueSegmentType[] {
         const properties: React.CSSProperties = {
             ...this.style.hljs,
             ...this.style[className]
         }
-        return chunk.map((c): highlightedTextValueSegmentType => {
+        return chunk.map((c): HighlightedTextValueSegmentType => {
             if (c === 'newline') {
                 return c
             }
@@ -55,7 +55,7 @@ export default class HighlightedSyntaxCanvasAnimationRenderer implements Rendere
         })
     }
 
-    join(chunks: highlightedTextValueSegmentType[][]): highlightedTextValueSegmentType[] {
+    join(chunks: HighlightedTextValueSegmentType[][]): HighlightedTextValueSegmentType[] {
         return chunks.flatMap(c => c)
     }
 

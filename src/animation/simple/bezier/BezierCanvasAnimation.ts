@@ -3,10 +3,11 @@ import AnimationStyle from '../../../AnimationStyles'
 import { BezierParamsType } from './BezierCanvasAnimationParams'
 import CanvasAnimation from '../../CanvasAnimation'
 import { calculatePointsPercentValue } from '../../../common/Utils'
+import { SelectionInfo } from '../SimpleCanvasAnimationParams'
 
 export default class BezierCanvasAnimation extends CanvasAnimation<BezierParamsType> {
 
-    public drawObject (p5: p5Types, object: BezierParamsType, percent: number, selectedPercentParam: number, style: AnimationStyle): void {
+    public drawObject (p5: p5Types, object: BezierParamsType, percent: number, selectionInfo: SelectionInfo, style: AnimationStyle): void {
         const points = calculatePointsPercentValue([
             object.originRelativePoints[0],
             object.originRelativePoints[0],

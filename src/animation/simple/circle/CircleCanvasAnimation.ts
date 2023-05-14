@@ -3,11 +3,12 @@ import { calculatePercentValue } from '../../../common/Utils'
 import AnimationStyle from '../../../AnimationStyles'
 import { circleParamsType } from './CircleCanvasAnimationParams'
 import CanvasAnimation from '../../CanvasAnimation'
+import { SelectionInfo } from '../SimpleCanvasAnimationParams'
 
 export default class CircleCanvasAnimation extends CanvasAnimation<circleParamsType> {
 
-    public drawObject (p5: p5Types, object: circleParamsType, percent: number, selectedPercent: number, style: AnimationStyle): void {
-        const diameter = calculatePercentValue(object.diameter, object.diameter * 2, selectedPercent)
+    public drawObject (p5: p5Types, object: circleParamsType, percent: number, selectionInfo: SelectionInfo, style: AnimationStyle): void {
+        const diameter = calculatePercentValue(object.diameter, object.diameter * 2, selectionInfo.percent)
 
         p5.arc(0, 0, diameter, diameter, 0, p5.PI * 2 * percent)
     }

@@ -1,6 +1,6 @@
 import { LessonJsonType } from '../AnimationsJsonType'
 
-export const Demo: LessonJsonType = {
+export const MergeKSortedLists: LessonJsonType = {
     sound: require('./Lofi_Jazz_Cafe_Cozy_Evening.mp3'),
     canvasDimensions: {
         width: 1280,

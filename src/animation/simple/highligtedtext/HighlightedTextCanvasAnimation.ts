@@ -1,8 +1,16 @@
 import p5Types from 'p5'
 import AnimationStyle from '../../../AnimationStyles'
-import {highlightedTextParamsType} from './HighlightedTextCanvasAnimationParams'
+import {
+    HighlightedTextCanvasAnimationSelection,
+    HighlightedTextParamsType
+} from './HighlightedTextCanvasAnimationParams'
 import CanvasAnimation from '../../CanvasAnimation'
-import {calculateArrayPercentValue} from '../../../common/Utils'
+import {
+    calculateArrayPercentValue,
+    calculateColorPercentValue,
+    convertPercentToFadeInFadeOut
+} from '../../../common/Utils'
+import { SelectionInfo } from '../SimpleCanvasAnimationParams'
 
 type rectParams = {
     x: number
@@ -11,20 +19,20 @@ type rectParams = {
     height: number
 }
 
-export default class HighlightedTextCanvasAnimation extends CanvasAnimation<highlightedTextParamsType> {
+export default class HighlightedTextCanvasAnimation extends CanvasAnimation<HighlightedTextParamsType> {
 
-    public drawObject(p5: p5Types, o: highlightedTextParamsType, perc: number, selectedPerc: number, animationStyle: AnimationStyle): void {
-        const {x, y, width, height} = this.process(p5, o, perc, selectedPerc, animationStyle, true)
+    public drawObject(p5: p5Types, o: HighlightedTextParamsType, perc: number, selectionInfo: SelectionInfo<HighlightedTextCanvasAnimationSelection>, animationStyle: AnimationStyle): void {
+        const {x, y, width, height} = this.process(p5, o, perc, selectionInfo, animationStyle, true)
         o.backgroundColor && p5.fill(o.backgroundColor)
         p5.rect(x, y, width, height)
-        this.process(p5, o, perc, selectedPerc, animationStyle)
+        this.process(p5, o, perc, selectionInfo, animationStyle)
     }
 
     public process(
         p5: p5Types,
-        o: highlightedTextParamsType,
+        o: HighlightedTextParamsType,
         perc: number,
-        selectedPerc: number,
+        selectionInfo: SelectionInfo<HighlightedTextCanvasAnimationSelection>,
         animationStyle: AnimationStyle,
         dry?: boolean
     ): rectParams {
@@ -43,7 +51,13 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<high
                 continue
             }
             let {value, textStyle, textWeight, textColor, backgroundTextColor} = part
-
+            if (selectionInfo.selection?.segmentIndex === i) {
+                textColor = calculateColorPercentValue(
+                    textColor,
+                    animationStyle.selectedColor,
+                    convertPercentToFadeInFadeOut(selectionInfo.percent)
+                )
+            }
             value = value.replaceAll('\t', '    ')
             const textFont = o.font === 'monospace' ? animationStyle.monospaceFont : (o.font ?? animationStyle.font)
 

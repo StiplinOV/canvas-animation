@@ -4,10 +4,10 @@ import ComplexCanvasAnimationParams from '../ComplexCanvasAnimationParams'
 import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
 import ArrayElement, { ElementStyle, ElementType } from './ArrayElement'
+import ArrowCanvasAnimationParams from '../arrow/ArrowCanvasAnimationParams'
 
 export interface ArrayParamsType extends ObjectParams {
     values: (ElementType | string | boolean | number)[]
-    valueIds?: (null | string)[]
     height: number
     width?: number
     title?: string
@@ -16,9 +16,14 @@ export interface ArrayParamsType extends ObjectParams {
     hideIndices?: boolean
     elementStyle?: ElementStyle
     valueStyle?: Map<number, ElementType>
+    pointers?: number[]
 }
 
-export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationParams<ArrayParamsType> {
+export type ArraySelectorType = {
+    values?: 'all' | number[]
+}
+
+export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationParams<ArrayParamsType, ArraySelectorType> {
 
     protected getIncludedAnimationParamsByParameter (object: ArrayParamsType): Map<string, SimpleCanvasAnimationParams> {
         const result = new Map<string, SimpleCanvasAnimationParams>()
@@ -30,7 +35,7 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
             origin,
             rotations,
             hideIndices,
-            valueIds
+            pointers
         } = object
         const partHeight = this.calculatePartHeight(object)
         const width = this.calculateWidth(object)
@@ -63,7 +68,6 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
                     }
                 }
             }
-
             new ArrayElement({
                 object: {
                     origin: addPoints(origin, {
@@ -75,24 +79,27 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
                     height: partHeight * 3
                 }
             }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
-                const id = valueIds ? valueIds[index] : null
-                const indexPart = id ?? `[${index}]`
-                result.set(`${k} ${indexPart}`, v)
+                result.set(`${k} ${index}`, v)
             })
-            !hideIndices && result.set(`index text ${index}`, new TextCanvasAnimationParams({
-                object: {
-                    value: String(index + (firstIndex ?? 0)),
-                    origin: addPoints(origin, {
-                        x: index * (arrayRectangleWidth + partHeight) + arrayRectangleWidth / 2,
-                        y: partShift + partHeight * 4
-                    }),
-                    fontSize: partHeight * 2 / 3,
-                    horizontalAlign: 'center',
-                    rotations
-                }
-            }))
         })
-        partShift += partHeight * 5
+        partShift += partHeight * 4
+        if (!hideIndices) {
+            values.forEach((valueParam, index) => {
+                result.set(`index text ${index}`, new TextCanvasAnimationParams({
+                    object: {
+                        value: String(index + (firstIndex ?? 0)),
+                        origin: addPoints(origin, {
+                            x: index * (arrayRectangleWidth + partHeight) + arrayRectangleWidth / 2,
+                            y: partShift
+                        }),
+                        fontSize: partHeight * 2 / 3,
+                        horizontalAlign: 'center',
+                        rotations
+                    }
+                }))
+            })
+        }
+        partShift += partHeight
         if (indexTitle) {
             result.set('index title', new TextCanvasAnimationParams({
                 object: {
@@ -106,7 +113,30 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
                     rotations
                 }
             }))
+            partShift += partHeight
         }
+        values.forEach((valueParam, index) => {
+            if (pointers?.includes(index)) {
+                new ArrowCanvasAnimationParams(
+                    {
+                        object: {
+                            origin: addPoints(origin, {
+                                x: index * (arrayRectangleWidth + partHeight) + arrayRectangleWidth / 2,
+                                y: partShift
+                            }),
+                            endPoint: addPoints(origin, {
+                                x: index * (arrayRectangleWidth + partHeight) + arrayRectangleWidth / 2,
+                                y: partShift + arrayRectangleWidth
+                            }),
+                            startType: 'Arrow',
+                            weight: arrayRectangleWidth/30
+                        }
+                    },
+                    this.p5,
+                    this.getAnimationStyle()
+                ).getIncludedAnimationParams().forEach((v, k) => result.set(`element pointer ${index} ${k}`, v))
+            }
+        })
 
         return result
     }
@@ -132,6 +162,19 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
             numberOfParts += 2
         }
         return height / numberOfParts
+    }
+
+    protected convertSelectorToDiscriminatorRegexps (selector: ArraySelectorType): RegExp[] {
+        if (!selector.values) {
+            return [/.*/]
+        }
+        const result: RegExp[] = []
+        if (selector.values === 'all') {
+            result.push(/square [0-9]*/)
+        } else if (Array.isArray(selector.values)) {
+            selector.values.forEach(p => result.push(new RegExp(`square ${p}`)))
+        }
+        return result
     }
 
 }

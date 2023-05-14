@@ -2,7 +2,7 @@ import {ObjectParams} from '../../CanvasAnimationParams'
 import ComplexCanvasAnimationParams from '../ComplexCanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
 import HighlightedTextCanvasAnimationParams, {
-    highlightedTextValueSegmentType
+    HighlightedTextValueSegmentType
 } from '../../simple/highligtedtext/HighlightedTextCanvasAnimationParams'
 import {
     AccessLog,
@@ -317,7 +317,7 @@ export default class HighlightedSyntaxCanvasAnimationParams extends ComplexCanva
         return result
     }
 
-    private createValue(object: highlightedSyntaxParamsType): highlightedTextValueSegmentType[] {
+    private createValue(object: highlightedSyntaxParamsType): HighlightedTextValueSegmentType[] {
         const {value} = object
 
         registerLanguages(...Object.values(languageDefs))

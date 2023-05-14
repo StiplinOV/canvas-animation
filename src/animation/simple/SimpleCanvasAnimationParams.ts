@@ -10,12 +10,13 @@ import {
 } from '../../common/Utils'
 import { ZeroPoint } from '../../common/Point'
 
-interface SelectionInfo<U extends Selection = Selection> {
+export interface SelectionInfo<U extends Selection = Selection> {
     selection?: U | null
     percent: number
 }
 
-export default abstract class SimpleCanvasAnimationParams<T extends ObjectParams = ObjectParams> extends CanvasAnimationParams<T> {
+export default abstract class SimpleCanvasAnimationParams<T extends ObjectParams = ObjectParams,
+    V extends Selection = Selection> extends CanvasAnimationParams<T, unknown, V> {
 
     public calculateObjectParamsInTime (time: number, animationStyle: AnimationStyle): T {
         const sourceObject = this.getObject()
@@ -99,7 +100,7 @@ export default abstract class SimpleCanvasAnimationParams<T extends ObjectParams
 
     public abstract mergeWithTransformation (obj: T, trans: Partial<T>, perc: number, animationStyle: AnimationStyle): Omit<T, keyof ObjectParams>
 
-    public calculateSelectionInfo (time: number): SelectionInfo {
+    public calculateSelectionInfo (time: number): SelectionInfo<V> {
         const selections = this.getSelections()
         let selected = false
         let percent = 0

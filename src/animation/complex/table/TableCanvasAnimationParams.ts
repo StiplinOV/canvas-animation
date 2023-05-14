@@ -12,7 +12,7 @@ import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationPara
 import EllipseCanvasAnimationParams from '../../simple/ellipse/EllipseCanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
 
-export interface tableParamsType extends ObjectParams {
+export interface TableParamsType extends ObjectParams {
     values: string[][]
     width: number
     height: number
@@ -25,9 +25,13 @@ export interface tableParamsType extends ObjectParams {
     markedCells?: number[][]
 }
 
-export type tableSelectorType = { rowTitles?: 'all' | number[], colTitles?: 'all' | number[], values?: 'all' | [number, number][] }
+export type TableSelectorType = {
+    rowTitles?: 'all' | number[],
+    colTitles?: 'all' | number[],
+    values?: 'all' | [number, number][]
+}
 
-export interface tableTransformOptionsType extends TransformOptions {
+export interface TableTransformOptionsType extends TransformOptions {
     renderValues?: {
         direction?: render2DArrayType
         immediacy?: boolean
@@ -36,9 +40,9 @@ export interface tableTransformOptionsType extends TransformOptions {
 
 const cellValueRegexp = /title|value (\d+) (\d+)/
 
-export default class TableCanvasAnimationParams extends ComplexCanvasAnimationParams<tableParamsType, tableSelectorType, tableTransformOptionsType> {
+export default class TableCanvasAnimationParams extends ComplexCanvasAnimationParams<TableParamsType, TableSelectorType, TableTransformOptionsType> {
 
-    protected getIncludedAnimationParamsByParameter(object: tableParamsType): Map<string, SimpleCanvasAnimationParams> {
+    protected getIncludedAnimationParamsByParameter(object: TableParamsType): Map<string, SimpleCanvasAnimationParams> {
         const result = new Map<string, SimpleCanvasAnimationParams>()
         const {values, height, horizontalTitles, verticalTitles, origin, rotations} = object
         const rowHeight = height / values.length
@@ -112,7 +116,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         return result
     }
 
-    private calculateRowColumnsWidths(object: tableParamsType): number[][] {
+    private calculateRowColumnsWidths(object: TableParamsType): number[][] {
         const result: number[][] = []
         const {values, width, columnWidthProportions} = object
         if (columnWidthProportions) {
@@ -153,7 +157,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         return result
     }
 
-    private calculateRowColumnsWidthsFromParam(object: tableParamsType): number[][] {
+    private calculateRowColumnsWidthsFromParam(object: TableParamsType): number[][] {
         const {width, columnWidthProportions} = object
         const result: number[][] = []
         if (!columnWidthProportions || columnWidthProportions.length === 0) {
@@ -173,7 +177,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         return result
     }
 
-    private calculateVerticalTitleWidth(object: tableParamsType): number {
+    private calculateVerticalTitleWidth(object: TableParamsType): number {
         const {verticalTitles, values, width} = object
         if (!verticalTitles) {
             return 0
@@ -219,7 +223,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         return result
     }
 
-    private isBoldHorizontalLine(object: tableParamsType, i: number, j: number): boolean {
+    private isBoldHorizontalLine(object: TableParamsType, i: number, j: number): boolean {
         const {horizontalTitles, boldHorizontalLines} = object
         if (Boolean(horizontalTitles) && i === 0) {
             return true
@@ -241,7 +245,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         return false
     }
 
-    private isBoldVerticalLine(object: tableParamsType, i: number, j: number): boolean {
+    private isBoldVerticalLine(object: TableParamsType, i: number, j: number): boolean {
         const {verticalTitles, boldVerticalLines} = object
         if (Boolean(verticalTitles) && j === 0) {
             return true
@@ -263,7 +267,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         return false
     }
 
-    protected convertSelectorToDiscriminatorRegexps(selector: tableSelectorType): RegExp[] {
+    protected convertSelectorToDiscriminatorRegexps(selector: TableSelectorType): RegExp[] {
         if (!selector.rowTitles && !selector.colTitles && !selector.values) {
             return [/.*/]
         }
@@ -292,7 +296,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         added: Map<string, SimpleCanvasAnimationParams>,
         time: number,
         duration: number,
-        options?: tableTransformOptionsType
+        options?: TableTransformOptionsType
     ): Map<string, AddedAppearParamType> {
         if (!options?.renderValues || options.type === 'together') {
             return super.calculateAddedTransformAnimationsAppearParams(added, time, duration, options)
@@ -317,7 +321,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         deleted: Set<string>,
         time: number,
         duration: number,
-        options?: tableTransformOptionsType
+        options?: TableTransformOptionsType
     ): Map<string, DeletedDisappearParamType> {
         if (!options?.renderValues || options.type === 'together') {
             return super.calculateDeletedTransformAnimationsDisappearParams(deleted, time, duration, options)
@@ -340,7 +344,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         changed: Map<string, AnimationS2T>,
         time: number,
         duration: number,
-        options?: tableTransformOptionsType
+        options?: TableTransformOptionsType
     ): Map<string, ChangedTransformParamType> {
         if (!options?.renderValues || options.type === 'together') {
             return super.calculateChangedTransformAnimationsTransformParams(changed, time, duration, options)
@@ -362,7 +366,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         return result
     }
 
-    private sortKeysAccordingToOption(options: tableTransformOptionsType, keysParam: Set<string>): string[] {
+    private sortKeysAccordingToOption(options: TableTransformOptionsType, keysParam: Set<string>): string[] {
         const keys = Array.from(keysParam.keys())
         const direction = options.renderValues?.direction
         if (!direction) {

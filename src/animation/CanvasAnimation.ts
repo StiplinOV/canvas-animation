@@ -10,10 +10,10 @@ import {
     toAppearancePercent
 } from '../common/Utils'
 import AnimationStyle, { getFillColor, getStrokeColor } from '../AnimationStyles'
-import { LayoutType, ObjectParams, weightToNumber } from './CanvasAnimationParams'
-import SimpleCanvasAnimationParams from './simple/SimpleCanvasAnimationParams'
+import { LayoutType, ObjectParams, Selection, weightToNumber } from './CanvasAnimationParams'
+import SimpleCanvasAnimationParams, { SelectionInfo } from './simple/SimpleCanvasAnimationParams'
 
-export default abstract class CanvasAnimation<T extends ObjectParams = ObjectParams, U extends SimpleCanvasAnimationParams<T> = SimpleCanvasAnimationParams<T>> {
+export default abstract class CanvasAnimation<T extends ObjectParams = ObjectParams, V extends Selection = Selection, U extends SimpleCanvasAnimationParams<T, V> = SimpleCanvasAnimationParams<T, V>> {
 
     private readonly params: U
 
@@ -54,26 +54,20 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
         p5.rotate(angle)
         dashed && p5.drawingContext.setLineDash(dashed)
         const selectionInfo = this.params.calculateSelectionInfo(time)
-        const selectedPercent = convertPercentToFadeInFadeOut(selectionInfo.percent)
-        const weight = calculatePercentValue(
-            weightToNumber(animationStyle, object.weight),
-            weightToNumber(animationStyle, object.weight) * 2,
-            selectedPercent
-        )
-        p5.strokeWeight(weight)
+        //const selectedPercent = convertPercentToFadeInFadeOut(selectionInfo.percent)
+        // const weight = calculatePercentValue(
+        //     weightToNumber(animationStyle, object.weight),
+        //     weightToNumber(animationStyle, object.weight) * 2,
+        //     selectedPercent
+        // )
+        p5.strokeWeight(weightToNumber(animationStyle, object.weight))
         p5.stroke(getStrokeColor(animationStyle, object.strokeColor))
-        p5.fill(
-            calculateColorPercentValue(
-                getFillColor(animationStyle, object.fillColor),
-                animationStyle.selectedColor,
-                selectedPercent
-            )
-        )
-        this.drawObject(p5, object, toAppearancePercent(time, this.params.getAppearanceParam()), selectedPercent, animationStyle)
+        p5.fill(getFillColor(animationStyle, object.fillColor))
+        this.drawObject(p5, object, toAppearancePercent(time, this.params.getAppearanceParam()), selectionInfo, animationStyle)
         p5.pop()
     }
 
-    public abstract drawObject (p5: p5Types, obj: T, perc: number, selectedPercent: number, animationStyle: AnimationStyle): void
+    public abstract drawObject (p5: p5Types, obj: T, perc: number, selectedPercent: SelectionInfo<V>, animationStyle: AnimationStyle): void
 
     public getZIndex (time: number, animationStyle: AnimationStyle): number {
         return this.params.getZIndex(time, animationStyle)
