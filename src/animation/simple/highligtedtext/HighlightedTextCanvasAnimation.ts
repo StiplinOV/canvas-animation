@@ -1,5 +1,5 @@
 import p5Types from 'p5'
-import AnimationStyle from '../../../AnimationStyles'
+import AnimationStyle, { getFontColor } from '../../../AnimationStyles'
 import {
     HighlightedTextCanvasAnimationSelection,
     HighlightedTextParamsType
@@ -51,6 +51,7 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
                 continue
             }
             let {value, textStyle, textWeight, textColor, backgroundTextColor} = part
+            textColor = getFontColor(animationStyle, textColor)
             if (selectionInfo.selection?.segmentIndex === i) {
                 textColor = calculateColorPercentValue(
                     textColor,

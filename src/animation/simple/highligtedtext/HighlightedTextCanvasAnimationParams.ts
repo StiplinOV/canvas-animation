@@ -1,7 +1,7 @@
 import {calculateArrayPercentValue, calculatePercentValue} from '../../../common/Utils'
 import { ObjectParams, Selection } from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
-import AnimationStyle, {WebSafeFontsType} from '../../../AnimationStyles'
+import AnimationStyle, { ColorType, WebSafeFontsType } from '../../../AnimationStyles'
 import HighlightedTextCanvasAnimation from './HighlightedTextCanvasAnimation'
 import {THE_STYLE} from 'p5'
 
@@ -9,7 +9,7 @@ export type HighlightedTextValueSegmentType = {
     value: string
     textStyle: THE_STYLE
     textWeight?: number
-    textColor: string
+    textColor?: ColorType
     backgroundTextColor?: string
 } | 'newline'
 

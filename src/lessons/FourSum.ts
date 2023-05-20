@@ -68,25 +68,21 @@ export const FourSum: LessonJsonType = {
                     value: [
                         {
                             value: 'Restrictions:',
-                            textColor: '#000000',//TODO
                             textStyle: 'normal',
                         },
                         'newline',
                         {
                             value: '1 <= nums.length <= 200\n',
-                            textColor: '#000000',//TODO
                             textStyle: 'normal',
                         },
                         'newline',
                         {
                             value: '-10^9 <= nums[i] <= 10^9\n',
-                            textColor: '#000000',//TODO
                             textStyle: 'normal',
                         },
                         'newline',
                         {
                             value: '-10^9 <= target <= 10^9',
-                            textColor: '#000000',//TODO
                             textStyle: 'normal',
                         }
                     ]
