@@ -864,248 +864,32 @@ export const ContainerWithMostWater: LessonJsonType = {
                 ],
                 selections: [{
                     time: 17000,
-                    duration: 200,
-                    selector: {
-                        bars: [0, 1]
-                    }
-                }, {
-                    time: 17200,
-                    duration: 200,
-                    selector: {
-                        bars: [0, 2]
-                    }
-                }, {
-                    time: 17400,
-                    duration: 200,
-                    selector: {
-                        bars: [0, 3]
-                    }
-                }, {
-                    time: 17600,
-                    duration: 200,
-                    selector: {
-                        bars: [0, 4]
-                    }
-                }, {
-                    time: 17800,
-                    duration: 200,
-                    selector: {
-                        bars: [0, 4]
-                    }
-                }, {
-                    time: 18000,
-                    duration: 200,
-                    selector: {
-                        bars: [0, 5]
-                    }
-                }, {
-                    time: 18200,
-                    duration: 200,
-                    selector: {
-                        bars: [0, 6]
-                    }
-                }, {
-                    time: 18400,
-                    duration: 200,
-                    selector: {
-                        bars: [0, 7]
-                    }
-                }, {
-                    time: 18600,
-                    duration: 200,
-                    selector: {
-                        bars: [0, 8]
-                    }
-                }, {
-                    time: 18800,
-                    duration: 200,
-                    selector: {
-                        bars: [1, 2]
-                    }
-                }, {
-                    time: 19000,
-                    duration: 200,
-                    selector: {
-                        bars: [1, 3]
-                    }
-                }, {
-                    time: 19200,
-                    duration: 200,
-                    selector: {
-                        bars: [1, 4]
-                    }
-                }, {
-                    time: 19400,
-                    duration: 200,
-                    selector: {
-                        bars: [1, 5]
-                    }
-                }, {
-                    time: 19600,
-                    duration: 200,
-                    selector: {
-                        bars: [1, 6]
-                    }
-                }, {
-                    time: 19800,
-                    duration: 200,
-                    selector: {
-                        bars: [1, 7]
-                    }
-                }, {
-                    time: 20000,
-                    duration: 200,
-                    selector: {
-                        bars: [1, 8]
-                    }
-                }, {
-                    time: 20200,
-                    duration: 200,
-                    selector: {
-                        bars: [2, 3]
-                    }
-                }, {
-                    time: 20400,
-                    duration: 200,
-                    selector: {
-                        bars: [2, 4]
-                    }
-                }, {
-                    time: 20600,
-                    duration: 200,
-                    selector: {
-                        bars: [2, 5]
-                    }
-                }, {
-                    time: 20800,
-                    duration: 200,
-                    selector: {
-                        bars: [2, 6]
-                    }
-                }, {
-                    time: 21000,
-                    duration: 200,
-                    selector: {
-                        bars: [2, 7]
-                    }
-                }, {
-                    time: 21200,
-                    duration: 200,
-                    selector: {
-                        bars: [2, 8]
-                    }
-                }, {
-                    time: 21400,
-                    duration: 200,
-                    selector: {
-                        bars: [3, 4]
-                    }
-                }, {
-                    time: 21600,
-                    duration: 200,
-                    selector: {
-                        bars: [3, 5]
-                    }
-                }, {
-                    time: 21800,
-                    duration: 200,
-                    selector: {
-                        bars: [3, 6]
-                    }
-                }, {
-                    time: 22000,
-                    duration: 200,
-                    selector: {
-                        bars: [3, 7]
-                    }
-                }, {
-                    time: 22200,
-                    duration: 200,
-                    selector: {
-                        bars: [3, 8]
-                    }
-                }, {
-                    time: 22400,
-                    duration: 200,
-                    selector: {
-                        bars: [4, 5]
-                    }
-                }, {
-                    time: 22600,
-                    duration: 200,
-                    selector: {
-                        bars: [4, 6]
-                    }
-                }, {
-                    time: 22800,
-                    duration: 200,
-                    selector: {
-                        bars: [4, 7]
-                    }
-                }, {
-                    time: 23000,
-                    duration: 200,
-                    selector: {
-                        bars: [4, 8]
-                    }
-                }, {
-                    time: 23200,
-                    duration: 200,
-                    selector: {
-                        bars: [5, 6]
-                    }
-                }, {
-                    time: 23400,
-                    duration: 200,
-                    selector: {
-                        bars: [5, 7]
-                    }
-                }, {
-                    time: 23600,
-                    duration: 200,
-                    selector: {
-                        bars: [5, 8]
-                    }
-                }, {
-                    time: 23800,
-                    duration: 200,
-                    selector: {
-                        bars: [6, 7]
-                    }
-                }, {
-                    time: 24000,
-                    duration: 200,
-                    selector: {
-                        bars: [6, 8]
-                    }
-                }, {
-                    time: 24200,
-                    duration: 200,
-                    selector: {
-                        bars: [7, 8]
+                    duration: 10000,
+                    type: {
+                        bars: 'allPairsInSequence'
                     }
                 }, {
                     time: 34000,
                     duration: 500,
-                    selector: {
+                    type: {
                         bars: [1]
                     }
-                },{
+                }, {
                     time: 39000,
                     duration: 500,
-                    selector: {
+                    type: {
                         bars: [6]
                     }
-                },{
+                }, {
                     time: 65000,
                     duration: 500,
-                    selector: {
+                    type: {
                         bars: [2, 5]
                     }
-                },{
+                }, {
                     time: 66000,
                     duration: 500,
-                    selector: {
+                    type: {
                         bars: [3, 4]
                     }
                 }]
@@ -1137,25 +921,25 @@ export const ContainerWithMostWater: LessonJsonType = {
                 object: {
                     value: '1 x 8 = 8\n---------\nmax = 8'
                 }
-            },{
+            }, {
                 time: 46000,
                 duration: 500,
                 object: {
                     value: '1 x 8 = 8\n7 x 7 = 49'
                 }
-            },{
+            }, {
                 time: 47000,
                 duration: 500,
                 object: {
                     value: '1 x 8 = 8\n7 x 7 = 49\n----------\nmax = 49'
                 }
-            },{
+            }, {
                 time: 58000,
                 duration: 500,
                 object: {
                     value: '1 x 8 = 8\n7 x 7 = 49\n5 x 8 = 40\n----------\nmax = 49'
                 }
-            },{
+            }, {
                 time: 68000,
                 duration: 500,
                 object: {

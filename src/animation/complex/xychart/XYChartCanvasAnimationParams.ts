@@ -1,7 +1,7 @@
 import { Point } from '../../../common/Point'
 import { addPoints } from '../../../common/Utils'
 import { ObjectParams } from '../../CanvasAnimationParams'
-import ComplexCanvasAnimationParams from '../ComplexCanvasAnimationParams'
+import ComplexCanvasAnimationParams, { AnimationSelectedInfo } from '../ComplexCanvasAnimationParams'
 import ArrowCanvasAnimationParams from '../arrow/ArrowCanvasAnimationParams'
 import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
 import LineCanvasAnimationParams from '../../simple/line/LineCanvasAnimationParams'
@@ -87,7 +87,7 @@ export type XyChartSelectorType = {
     lines?: 'all'
     xScaleValues?: 'all' | number[]
     yScaleValues?: 'all' | number[]
-    bars?: 'all' | number[]
+    bars?: 'all' | 'allPairsInSequence' | number[]
 }
 
 export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimationParams<XyChartParamsType, XyChartSelectorType> {
@@ -513,11 +513,11 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                 {
                     object: {
                         origin: {
-                            x: firstPointX ,
+                            x: firstPointX,
                             y: startYCoord
                         },
                         endPoint: {
-                            x: secondPointX ,
+                            x: secondPointX,
                             y: startYCoord
                         },
                         startType: 'Arrow',
@@ -578,7 +578,54 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         return originCoord + (coord * length / scaleMax)
     }
 
-    protected convertSelectorToDiscriminatorRegexps (selector: XyChartSelectorType): RegExp[] {
+    protected getAnimationsToBeSelectedInfo (animationsCanBeSelected: Set<string>, selectionType: XyChartSelectorType): AnimationSelectedInfo[] {
+        const result: AnimationSelectedInfo[] = []
+        if (selectionType.bars === 'allPairsInSequence') {
+            const barIndices: Set<number> = new Set<number>()
+            animationsCanBeSelected.forEach(k => {
+                const barRegexp =/chartBar (\d+)/
+                if (barRegexp.test(k)) {
+                    const extracted = barRegexp.exec(k)
+                    if (extracted?.length === 2) {
+                        barIndices.add(Number(extracted[1]))
+                    }
+                }
+            })
+            const barIndicesArray: number[] = []
+            barIndices.forEach(i => barIndicesArray.push(i))
+            const allPossiblePairs: [number, number][] = []
+            for (let i = 0; i < barIndicesArray.length; i++) {
+                for (let j = i + 1; j < barIndicesArray.length; j++) {
+                    allPossiblePairs.push([barIndicesArray[i], barIndicesArray[j]])
+                }
+            }
+            const durationStep = 1/allPossiblePairs.length
+            let startSelectionPercent = 0
+            let endSelectionPercent = durationStep
+            allPossiblePairs.forEach(pair => {
+                result.push({
+                    key: `chartBar ${pair[0]}`,
+                    startSelectionPercent,
+                    endSelectionPercent
+                })
+                result.push({
+                    key: `chartBar ${pair[1]}`,
+                    startSelectionPercent,
+                    endSelectionPercent
+                })
+                startSelectionPercent = endSelectionPercent
+                endSelectionPercent += durationStep
+            })
+        }
+        result.push(...this.createAnimationSelectedInfoByRegexpSelector(
+            animationsCanBeSelected,
+            selectionType,
+            selector => this.convertSelectorToDiscriminatorRegexps(selector)
+        ))
+        return result
+    }
+
+    private convertSelectorToDiscriminatorRegexps (selector: XyChartSelectorType): RegExp[] {
         if (!selector.lines && !selector.points && !selector.yScaleValues && !selector.xScaleValues && !selector.bars) {
             return [/.*/]
         }

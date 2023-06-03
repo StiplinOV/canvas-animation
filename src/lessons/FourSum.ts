@@ -30,21 +30,21 @@ export const FourSum: LessonJsonType = {
                 {
                     time: 3000,
                     duration: 500,
-                    selector: {
+                    type: {
                         values: [4, 5, 6, 7]
                     }
                 },
                 {
                     time: 5000,
                     duration: 500,
-                    selector: {
+                    type: {
                         values: [1, 2, 5, 6]
                     }
                 },
                 {
                     time: 7000,
                     duration: 500,
-                    selector: {
+                    type: {
                         values: [0, 2, 3, 4]
                     }
                 }

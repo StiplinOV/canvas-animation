@@ -20,7 +20,7 @@ export const NumberOfIslands: LessonJsonType = {
                 {
                     time: 2000,
                     duration: 1000,
-                    selector: {
+                    type: {
                         elements: [
                             {
                                 x: 0,

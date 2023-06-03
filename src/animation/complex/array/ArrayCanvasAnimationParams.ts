@@ -1,6 +1,6 @@
 import { ObjectParams } from '../../CanvasAnimationParams'
 import { addPoints } from '../../../common/Utils'
-import ComplexCanvasAnimationParams from '../ComplexCanvasAnimationParams'
+import ComplexCanvasAnimationParams, { AnimationSelectedInfo } from '../ComplexCanvasAnimationParams'
 import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
 import ArrayElement, { ElementStyle, ElementType } from './ArrayElement'
@@ -129,7 +129,7 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
                                 y: partShift + arrayRectangleWidth
                             }),
                             startType: 'Arrow',
-                            weight: arrayRectangleWidth/30
+                            weight: arrayRectangleWidth / 30
                         }
                     },
                     this.p5,
@@ -164,7 +164,15 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
         return height / numberOfParts
     }
 
-    protected convertSelectorToDiscriminatorRegexps (selector: ArraySelectorType): RegExp[] {
+    protected getAnimationsToBeSelectedInfo (animationsCanBeSelected: Set<string>, selectionType: ArraySelectorType): AnimationSelectedInfo[] {
+        return this.createAnimationSelectedInfoByRegexpSelector(
+            animationsCanBeSelected,
+            selectionType,
+            selector => this.convertSelectorToDiscriminatorRegexps(selector)
+        )
+    }
+
+    private convertSelectorToDiscriminatorRegexps (selector: ArraySelectorType): RegExp[] {
         if (!selector.values) {
             return [/.*/]
         }

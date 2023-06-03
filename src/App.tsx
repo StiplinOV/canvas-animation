@@ -3,9 +3,10 @@ import './App.css'
 import { AnimationPlayer } from './components/player/AnimationPlayer'
 import { useWindowDimensions } from './hook/UseWindowDimensions'
 import { FourSum } from './lessons/FourSum'
+import { ContainerWithMostWater } from './lessons/ContainerWithMostWater'
 
 const App = (): ReactElement => {
-    const lesson = FourSum
+    const lesson = ContainerWithMostWater
     const canvasTop = 50
     const left = (useWindowDimensions().width - lesson.canvasDimensions.width) / 2
 

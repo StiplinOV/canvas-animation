@@ -34,7 +34,7 @@ export interface ObjectParams {
 
 export interface Selection {
     time: number
-    duration?: number
+    duration: number
 }
 
 export type Transformation<T extends ObjectParams, U> = {

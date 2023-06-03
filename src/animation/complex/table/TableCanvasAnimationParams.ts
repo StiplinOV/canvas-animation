@@ -2,7 +2,7 @@ import {ObjectParams} from '../../CanvasAnimationParams'
 import {addPoints, render2DArrayType, requireValueFromMap} from '../../../common/Utils'
 import ComplexCanvasAnimationParams, {
     AddedAppearParamType,
-    AnimationS2T,
+    AnimationS2T, AnimationSelectedInfo,
     ChangedTransformParamType,
     DeletedDisappearParamType,
     TransformOptions
@@ -11,6 +11,7 @@ import LineCanvasAnimationParams from '../../simple/line/LineCanvasAnimationPara
 import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
 import EllipseCanvasAnimationParams from '../../simple/ellipse/EllipseCanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
+import { MatrixSelectorType } from '../array/MatrixCanvasAnimationParams'
 
 export interface TableParamsType extends ObjectParams {
     values: string[][]
@@ -267,7 +268,15 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         return false
     }
 
-    protected convertSelectorToDiscriminatorRegexps(selector: TableSelectorType): RegExp[] {
+    protected getAnimationsToBeSelectedInfo (animationsCanBeSelected: Set<string>, selectionType: TableSelectorType): AnimationSelectedInfo[] {
+        return this.createAnimationSelectedInfoByRegexpSelector(
+            animationsCanBeSelected,
+            selectionType,
+            selector => this.convertSelectorToDiscriminatorRegexps(selector)
+        )
+    }
+
+    private convertSelectorToDiscriminatorRegexps(selector: TableSelectorType): RegExp[] {
         if (!selector.rowTitles && !selector.colTitles && !selector.values) {
             return [/.*/]
         }

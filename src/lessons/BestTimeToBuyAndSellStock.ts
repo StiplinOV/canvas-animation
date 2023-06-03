@@ -287,48 +287,47 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     {
                         time: 15000,
                         duration: 5000,
-                        type: 'sequentially',
-                        selector: { points: 'all' }
+                        type: { points: 'all' },
                     },
                     {
                         time: 23000,
                         duration: 500,
-                        selector: { points: [1] }
+                        type: { points: [1] }
                     },
                     {
                         time: 25000,
                         duration: 500,
-                        selector: { points: [4] }
+                        type: { points: [4] }
                     },
                     {
                         time: 60000,
                         duration: 500,
-                        selector: { points: [0] }
+                        type: { points: [0] }
                     },
                     {
                         time: 65000,
                         duration: 500,
-                        selector: { yScaleValues: [7] }
+                        type: { yScaleValues: [7] }
                     },
                     {
                         time: 87000,
                         duration: 500,
-                        selector: { xScaleValues: [1] }
+                        type: { xScaleValues: [1] }
                     },
                     {
                         time: 92000,
                         duration: 500,
-                        selector: { yScaleValues: [1] }
+                        type: { yScaleValues: [1] }
                     },
                     {
                         time: 123000,
                         duration: 500,
-                        selector: { xScaleValues: [2] }
+                        type: { xScaleValues: [2] }
                     },
                     {
                         time: 125000,
                         duration: 500,
-                        selector: { yScaleValues: [1] }
+                        type: { yScaleValues: [1] }
                     }
                 ],
                 transformations: [
@@ -486,35 +485,35 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 {
                     time: 50000,
                     duration: 500,
-                    selector: {
+                    type: {
                         rowTitles: 'all'
                     }
                 },
                 {
                     time: 55000,
                     duration: 500,
-                    selector: {
+                    type: {
                         colTitles: 'all'
                     }
                 },
                 {
                     time: 60000,
                     duration: 500,
-                    selector: {
+                    type: {
                         colTitles: [1]
                     }
                 },
                 {
                     time: 87000,
                     duration: 500,
-                    selector: {
+                    type: {
                         colTitles: [2]
                     }
                 },
                 {
                     time: 95000,
                     duration: 500,
-                    selector: {
+                    type: {
                         colTitles: [1],
                         rowTitles: [2]
                     }
@@ -522,7 +521,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 {
                     time: 99000,
                     duration: 500,
-                    selector: {
+                    type: {
                         colTitles: [1],
                         rowTitles: [3]
                     }
@@ -530,28 +529,28 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 {
                     time: 106000,
                     duration: 500,
-                    selector: {
+                    type: {
                         values: [[2, 1]]
                     }
                 },
                 {
                     time: 109000,
                     duration: 500,
-                    selector: {
+                    type: {
                         values: [[3, 1]]
                     }
                 },
                 {
                     time: 123000,
                     duration: 500,
-                    selector: {
+                    type: {
                         colTitles: [2]
                     }
                 },
                 {
                     time: 182000,
                     duration: 10000,
-                    selector: { values: [[5, 7]] }
+                    type: { values: [[5, 7]] }
                 }
             ],
             transformations: [

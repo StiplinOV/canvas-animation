@@ -1,6 +1,6 @@
 import { ObjectParams } from '../../CanvasAnimationParams'
 import { addPoints } from '../../../common/Utils'
-import ComplexCanvasAnimationParams from '../ComplexCanvasAnimationParams'
+import ComplexCanvasAnimationParams, { AnimationSelectedInfo } from '../ComplexCanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
 import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
 import { Point } from '../../../common/Point'
@@ -100,7 +100,15 @@ export default class MatrixCanvasAnimationParams extends ComplexCanvasAnimationP
         return object.values.map(v => v.length).reduce((l, r) => Math.max(l, r), 0)
     }
 
-    protected convertSelectorToDiscriminatorRegexps (selector: MatrixSelectorType): RegExp[] {
+    protected getAnimationsToBeSelectedInfo (animationsCanBeSelected: Set<string>, selectionType: MatrixSelectorType): AnimationSelectedInfo[] {
+        return this.createAnimationSelectedInfoByRegexpSelector(
+            animationsCanBeSelected,
+            selectionType,
+            selector => this.convertSelectorToDiscriminatorRegexps(selector)
+        )
+    }
+
+    private convertSelectorToDiscriminatorRegexps (selector: MatrixSelectorType): RegExp[] {
         if (!selector.elements) {
             return [/.*/]
         }

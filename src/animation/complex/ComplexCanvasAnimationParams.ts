@@ -1,13 +1,18 @@
-import CanvasAnimationParams, {ObjectParams, Params, Selection, Transformation} from '../CanvasAnimationParams'
+import CanvasAnimationParams, { ObjectParams, Params, Selection, Transformation } from '../CanvasAnimationParams'
 import p5Types from 'p5'
 import AnimationStyle from '../../AnimationStyles'
 import SimpleCanvasAnimationParams from '../simple/SimpleCanvasAnimationParams'
 import { needAppearObject, requireValueFromMap } from '../../common/Utils'
 import CanvasAnimation from '../CanvasAnimation'
 
+export interface AnimationSelectedInfo {
+    key: string,
+    startSelectionPercent?: number,
+    endSelectionPercent?: number
+}
+
 export interface ComplexCanvasAnimationSelection<T = unknown> extends Selection {
-    type?: 'together' | 'sequentially'
-    selector?: T
+    type: 'together' | 'sequentially' | T
 }
 
 export type AnimationS2T = { source: SimpleCanvasAnimationParams, target: SimpleCanvasAnimationParams }
@@ -46,13 +51,13 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
 
     private readonly animationStyle: AnimationStyle
 
-    constructor(params: Params<T, V, ComplexCanvasAnimationSelection<U>>, p5: p5Types, animationStyle: AnimationStyle) {
+    constructor (params: Params<T, V, ComplexCanvasAnimationSelection<U>>, p5: p5Types, animationStyle: AnimationStyle) {
         super(params)
         this.p5 = p5
         this.animationStyle = animationStyle
     }
 
-    protected toSimpleCanvasAnimationParams(): SimpleCanvasAnimationParams[] {
+    protected toSimpleCanvasAnimationParams (): SimpleCanvasAnimationParams[] {
         const object = this.getObject()
         const appearanceParam = this.getAppearanceParam()
         const initialIncludedAnimationParams = this.getIncludedAnimationParamsByParameter(object)
@@ -70,7 +75,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         let previousObject = object
         let prevObjectParams = initialIncludedAnimationParams
         this.getTransformations().forEach(t => {
-            const nextObject = {...previousObject, ...t.object}
+            const nextObject = { ...previousObject, ...t.object }
             const nextObjectParams = this.getIncludedAnimationParamsByParameter(nextObject)
 
             const transformSimpleAnimationsDifference = this.getAnimationsSetDifference(prevObjectParams, nextObjectParams)
@@ -83,7 +88,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
             const disappearedObjectDisappearDuration = disappear.duration / prevObjectParams.size
             let disappearedObjectDisappearTime = disappear.time
 
-            initialIncludedAnimationParams.forEach((o, k) => {
+            initialIncludedAnimationParams.forEach((o) => {
                 o.appendDisappearTime(disappearedObjectDisappearTime, disappearedObjectDisappearDuration)
                 disappearedObjectDisappearTime += disappearedObjectDisappearDuration
             })
@@ -92,13 +97,21 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         return Array.from(initialIncludedAnimationParams.values())
     }
 
-    protected applySimpleTransformAnimations(
+    protected applySimpleTransformAnimations (
         animations: Map<string, SimpleCanvasAnimationParams>,
         transformation: Transformation<T, V>,
         diff: AnimationsSetDifferenceType
     ): void {
-        const {added, deleted, changed} = diff
-        const {time, duration, options} = transformation
+        const {
+            added,
+            deleted,
+            changed
+        } = diff
+        const {
+            time,
+            duration,
+            options
+        } = transformation
         this.calculateAddedTransformAnimationsAppearParams(added, time, duration, options).forEach((value, key) => {
             const params = value.params
             const pastParams = animations.get(key)
@@ -128,7 +141,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
             }))
     }
 
-    protected calculateAddedTransformAnimationsAppearParams(
+    protected calculateAddedTransformAnimationsAppearParams (
         added: Map<string, SimpleCanvasAnimationParams>,
         time: number,
         duration: number,
@@ -154,7 +167,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         return result
     }
 
-    protected calculateDeletedTransformAnimationsDisappearParams(
+    protected calculateDeletedTransformAnimationsDisappearParams (
         deleted: Set<string>,
         time: number,
         duration: number,
@@ -179,7 +192,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         return result
     }
 
-    protected calculateChangedTransformAnimationsTransformParams(
+    protected calculateChangedTransformAnimationsTransformParams (
         changed: Map<string, AnimationS2T>,
         time: number,
         duration: number,
@@ -205,45 +218,78 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         return result
     }
 
-    public getIncludedAnimationParams(): Map<string, SimpleCanvasAnimationParams> {
+    public getIncludedAnimationParams (): Map<string, SimpleCanvasAnimationParams> {
         return this.getIncludedAnimationParamsByParameter(this.getObject())
     }
 
-    protected abstract getIncludedAnimationParamsByParameter(object: T): Map<string, SimpleCanvasAnimationParams>
+    protected abstract getIncludedAnimationParamsByParameter (object: T): Map<string, SimpleCanvasAnimationParams>
 
-    private setAnimationSelections(animations: Map<string, CanvasAnimationParams>): void {
+    private setAnimationSelections (animations: Map<string, CanvasAnimationParams>): void {
         this.getSelections().forEach(selection => {
-            const {type, selector, time, duration} = selection
-            const animationsToBeSelected: CanvasAnimationParams[] = []
+            const {
+                type,
+                time,
+                duration
+            } = selection
+            const animationsCanBeSelected = new Set<string>()
             animations.forEach((value, key) => {
                 if (!needAppearObject(time, value.getAppearanceParam())) {
                     return
                 }
-                if (selector) {
-                    this.convertSelectorToDiscriminatorRegexp(selector).test(key) && animationsToBeSelected.push(value)
-                } else {
-                    animationsToBeSelected.push(value)
-                }
+                animationsCanBeSelected.add(key)
             })
             if (type === 'sequentially') {
                 let selectionTime = time
-                const selectionDuration = (duration ?? 0) / animationsToBeSelected.length
-                animationsToBeSelected.forEach(animation => {
-                    animation.addSelection({
+                const selectionDuration = (duration) / animationsCanBeSelected.size
+                animationsCanBeSelected.forEach(key => {
+                    animations.get(key)?.addSelection({
                         time: selectionTime,
                         duration: selectionDuration
                     })
                     selectionTime += selectionDuration
                 })
-            } else {
-                animationsToBeSelected.forEach(animation => {
-                    animation.addSelection({time, duration})
+            } else if (type === 'together') {
+                animationsCanBeSelected.forEach(key => {
+                    animations.get(key)?.addSelection({
+                        time,
+                        duration
+                    })
                 })
+            } else {
+                this.getAnimationsToBeSelectedInfo(animationsCanBeSelected, type).forEach(info =>
+                    animations.get(info.key)?.addSelection({
+                        time: time + (duration * (info.startSelectionPercent ?? 0)),
+                        duration: ((info.endSelectionPercent ?? 1) - (info.startSelectionPercent ?? 0)) * duration
+                    })
+                )
             }
         })
     }
 
-    getAnimationsSetDifference(
+    protected getAnimationsToBeSelectedInfo (animationsCanBeSelected: Set<string>, selectionType: U): AnimationSelectedInfo[] {
+        return []
+    }
+
+    protected createAnimationSelectedInfoByRegexpSelector (
+        animationsCanBeSelected: Set<string>,
+        selectionType: U,
+        selectorToDiscriminatorRegexpFunction: (selector: U) => RegExp[]
+    ): AnimationSelectedInfo[] {
+        const result: AnimationSelectedInfo[] = []
+        const discriminatorRegexps = selectorToDiscriminatorRegexpFunction(selectionType)
+        animationsCanBeSelected.forEach(a => {
+            for (let i = 0; i < discriminatorRegexps.length; i++) {
+                if (discriminatorRegexps[i].test(a)) {
+                    result.push({ key: a })
+                    break
+                }
+            }
+        })
+
+        return result
+    }
+
+    getAnimationsSetDifference (
         left: Map<string, SimpleCanvasAnimationParams>,
         right: Map<string, SimpleCanvasAnimationParams>
     ): AnimationsSetDifferenceType {
@@ -256,28 +302,27 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
             const rightValue = right.get(key)
             if (rightValue) {
                 if (JSON.stringify(value.getObject()) !== JSON.stringify(rightValue.getObject())) {
-                    changedSourceToTarget.set(key, {source: value, target: rightValue})
+                    changedSourceToTarget.set(key, {
+                        source: value,
+                        target: rightValue
+                    })
                 }
             } else {
                 deleted.set(key, value)
             }
         })
-        return {added, deleted, changed: changedSourceToTarget}
+        return {
+            added,
+            deleted,
+            changed: changedSourceToTarget
+        }
     }
 
-    private convertSelectorToDiscriminatorRegexp(selector: U): RegExp {
-        return new RegExp(this.convertSelectorToDiscriminatorRegexps(selector).map(r => `(${r.source})`).join('|'))
-    }
-
-    protected convertSelectorToDiscriminatorRegexps(selector: U): RegExp[] {
-        return [/.*/]
-    }
-
-    toCanvasAnimations(animationStyle: AnimationStyle): CanvasAnimation[] {
+    toCanvasAnimations (animationStyle: AnimationStyle): CanvasAnimation[] {
         return this.toSimpleCanvasAnimationParams().flatMap(p => p.toCanvasAnimations(animationStyle))
     }
 
-    protected getAnimationStyle(): AnimationStyle {
+    protected getAnimationStyle (): AnimationStyle {
         return this.animationStyle
     }
 
