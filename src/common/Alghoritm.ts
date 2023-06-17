@@ -1,9 +1,7 @@
-import { Simulate } from 'react-dom/test-utils'
-
 export const findAllArrayIndexGroupsBy = (numberOfElements: number, numberOfElementsInGroup: number, startIndexParam?: number): number[][] => {
     const startIndex = startIndexParam || 0
     if (numberOfElements - startIndex < numberOfElementsInGroup) {
-        throw new Error("Number of elements in group should be less than number of elements")
+        throw new Error('Number of elements in group should be less than number of elements')
     }
     const result: number[][] = []
     if (numberOfElementsInGroup == 1) {
@@ -13,8 +11,8 @@ export const findAllArrayIndexGroupsBy = (numberOfElements: number, numberOfElem
         return result
     }
     for (let i = startIndex; i < numberOfElements; i++) {
-        const newNumberOfElementsInGroup = numberOfElementsInGroup - 1;
-        const newStartIndex = i + 1;
+        const newNumberOfElementsInGroup = numberOfElementsInGroup - 1
+        const newStartIndex = i + 1
         if (numberOfElements - newStartIndex < newNumberOfElementsInGroup) {
             break
         }
@@ -25,7 +23,7 @@ export const findAllArrayIndexGroupsBy = (numberOfElements: number, numberOfElem
     return result
 }
 
-type IntervalType = {start: number; end: number}
+type IntervalType = { start: number; end: number }
 export const mergeIntervals = (input: IntervalType[]): IntervalType[] => {
     if (input.length <= 1) {
         return input
@@ -51,4 +49,18 @@ export const mergeIntervals = (input: IntervalType[]): IntervalType[] => {
         }
     } while (fromIndex < input.length - 1)
     return input
+}
+
+export const convertPercentToFadeInFadeOut = (percent: number, duration?: number, fadeDuration?: number): number => {
+    if (!duration || !fadeDuration) {
+        duration = 1
+        fadeDuration = 0.5
+    }
+    if (percent < fadeDuration / duration) {
+        return (percent * duration) / fadeDuration
+    }
+    if (percent < 1 - (fadeDuration / duration)) {
+        return 1
+    }
+    return ((1 - percent) * duration) / fadeDuration
 }

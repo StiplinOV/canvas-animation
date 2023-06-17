@@ -1,5 +1,6 @@
 import {THE_STYLE} from 'p5'
 import {HighlightedStyleName} from './animation/complex/highlightedsyntax/HighlightedSyntaxCanvasAnimationParams'
+import { SelectionAlgorithm } from './animation/CanvasAnimationParams'
 
 export const COURIER_NEW_FONT = 'Courier New'
 export type ColorType = string | 'primary' | 'secondary' | 'background'
@@ -38,6 +39,7 @@ export default interface AnimationStyle {
     objectRotation: number
     textStyle: THE_STYLE
     zIndex: number
+    selectionAlgorithm: SelectionAlgorithm
 }
 
 const defaultAnimationStyle: AnimationStyle = {
@@ -62,7 +64,11 @@ const defaultAnimationStyle: AnimationStyle = {
     vertexDiameter: 60,
     vertexFontSize: 30,
     edgeFontSize: 20,
-    zIndex: 0
+    zIndex: 0,
+    selectionAlgorithm: {
+        func: 'fadeinFadeOut',
+        params: [150]
+    }
 }
 const createAnimationStyles = (): Record<string, Partial<AnimationStyle>> => ({
     default: defaultAnimationStyle,

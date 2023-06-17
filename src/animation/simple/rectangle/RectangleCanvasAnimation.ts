@@ -3,7 +3,7 @@ import { rectangleParamsType } from './RectangleCanvasAnimationParams'
 import CanvasAnimation from '../../CanvasAnimation'
 import AnimationStyle, { getFillColor } from '../../../AnimationStyles'
 import { SelectionInfo } from '../SimpleCanvasAnimationParams'
-import { calculateColorPercentValue, calculatePercentValue, convertPercentToFadeInFadeOut } from '../../../common/Utils'
+import { calculateColorPercentValue, calculatePercentValue } from '../../../common/Utils'
 import { weightToNumber } from '../../CanvasAnimationParams'
 
 export default class RectangleCanvasAnimation extends CanvasAnimation<rectangleParamsType> {
@@ -14,18 +14,17 @@ export default class RectangleCanvasAnimation extends CanvasAnimation<rectangleP
             height,
             cornerRadius
         } = object
-        const selectedPercent = convertPercentToFadeInFadeOut(selectionInfo.percent)
         const weight = calculatePercentValue(
             weightToNumber(style, object.weight),
             weightToNumber(style, object.weight) * 2,
-            selectedPercent
+            selectionInfo.percent
         )
         p5.strokeWeight(weight)
         p5.fill(
             calculateColorPercentValue(
                 getFillColor(style, object.fillColor),
                 style.selectedColor,
-                selectedPercent
+                selectionInfo.percent
             )
         )
         p5.rect(width / 2 * (1 - percent), height / 2 * (1 - percent), width * percent, height * percent, cornerRadius)

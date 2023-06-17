@@ -7,8 +7,7 @@ import {
 import CanvasAnimation from '../../CanvasAnimation'
 import {
     calculateArrayPercentValue,
-    calculateColorPercentValue,
-    convertPercentToFadeInFadeOut
+    calculateColorPercentValue
 } from '../../../common/Utils'
 import { SelectionInfo } from '../SimpleCanvasAnimationParams'
 
@@ -56,7 +55,7 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
                 textColor = calculateColorPercentValue(
                     textColor,
                     animationStyle.selectedColor,
-                    convertPercentToFadeInFadeOut(selectionInfo.percent)
+                    selectionInfo.percent
                 )
             }
             value = value.replaceAll('\t', '    ')

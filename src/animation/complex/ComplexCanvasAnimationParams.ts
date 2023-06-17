@@ -242,6 +242,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
                 animationsCanBeSelected.forEach(key => {
                     animations.get(key)?.addSelection({
                         time: selectionTime,
+                        selectionAlgorithm: selection.selectionAlgorithm,
                         duration: selectionDuration
                     })
                     selectionTime += selectionDuration
@@ -250,6 +251,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
                 animationsCanBeSelected.forEach(key => {
                     animations.get(key)?.addSelection({
                         time,
+                        selectionAlgorithm: selection.selectionAlgorithm,
                         duration
                     })
                 })
@@ -257,6 +259,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
                 this.getAnimationsToBeSelectedInfo(animationsCanBeSelected, type).forEach(info =>
                     animations.get(info.key)?.addSelection({
                         time: time + (duration * (info.startSelectionPercent ?? 0)),
+                        selectionAlgorithm: selection.selectionAlgorithm,
                         duration: ((info.endSelectionPercent ?? 1) - (info.startSelectionPercent ?? 0)) * duration
                     })
                 )

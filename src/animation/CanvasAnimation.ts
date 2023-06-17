@@ -44,7 +44,7 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
         p5.translate(result.x, result.y)
         p5.rotate(angle)
         dashed && p5.drawingContext.setLineDash(dashed)
-        const selectionInfo = this.params.calculateSelectionInfo(time)
+        const selectionInfo = this.params.calculateSelectionInfo(time, animationStyle)
         p5.strokeWeight(weightToNumber(animationStyle, object.weight))
         p5.stroke(getStrokeColor(animationStyle, object.strokeColor))
         p5.fill(getFillColor(animationStyle, object.fillColor))

@@ -9,6 +9,7 @@ import {
     toAppearancePercent
 } from '../../common/Utils'
 import { ZeroPoint } from '../../common/Point'
+import { convertPercentToFadeInFadeOut } from '../../common/Alghoritm'
 
 export interface SelectionInfo<U extends Selection = Selection> {
     selection?: U | null
@@ -100,7 +101,7 @@ export default abstract class SimpleCanvasAnimationParams<T extends ObjectParams
 
     public abstract mergeWithTransformation (obj: T, trans: Partial<T>, perc: number, animationStyle: AnimationStyle): Omit<T, keyof ObjectParams>
 
-    public calculateSelectionInfo (time: number): SelectionInfo<V> {
+    public calculateSelectionInfo (time: number, animationStyle: AnimationStyle): SelectionInfo<V> {
         const selections = this.getSelections()
         let selected = false
         let percent = 0
@@ -111,8 +112,16 @@ export default abstract class SimpleCanvasAnimationParams<T extends ObjectParams
             if (time >= currentSelection.time) {
                 selected = !duration || time <= currentSelection.time + duration
                 if (selected) {
-                    percent = duration ? (time - currentSelection.time) / duration : 1
                     selection = currentSelection
+                    const selectionAlgorithm = selection.selectionAlgorithm ?? animationStyle.selectionAlgorithm
+                    switch (selectionAlgorithm.func) {
+                    case 'fadeinFadeOut':
+                        percent = convertPercentToFadeInFadeOut(
+                            duration ? (time - currentSelection.time) / duration : 1,
+                            duration,
+                            selectionAlgorithm.params[0]
+                        )
+                    }
                     break
                 }
             }
