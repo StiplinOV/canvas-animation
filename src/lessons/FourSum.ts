@@ -47,10 +47,16 @@ export const FourSum: LessonJsonType = {
                     type: {
                         values: [0, 2, 3, 4]
                     }
+                },
+                {
+                    time: 18000,
+                    duration: 100000,
+                    type: {
+                        allNElementsInSequence: 4
+                    }
                 }
             ]
         }],
-        //TODO в текст добавить подсвечение позиции
         highlightedText: [
             {
                 presenceParameters: {
@@ -90,8 +96,8 @@ export const FourSum: LessonJsonType = {
                 transformations: [],
                 selections: [{
                     time: 14000,
-                    duration: 1000,
-                    segmentIndex: 4
+                    duration:2000,
+                    segmentIndex: 2
                 }]
             }
         ],

@@ -54,7 +54,6 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
             result.set(`axis ${key}`, value)
         })
         scale.sort((l, r) => l - r)
-        console.log(scale.length)
         const length = scale.length
         const segmentWidth = width / (length + 1)
         const getLineX = (value: number): number => {

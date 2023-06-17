@@ -9,6 +9,7 @@ import CircleCanvasAnimationParams from '../../simple/circle/CircleCanvasAnimati
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
 import RectangleCanvasAnimationParams from '../../simple/rectangle/RectangleCanvasAnimationParams'
 import { ColorType } from '../../../AnimationStyles'
+import { findAllArrayIndexGroupsBy } from '../../../common/Alghoritm'
 
 const coordinateDashWidth = 20
 const toScaleType = (value: scaleType | number): scaleType => {
@@ -591,14 +592,10 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     }
                 }
             })
+
             const barIndicesArray: number[] = []
             barIndices.forEach(i => barIndicesArray.push(i))
-            const allPossiblePairs: [number, number][] = []
-            for (let i = 0; i < barIndicesArray.length; i++) {
-                for (let j = i + 1; j < barIndicesArray.length; j++) {
-                    allPossiblePairs.push([barIndicesArray[i], barIndicesArray[j]])
-                }
-            }
+            const allPossiblePairs = findAllArrayIndexGroupsBy(barIndicesArray.length, 2).map(pair => [barIndicesArray[pair[0]], barIndicesArray[pair[1]]])
             const durationStep = 1/allPossiblePairs.length
             let startSelectionPercent = 0
             let endSelectionPercent = durationStep

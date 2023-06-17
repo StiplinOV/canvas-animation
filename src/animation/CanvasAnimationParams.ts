@@ -32,9 +32,27 @@ export interface ObjectParams {
     rotations?: rotationType[]
 }
 
-export interface Selection {
+interface FuncNameParamTypeMap {
+    "fadeinFadeOut": [number?]
+}
+
+export type SelectionAlgorithm<T extends keyof FuncNameParamTypeMap = keyof FuncNameParamTypeMap> = {
+    func: T
+    params: FuncNameParamTypeMap[T]
+}
+
+export const fadeinFadeOut = (duration?: number): SelectionAlgorithm => {
+    return {
+        func: 'fadeinFadeOut',
+        params: [duration]
+    }
+}
+
+export interface Selection<T = unknown> {
     time: number
     duration: number
+    type?: T
+    selectionAlgorithm?: SelectionAlgorithm
 }
 
 export type Transformation<T extends ObjectParams, U> = {

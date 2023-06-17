@@ -11,9 +11,7 @@ export interface AnimationSelectedInfo {
     endSelectionPercent?: number
 }
 
-export interface ComplexCanvasAnimationSelection<T = unknown> extends Selection {
-    type: 'together' | 'sequentially' | T
-}
+export interface ComplexCanvasAnimationSelection<T = unknown> extends Selection<'together' | 'sequentially' | T> {}
 
 export type AnimationS2T = { source: SimpleCanvasAnimationParams, target: SimpleCanvasAnimationParams }
 
@@ -266,7 +264,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         })
     }
 
-    protected getAnimationsToBeSelectedInfo (animationsCanBeSelected: Set<string>, selectionType: U): AnimationSelectedInfo[] {
+    protected getAnimationsToBeSelectedInfo (animationsCanBeSelected: Set<string>, selectionType?: U): AnimationSelectedInfo[] {
         return []
     }
 
