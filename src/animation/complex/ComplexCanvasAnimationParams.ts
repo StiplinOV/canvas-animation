@@ -6,8 +6,8 @@ import { needAppearObject, requireValueFromMap } from '../../common/Utils'
 import CanvasAnimation from '../CanvasAnimation'
 
 export interface AnimationSelectedInfo {
-    key: string,
-    startSelectionPercent?: number,
+    key: string
+    startSelectionPercent?: number
     endSelectionPercent?: number
 }
 
@@ -61,7 +61,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         const initialIncludedAnimationParams = this.getIncludedAnimationParamsByParameter(object)
 
         appearanceParam.appears.forEach(appear => {
-            //TODO add type
+            // TODO add type
             let containedObjectAppearTime = appear.time
             const containedObjectAppearDuration = appear.duration / initialIncludedAnimationParams.size
 

@@ -33,7 +33,7 @@ export interface ObjectParams {
 }
 
 interface FuncNameParamTypeMap {
-    "fadeinFadeOut": [number?]
+    'fadeinFadeOut': [number?]
 }
 
 export type SelectionAlgorithm<T extends keyof FuncNameParamTypeMap = keyof FuncNameParamTypeMap> = {

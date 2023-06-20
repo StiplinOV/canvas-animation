@@ -23,7 +23,7 @@ interface OnlyTextParamsType {
 export interface HighlightedTextParamsType extends ObjectParams, OnlyTextParamsType {
 }
 
-export interface HighlightedTextCanvasAnimationSelection<T = unknown> extends Selection {
+export interface HighlightedTextCanvasAnimationSelection extends Selection {
     segmentIndex?: number
 }
 

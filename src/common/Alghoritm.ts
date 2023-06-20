@@ -1,10 +1,10 @@
 export const findAllArrayIndexGroupsBy = (numberOfElements: number, numberOfElementsInGroup: number, startIndexParam?: number): number[][] => {
-    const startIndex = startIndexParam || 0
+    const startIndex = startIndexParam ?? 0
     if (numberOfElements - startIndex < numberOfElementsInGroup) {
         throw new Error('Number of elements in group should be less than number of elements')
     }
     const result: number[][] = []
-    if (numberOfElementsInGroup == 1) {
+    if (numberOfElementsInGroup === 1) {
         for (let i = startIndex; i < numberOfElements; i++) {
             result.push([i])
         }
@@ -23,21 +23,21 @@ export const findAllArrayIndexGroupsBy = (numberOfElements: number, numberOfElem
     return result
 }
 
-type IntervalType = { start: number; end: number }
+type IntervalType = { start: number, end: number }
 export const mergeIntervals = (input: IntervalType[]): IntervalType[] => {
     if (input.length <= 1) {
         return input
     }
     input.sort((l, r) => {
-        if (l.start != r.start) {
+        if (l.start !== r.start) {
             return l.start - r.start
         }
         return l.end - r.end
     })
     let fromIndex = 0
     do {
-        let left = input[fromIndex]
-        let right = input[fromIndex + 1]
+        const left = input[fromIndex]
+        const right = input[fromIndex + 1]
         if (right.start > left.end) {
             fromIndex++
         } else {

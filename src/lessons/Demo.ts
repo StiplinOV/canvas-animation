@@ -13,7 +13,7 @@ export const Demo: LessonJsonType = {
             presenceParameters: {
                 appears: [{
                     time: 0,
-                    duration: 1000,
+                    duration: 1000
                 }]
             },
             object: {
@@ -24,7 +24,7 @@ export const Demo: LessonJsonType = {
                 height: 150,
                 width: 1180,
                 hideIndices: true,
-                values: [1, 2, 3, 4, 5, 6],
+                values: [1, 2, 3, 4, 5, 6]
             },
             selections: [
                 {
@@ -35,6 +35,6 @@ export const Demo: LessonJsonType = {
                     }
                 }
             ]
-        }],
+        }]
     }
 }

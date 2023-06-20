@@ -28,11 +28,11 @@ export const ContainerWithMostWater: LessonJsonType = {
                 presenceParameters: {
                     appears: [{
                         time: 0,
-                        duration: 2000,
+                        duration: 2000
                     }],
                     disappears: [{
-                        time: 70000,//70000
-                        duration: 2000,
+                        time: 70000,
+                        duration: 2000
                     }]
                 },
                 object: {
@@ -78,7 +78,7 @@ export const ContainerWithMostWater: LessonJsonType = {
                         {
                             position: 9,
                             value: ''
-                        },
+                        }
                     ],
                     yScale: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                     bars: [
@@ -88,7 +88,7 @@ export const ContainerWithMostWater: LessonJsonType = {
                         },
                         {
                             x: 2,
-                            y: 8,
+                            y: 8
                         },
                         {
                             x: 3,
@@ -116,9 +116,9 @@ export const ContainerWithMostWater: LessonJsonType = {
                         },
                         {
                             x: 9,
-                            y: 7,
+                            y: 7
                         }
-                    ],
+                    ]
                 },
                 transformations: [
                     {
@@ -164,7 +164,7 @@ export const ContainerWithMostWater: LessonJsonType = {
                                 },
                                 {
                                     x: 9,
-                                    y: 7,
+                                    y: 7
                                 }
                             ],
                             backgroundSelectedRectangleAreas: [
@@ -188,7 +188,7 @@ export const ContainerWithMostWater: LessonJsonType = {
                             bars: [
                                 {
                                     x: 1,
-                                    y: 1,
+                                    y: 1
                                 },
                                 {
                                     x: 2,
@@ -226,7 +226,7 @@ export const ContainerWithMostWater: LessonJsonType = {
                                 },
                                 {
                                     x: 9,
-                                    y: 7,
+                                    y: 7
                                 }
                             ],
                             backgroundSelectedRectangleAreas: [
@@ -250,11 +250,11 @@ export const ContainerWithMostWater: LessonJsonType = {
                             bars: [
                                 {
                                     x: 1,
-                                    y: 1,
+                                    y: 1
                                 },
                                 {
                                     x: 2,
-                                    y: 8,
+                                    y: 8
                                 },
                                 {
                                     x: 3,
@@ -287,7 +287,7 @@ export const ContainerWithMostWater: LessonJsonType = {
                                 },
                                 {
                                     x: 9,
-                                    y: 7,
+                                    y: 7
                                 }
                             ],
                             backgroundSelectedRectangleAreas: [
@@ -322,11 +322,11 @@ export const ContainerWithMostWater: LessonJsonType = {
                             bars: [
                                 {
                                     x: 1,
-                                    y: 1,
+                                    y: 1
                                 },
                                 {
                                     x: 2,
-                                    y: 8,
+                                    y: 8
                                 },
                                 {
                                     x: 3,
@@ -360,9 +360,9 @@ export const ContainerWithMostWater: LessonJsonType = {
                                 },
                                 {
                                     x: 9,
-                                    y: 7,
+                                    y: 7
                                 }
-                            ],
+                            ]
                             // backgroundSelectedRectangleAreas: []
                         }
                     },
@@ -375,11 +375,11 @@ export const ContainerWithMostWater: LessonJsonType = {
                             bars: [
                                 {
                                     x: 1,
-                                    y: 1,
+                                    y: 1
                                 },
                                 {
                                     x: 2,
-                                    y: 8,
+                                    y: 8
                                 },
                                 {
                                     x: 3,
@@ -387,27 +387,27 @@ export const ContainerWithMostWater: LessonJsonType = {
                                 },
                                 {
                                     x: 4,
-                                    y: 2,
+                                    y: 2
                                 },
                                 {
                                     x: 5,
-                                    y: 5,
+                                    y: 5
                                 },
                                 {
                                     x: 6,
-                                    y: 4,
+                                    y: 4
                                 },
                                 {
                                     x: 7,
-                                    y: 8,
+                                    y: 8
                                 },
                                 {
                                     x: 8,
-                                    y: 3,
+                                    y: 3
                                 },
                                 {
                                     x: 9,
-                                    y: 7,
+                                    y: 7
                                 }
                             ],
                             backgroundSelectedRectangleAreas: []
@@ -426,7 +426,7 @@ export const ContainerWithMostWater: LessonJsonType = {
                                 },
                                 {
                                     x: 2,
-                                    y: 8,
+                                    y: 8
                                 },
                                 {
                                     x: 3,
@@ -434,23 +434,23 @@ export const ContainerWithMostWater: LessonJsonType = {
                                 },
                                 {
                                     x: 4,
-                                    y: 2,
+                                    y: 2
                                 },
                                 {
                                     x: 5,
-                                    y: 5,
+                                    y: 5
                                 },
                                 {
                                     x: 6,
-                                    y: 4,
+                                    y: 4
                                 },
                                 {
                                     x: 7,
-                                    y: 8,
+                                    y: 8
                                 },
                                 {
                                     x: 8,
-                                    y: 3,
+                                    y: 3
                                 },
                                 {
                                     x: 9,
@@ -458,7 +458,7 @@ export const ContainerWithMostWater: LessonJsonType = {
                                     type: 'selected',
                                     zIndex: 3
                                 }
-                            ],
+                            ]
                         }
                     },
                     {
@@ -491,7 +491,7 @@ export const ContainerWithMostWater: LessonJsonType = {
                             chartYRanges: [{
                                 coords: [0, 1],
                                 value: '1'
-                            }],
+                            }]
                         }
                     },
                     {
@@ -499,7 +499,7 @@ export const ContainerWithMostWater: LessonJsonType = {
                         duration: 500,
                         object: {
                             chartXRanges: [],
-                            chartYRanges: [],
+                            chartYRanges: []
                         }
                     },
                     {
@@ -516,7 +516,7 @@ export const ContainerWithMostWater: LessonJsonType = {
                                 },
                                 {
                                     x: 2,
-                                    y: 8,
+                                    y: 8
                                 },
                                 {
                                     x: 3,
@@ -524,23 +524,23 @@ export const ContainerWithMostWater: LessonJsonType = {
                                 },
                                 {
                                     x: 4,
-                                    y: 2,
+                                    y: 2
                                 },
                                 {
                                     x: 5,
-                                    y: 5,
+                                    y: 5
                                 },
                                 {
                                     x: 6,
-                                    y: 4,
+                                    y: 4
                                 },
                                 {
                                     x: 7,
-                                    y: 8,
+                                    y: 8
                                 },
                                 {
                                     x: 8,
-                                    y: 3,
+                                    y: 3
                                 },
                                 {
                                     x: 9,
@@ -548,7 +548,7 @@ export const ContainerWithMostWater: LessonJsonType = {
                                     type: 'selected',
                                     zIndex: 3
                                 }
-                            ],
+                            ]
                         }
                     },
                     {
@@ -558,13 +558,13 @@ export const ContainerWithMostWater: LessonJsonType = {
                             bars: [
                                 {
                                     x: 1,
-                                    y: 1,
+                                    y: 1
                                 },
                                 {
                                     x: 2,
                                     y: 8,
                                     type: 'selected',
-                                    zIndex: 3,
+                                    zIndex: 3
                                 },
                                 {
                                     x: 3,
@@ -572,23 +572,23 @@ export const ContainerWithMostWater: LessonJsonType = {
                                 },
                                 {
                                     x: 4,
-                                    y: 2,
+                                    y: 2
                                 },
                                 {
                                     x: 5,
-                                    y: 5,
+                                    y: 5
                                 },
                                 {
                                     x: 6,
-                                    y: 4,
+                                    y: 4
                                 },
                                 {
                                     x: 7,
-                                    y: 8,
+                                    y: 8
                                 },
                                 {
                                     x: 8,
-                                    y: 3,
+                                    y: 3
                                 },
                                 {
                                     x: 9,
@@ -623,7 +623,7 @@ export const ContainerWithMostWater: LessonJsonType = {
                             chartYRanges: [{
                                 coords: [0, 7],
                                 value: '7'
-                            }],
+                            }]
                         }
                     },
                     {
@@ -631,7 +631,7 @@ export const ContainerWithMostWater: LessonJsonType = {
                         duration: 500,
                         object: {
                             chartXRanges: [],
-                            chartYRanges: [],
+                            chartYRanges: []
                         }
                     },
                     {
@@ -648,13 +648,13 @@ export const ContainerWithMostWater: LessonJsonType = {
                             bars: [
                                 {
                                     x: 1,
-                                    y: 1,
+                                    y: 1
                                 },
                                 {
                                     x: 2,
                                     y: 8,
                                     type: 'selected',
-                                    zIndex: 3,
+                                    zIndex: 3
                                 },
                                 {
                                     x: 3,
@@ -662,23 +662,23 @@ export const ContainerWithMostWater: LessonJsonType = {
                                 },
                                 {
                                     x: 4,
-                                    y: 2,
+                                    y: 2
                                 },
                                 {
                                     x: 5,
-                                    y: 5,
+                                    y: 5
                                 },
                                 {
                                     x: 6,
-                                    y: 4,
+                                    y: 4
                                 },
                                 {
                                     x: 7,
-                                    y: 8,
+                                    y: 8
                                 },
                                 {
                                     x: 8,
-                                    y: 3,
+                                    y: 3
                                 },
                                 {
                                     x: 9,
@@ -697,13 +697,13 @@ export const ContainerWithMostWater: LessonJsonType = {
                             bars: [
                                 {
                                     x: 1,
-                                    y: 1,
+                                    y: 1
                                 },
                                 {
                                     x: 2,
                                     y: 8,
                                     type: 'selected',
-                                    zIndex: 3,
+                                    zIndex: 3
                                 },
                                 {
                                     x: 3,
@@ -711,15 +711,15 @@ export const ContainerWithMostWater: LessonJsonType = {
                                 },
                                 {
                                     x: 4,
-                                    y: 2,
+                                    y: 2
                                 },
                                 {
                                     x: 5,
-                                    y: 5,
+                                    y: 5
                                 },
                                 {
                                     x: 6,
-                                    y: 4,
+                                    y: 4
                                 },
                                 {
                                     x: 7,
@@ -730,11 +730,11 @@ export const ContainerWithMostWater: LessonJsonType = {
                                 },
                                 {
                                     x: 8,
-                                    y: 3,
+                                    y: 3
                                 },
                                 {
                                     x: 9,
-                                    y: 7,
+                                    y: 7
                                 }
                             ]
                         }
@@ -746,13 +746,13 @@ export const ContainerWithMostWater: LessonJsonType = {
                             bars: [
                                 {
                                     x: 1,
-                                    y: 1,
+                                    y: 1
                                 },
                                 {
                                     x: 2,
                                     y: 8,
                                     type: 'selected',
-                                    zIndex: 3,
+                                    zIndex: 3
                                 },
                                 {
                                     x: 3,
@@ -760,15 +760,15 @@ export const ContainerWithMostWater: LessonJsonType = {
                                 },
                                 {
                                     x: 4,
-                                    y: 2,
+                                    y: 2
                                 },
                                 {
                                     x: 5,
-                                    y: 5,
+                                    y: 5
                                 },
                                 {
                                     x: 6,
-                                    y: 4,
+                                    y: 4
                                 },
                                 {
                                     x: 7,
@@ -778,11 +778,11 @@ export const ContainerWithMostWater: LessonJsonType = {
                                 },
                                 {
                                     x: 8,
-                                    y: 3,
+                                    y: 3
                                 },
                                 {
                                     x: 9,
-                                    y: 7,
+                                    y: 7
                                 }
                             ],
                             chartXRanges: [{
@@ -824,11 +824,11 @@ export const ContainerWithMostWater: LessonJsonType = {
                             bars: [
                                 {
                                     x: 1,
-                                    y: 1,
+                                    y: 1
                                 },
                                 {
                                     x: 2,
-                                    y: 8,
+                                    y: 8
                                 },
                                 {
                                     x: 3,
@@ -836,31 +836,31 @@ export const ContainerWithMostWater: LessonJsonType = {
                                 },
                                 {
                                     x: 4,
-                                    y: 2,
+                                    y: 2
                                 },
                                 {
                                     x: 5,
-                                    y: 5,
+                                    y: 5
                                 },
                                 {
                                     x: 6,
-                                    y: 4,
+                                    y: 4
                                 },
                                 {
                                     x: 7,
-                                    y: 8,
+                                    y: 8
                                 },
                                 {
                                     x: 8,
-                                    y: 3,
+                                    y: 3
                                 },
                                 {
                                     x: 9,
-                                    y: 7,
+                                    y: 7
                                 }
-                            ],
+                            ]
                         }
-                    },
+                    }
                 ],
                 selections: [{
                     time: 17000,

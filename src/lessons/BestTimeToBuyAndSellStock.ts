@@ -287,7 +287,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     {
                         time: 15000,
                         duration: 5000,
-                        type: { points: 'all' },
+                        type: { points: 'all' }
                     },
                     {
                         time: 23000,

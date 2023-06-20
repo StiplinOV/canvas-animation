@@ -13,7 +13,7 @@ export const FourSum: LessonJsonType = {
             presenceParameters: {
                 appears: [{
                     time: 0,
-                    duration: 1000,
+                    duration: 1000
                 }]
             },
             object: {
@@ -24,7 +24,7 @@ export const FourSum: LessonJsonType = {
                 height: 150,
                 width: 1180,
                 hideIndices: true,
-                values: [2, 2, 3, 4, -2, -5, 7, 7, 7, 7],
+                values: [2, 2, 3, 4, -2, -5, 7, 7, 7, 7]
             },
             selections: [
                 {
@@ -62,8 +62,8 @@ export const FourSum: LessonJsonType = {
                 presenceParameters: {
                     appears: [{
                         time: 11000,
-                        duration: 500,
-                    }],
+                        duration: 500
+                    }]
                 },
                 object: {
                     origin: {
@@ -74,29 +74,29 @@ export const FourSum: LessonJsonType = {
                     value: [
                         {
                             value: 'Restrictions:',
-                            textStyle: 'normal',
+                            textStyle: 'normal'
                         },
                         'newline',
                         {
                             value: '1 <= nums.length <= 200\n',
-                            textStyle: 'normal',
+                            textStyle: 'normal'
                         },
                         'newline',
                         {
                             value: '-10^9 <= nums[i] <= 10^9\n',
-                            textStyle: 'normal',
+                            textStyle: 'normal'
                         },
                         'newline',
                         {
                             value: '-10^9 <= target <= 10^9',
-                            textStyle: 'normal',
+                            textStyle: 'normal'
                         }
                     ]
                 },
                 transformations: [],
                 selections: [{
                     time: 14000,
-                    duration:2000,
+                    duration: 2000,
                     segmentIndex: 2
                 }]
             }
@@ -106,11 +106,11 @@ export const FourSum: LessonJsonType = {
                 presenceParameters: {
                     appears: [{
                         time: 2000,
-                        duration: 500,
+                        duration: 500
                     }],
                     disappears: [{
                         time: 10000,
-                        duration: 1000,
+                        duration: 1000
                     }]
                 },
                 object: {
@@ -135,11 +135,11 @@ export const FourSum: LessonJsonType = {
                 presenceParameters: {
                     appears: [{
                         time: 4000,
-                        duration: 500,
+                        duration: 500
                     }],
                     disappears: [{
                         time: 10000,
-                        duration: 1000,
+                        duration: 1000
                     }]
                 },
                 object: {
@@ -165,7 +165,7 @@ export const FourSum: LessonJsonType = {
                         value: '-2 + -5 +  7 +  7 = 7\n 2 +  3 + -5 +  7 = 7\n 2 +  3 +  4 + -2 = 7'
                     }
                 }]
-            },
+            }
             // {
             //     presenceParameters: {
             //         appears: [{

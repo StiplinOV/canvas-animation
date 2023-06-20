@@ -11,7 +11,6 @@ import LineCanvasAnimationParams from '../../simple/line/LineCanvasAnimationPara
 import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
 import EllipseCanvasAnimationParams from '../../simple/ellipse/EllipseCanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
-import { MatrixSelectorType } from '../array/MatrixCanvasAnimationParams'
 
 export interface TableParamsType extends ObjectParams {
     values: string[][]
@@ -27,8 +26,8 @@ export interface TableParamsType extends ObjectParams {
 }
 
 export type TableSelectorType = {
-    rowTitles?: 'all' | number[],
-    colTitles?: 'all' | number[],
+    rowTitles?: 'all' | number[]
+    colTitles?: 'all' | number[]
     values?: 'all' | [number, number][]
 }
 

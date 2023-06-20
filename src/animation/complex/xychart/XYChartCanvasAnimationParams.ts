@@ -30,7 +30,7 @@ const toChartPointType = (value: ChartPointType | Point): ChartPointType => {
         text: ''
     }
 }
-const chartRangesCoordsComparator = (l: ChartRangeType, r: ChartRangeType) => {
+const chartRangesCoordsComparator = (l: ChartRangeType, r: ChartRangeType): number => {
     const [firstLeft, firstRight] = l.coords.sort()
     const [secondLeft, secondRight] = r.coords.sort()
     if (firstLeft <= secondLeft && firstRight >= secondRight) {
@@ -563,8 +563,8 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
 
     private convertPointToCoordinate (object: XyChartParamsType, point: Point): Point {
         return {
-            x: this.scaleCoordinateValue(object.width, object.xScale || [], object.origin.x, point.x),
-            y: this.scaleCoordinateValue(object.height, object.yScale || [], object.origin.y, -point.y)
+            x: this.scaleCoordinateValue(object.width, object.xScale ?? [], object.origin.x, point.x),
+            y: this.scaleCoordinateValue(object.height, object.yScale ?? [], object.origin.y, -point.y)
         }
     }
 
@@ -584,7 +584,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         if (selectionType.bars === 'allPairsInSequence') {
             const barIndices: Set<number> = new Set<number>()
             animationsCanBeSelected.forEach(k => {
-                const barRegexp =/chartBar (\d+)/
+                const barRegexp = /chartBar (\d+)/
                 if (barRegexp.test(k)) {
                     const extracted = barRegexp.exec(k)
                     if (extracted?.length === 2) {
@@ -596,7 +596,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             const barIndicesArray: number[] = []
             barIndices.forEach(i => barIndicesArray.push(i))
             const allPossiblePairs = findAllArrayIndexGroupsBy(barIndicesArray.length, 2).map(pair => [barIndicesArray[pair[0]], barIndicesArray[pair[1]]])
-            const durationStep = 1/allPossiblePairs.length
+            const durationStep = 1 / allPossiblePairs.length
             let startSelectionPercent = 0
             let endSelectionPercent = durationStep
             allPossiblePairs.forEach(pair => {

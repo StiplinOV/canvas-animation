@@ -207,13 +207,15 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
                         .map(v => ({startSelectionPercent: v.start, endSelectionPercent: v.end}))
                 )
             })
-            elementSelectionInfoMap.forEach((value, key) => value.forEach(
-                v => result.push({
-                    key: `square ${key}`,
-                    startSelectionPercent: v.startSelectionPercent,
-                    endSelectionPercent: v.endSelectionPercent
-                })
-            ))
+            elementSelectionInfoMap.forEach((value, key) => {
+                value.forEach(
+                    v => result.push({
+                        key: `square ${key}`,
+                        startSelectionPercent: v.startSelectionPercent,
+                        endSelectionPercent: v.endSelectionPercent
+                    })
+                )
+            })
         }
         result.push(...this.createAnimationSelectedInfoByRegexpSelector(
             animationsCanBeSelected,

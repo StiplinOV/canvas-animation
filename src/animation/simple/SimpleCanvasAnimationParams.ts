@@ -114,8 +114,7 @@ export default abstract class SimpleCanvasAnimationParams<T extends ObjectParams
                 if (selected) {
                     selection = currentSelection
                     const selectionAlgorithm = selection.selectionAlgorithm ?? animationStyle.selectionAlgorithm
-                    switch (selectionAlgorithm.func) {
-                    case 'fadeinFadeOut':
+                    if (selectionAlgorithm.func === 'fadeinFadeOut') {
                         percent = convertPercentToFadeInFadeOut(
                             duration ? (time - currentSelection.time) / duration : 1,
                             duration,

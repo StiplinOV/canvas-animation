@@ -1,6 +1,6 @@
 import {HORIZ_ALIGN, VERT_ALIGN, THE_STYLE} from 'p5'
 import {calculatePercentValue, calculateTextPercentValue} from '../../../common/Utils'
-import { ObjectParams, Selection } from '../../CanvasAnimationParams'
+import { ObjectParams } from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle, {WebSafeFontsType} from '../../../AnimationStyles'
 import TextCanvasAnimation from './TextCanvasAnimation'
