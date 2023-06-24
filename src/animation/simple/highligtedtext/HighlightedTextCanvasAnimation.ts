@@ -5,10 +5,7 @@ import {
     HighlightedTextParamsType
 } from './HighlightedTextCanvasAnimationParams'
 import CanvasAnimation from '../../CanvasAnimation'
-import {
-    calculateArrayPercentValue,
-    calculateColorPercentValue
-} from '../../../common/Utils'
+import { calculateArrayPercentValue, calculateColorPercentValue } from '../../../common/Utils'
 import { SelectionInfo } from '../SimpleCanvasAnimationParams'
 
 type rectParams = {
@@ -20,36 +17,59 @@ type rectParams = {
 
 export default class HighlightedTextCanvasAnimation extends CanvasAnimation<HighlightedTextParamsType> {
 
-    public drawObject(p5: p5Types, o: HighlightedTextParamsType, perc: number, selectionInfo: SelectionInfo<HighlightedTextCanvasAnimationSelection>, animationStyle: AnimationStyle): void {
-        const {x, y, width, height} = this.process(p5, o, perc, selectionInfo, animationStyle, true)
+    public drawObject (p5: p5Types, o: HighlightedTextParamsType, perc: number, selectionInfo: SelectionInfo<HighlightedTextCanvasAnimationSelection>, animationStyle: AnimationStyle): void {
+        const fontSize = o.fontSize ?? animationStyle.fontSize
+        const widthParam = o.width ?? 0
+        const heightParam = (o.height ?? 0)
+        const rectWithoutBorder = this.process(p5, o, perc, selectionInfo, animationStyle, 0, 0, true)
+        const borderX = widthParam > rectWithoutBorder.width ? (widthParam - rectWithoutBorder.width) / 2 : fontSize / 2
+        const borderY = heightParam > rectWithoutBorder.height ? (heightParam - rectWithoutBorder.height) / 2 : fontSize / 2
+        let {
+            x,
+            y,
+            width,
+            height
+        } = this.process(p5, o, perc, selectionInfo, animationStyle, borderX, borderY, true)
         o.backgroundColor && p5.fill(o.backgroundColor)
-        p5.rect(x, y, width, height)
-        this.process(p5, o, perc, selectionInfo, animationStyle)
+        const rectX = x + borderX * (1 - perc)
+        const rectY = y + borderY * (1 - perc)
+        const rectWidth = width - 2 * borderX * (1 - perc)
+        const rectHeight = height - 2 * borderY * (1 - perc)
+        p5.rect(rectX, rectY, rectWidth, rectHeight)
+        this.process(p5, o, perc, selectionInfo, animationStyle, borderX, borderY)
     }
 
-    public process(
+    public process (
         p5: p5Types,
         o: HighlightedTextParamsType,
         perc: number,
         selectionInfo: SelectionInfo<HighlightedTextCanvasAnimationSelection>,
         animationStyle: AnimationStyle,
+        borderX: number,
+        borderY: number,
         dry?: boolean
     ): rectParams {
         const textArray = calculateArrayPercentValue([], o.value, perc)
         const fontSize = o.fontSize ?? animationStyle.fontSize
 
-        let x = 0
-        let y = 0
+        let x = borderX
+        let y = 0.8 * fontSize + borderY
         let width = 0
         for (let i = 0; i < textArray.length; i++) {
             const part = textArray[i]
             if (part === 'newline') {
                 y += fontSize * 1.2
                 width = Math.max(width, x)
-                x = 0
+                x = borderX
                 continue
             }
-            let {value, textStyle, textWeight, textColor, backgroundTextColor} = part
+            let {
+                value,
+                textStyle,
+                textWeight,
+                textColor,
+                backgroundTextColor
+            } = part
             textColor = getFontColor(animationStyle, textColor)
             if (selectionInfo.selection?.segmentIndex === i) {
                 textColor = calculateColorPercentValue(
@@ -80,10 +100,10 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
         }
 
         return {
-            x: -0.5 * fontSize,
-            y: -1.5 * fontSize,
-            width: width + fontSize,
-            height: y + 2.5 * fontSize
+            x: 0,
+            y: 0,
+            width: width + borderX,
+            height: y + 0.2 * fontSize + borderY
         }
     }
 

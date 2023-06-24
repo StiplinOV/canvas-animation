@@ -1,5 +1,5 @@
 import {ObjectParams} from '../../CanvasAnimationParams'
-import ComplexCanvasAnimationParams from '../ComplexCanvasAnimationParams'
+import ComplexCanvasAnimationParams, { AnimationSelectedInfo } from '../ComplexCanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
 import HighlightedTextCanvasAnimationParams, {
     HighlightedTextValueSegmentType
@@ -296,9 +296,16 @@ export interface highlightedSyntaxParamsType extends ObjectParams {
     language: keyof typeof languageDefs
     highlightStyle?: HighlightedStyleName
     fontSize?: number
+    width?: number,
+    height?: number
 }
 
-export default class HighlightedSyntaxCanvasAnimationParams extends ComplexCanvasAnimationParams<highlightedSyntaxParamsType> {
+export type HighlightedSyntaxSelectorType = {
+    lines?: number[]
+    substring?: string
+}
+
+export default class HighlightedSyntaxCanvasAnimationParams extends ComplexCanvasAnimationParams<highlightedSyntaxParamsType, HighlightedSyntaxSelectorType> {
 
     protected getIncludedAnimationParamsByParameter(object: highlightedSyntaxParamsType): Map<string, SimpleCanvasAnimationParams> {
         const result = new Map<string, SimpleCanvasAnimationParams>()
@@ -310,7 +317,9 @@ export default class HighlightedSyntaxCanvasAnimationParams extends ComplexCanva
                 font: 'monospace',
                 value: this.createValue(object),
                 rotations: object.rotations,
-                backgroundColor: String(this.getStyle(object).hljs.background)
+                backgroundColor: String(this.getStyle(object).hljs.background),
+                width: object.width,
+                height: object.height
             }
         }))
 
@@ -330,6 +339,16 @@ export default class HighlightedSyntaxCanvasAnimationParams extends ComplexCanva
 
     private getStyle(object: highlightedSyntaxParamsType): Record<string, React.CSSProperties> {
         return styles[object.highlightStyle ?? this.getAnimationStyle().highlightTextStyle]
+    }
+
+    protected getAnimationsToBeSelectedInfo (animationsCanBeSelected: Set<string>, selectionType?: HighlightedSyntaxSelectorType): AnimationSelectedInfo[] {
+        const result: AnimationSelectedInfo[] = []
+        let selectionLines = selectionType?.lines ?? []
+
+        if (selectionLines.length !== 0) {
+
+        }
+        return super.getAnimationsToBeSelectedInfo(animationsCanBeSelected, selectionType)
     }
 
 }

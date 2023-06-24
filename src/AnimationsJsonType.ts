@@ -8,7 +8,7 @@ import {
     HighlightedTextParamsType
 } from './animation/simple/highligtedtext/HighlightedTextCanvasAnimationParams'
 import {
-    highlightedSyntaxParamsType
+    highlightedSyntaxParamsType, HighlightedSyntaxSelectorType
 } from './animation/complex/highlightedsyntax/HighlightedSyntaxCanvasAnimationParams'
 import { ComplexCanvasAnimationSelection, TransformOptions } from './animation/complex/ComplexCanvasAnimationParams'
 import { LineParamsType } from './animation/simple/line/LineCanvasAnimationParams'
@@ -34,7 +34,7 @@ export type AnimationsJsonType = {
     circle?: Params<circleParamsType>[]
     ellipse?: Params<ellipseParamsType>[]
     bezier?: Params<BezierParamsType>[]
-    highlightedSyntax?: Params<highlightedSyntaxParamsType, TransformOptions, ComplexCanvasAnimationSelection>[]
+    highlightedSyntax?: Params<highlightedSyntaxParamsType, TransformOptions, ComplexCanvasAnimationSelection<HighlightedSyntaxSelectorType>>[]
     highlightedText?: Params<HighlightedTextParamsType, unknown, HighlightedTextCanvasAnimationSelection>[]
     line?: Params<LineParamsType>[]
     rectangle?: Params<rectangleParamsType>[]

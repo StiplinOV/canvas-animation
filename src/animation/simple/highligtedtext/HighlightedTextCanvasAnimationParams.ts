@@ -18,6 +18,8 @@ interface OnlyTextParamsType {
     fontSize?: number
     font?: WebSafeFontsType | 'monospace'
     backgroundColor?: string
+    width?: number
+    height?: number
 }
 
 export interface HighlightedTextParamsType extends ObjectParams, OnlyTextParamsType {
