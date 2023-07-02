@@ -140,7 +140,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     fillColor,
                     zIndex: value.zIndex ?? 1
                 }
-            }))
+            }, this.getAnimationStyle()))
             if (value.pointer) {
                 new ArrowCanvasAnimationParams({
                     object: {
@@ -179,7 +179,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     zIndex: 2,
                     rotations
                 }
-            }))
+            }, this.getAnimationStyle()))
             result.set(`chartPointValue ${index}`, new TextCanvasAnimationParams({
                 object: {
                     origin: {
@@ -192,7 +192,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     fontSize: 15,
                     rotations
                 }
-            }))
+            }, this.getAnimationStyle()))
         })
         objChartLines.forEach((line, index) => result.set(`chartLine ${index}`, new LineCanvasAnimationParams({
             object: {
@@ -201,7 +201,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                 weight: 3,
                 rotations
             }
-        })))
+        }, this.getAnimationStyle())))
 
         this.getChartYRangeParams(object).forEach((v, k) => result.set(k, v))
         this.getChartXRangeParams(object).forEach((v, k) => result.set(k, v))
@@ -226,7 +226,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     fillColor: value.color,
                     zIndex: value.zIndex ?? -1
                 }
-            }))
+            }, this.getAnimationStyle()))
         })
         return result
     }
@@ -270,7 +270,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                 verticalAlign: 'top',
                 rotations
             }
-        }))
+        }, this.getAnimationStyle()))
         xScale.forEach((value, index) => {
             const x = this.getXForValue(object, value.position)
             if (!object.hideXAxis) {
@@ -287,7 +287,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                         zIndex: -1,
                         rotations
                     }
-                }))
+                }, this.getAnimationStyle()))
             }
             result.set(`xScaleValue ${index}`, new TextCanvasAnimationParams({
                 object: {
@@ -300,7 +300,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     horizontalAlign: 'center',
                     rotations
                 }
-            }))
+            }, this.getAnimationStyle()))
         })
 
         return result
@@ -349,7 +349,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     angle: -Math.PI / 2
                 }]
             }
-        }))
+        }, this.getAnimationStyle()))
 
         yScale.forEach((value, index) => {
             const y = this.getYForValue(object, value.position)
@@ -367,7 +367,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                         zIndex: -1,
                         rotations
                     }
-                }))
+                }, this.getAnimationStyle()))
             }
             result.set(`yScaleValue ${index}`, new TextCanvasAnimationParams({
                 object: {
@@ -380,7 +380,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     horizontalAlign: 'center',
                     rotations
                 }
-            }))
+            }, this.getAnimationStyle()))
         })
         return result
     }
@@ -414,7 +414,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     dashed: [5, 10, 30, 10],
                     rotations
                 }
-            }))
+            }, this.getAnimationStyle()))
             result.set(`objectChartYRangeSecondLine ${index}`, new LineCanvasAnimationParams({
                 object: {
                     origin: {
@@ -428,7 +428,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     dashed: [5, 10, 30, 10],
                     rotations
                 }
-            }))
+            }, this.getAnimationStyle()))
             new ArrowCanvasAnimationParams(
                 {
                     object: {
@@ -463,7 +463,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                         angle: -Math.PI / 2
                     }]
                 }
-            }))
+            }, this.getAnimationStyle()))
         })
 
         return result
@@ -495,7 +495,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     dashed: [5, 10, 30, 10],
                     rotations
                 }
-            }))
+            }, this.getAnimationStyle()))
             result.set(`objectChartXRangeSecondLine ${index}`, new LineCanvasAnimationParams({
                 object: {
                     origin: {
@@ -509,7 +509,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     dashed: [5, 10, 30, 10],
                     rotations
                 }
-            }))
+            }, this.getAnimationStyle()))
             new ArrowCanvasAnimationParams(
                 {
                     object: {
@@ -541,7 +541,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     fontSize: 20,
                     rotations
                 }
-            }))
+            }, this.getAnimationStyle()))
         })
 
         return result

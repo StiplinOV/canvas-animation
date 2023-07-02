@@ -1,6 +1,6 @@
 import {THE_STYLE} from 'p5'
-import {HighlightedStyleName} from './animation/complex/highlightedsyntax/HighlightedSyntaxCanvasAnimationParams'
 import { SelectionAlgorithm } from './animation/CanvasAnimationParams'
+import { HighlightedStyleName } from './animation/simple/highligtedtext/HighlightedTextCanvasAnimationParams'
 
 export const COURIER_NEW_FONT = 'Courier New'
 export type ColorType = string | 'primary' | 'secondary' | 'background'

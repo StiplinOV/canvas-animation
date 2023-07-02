@@ -1,11 +1,11 @@
 import {Renderer} from 'highlight-ts'
-import {HighlightedTextValueSegmentType} from '../../simple/highligtedtext/HighlightedTextCanvasAnimationParams'
+import {HighlightedTextValueSegmentType} from './HighlightedTextCanvasAnimationParams'
 import {THE_STYLE} from 'p5'
 import {Property} from 'csstype'
 import AnimationStyle from '../../../AnimationStyles'
 import React from 'react'
 
-export default class HighlightedSyntaxCanvasAnimationRenderer implements Renderer<HighlightedTextValueSegmentType[]> {
+export default class HighlightedTextCanvasAnimationRenderer implements Renderer<HighlightedTextValueSegmentType[]> {
 
     private readonly style: Record<string, React.CSSProperties>
 

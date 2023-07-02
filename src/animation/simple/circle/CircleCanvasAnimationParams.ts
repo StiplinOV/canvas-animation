@@ -8,12 +8,12 @@ interface onlyCircleParamsType {
     diameter: number
 }
 
-export interface circleParamsType extends onlyCircleParamsType, ObjectParams {
+export interface CircleParamsType extends onlyCircleParamsType, ObjectParams {
 }
 
-export default class CircleCanvasAnimationParams extends SimpleCanvasAnimationParams<circleParamsType> {
+export default class CircleCanvasAnimationParams extends SimpleCanvasAnimationParams<CircleParamsType> {
 
-    mergeWithTransformation(obj: circleParamsType, trans: circleParamsType, perc: number): onlyCircleParamsType {
+    mergeWithTransformation(obj: CircleParamsType, trans: CircleParamsType, perc: number): onlyCircleParamsType {
         return {
             diameter: trans.diameter ? calculatePercentValue(obj.diameter, trans.diameter, perc) : obj.diameter
         }

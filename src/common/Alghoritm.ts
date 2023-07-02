@@ -23,7 +23,7 @@ export const findAllArrayIndexGroupsBy = (numberOfElements: number, numberOfElem
     return result
 }
 
-type IntervalType = { start: number, end: number }
+export type IntervalType = { start: number, end: number }
 export const mergeIntervals = (input: IntervalType[]): IntervalType[] => {
     if (input.length <= 1) {
         return input
@@ -63,4 +63,8 @@ export const convertPercentToFadeInFadeOut = (percent: number, duration?: number
         return 1
     }
     return ((1 - percent) * duration) / fadeDuration
+}
+
+export const uniqueArray = <T>(array: Array<T>): Array<T> => {
+    return array.filter((value, index, array) => array.indexOf(value) === index)
 }

@@ -68,14 +68,14 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
                     origin: object.endPoint,
                     endPoint: left
                 }
-            })
+            }, this.getAnimationStyle())
             rightHalfArrowHeadParams = new LineCanvasAnimationParams({
                 object: {
                     ...arrowHeadLineParams,
                     origin: object.endPoint,
                     endPoint: right
                 }
-            })
+            }, this.getAnimationStyle())
         }
         if (object.startType === 'Arrow') {
             const startPoint = bezierParams?.point2 ?? object.endPoint
@@ -87,14 +87,14 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
                     origin: object.origin,
                     endPoint: left
                 }
-            })
+            }, this.getAnimationStyle())
             rightHalfArrowTailParams = new LineCanvasAnimationParams({
                 object: {
                     ...arrowHeadLineParams,
                     origin: object.origin,
                     endPoint: right
                 }
-            })
+            }, this.getAnimationStyle())
         }
         result.set('shaft', shaftParams)
         leftHalfArrowHeadParams && result.set('left half arrow head', leftHalfArrowHeadParams)
@@ -115,7 +115,7 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
                     verticalAlign,
                     value: object.label.value
                 }
-            }))
+            }, this.getAnimationStyle()))
         }
 
         return result
@@ -141,7 +141,7 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
                         subtractPoints(object.endPoint, object.origin)
                     ]
                 }
-            })
+            }, this.getAnimationStyle())
         }
         return new LineCanvasAnimationParams({
             object: {
@@ -149,7 +149,7 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
                 origin: object.origin,
                 endPoint: object.endPoint
             }
-        })
+        }, this.getAnimationStyle())
     }
 
     private createArrowHeadLinePoints (tail: Point, head: Point): [Point, Point] {

@@ -47,12 +47,9 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
 
     public readonly p5: p5Types
 
-    private readonly animationStyle: AnimationStyle
-
     constructor (params: Params<T, V, ComplexCanvasAnimationSelection<U>>, p5: p5Types, animationStyle: AnimationStyle) {
-        super(params)
+        super(params, animationStyle)
         this.p5 = p5
-        this.animationStyle = animationStyle
     }
 
     protected toSimpleCanvasAnimationParams (): SimpleCanvasAnimationParams[] {
@@ -321,10 +318,6 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
 
     toCanvasAnimations (animationStyle: AnimationStyle): CanvasAnimation[] {
         return this.toSimpleCanvasAnimationParams().flatMap(p => p.toCanvasAnimations(animationStyle))
-    }
-
-    protected getAnimationStyle (): AnimationStyle {
-        return this.animationStyle
     }
 
 }

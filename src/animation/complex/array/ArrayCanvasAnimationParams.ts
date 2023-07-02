@@ -56,7 +56,7 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
                     verticalAlign: 'top',
                     rotations
                 }
-            }))
+            }, this.getAnimationStyle()))
             partShift += partHeight * 2
         }
         values.forEach((valueParam, index) => {
@@ -98,7 +98,7 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
                         horizontalAlign: 'center',
                         rotations
                     }
-                }))
+                }, this.getAnimationStyle()))
             })
         }
         partShift += partHeight
@@ -114,7 +114,7 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
                     horizontalAlign: 'center',
                     rotations
                 }
-            }))
+            }, this.getAnimationStyle()))
             partShift += partHeight
         }
         values.forEach((valueParam, index) => {

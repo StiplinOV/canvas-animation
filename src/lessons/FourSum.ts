@@ -94,11 +94,6 @@ export const FourSum: LessonJsonType = {
                     ]
                 },
                 transformations: [],
-                selections: [{
-                    time: 14000,
-                    duration: 2000,
-                    segmentIndex: 2
-                }]
             }
         ],
         text: [

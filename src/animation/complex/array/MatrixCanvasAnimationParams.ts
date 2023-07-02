@@ -55,7 +55,7 @@ export default class MatrixCanvasAnimationParams extends ComplexCanvasAnimationP
                     verticalAlign: 'center',
                     fontSize
                 }
-            }))
+            }, this.getAnimationStyle()))
         }
         for (let i = 0; i < values.length; i++) {
             const row = values[i]

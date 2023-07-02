@@ -66,7 +66,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                             weight: this.isBoldHorizontalLine(object, i, j) ? 'bold' : 'normal',
                             rotations
                         }
-                    }))
+                    }, this.getAnimationStyle()))
                 }
                 accumulatedWidth += columnWidth
                 if (j < columnWidths.length - 1) {
@@ -77,7 +77,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                             weight: this.isBoldVerticalLine(object, i, j) ? 'bold' : 'normal',
                             rotations
                         }
-                    }))
+                    }, this.getAnimationStyle()))
                 }
                 markedCells.forEach(markedCell => {
                     if (markedCell[0] === i && markedCell[1] === j) {
@@ -94,7 +94,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                                 strokeColor: 'secondary',
                                 rotations
                             }
-                        }))
+                        }, this.getAnimationStyle()))
                     }
                 })
                 result.set(title ? `title ${i} ${j}` : `value ${i} ${j}`, new TextCanvasAnimationParams({
@@ -110,7 +110,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                         textStyle,
                         rotations
                     }
-                }))
+                }, this.getAnimationStyle()))
             }
         }
         return result

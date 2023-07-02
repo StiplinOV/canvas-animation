@@ -16,12 +16,12 @@ interface OnlyTextParamsType {
     verticalAlign?: VERT_ALIGN
 }
 
-export interface textParamsType extends ObjectParams, OnlyTextParamsType {
+export interface TextParamsType extends ObjectParams, OnlyTextParamsType {
 }
 
-export default class TextCanvasAnimationParams extends SimpleCanvasAnimationParams<textParamsType> {
+export default class TextCanvasAnimationParams extends SimpleCanvasAnimationParams<TextParamsType> {
 
-    mergeWithTransformation(obj: textParamsType, trans: Partial<textParamsType>, perc: number, style: AnimationStyle): OnlyTextParamsType {
+    mergeWithTransformation(obj: TextParamsType, trans: Partial<TextParamsType>, perc: number, style: AnimationStyle): OnlyTextParamsType {
         let {fontSize, boxWidth, boxHeight} = obj
         fontSize ??= style.fontSize
         boxHeight = boxHeight && trans.boxHeight ? calculatePercentValue(boxHeight, trans.boxHeight, perc) : boxHeight

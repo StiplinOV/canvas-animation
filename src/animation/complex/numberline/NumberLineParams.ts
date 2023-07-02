@@ -81,7 +81,7 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
                             y: -coordinateDashWidth / 2
                         })
                     }
-                }))
+                }, this.getAnimationStyle()))
                 result.set(`scale value ${value}`, new TextCanvasAnimationParams({
                     object: {
                         origin: addPoints(origin, {
@@ -93,7 +93,7 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
                         verticalAlign: 'top',
                         fontSize
                     }
-                }))
+                }, this.getAnimationStyle()))
             })
         }
         const maxLayer = ranges.reduce((l, r) => Math.max(l, r.layer), 0)
@@ -145,7 +145,7 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
                         }),
                         dashed
                     }
-                }))
+                }, this.getAnimationStyle()))
             })
         })
 

@@ -951,7 +951,7 @@ export const ContainerWithMostWater: LessonJsonType = {
                 }
             }]
         }],
-        highlightedSyntax: [
+        highlightedText: [
             {
                 presenceParameters: {
                     appears: [{
@@ -965,31 +965,33 @@ export const ContainerWithMostWater: LessonJsonType = {
                         y: 50
                     },
                     fontSize: 22,
-                    language: 'Java',
-                    value: 'public int maxArea(int[] height) {\n' +
-                        '    int result = 0;\n' +
-                        '    int leftPointer = 0;\n' +
-                        '    int rightPointer = height.length - 1;\n' +
-                        '    int min = 0;\n' +
-                        '    while (leftPointer < rightPointer) {\n' +
-                        '        int leftHeight = height[leftPointer];\n' +
-                        '        int rightHeight = height[rightPointer];\n' +
-                        '        while (leftHeight <= min && leftPointer < rightPointer) {\n' +
-                        '            leftPointer++;\n' +
-                        '            leftHeight = height[leftPointer];\n' +
-                        '        }\n' +
-                        '        while (rightHeight <= min && leftPointer < rightPointer) {\n' +
-                        '            rightPointer--;\n' +
-                        '            rightHeight = height[rightPointer];\n' +
-                        '        }\n' +
-                        '        min = Math.min(leftHeight, rightHeight);\n' +
-                        '        int area = min * (rightPointer - leftPointer);\n' +
-                        '        if (area > result) {\n' +
-                        '            result = area;\n' +
-                        '        }\n' +
-                        '    }\n' +
-                        '    return result;\n' +
-                        '}'
+                    value: {
+                        language: 'Java',
+                        text: 'public int maxArea(int[] height) {\n' +
+                                '    int result = 0;\n' +
+                            '    int leftPointer = 0;\n' +
+                            '    int rightPointer = height.length - 1;\n' +
+                            '    int min = 0;\n' +
+                            '    while (leftPointer < rightPointer) {\n' +
+                            '        int leftHeight = height[leftPointer];\n' +
+                            '        int rightHeight = height[rightPointer];\n' +
+                            '        while (leftHeight <= min && leftPointer < rightPointer) {\n' +
+                            '            leftPointer++;\n' +
+                            '            leftHeight = height[leftPointer];\n' +
+                            '        }\n' +
+                            '        while (rightHeight <= min && leftPointer < rightPointer) {\n' +
+                            '            rightPointer--;\n' +
+                            '            rightHeight = height[rightPointer];\n' +
+                            '        }\n' +
+                            '        min = Math.min(leftHeight, rightHeight);\n' +
+                            '        int area = min * (rightPointer - leftPointer);\n' +
+                            '        if (area > result) {\n' +
+                            '            result = area;\n' +
+                            '        }\n' +
+                            '    }\n' +
+                            '    return result;\n' +
+                            '}'
+                    }
                 }
             }
         ]

@@ -114,7 +114,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
                         strokeColor: style.strokeColor,
                         fillColor: style.fillColor
                     }
-                }))
+                }, this.getAnimationStyle()))
                 vertex.label && result.set(`vertexValue ${id}`, new TextCanvasAnimationParams({
                     object: {
                         origin: addPoints(origin, offset, {
@@ -129,7 +129,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
                         textStyle: style.textStyle,
                         fillColor: style.fontColor
                     }
-                }))
+                }, this.getAnimationStyle()))
             })
             dagreGraph.edges().forEach((e) => {
                 let vNode: Point = dagreGraph.node(e.v)

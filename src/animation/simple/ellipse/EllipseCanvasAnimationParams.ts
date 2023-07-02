@@ -9,12 +9,12 @@ interface onlyEllipseParamsType {
     height: number
 }
 
-export interface ellipseParamsType extends onlyEllipseParamsType, ObjectParams {
+export interface EllipseParamsType extends onlyEllipseParamsType, ObjectParams {
 }
 
-export default class EllipseCanvasAnimationParams extends SimpleCanvasAnimationParams<ellipseParamsType> {
+export default class EllipseCanvasAnimationParams extends SimpleCanvasAnimationParams<EllipseParamsType> {
 
-    mergeWithTransformation(obj: ellipseParamsType, trans: ellipseParamsType, perc: number): onlyEllipseParamsType {
+    mergeWithTransformation(obj: EllipseParamsType, trans: EllipseParamsType, perc: number): onlyEllipseParamsType {
         return {
             width: trans.width ? calculatePercentValue(obj.width, trans.width, perc) : obj.width,
             height: trans.height ? calculatePercentValue(obj.height, trans.height, perc) : obj.height

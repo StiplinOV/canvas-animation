@@ -862,7 +862,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
             ]
         }
         ],
-        highlightedSyntax: [
+        highlightedText: [
             {
                 presenceParameters: {
                     appears: [{
@@ -876,31 +876,33 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                         y: 1900
                     },
                     fontSize: 22,
-                    language: 'Java',
-                    value: 'public int maxProfit(int[] prices) {\n' +
-                        '\n' +
-                        '    int prevBuy = -prices[0];\n' +
-                        '    int prevSell = MIN_VALUE;\n' +
-                        '    int prevWaitAfterBuy = MIN_VALUE;\n' +
-                        '    int prevWaitAfterNothing = 0;\n' +
-                        '\n' +
-                        '    for (int i = 1; i < prices.length; i++) {\n' +
-                        '        int price = prices[i];\n' +
-                        '        int buy = max(prevSell, prevWaitAfterNothing) - price;\n' +
-                        '        int sell = max(prevBuy, prevWaitAfterBuy) + price;\n' +
-                        '        int waitAfterBuy = max(prevWaitAfterBuy, prevBuy);\n' +
-                        '        int waitAfterNothing = max(prevWaitAfterNothing, prevSell);\n' +
-                        '        prevBuy = buy;\n' +
-                        '        prevSell = sell;\n' +
-                        '        prevWaitAfterBuy = waitAfterBuy;\n' +
-                        '        prevWaitAfterNothing = waitAfterNothing;\n' +
-                        '    }\n' +
-                        '\n' +
-                        '    return max(\n' +
-                        '        max(prevBuy, prevSell),\n' +
-                        '        max(prevWaitAfterBuy, prevWaitAfterNothing)\n' +
-                        '    );\n' +
-                        '}'
+                    value: {
+                        language: 'Java',
+                        text: 'public int maxProfit(int[] prices) {\n' +
+                                '\n' +
+                            '    int prevBuy = -prices[0];\n' +
+                            '    int prevSell = MIN_VALUE;\n' +
+                            '    int prevWaitAfterBuy = MIN_VALUE;\n' +
+                            '    int prevWaitAfterNothing = 0;\n' +
+                            '\n' +
+                            '    for (int i = 1; i < prices.length; i++) {\n' +
+                            '        int price = prices[i];\n' +
+                            '        int buy = max(prevSell, prevWaitAfterNothing) - price;\n' +
+                            '        int sell = max(prevBuy, prevWaitAfterBuy) + price;\n' +
+                            '        int waitAfterBuy = max(prevWaitAfterBuy, prevBuy);\n' +
+                            '        int waitAfterNothing = max(prevWaitAfterNothing, prevSell);\n' +
+                            '        prevBuy = buy;\n' +
+                            '        prevSell = sell;\n' +
+                            '        prevWaitAfterBuy = waitAfterBuy;\n' +
+                            '        prevWaitAfterNothing = waitAfterNothing;\n' +
+                            '    }\n' +
+                            '\n' +
+                            '    return max(\n' +
+                            '        max(prevBuy, prevSell),\n' +
+                            '        max(prevWaitAfterBuy, prevWaitAfterNothing)\n' +
+                            '    );\n' +
+                            '}'
+                    }
                 }
             }
         ]

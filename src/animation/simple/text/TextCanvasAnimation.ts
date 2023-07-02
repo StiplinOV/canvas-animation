@@ -1,13 +1,13 @@
 import p5Types from 'p5'
 import AnimationStyle, { getFontColor } from '../../../AnimationStyles'
-import { textParamsType } from './TextCanvasAnimationParams'
+import { TextParamsType } from './TextCanvasAnimationParams'
 import { calculateColorPercentValue, calculatePercentValue } from '../../../common/Utils'
 import CanvasAnimation from '../../CanvasAnimation'
 import { SelectionInfo } from '../SimpleCanvasAnimationParams'
 
-export default class TextCanvasAnimation extends CanvasAnimation<textParamsType> {
+export default class TextCanvasAnimation extends CanvasAnimation<TextParamsType> {
 
-    public drawObject (p5: p5Types, o: textParamsType, perc: number, selectionInfo: SelectionInfo, style: AnimationStyle): void {
+    public drawObject (p5: p5Types, o: TextParamsType, perc: number, selectionInfo: SelectionInfo, style: AnimationStyle): void {
         const {
             boxHeight,
             boxWidth,

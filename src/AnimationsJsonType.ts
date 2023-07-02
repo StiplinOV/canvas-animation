@@ -1,19 +1,16 @@
-import { textParamsType } from './animation/simple/text/TextCanvasAnimationParams'
+import { TextParamsType } from './animation/simple/text/TextCanvasAnimationParams'
 import { ArrayParamsType, ArraySelectorType } from './animation/complex/array/ArrayCanvasAnimationParams'
-import { circleParamsType } from './animation/simple/circle/CircleCanvasAnimationParams'
-import { ellipseParamsType } from './animation/simple/ellipse/EllipseCanvasAnimationParams'
+import { CircleParamsType } from './animation/simple/circle/CircleCanvasAnimationParams'
+import { EllipseParamsType } from './animation/simple/ellipse/EllipseCanvasAnimationParams'
 import { Params } from './animation/CanvasAnimationParams'
 import {
     HighlightedTextCanvasAnimationSelection,
     HighlightedTextParamsType
 } from './animation/simple/highligtedtext/HighlightedTextCanvasAnimationParams'
-import {
-    highlightedSyntaxParamsType, HighlightedSyntaxSelectorType
-} from './animation/complex/highlightedsyntax/HighlightedSyntaxCanvasAnimationParams'
 import { ComplexCanvasAnimationSelection, TransformOptions } from './animation/complex/ComplexCanvasAnimationParams'
 import { LineParamsType } from './animation/simple/line/LineCanvasAnimationParams'
 import { ArrowParamsType } from './animation/complex/arrow/ArrowCanvasAnimationParams'
-import { rectangleParamsType } from './animation/simple/rectangle/RectangleCanvasAnimationParams'
+import { RectangleParamsType } from './animation/simple/rectangle/RectangleCanvasAnimationParams'
 import {
     TableParamsType,
     TableSelectorType,
@@ -31,15 +28,14 @@ export type AnimationsJsonType = {
     array?: Params<ArrayParamsType, TransformOptions, ComplexCanvasAnimationSelection<ArraySelectorType>>[]
     matrix?: Params<MatrixParamsType, TransformOptions, ComplexCanvasAnimationSelection<MatrixSelectorType>>[]
     arrow?: Params<ArrowParamsType, TransformOptions, ComplexCanvasAnimationSelection>[]
-    circle?: Params<circleParamsType>[]
-    ellipse?: Params<ellipseParamsType>[]
+    circle?: Params<CircleParamsType>[]
+    ellipse?: Params<EllipseParamsType>[]
     bezier?: Params<BezierParamsType>[]
-    highlightedSyntax?: Params<highlightedSyntaxParamsType, TransformOptions, ComplexCanvasAnimationSelection<HighlightedSyntaxSelectorType>>[]
     highlightedText?: Params<HighlightedTextParamsType, unknown, HighlightedTextCanvasAnimationSelection>[]
     line?: Params<LineParamsType>[]
-    rectangle?: Params<rectangleParamsType>[]
+    rectangle?: Params<RectangleParamsType>[]
     table?: Params<TableParamsType, TableTransformOptionsType, ComplexCanvasAnimationSelection<TableSelectorType>>[]
-    text?: Params<textParamsType>[]
+    text?: Params<TextParamsType>[]
     xyChart?: Params<XyChartParamsType, TransformOptions, ComplexCanvasAnimationSelection<XyChartSelectorType>>[]
     graphDataStructure?: Params<GraphDataStructureParamsType, TransformOptions, ComplexCanvasAnimationSelection>[]
     numberLine?: Params<NumberLineParamsType, TransformOptions, ComplexCanvasAnimationSelection>[]

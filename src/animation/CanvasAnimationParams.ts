@@ -62,7 +62,7 @@ export type Transformation<T extends ObjectParams, U> = {
     options?: U
 }
 
-type TransformationParam<T extends ObjectParams, U> = {
+export type TransformationParam<T extends ObjectParams, U> = {
     object: Partial<T>
     time?: number
     duration?: number
@@ -93,14 +93,16 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
     private readonly selections: V[]
     private readonly object: T
     private readonly layout: LayoutType
+    private readonly animationStyle: AnimationStyle
 
-    public constructor(params: Params<T, U, V>) {
+    public constructor(params: Params<T, U, V>, animationStyle: AnimationStyle) {
         const transformations = params.transformations ?? []
         this.appearanceParam = toAppearanceParamType(params.presenceParameters ?? {})
         this.selections = params.selections ?? []
         this.transformations = transformations.map(t => transformationParamToTransformation(t))
         this.object = params.object
         this.layout = params.layout ?? 'absolute'
+        this.animationStyle = animationStyle
     }
 
     public getAppearanceParam(): PresenceParamsType {
@@ -173,6 +175,10 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
 
     public getLayout(): LayoutType {
         return this.layout
+    }
+
+    protected getAnimationStyle (): AnimationStyle {
+        return this.animationStyle
     }
 
 }

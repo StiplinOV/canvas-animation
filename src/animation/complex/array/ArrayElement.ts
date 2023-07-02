@@ -67,7 +67,7 @@ export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElem
                 fillColor: style.backgroundColor,
                 strokeColor: style.strokeColor
             }
-        }))
+        }, this.getAnimationStyle()))
         label && result.set('label', new TextCanvasAnimationParams({
             object: {
                 origin: addPoints(origin, {
@@ -81,7 +81,7 @@ export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElem
                 textStyle: style.textStyle,
                 value: label
             }
-        }))
+        }, this.getAnimationStyle()))
 
         return result
     }
