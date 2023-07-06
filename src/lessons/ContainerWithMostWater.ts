@@ -122,8 +122,8 @@ export const ContainerWithMostWater: LessonJsonType = {
                 },
                 transformations: [
                     {
-                        time: 6000,
-                        duration: 1000,
+                        appearTime: 6000,
+                        appearDuration: 1000,
                         object: {
                             bars: [
                                 {
@@ -182,8 +182,8 @@ export const ContainerWithMostWater: LessonJsonType = {
                         }
                     },
                     {
-                        time: 9000,
-                        duration: 1000,
+                        appearTime: 9000,
+                        appearDuration: 1000,
                         object: {
                             bars: [
                                 {
@@ -244,8 +244,8 @@ export const ContainerWithMostWater: LessonJsonType = {
                         }
                     },
                     {
-                        time: 11000,
-                        duration: 1000,
+                        appearTime: 11000,
+                        appearDuration: 1000,
                         object: {
                             bars: [
                                 {
@@ -305,8 +305,8 @@ export const ContainerWithMostWater: LessonJsonType = {
                         }
                     },
                     {
-                        time: 13000,
-                        duration: 1000,
+                        appearTime: 13000,
+                        appearDuration: 1000,
                         options: {
                             type: 'sequentially'
                         },
@@ -367,8 +367,8 @@ export const ContainerWithMostWater: LessonJsonType = {
                         }
                     },
                     {
-                        time: 16000,
-                        duration: 500,
+                        appearTime: 16000,
+                        appearDuration: 500,
                         object: {
                             chartXRanges: [],
                             chartYRanges: [],
@@ -414,8 +414,8 @@ export const ContainerWithMostWater: LessonJsonType = {
                         }
                     },
                     {
-                        time: 26000,
-                        duration: 500,
+                        appearTime: 26000,
+                        appearDuration: 500,
                         object: {
                             bars: [
                                 {
@@ -462,8 +462,8 @@ export const ContainerWithMostWater: LessonJsonType = {
                         }
                     },
                     {
-                        time: 27000,
-                        duration: 500,
+                        appearTime: 27000,
+                        appearDuration: 500,
                         object: {
                             backgroundSelectedRectangleAreas: [
                                 {
@@ -481,8 +481,8 @@ export const ContainerWithMostWater: LessonJsonType = {
                         }
                     },
                     {
-                        time: 28000,
-                        duration: 500,
+                        appearTime: 28000,
+                        appearDuration: 500,
                         object: {
                             chartXRanges: [{
                                 coords: [1, 9],
@@ -495,16 +495,16 @@ export const ContainerWithMostWater: LessonJsonType = {
                         }
                     },
                     {
-                        time: 29500,
-                        duration: 500,
+                        appearTime: 29500,
+                        appearDuration: 500,
                         object: {
                             chartXRanges: [],
                             chartYRanges: []
                         }
                     },
                     {
-                        time: 32000,
-                        duration: 500,
+                        appearTime: 32000,
+                        appearDuration: 500,
                         object: {
                             bars: [
                                 {
@@ -552,8 +552,8 @@ export const ContainerWithMostWater: LessonJsonType = {
                         }
                     },
                     {
-                        time: 42000,
-                        duration: 500,
+                        appearTime: 42000,
+                        appearDuration: 500,
                         object: {
                             bars: [
                                 {
@@ -613,8 +613,8 @@ export const ContainerWithMostWater: LessonJsonType = {
                         }
                     },
                     {
-                        time: 44000,
-                        duration: 500,
+                        appearTime: 44000,
+                        appearDuration: 500,
                         object: {
                             chartXRanges: [{
                                 coords: [2, 9],
@@ -627,23 +627,23 @@ export const ContainerWithMostWater: LessonJsonType = {
                         }
                     },
                     {
-                        time: 47000,
-                        duration: 500,
+                        appearTime: 47000,
+                        appearDuration: 500,
                         object: {
                             chartXRanges: [],
                             chartYRanges: []
                         }
                     },
                     {
-                        time: 48000,
-                        duration: 500,
+                        appearTime: 48000,
+                        appearDuration: 500,
                         object: {
                             backgroundSelectedRectangleAreas: []
                         }
                     },
                     {
-                        time: 49000,
-                        duration: 500,
+                        appearTime: 49000,
+                        appearDuration: 500,
                         object: {
                             bars: [
                                 {
@@ -691,8 +691,8 @@ export const ContainerWithMostWater: LessonJsonType = {
                         }
                     },
                     {
-                        time: 52000,
-                        duration: 500,
+                        appearTime: 52000,
+                        appearDuration: 500,
                         object: {
                             bars: [
                                 {
@@ -740,8 +740,8 @@ export const ContainerWithMostWater: LessonJsonType = {
                         }
                     },
                     {
-                        time: 55000,
-                        duration: 500,
+                        appearTime: 55000,
+                        appearDuration: 500,
                         object: {
                             bars: [
                                 {
@@ -809,8 +809,8 @@ export const ContainerWithMostWater: LessonJsonType = {
                         }
                     },
                     {
-                        time: 60000,
-                        duration: 500,
+                        appearTime: 60000,
+                        appearDuration: 500,
                         object: {
                             chartXRanges: [],
                             chartYRanges: [],
@@ -818,8 +818,8 @@ export const ContainerWithMostWater: LessonJsonType = {
                         }
                     },
                     {
-                        time: 68000,
-                        duration: 500,
+                        appearTime: 68000,
+                        appearDuration: 500,
                         object: {
                             bars: [
                                 {
@@ -916,32 +916,32 @@ export const ContainerWithMostWater: LessonJsonType = {
                 font: 'Courier New'
             },
             transformations: [{
-                time: 30000,
-                duration: 500,
+                appearTime: 30000,
+                appearDuration: 500,
                 object: {
                     value: '1 x 8 = 8\n---------\nmax = 8'
                 }
             }, {
-                time: 46000,
-                duration: 500,
+                appearTime: 46000,
+                appearDuration: 500,
                 object: {
                     value: '1 x 8 = 8\n7 x 7 = 49'
                 }
             }, {
-                time: 47000,
-                duration: 500,
+                appearTime: 47000,
+                appearDuration: 500,
                 object: {
                     value: '1 x 8 = 8\n7 x 7 = 49\n----------\nmax = 49'
                 }
             }, {
-                time: 58000,
-                duration: 500,
+                appearTime: 58000,
+                appearDuration: 500,
                 object: {
                     value: '1 x 8 = 8\n7 x 7 = 49\n5 x 8 = 40\n----------\nmax = 49'
                 }
             }, {
-                time: 68000,
-                duration: 500,
+                appearTime: 68000,
+                appearDuration: 500,
                 object: {
                     origin: {
                         x: 570,
@@ -968,7 +968,7 @@ export const ContainerWithMostWater: LessonJsonType = {
                     value: {
                         language: 'Java',
                         text: 'public int maxArea(int[] height) {\n' +
-                                '    int result = 0;\n' +
+                            '    int result = 0;\n' +
                             '    int leftPointer = 0;\n' +
                             '    int rightPointer = height.length - 1;\n' +
                             '    int min = 0;\n' +

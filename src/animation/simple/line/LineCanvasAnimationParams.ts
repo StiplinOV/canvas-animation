@@ -24,4 +24,10 @@ export default class LineCanvasAnimationParams extends SimpleCanvasAnimationPara
         return new LineCanvasAnimation(this, animationStyle)
     }
 
+    getZeroParams ():  Omit<LineParamsType, keyof ObjectParams> {
+        return {
+            endPoint: this.getObject().origin,
+        }
+    }
+
 }

@@ -28,6 +28,12 @@ export interface NumberLineParamsType extends ObjectParams {
 
 export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimationParams<NumberLineParamsType> {
 
+    protected getZeroParams (): Omit<NumberLineParamsType, keyof ObjectParams> {
+        return {
+            width: 0,
+        }
+    }
+
     protected getIncludedAnimationParamsByParameter (object: NumberLineParamsType): Map<string, SimpleCanvasAnimationParams> {
         const result = new Map<string, SimpleCanvasAnimationParams>()
         const {

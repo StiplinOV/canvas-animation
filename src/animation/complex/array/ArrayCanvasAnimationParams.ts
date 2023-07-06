@@ -5,7 +5,6 @@ import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationPara
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
 import ArrayElement, { ElementStyle, ElementType } from './ArrayElement'
 import ArrowCanvasAnimationParams from '../arrow/ArrowCanvasAnimationParams'
-import { findAllArrayIndexGroupsBy, mergeIntervals } from '../../../common/Alghoritm'
 
 export interface ArrayParamsType extends ObjectParams {
     values: (ElementType | string | boolean | number)[]
@@ -26,6 +25,13 @@ export type ArraySelectorType = {
 }
 
 export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationParams<ArrayParamsType, ArraySelectorType> {
+
+    protected getZeroParams (): Omit<ArrayParamsType, keyof ObjectParams> {
+        return {
+            values: [],
+            height: 0
+        }
+    }
 
     protected getIncludedAnimationParamsByParameter (object: ArrayParamsType): Map<string, SimpleCanvasAnimationParams> {
         const result = new Map<string, SimpleCanvasAnimationParams>()
@@ -164,78 +170,6 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
             numberOfParts += 2
         }
         return height / numberOfParts
-    }
-
-    protected getAnimationsToBeSelectedInfo (animationsCanBeSelected: Set<string>, selectionType: ArraySelectorType): AnimationSelectedInfo[] {
-        const result: AnimationSelectedInfo[] = []
-        if (selectionType.allNElementsInSequence) {
-            const indices: Set<number> = new Set<number>()
-            animationsCanBeSelected.forEach(k => {
-                const barRegexp = /square (\d+)/
-                if (barRegexp.test(k)) {
-                    const extracted = barRegexp.exec(k)
-                    if (extracted?.length === 2) {
-                        indices.add(Number(extracted[1]))
-                    }
-                }
-            })
-            const indicesArray: number[] = []
-            indices.forEach(i => indicesArray.push(i))
-            const allPossibleNElements = findAllArrayIndexGroupsBy(indicesArray.length, selectionType.allNElementsInSequence)
-                .map(group => group.map((element) => indicesArray[element]))
-
-            const durationStep = 1 / allPossibleNElements.length
-            let startSelectionPercent = 0
-            let endSelectionPercent = durationStep
-            const elementSelectionInfoMap = new Map<number, {
-                startSelectionPercent: number
-                endSelectionPercent: number
-            }[]>()
-            indicesArray.forEach(index => elementSelectionInfoMap.set(index, []))
-            allPossibleNElements.forEach((group) => {
-                group.forEach(element => elementSelectionInfoMap.get(element)?.push({
-                    startSelectionPercent,
-                    endSelectionPercent
-                }))
-                startSelectionPercent = endSelectionPercent
-                endSelectionPercent += durationStep
-            })
-            elementSelectionInfoMap.forEach((value, key) => {
-                elementSelectionInfoMap.set(
-                    key,
-                    mergeIntervals(value.map(v => ({start: v.startSelectionPercent, end: v.endSelectionPercent})))
-                        .map(v => ({startSelectionPercent: v.start, endSelectionPercent: v.end}))
-                )
-            })
-            elementSelectionInfoMap.forEach((value, key) => {
-                value.forEach(
-                    v => result.push({
-                        key: `square ${key}`,
-                        startSelectionPercent: v.startSelectionPercent,
-                        endSelectionPercent: v.endSelectionPercent
-                    })
-                )
-            })
-        }
-        result.push(...this.createAnimationSelectedInfoByRegexpSelector(
-            animationsCanBeSelected,
-            selectionType,
-            selector => this.convertSelectorToDiscriminatorRegexps(selector)
-        ))
-        return result
-    }
-
-    private convertSelectorToDiscriminatorRegexps (selector: ArraySelectorType): RegExp[] {
-        if (!selector.values && !selector.allNElementsInSequence) {
-            return [/.*/]
-        }
-        const result: RegExp[] = []
-        if (selector.values === 'all') {
-            result.push(/square [0-9]*/)
-        } else if (Array.isArray(selector.values)) {
-            selector.values.forEach(p => result.push(new RegExp(`square ${p}`)))
-        }
-        return result
     }
 
 }

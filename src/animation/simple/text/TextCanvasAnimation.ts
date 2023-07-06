@@ -7,7 +7,7 @@ import { SelectionInfo } from '../SimpleCanvasAnimationParams'
 
 export default class TextCanvasAnimation extends CanvasAnimation<TextParamsType> {
 
-    public drawObject (p5: p5Types, o: TextParamsType, perc: number, selectionInfo: SelectionInfo, style: AnimationStyle): void {
+    public drawObject (p5: p5Types, o: TextParamsType, style: AnimationStyle): void {
         const {
             boxHeight,
             boxWidth,
@@ -18,23 +18,16 @@ export default class TextCanvasAnimation extends CanvasAnimation<TextParamsType>
             textStyle
         } = o
         let textSize = fontSize ?? style.fontSize
-        textSize = calculatePercentValue(textSize, textSize * 1.5, selectionInfo.percent)
 
         p5.strokeWeight(style.fontWeight)
         p5.stroke('#FFFFFF')
         p5.textFont(o.font ?? style.font)
-        p5.fill(
-            calculateColorPercentValue(
-                getFontColor(style, o.fillColor),
-                style.selectedColor,
-                selectionInfo.percent
-            )
-        )
+        p5.fill(getFontColor(style, o.fillColor))
         p5.textSize(textSize)
         p5.textStyle(textStyle ?? style.textStyle)
         p5.textAlign(horizontalAlign ?? p5.LEFT, verticalAlign ?? p5.BOTTOM)
         p5.text(
-            value.substring(0, (value.length + 1) * perc),
+            value.substring(0, (value.length + 1)),
             0,
             0,
             boxWidth,

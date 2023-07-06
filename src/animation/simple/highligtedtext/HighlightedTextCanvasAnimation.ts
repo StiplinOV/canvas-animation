@@ -3,14 +3,12 @@ import AnimationStyle, { getFontColor } from '../../../AnimationStyles'
 import {
     createHighlightedTextValueSegmentType,
     getStyle,
-    HighlightedTextCanvasAnimationSelection,
     HighlightedTextParamsType,
     HighlightedTextValueSegmentType
 } from './HighlightedTextCanvasAnimationParams'
 import CanvasAnimation from '../../CanvasAnimation'
-import { calculateArrayPercentValue, calculateColorPercentValue } from '../../../common/Utils'
-import { SelectionInfo } from '../SimpleCanvasAnimationParams'
 import { mergeIntervals } from '../../../common/Alghoritm'
+import { calculateColorPercentValue } from '../../../common/Utils'
 
 type rectParams = {
     x: number
@@ -21,11 +19,11 @@ type rectParams = {
 
 export default class HighlightedTextCanvasAnimation extends CanvasAnimation<HighlightedTextParamsType> {
 
-    public drawObject (p5: p5Types, o: HighlightedTextParamsType, perc: number, selectionInfo: SelectionInfo<HighlightedTextCanvasAnimationSelection>, animationStyle: AnimationStyle): void {
+    public drawObject (p5: p5Types, o: HighlightedTextParamsType, animationStyle: AnimationStyle): void {
         const fontSize = o.fontSize ?? animationStyle.fontSize
         const widthParam = o.width ?? 0
         const heightParam = (o.height ?? 0)
-        const rectWithoutBorder = this.process(p5, o, perc, selectionInfo, animationStyle, 0, 0, true)
+        const rectWithoutBorder = this.process(p5, o, animationStyle, 0, 0, true)
         const borderX = widthParam > rectWithoutBorder.width ? (widthParam - rectWithoutBorder.width) / 2 : fontSize / 2
         const borderY = heightParam > rectWithoutBorder.height ? (heightParam - rectWithoutBorder.height) / 2 : fontSize / 2
         let {
@@ -33,44 +31,38 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
             y,
             width,
             height
-        } = this.process(p5, o, perc, selectionInfo, animationStyle, borderX, borderY, true)
+        } = this.process(p5, o, animationStyle, borderX, borderY, true)
 
-        let { backgroundColor } = o
+        p5.fill(this.calculateBackgroundColor(o, animationStyle))
+        p5.rect(x, y, width, height)
+        this.process(p5, o, animationStyle, borderX, borderY)
+    }
 
-        if (!backgroundColor && !Array.isArray(o.value)) {
-            const style = getStyle(o.value, animationStyle)
-            backgroundColor = String(style.hljs.background)
+    private calculateBackgroundColor (params: HighlightedTextParamsType, animationStyle: AnimationStyle): string {
+        if (typeof params.highlightStyle === 'string' || !params.highlightStyle) {
+            const style = getStyle(animationStyle, params.highlightStyle)
+            return String(style.hljs.background)
         }
-
-        backgroundColor && p5.fill(backgroundColor)
-        const rectX = x + borderX * (1 - perc)
-        const rectY = y + borderY * (1 - perc)
-        const rectWidth = width - 2 * borderX * (1 - perc)
-        const rectHeight = height - 2 * borderY * (1 - perc)
-        p5.rect(rectX, rectY, rectWidth, rectHeight)
-        this.process(p5, o, perc, selectionInfo, animationStyle, borderX, borderY)
+        return params.highlightStyle?.backgroundColor ?? animationStyle.backgroundColor
     }
 
     public process (
         p5: p5Types,
         o: HighlightedTextParamsType,
-        perc: number,
-        selectionInfo: SelectionInfo<HighlightedTextCanvasAnimationSelection>,
         animationStyle: AnimationStyle,
         borderX: number,
         borderY: number,
         dry?: boolean
     ): rectParams {
-        const segments = this.splitSegmentsAccordingToSelections(createHighlightedTextValueSegmentType(o.value, animationStyle), selectionInfo)
-        const textArray = calculateArrayPercentValue([], segments, perc)
+        const segments = this.splitSegmentsAccordingToSelections(createHighlightedTextValueSegmentType(o.value, animationStyle), o)
         const fontSize = o.fontSize ?? animationStyle.fontSize
 
         let x = borderX
         let y = 0.8 * fontSize + borderY
         let width = 0
-        for (let i = 0; i < textArray.length; i++) {
-            const part = textArray[i].segment
-            const selected = textArray[i].selected
+        for (let i = 0; i < segments.length; i++) {
+            const part = segments[i].segment
+            const selected = segments[i].selected
             if (part === 'newline') {
                 y += fontSize * 1.2
                 width = Math.max(width, x)
@@ -86,11 +78,7 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
             } = part
             textColor = getFontColor(animationStyle, textColor)
             if (selected) {
-                textColor = calculateColorPercentValue(
-                    textColor,
-                    animationStyle.selectedColor,
-                    selectionInfo.percent
-                )
+                textColor = animationStyle.selectedColor
             }
             value = value.replaceAll('\t', '    ')
             let font = o.font || 'monospace'
@@ -107,7 +95,7 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
             }
             if (!dry) {
                 p5.fill(textColor)
-                p5.stroke(o.backgroundColor ?? animationStyle.backgroundColor)
+                p5.stroke(this.calculateBackgroundColor(o, animationStyle))
                 p5.text(value, x, y)
             }
             x += textWidth
@@ -124,10 +112,10 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
 
     private splitSegmentsAccordingToSelections (
         segments: HighlightedTextValueSegmentType[],
-        selectionInfo: SelectionInfo<HighlightedTextCanvasAnimationSelection>
+        o: HighlightedTextParamsType
     ): { segment: HighlightedTextValueSegmentType, selected: boolean }[] {
         const result: { segment: HighlightedTextValueSegmentType, selected: boolean }[] = []
-        let selectionIntervals = selectionInfo.selection?.substrings?.map(s => ({
+        let selectionIntervals = o.selectedSubstrings?.map(s => ({
             start: s.from,
             end: s.to
         })) ?? []

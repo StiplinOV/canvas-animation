@@ -1,10 +1,10 @@
 import p5Types from 'p5'
-import { addPoints, needAppearObject, rotateVector, subtractPoints, toAppearancePercent } from '../common/Utils'
+import { addPoints, needAppearObject, rotateVector, subtractPoints } from '../common/Utils'
 import AnimationStyle, { getFillColor, getStrokeColor } from '../AnimationStyles'
-import { LayoutType, ObjectParams, Selection, weightToNumber } from './CanvasAnimationParams'
-import SimpleCanvasAnimationParams, { SelectionInfo } from './simple/SimpleCanvasAnimationParams'
+import { LayoutType, ObjectParams, SelectionType, weightToNumber } from './CanvasAnimationParams'
+import SimpleCanvasAnimationParams from './simple/SimpleCanvasAnimationParams'
 
-export default abstract class CanvasAnimation<T extends ObjectParams = ObjectParams, V extends Selection = Selection, U extends SimpleCanvasAnimationParams<T, V> = SimpleCanvasAnimationParams<T, V>> {
+export default abstract class CanvasAnimation<T extends ObjectParams = ObjectParams, V extends SelectionType = SelectionType, U extends SimpleCanvasAnimationParams<T, V> = SimpleCanvasAnimationParams<T, V>> {
 
     private readonly params: U
 
@@ -17,7 +17,7 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
 
     public draw (p5: p5Types, time: number): void {
         const { animationStyle } = this
-        const object = this.params.calculateObjectParamsInTime(time, animationStyle)
+        const object = this.params.calculateObjectParamsInTime(time)
         const {
             origin,
             rotations,
@@ -44,15 +44,14 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
         p5.translate(result.x, result.y)
         p5.rotate(angle)
         dashed && p5.drawingContext.setLineDash(dashed)
-        const selectionInfo = this.params.calculateSelectionInfo(time, animationStyle)
         p5.strokeWeight(weightToNumber(animationStyle, object.weight))
         p5.stroke(getStrokeColor(animationStyle, object.strokeColor))
         p5.fill(getFillColor(animationStyle, object.fillColor))
-        this.drawObject(p5, object, toAppearancePercent(time, this.params.getAppearanceParam()), selectionInfo, animationStyle)
+        this.drawObject(p5, object, animationStyle)
         p5.pop()
     }
 
-    public abstract drawObject (p5: p5Types, obj: T, perc: number, selectedPercent: SelectionInfo<V>, animationStyle: AnimationStyle): void
+    public abstract drawObject (p5: p5Types, obj: T, animationStyle: AnimationStyle): void
 
     public getZIndex (time: number, animationStyle: AnimationStyle): number {
         return this.params.getZIndex(time, animationStyle)

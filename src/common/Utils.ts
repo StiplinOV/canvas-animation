@@ -101,7 +101,7 @@ export const calculateArrayPercentValue = <T> (from: T[], to: T[], percent: numb
     } else if (fromStartsWithTo) {
         const numberOfStates = from.length - to.length + 1
         const currentState = Math.floor(calculatePercentValue(1, numberOfStates, percent))
-        return to.slice(0, from.length - currentState)
+        return from.slice(0, from.length - currentState)
     } else {
         const numberOfStates = from.length + to.length
         const currentState = Math.floor(calculatePercentValue(1, numberOfStates, percent))

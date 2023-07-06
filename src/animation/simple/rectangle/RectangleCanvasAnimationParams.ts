@@ -31,4 +31,11 @@ export default class RectangleCanvasAnimationParams extends SimpleCanvasAnimatio
         return new RectangleCanvasAnimation(this, animationStyle)
     }
 
+    getZeroParams (): Omit<RectangleParamsType, keyof ObjectParams> {
+        return {
+            width: 0,
+            height: 0
+        }
+    }
+
 }

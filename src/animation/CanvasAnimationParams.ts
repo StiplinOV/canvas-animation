@@ -1,12 +1,17 @@
 import {
+    calculateColorPercentValue,
+    calculatePercentValue, calculatePointPercentValue, calculateRotationsPercentValue,
+    needAppearObject,
     PresenceParamsType,
-    calculatePercentValue,
     rotationType,
-    toAppearancePercent, toAppearanceParamType
+    toAppearanceParamType,
+    toAppearancePercent
 } from '../common/Utils'
-import {Point} from '../common/Point'
-import AnimationStyle, { ColorType } from '../AnimationStyles'
+import { Point, ZeroPoint } from '../common/Point'
+import AnimationStyle, { ColorType, getFillColor, getStrokeColor } from '../AnimationStyles'
 import CanvasAnimation from './CanvasAnimation'
+import { uniqueArray } from '../common/Alghoritm'
+import { animationStyle } from '../Animations'
 
 type WeightType = number | 'normal' | 'bold'
 
@@ -48,7 +53,7 @@ export const fadeinFadeOut = (duration?: number): SelectionAlgorithm => {
     }
 }
 
-export interface Selection<T = unknown> {
+export interface SelectionType<T = unknown> {
     time: number
     duration: number
     type?: T
@@ -57,26 +62,38 @@ export interface Selection<T = unknown> {
 
 export type Transformation<T extends ObjectParams, U> = {
     object: Partial<T>
-    time: number
-    duration: number
+    appearTime: number
+    appearDuration: number
+    disappearTime: number
+    disappearDuration: number
     options?: U
 }
 
 export type TransformationParam<T extends ObjectParams, U> = {
     object: Partial<T>
-    time?: number
-    duration?: number
+    appearTime?: number
+    appearDuration?: number
+    disappearTime?: number
+    disappearDuration?: number
     options?: U
 }
 
-const transformationParamToTransformation = <T extends ObjectParams, U>(t: TransformationParam<T, U>): Transformation<T, U> => ({
+const transformationParamToTransformation = <T extends ObjectParams, U> (t: TransformationParam<T, U>): Transformation<T, U> => ({
     ...t,
-    time: t.time ?? 0,
-    duration: t.duration ?? 0,
+    appearTime: t.appearTime ?? 0,
+    appearDuration: t.appearDuration ?? 0,
+    disappearTime: t.disappearTime ?? Number.MAX_VALUE,
+    disappearDuration: t.disappearDuration ?? 0,
     options: t.options
 })
 
-export type Params<T extends ObjectParams, U = unknown, V extends Selection = Selection> = {
+export type ObjectParamsWithPresence<T extends ObjectParams> = {
+    objectParams: T
+    time: number,
+    duration: number
+}
+
+export type Params<T extends ObjectParams, U = unknown, V extends SelectionType = SelectionType> = {
     transformations?: TransformationParam<T, U>[]
     selections?: V[]
     object: T
@@ -86,7 +103,7 @@ export type Params<T extends ObjectParams, U = unknown, V extends Selection = Se
 
 export default abstract class CanvasAnimationParams<T extends ObjectParams = ObjectParams,
     U = unknown,
-    V extends Selection = Selection> {
+    V extends SelectionType = SelectionType> {
 
     private appearanceParam: PresenceParamsType
     private readonly transformations: Transformation<T, U>[]
@@ -95,7 +112,7 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
     private readonly layout: LayoutType
     private readonly animationStyle: AnimationStyle
 
-    public constructor(params: Params<T, U, V>, animationStyle: AnimationStyle) {
+    public constructor (params: Params<T, U, V>, animationStyle: AnimationStyle) {
         const transformations = params.transformations ?? []
         this.appearanceParam = toAppearanceParamType(params.presenceParameters ?? {})
         this.selections = params.selections ?? []
@@ -105,51 +122,189 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
         this.animationStyle = animationStyle
     }
 
-    public getAppearanceParam(): PresenceParamsType {
+    public getAppearanceParam (): PresenceParamsType {
         return this.appearanceParam
     }
 
-    public appendAppearTime(time: number, duration: number): void {
+    public appendAppearTime (time: number, duration: number): void {
         this.appearanceParam.appears.push({
             time,
             duration
         })
     }
 
-    public appendDisappearTime(time: number, duration: number): void {
+    public appendDisappearTime (time: number, duration: number): void {
         this.appearanceParam.disappears.push({
             time,
             duration
         })
     }
 
-    public setAppearanceParam(param: Partial<PresenceParamsType>): void {
+    public setAppearanceParam (param: Partial<PresenceParamsType>): void {
         this.appearanceParam = toAppearanceParamType({
             ...this.appearanceParam,
             ...param
         })
     }
 
-    protected getSelections(): V[] {
-        return this.selections
+    public getObjectParamsWithTime (): ObjectParamsWithPresence<T>[] {
+        const result: ObjectParamsWithPresence<T>[] = []
+        this.getAppearanceParam().appears.forEach(a => {
+            result.push({
+                objectParams: this.getObject(),
+                time: a.time,
+                duration: 0
+            })
+        })
+        this.getAppearanceParam().disappears.forEach(d => {
+            result.push({
+                objectParams: this.getZeroObject(),
+                time: d.time,
+                duration: d.duration
+            })
+        })
+
+        const transformations = this.getTransformations()
+        uniqueArray([
+            ...transformations.map(t => ({
+                time: t.appearTime,
+                duration: t.appearDuration
+            })),
+            ...transformations.map(t => ({
+                time: t.disappearTime,
+                duration: t.disappearDuration
+            }))
+        ]).map(presence => {//Ошибка. НЕ учтен процент появления
+            result.push({
+                ...presence,
+                objectParams: this.calculateObjectParamsInTime(presence.time)
+            })
+        })
+
+        return result.sort((l, r) => l.time - r.time)
     }
 
-    public addSelection(selection: V): void {
-        this.selections.push(selection)
-    }
+    public calculateObjectParamsInTime (time: number): T {
+        const animationStyle = this.getAnimationStyle()
+        const sourceObject = this.getZeroObject()
+        let result = { ...sourceObject }
 
-    public getZIndex(time: number, animationStyle: AnimationStyle): number {
-        let result = this.object.zIndex ?? animationStyle.zIndex
         this.getTransformations()
-            .filter(t => time >= t.time)
+            .filter(t => needAppearObject(time, {
+                appears: [{
+                    time: t.appearTime,
+                    duration: t.appearDuration
+                }],
+                disappears: [{
+                    time: t.disappearTime,
+                    duration: t.disappearDuration
+                }]
+            }))
             .forEach((t) => {
                 const transformationObject = t.object
                 const percent = toAppearancePercent(time, {
                     appears: [{
-                        time: t.time,
-                        duration: t.duration
+                        time: t.appearTime,
+                        duration: t.appearDuration
                     }],
-                    disappears: []
+                    disappears: [{
+                        time: t.disappearTime,
+                        duration: t.disappearDuration
+                    }]
+                })
+                if (transformationObject.fillColor) {
+                    result.fillColor = calculateColorPercentValue(
+                        getFillColor(animationStyle, result.fillColor),
+                        getFillColor(animationStyle, transformationObject.fillColor),
+                        percent
+                    )
+                }
+                if (transformationObject.strokeColor) {
+                    result.strokeColor = calculateColorPercentValue(
+                        getStrokeColor(animationStyle, result.strokeColor),
+                        getStrokeColor(animationStyle, transformationObject.strokeColor),
+                        percent
+                    )
+                }
+                if (transformationObject.origin) {
+                    result.origin = calculatePointPercentValue(result.origin, transformationObject.origin, percent)
+                }
+                if (transformationObject.zIndex !== undefined) {
+                    result.zIndex = calculatePercentValue(result.zIndex ?? 0, transformationObject.zIndex, percent)
+                }
+                if (transformationObject.weight) {
+                    result.weight = calculatePercentValue(
+                        weightToNumber(animationStyle, result.weight),
+                        weightToNumber(animationStyle, transformationObject.weight), percent
+                    )
+                }
+                if (transformationObject.rotations) {
+                    result.rotations = calculateRotationsPercentValue(
+                        result.rotations ?? [{
+                            axis: ZeroPoint,
+                            angle: 0
+                        }],
+                        transformationObject.rotations,
+                        percent
+                    )
+                }
+                const transformDashed = transformationObject.dashed
+                const resultDashed = result.dashed ?? []
+                if (transformDashed && (transformDashed.length || resultDashed.length)) {
+                    let resultLength = 1
+                    if (resultDashed.length) {
+                        resultLength *= resultDashed.length
+                    }
+                    if (transformDashed.length) {
+                        resultLength *= transformDashed.length
+                    }
+
+                    const sourceCopy = []
+                    const transformCopy = []
+                    for (let i = 0; i < resultLength; i++) {
+                        sourceCopy.push(resultDashed.length ? resultDashed[i % resultDashed.length] : 0)
+                        transformCopy.push(transformDashed.length ? transformDashed[i % transformDashed.length] : 0)
+                    }
+                    for (let i = 0; i < resultLength; i++) {
+                        sourceCopy[i] = calculatePercentValue(sourceCopy[i], transformCopy[i], percent)
+                    }
+                    result.dashed = sourceCopy
+                }
+                result = {
+                    ...result,
+                    ...this.mergeWithTransformation(result, transformationObject, percent, animationStyle)
+                }
+            })
+        return result
+    }
+
+    public abstract mergeWithTransformation (obj: T, trans: Partial<T>, perc: number, animationStyle: AnimationStyle): Omit<T, keyof ObjectParams>
+
+
+    public getZIndex (time: number, animationStyle: AnimationStyle): number {//ХУ Е ТА
+        let result = this.object.zIndex ?? animationStyle.zIndex
+        this.getTransformations()
+            .filter(t => needAppearObject(time, {
+                appears: [{
+                    time: t.appearTime,
+                    duration: t.appearDuration
+                }],
+                disappears: [{
+                    time: t.disappearTime,
+                    duration: t.disappearDuration
+                }]
+            }))
+            .forEach((t) => {
+                const transformationObject = t.object
+                const percent = toAppearancePercent(time, {
+                    appears: [{
+                        time: t.appearTime,
+                        duration: t.appearDuration
+                    }],
+                    disappears: [{
+                        time: t.disappearTime,
+                        duration: t.disappearDuration
+                    }]
                 })
 
                 if (transformationObject.zIndex) {
@@ -159,21 +314,67 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
         return result
     }
 
-    public getObject(): T {
+    public getObject (): T {
         return this.object
     }
 
-    public getTransformations(): Transformation<T, U>[] {
-        return this.transformations.sort((l, r) => l.time - r.time)
+    public getZeroObject (): T {
+        return {
+            ...this.getObject(),
+            ...this.getZeroParams(),
+            origin: this.getZeroObjectOrigin(),
+            zIndex: Number.MIN_VALUE,
+        }
     }
 
-    public appendTransformation(transformation: TransformationParam<T, U>): void {
+    protected getZeroObjectOrigin (): Point {
+        return this.getObject().origin
+    }
+
+    protected abstract getZeroParams (): Omit<T, keyof ObjectParams>
+
+    public appendTransformation (transformation: TransformationParam<T, U>): void {
         this.transformations.push(transformationParamToTransformation(transformation))
     }
 
-    public abstract toCanvasAnimations(animationStyle: AnimationStyle): CanvasAnimation[]
+    public getTransformations (): Transformation<T, U>[] {
+        return [
+            ...this.transformations,
+            ...this.calculateSelectionTransformations(),
+            ...this.getAppearanceParam().appears.map(a => ({
+                object: this.getObject(),
+                appearTime: a.time,
+                appearDuration: a.duration,
+                disappearTime: Number.MAX_VALUE,
+                disappearDuration: 0
+            })),
+            ...this.getAppearanceParam().disappears.map(d => ({
+                object: this.getZeroObject(),
+                appearTime: d.time,
+                appearDuration: d.duration,
+                disappearTime: Number.MAX_VALUE,
+                disappearDuration: 0
+            }))
+        ].sort((l, r) => l.appearTime - r.appearTime)
+    }
 
-    public getLayout(): LayoutType {
+    private calculateSelectionTransformations (): Transformation<T, U>[] {
+        return this.selections.map(selection => ({
+            object: this.convertSelectionToTransformObject(selection),
+            appearTime: selection.time,
+            appearDuration: selection.duration / 2,
+            disappearTime: selection.time + selection.duration / 2,
+            disappearDuration: selection.duration / 2
+        }))
+    }
+
+    protected convertSelectionToTransformObject (selection: V): Partial<T> {
+        return {}
+    }
+
+    public abstract toCanvasAnimations (animationStyle: AnimationStyle): CanvasAnimation[]
+
+    public getLayout (): LayoutType {
         return this.layout
     }
 

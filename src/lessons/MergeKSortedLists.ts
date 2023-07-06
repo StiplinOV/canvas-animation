@@ -104,8 +104,8 @@ export const MergeKSortedLists: LessonJsonType = {
                     ]
                 },
                 transformations: [{
-                    time: 2000,
-                    duration: 1000,
+                    appearTime:      2000,
+                    appearDuration:1000,
                     object: {
                         edges: [
                             {
@@ -143,8 +143,8 @@ export const MergeKSortedLists: LessonJsonType = {
                         ]
                     }
                 }, {
-                    time: 4000,
-                    duration: 1000,
+                   appearTime:      4000,
+                   appearDuration:1000,
                     object: {
                         edges: [
                             {
@@ -182,8 +182,8 @@ export const MergeKSortedLists: LessonJsonType = {
                         ]
                     }
                 }, {
-                    time: 6000,
-                    duration: 1000,
+                    appearTime:     6000,
+                    appearDuration: 1000,
                     object: {
                         edges: [
                             {

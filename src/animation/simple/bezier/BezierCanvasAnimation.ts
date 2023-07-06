@@ -7,13 +7,8 @@ import { SelectionInfo } from '../SimpleCanvasAnimationParams'
 
 export default class BezierCanvasAnimation extends CanvasAnimation<BezierParamsType> {
 
-    public drawObject (p5: p5Types, object: BezierParamsType, percent: number, selectionInfo: SelectionInfo, style: AnimationStyle): void {
-        const points = calculatePointsPercentValue([
-            object.originRelativePoints[0],
-            object.originRelativePoints[0],
-            object.originRelativePoints[0],
-            object.originRelativePoints[0]
-        ], object.originRelativePoints, percent)
+    public drawObject (p5: p5Types, object: BezierParamsType, style: AnimationStyle): void {
+        const points = object.originRelativePoints
 
         p5.noFill()
         p5.bezier(

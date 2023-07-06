@@ -2,12 +2,12 @@ import { TextParamsType } from './animation/simple/text/TextCanvasAnimationParam
 import { ArrayParamsType, ArraySelectorType } from './animation/complex/array/ArrayCanvasAnimationParams'
 import { CircleParamsType } from './animation/simple/circle/CircleCanvasAnimationParams'
 import { EllipseParamsType } from './animation/simple/ellipse/EllipseCanvasAnimationParams'
-import { Params } from './animation/CanvasAnimationParams'
+import { Params, SelectionType } from './animation/CanvasAnimationParams'
 import {
     HighlightedTextCanvasAnimationSelection,
     HighlightedTextParamsType
 } from './animation/simple/highligtedtext/HighlightedTextCanvasAnimationParams'
-import { ComplexCanvasAnimationSelection, TransformOptions } from './animation/complex/ComplexCanvasAnimationParams'
+import { TransformOptions } from './animation/complex/ComplexCanvasAnimationParams'
 import { LineParamsType } from './animation/simple/line/LineCanvasAnimationParams'
 import { ArrowParamsType } from './animation/complex/arrow/ArrowCanvasAnimationParams'
 import { RectangleParamsType } from './animation/simple/rectangle/RectangleCanvasAnimationParams'
@@ -22,23 +22,28 @@ import { GraphDataStructureParamsType } from './animation/complex/datastructure/
 import { BezierParamsType } from './animation/simple/bezier/BezierCanvasAnimationParams'
 import { MatrixParamsType, MatrixSelectorType } from './animation/complex/array/MatrixCanvasAnimationParams'
 import { NumberLineParamsType } from './animation/complex/numberline/NumberLineParams'
+import {
+    CodeQuestionnaireCanvasAnimationSelection,
+    CodeQuestionnaireParamsType
+} from './animation/complex/codequestionnaire/CodeQuestionnaireCanvasAnimationParams'
 
 export type AnimationsJsonType = {
     // TODO dequeue
-    array?: Params<ArrayParamsType, TransformOptions, ComplexCanvasAnimationSelection<ArraySelectorType>>[]
-    matrix?: Params<MatrixParamsType, TransformOptions, ComplexCanvasAnimationSelection<MatrixSelectorType>>[]
-    arrow?: Params<ArrowParamsType, TransformOptions, ComplexCanvasAnimationSelection>[]
+    array?: Params<ArrayParamsType, TransformOptions, SelectionType<ArraySelectorType>>[]
+    matrix?: Params<MatrixParamsType, TransformOptions, SelectionType<MatrixSelectorType>>[]
+    arrow?: Params<ArrowParamsType, TransformOptions>[]
     circle?: Params<CircleParamsType>[]
+    codeQuestionnaire?: Params<CodeQuestionnaireParamsType, TransformOptions, SelectionType<CodeQuestionnaireCanvasAnimationSelection>>[]
     ellipse?: Params<EllipseParamsType>[]
     bezier?: Params<BezierParamsType>[]
     highlightedText?: Params<HighlightedTextParamsType, unknown, HighlightedTextCanvasAnimationSelection>[]
     line?: Params<LineParamsType>[]
     rectangle?: Params<RectangleParamsType>[]
-    table?: Params<TableParamsType, TableTransformOptionsType, ComplexCanvasAnimationSelection<TableSelectorType>>[]
+    table?: Params<TableParamsType, TableTransformOptionsType, SelectionType<TableSelectorType>>[]
     text?: Params<TextParamsType>[]
-    xyChart?: Params<XyChartParamsType, TransformOptions, ComplexCanvasAnimationSelection<XyChartSelectorType>>[]
-    graphDataStructure?: Params<GraphDataStructureParamsType, TransformOptions, ComplexCanvasAnimationSelection>[]
-    numberLine?: Params<NumberLineParamsType, TransformOptions, ComplexCanvasAnimationSelection>[]
+    xyChart?: Params<XyChartParamsType, TransformOptions, SelectionType<XyChartSelectorType>>[]
+    graphDataStructure?: Params<GraphDataStructureParamsType, TransformOptions>[]
+    numberLine?: Params<NumberLineParamsType, TransformOptions>[]
 }
 
 export type LessonJsonType = {

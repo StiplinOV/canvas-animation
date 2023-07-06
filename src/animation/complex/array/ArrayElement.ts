@@ -28,6 +28,13 @@ export interface ArrayElementParamsType extends ObjectParams {
 
 export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElementParamsType> {
 
+    protected getZeroParams (): Omit<ArrayElementParamsType, keyof ObjectParams> {
+        return {
+            value: "",
+            height: 0
+        }
+    }
+
     protected getIncludedAnimationParamsByParameter (object: ArrayElementParamsType): Map<string, SimpleCanvasAnimationParams> {
         const result = new Map<string, SimpleCanvasAnimationParams>()
         const {

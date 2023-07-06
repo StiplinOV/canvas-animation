@@ -14,6 +14,13 @@ export interface EllipseParamsType extends onlyEllipseParamsType, ObjectParams {
 
 export default class EllipseCanvasAnimationParams extends SimpleCanvasAnimationParams<EllipseParamsType> {
 
+    protected getZeroParams(): Omit<EllipseParamsType, keyof ObjectParams> {
+        return {
+            width: 0,
+            height: 0
+        }
+    }
+
     mergeWithTransformation(obj: EllipseParamsType, trans: EllipseParamsType, perc: number): onlyEllipseParamsType {
         return {
             width: trans.width ? calculatePercentValue(obj.width, trans.width, perc) : obj.width,

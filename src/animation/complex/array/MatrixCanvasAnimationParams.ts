@@ -21,6 +21,13 @@ export type MatrixSelectorType = {
 
 export default class MatrixCanvasAnimationParams extends ComplexCanvasAnimationParams<MatrixParamsType, MatrixSelectorType> {
 
+    protected getZeroParams (): Omit<MatrixParamsType, keyof ObjectParams> {
+        return {
+            values: [],
+            height: 0
+        }
+    }
+
     protected getIncludedAnimationParamsByParameter (object: MatrixParamsType): Map<string, SimpleCanvasAnimationParams> {
         const result = new Map<string, SimpleCanvasAnimationParams>()
         const {
@@ -98,29 +105,6 @@ export default class MatrixCanvasAnimationParams extends ComplexCanvasAnimationP
 
     private getNumberOfCols (object: MatrixParamsType): number {
         return object.values.map(v => v.length).reduce((l, r) => Math.max(l, r), 0)
-    }
-
-    protected getAnimationsToBeSelectedInfo (animationsCanBeSelected: Set<string>, selectionType: MatrixSelectorType): AnimationSelectedInfo[] {
-        return this.createAnimationSelectedInfoByRegexpSelector(
-            animationsCanBeSelected,
-            selectionType,
-            selector => this.convertSelectorToDiscriminatorRegexps(selector)
-        )
-    }
-
-    private convertSelectorToDiscriminatorRegexps (selector: MatrixSelectorType): RegExp[] {
-        if (!selector.elements) {
-            return [/.*/]
-        }
-        const result = []
-        if (selector.elements === 'all') {
-            result.push(/square.*/)
-        } else if (Array.isArray(selector.elements)) {
-            selector.elements.forEach(e => {
-                result.push(new RegExp(`square \\[${e.x}\\]\\[${e.y}\\]`))
-            })
-        }
-        return result
     }
 
 }

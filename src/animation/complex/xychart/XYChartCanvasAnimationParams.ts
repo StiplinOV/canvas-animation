@@ -9,7 +9,6 @@ import CircleCanvasAnimationParams from '../../simple/circle/CircleCanvasAnimati
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
 import RectangleCanvasAnimationParams from '../../simple/rectangle/RectangleCanvasAnimationParams'
 import { ColorType } from '../../../AnimationStyles'
-import { findAllArrayIndexGroupsBy } from '../../../common/Alghoritm'
 
 const coordinateDashWidth = 20
 const toScaleType = (value: scaleType | number): scaleType => {
@@ -92,6 +91,13 @@ export type XyChartSelectorType = {
 }
 
 export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimationParams<XyChartParamsType, XyChartSelectorType> {
+
+    protected getZeroParams (): Omit<XyChartParamsType, keyof ObjectParams> {
+        return {
+            width: 0,
+            height: 0
+        }
+    }
 
     protected getIncludedAnimationParamsByParameter (object: XyChartParamsType): Map<string, SimpleCanvasAnimationParams> {
         const result = new Map<string, SimpleCanvasAnimationParams>()
@@ -577,80 +583,6 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         const averageGap = lastScaleValue / scale.length
         const scaleMax = scale.length > 0 ? (lastScaleValue + averageGap) : 0
         return originCoord + (coord * length / scaleMax)
-    }
-
-    protected getAnimationsToBeSelectedInfo (animationsCanBeSelected: Set<string>, selectionType: XyChartSelectorType): AnimationSelectedInfo[] {
-        const result: AnimationSelectedInfo[] = []
-        if (selectionType.bars === 'allPairsInSequence') {
-            const barIndices: Set<number> = new Set<number>()
-            animationsCanBeSelected.forEach(k => {
-                const barRegexp = /chartBar (\d+)/
-                if (barRegexp.test(k)) {
-                    const extracted = barRegexp.exec(k)
-                    if (extracted?.length === 2) {
-                        barIndices.add(Number(extracted[1]))
-                    }
-                }
-            })
-
-            const barIndicesArray: number[] = []
-            barIndices.forEach(i => barIndicesArray.push(i))
-            const allPossiblePairs = findAllArrayIndexGroupsBy(barIndicesArray.length, 2).map(pair => [barIndicesArray[pair[0]], barIndicesArray[pair[1]]])
-            const durationStep = 1 / allPossiblePairs.length
-            let startSelectionPercent = 0
-            let endSelectionPercent = durationStep
-            allPossiblePairs.forEach(pair => {
-                result.push({
-                    key: `chartBar ${pair[0]}`,
-                    startSelectionPercent,
-                    endSelectionPercent
-                })
-                result.push({
-                    key: `chartBar ${pair[1]}`,
-                    startSelectionPercent,
-                    endSelectionPercent
-                })
-                startSelectionPercent = endSelectionPercent
-                endSelectionPercent += durationStep
-            })
-        }
-        result.push(...this.createAnimationSelectedInfoByRegexpSelector(
-            animationsCanBeSelected,
-            selectionType,
-            selector => this.convertSelectorToDiscriminatorRegexps(selector)
-        ))
-        return result
-    }
-
-    private convertSelectorToDiscriminatorRegexps (selector: XyChartSelectorType): RegExp[] {
-        if (!selector.lines && !selector.points && !selector.yScaleValues && !selector.xScaleValues && !selector.bars) {
-            return [/.*/]
-        }
-        const result = []
-        if (selector.lines === 'all') {
-            result.push(/chartLine.*/)
-        }
-        if (selector.points === 'all') {
-            result.push(/chartPoint.*/)
-        } else if (Array.isArray(selector.points)) {
-            selector.points.forEach(p => result.push(new RegExp(`chartPoint ${p}`)))
-        }
-        if (selector.xScaleValues === 'all') {
-            result.push(/xScaleValue.*/)
-        } else if (Array.isArray(selector.xScaleValues)) {
-            selector.xScaleValues.forEach(p => result.push(new RegExp(`xScaleValue ${p}`)))
-        }
-        if (selector.yScaleValues === 'all') {
-            result.push(/yScaleValue.*/)
-        } else if (Array.isArray(selector.yScaleValues)) {
-            selector.yScaleValues.forEach(p => result.push(new RegExp(`yScaleValue ${p}`)))
-        }
-        if (selector.bars === 'all') {
-            result.push(/chartBar.*/)
-        } else if (Array.isArray(selector.bars)) {
-            selector.bars.forEach(b => result.push(new RegExp(`chartBar ${b}`)))
-        }
-        return result
     }
 
 }

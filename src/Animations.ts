@@ -17,6 +17,8 @@ import GraphDataStructureParams from './animation/complex/datastructure/graph/Gr
 import BezierCanvasAnimationParams from './animation/simple/bezier/BezierCanvasAnimationParams'
 import MatrixCanvasAnimationParams from './animation/complex/array/MatrixCanvasAnimationParams'
 import NumberLineCanvasAnimationParams from './animation/complex/numberline/NumberLineParams'
+import CodeQuestionnaireCanvasAnimationParams
+    from './animation/complex/codequestionnaire/CodeQuestionnaireCanvasAnimationParams'
 
 export const animationStyle = getAnimationStyle('default')
 
@@ -51,6 +53,8 @@ export const canvasAnimations: (json: AnimationsJsonType, p5: p5Types) => Canvas
             result.push(...json.graphDataStructure?.map(c => new GraphDataStructureParams(c, p5, animationStyle)) ?? [])
         } else if (key === 'numberLine') {
             result.push(...json.numberLine?.map(c => new NumberLineCanvasAnimationParams(c, p5, animationStyle)) ?? [])
+        } else if (key === 'codeQuestionnaire') {
+            result.push(...json.codeQuestionnaire?.map(c => new CodeQuestionnaireCanvasAnimationParams(c, p5, animationStyle)) ?? [])
         } else {
             throw new Error(`Wrong JSON. Unexpected key ${key}`)
         }

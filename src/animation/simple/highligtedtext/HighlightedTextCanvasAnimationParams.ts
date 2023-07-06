@@ -1,5 +1,5 @@
 import {calculateArrayPercentValue, calculatePercentValue} from '../../../common/Utils'
-import { ObjectParams, Selection } from '../../CanvasAnimationParams'
+import { ObjectParams, SelectionType } from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle, { ColorType, WebSafeFontsType } from '../../../AnimationStyles'
 import HighlightedTextCanvasAnimation from './HighlightedTextCanvasAnimation'
@@ -123,12 +123,10 @@ import {
     tomorrowNightBright,
     tomorrowNightEighties, vs, vs2015, xcode, xt256, zenburn
 } from 'react-syntax-highlighter/dist/esm/styles/hljs'
-import HighlightedTextCanvasAnimationRenderer
-    from './HighlightedTextCanvasAnimationRenderer'
-import { animationStyle } from '../../../Animations'
+import HighlightedTextCanvasAnimationRenderer from './HighlightedTextCanvasAnimationRenderer'
 import React from 'react'
 
-const languageDefs = {
+export const languageDefs = {
     AccessLog,
     Bash,
     CMake,
@@ -268,8 +266,8 @@ const styles = {
     zenburn
 }
 
-export const getStyle = (object: HighlightedSyntaxValueType, animationStyle: AnimationStyle): Record<string, React.CSSProperties> => {
-    return styles[object.highlightStyle ?? animationStyle.highlightTextStyle]
+export const getStyle = (animationStyle: AnimationStyle, styleName?: HighlightedStyleName, ): Record<string, React.CSSProperties> => {
+    return styles[styleName ?? animationStyle.highlightTextStyle]
 }
 
 export const createHighlightedTextValueSegmentType = (object: HighlightedTextValueType, animationStyle: AnimationStyle): HighlightedTextValueSegmentType[] => {
@@ -280,7 +278,7 @@ export const createHighlightedTextValueSegmentType = (object: HighlightedTextVal
 
     registerLanguages(...Object.values(languageDefs))
 
-    const style = getStyle(object, animationStyle)
+    const style = getStyle(animationStyle, object.highlightStyle)
     const highlighter = init(new HighlightedTextCanvasAnimationRenderer(style, animationStyle))
 
     return process(highlighter, text, languageDefs[object.language].name).value
@@ -304,19 +302,25 @@ export type HighlightedSyntaxValueType = {
 
 export type HighlightedTextValueType = HighlightedSyntaxValueType | HighlightedTextValueSegmentType[]
 
-interface OnlyTextParamsType {
+interface OnlyHighlightedTextParamsType {
     value: HighlightedTextValueType
     fontSize?: number
     font?: WebSafeFontsType | 'monospace'
-    backgroundColor?: string
+    highlightStyle?: HighlightedStyleName | {
+        backgroundColor?: string
+    }
+    selectedSubstrings?: {
+        from: number,
+        to: number,
+    }[]
     width?: number
     height?: number
 }
 
-export interface HighlightedTextParamsType extends ObjectParams, OnlyTextParamsType {
+export interface HighlightedTextParamsType extends ObjectParams, OnlyHighlightedTextParamsType {
 }
 
-export interface HighlightedTextCanvasAnimationSelection extends Selection {
+export interface HighlightedTextCanvasAnimationSelection extends SelectionType {
     substrings?: {
         from: number,
         to: number
@@ -325,25 +329,37 @@ export interface HighlightedTextCanvasAnimationSelection extends Selection {
 
 export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAnimationParams<HighlightedTextParamsType, HighlightedTextCanvasAnimationSelection> {
 
+    protected getZeroParams(): Omit<HighlightedTextParamsType, keyof ObjectParams> {
+        return {
+            value: []
+        }
+    }
+
     mergeWithTransformation(
         obj: HighlightedTextParamsType,
         trans: Partial<HighlightedTextParamsType>,
         perc: number,
         style: AnimationStyle
-    ): OnlyTextParamsType {
-        let {fontSize} = obj
+    ): OnlyHighlightedTextParamsType {
+        let {fontSize, width, height, highlightStyle} = obj
         fontSize ??= style.fontSize
+        width ??= 0
+        height ??= 0
         const value = createHighlightedTextValueSegmentType(obj.value, this.getAnimationStyle())
         const transValue = createHighlightedTextValueSegmentType(trans.value || [], this.getAnimationStyle())
         return {
+            highlightStyle: (trans.highlightStyle && perc >= 0.5) ? trans.highlightStyle : highlightStyle,
             value: trans.value ? this.calculateValuePercentValue(value, transValue, perc) : obj.value,
             fontSize: trans.fontSize ? calculatePercentValue(fontSize, trans.fontSize, perc) : fontSize,
-            font: (trans.font && perc >= 0.5) ? trans.font : obj.font
+            font: (trans.font && perc >= 0.5) ? trans.font : obj.font,
+            width: trans.width != undefined? calculatePercentValue(width, trans.width, perc) : width,
+            height: trans.height != undefined? calculatePercentValue(height, trans.height, perc) : height,
+            selectedSubstrings: (trans.selectedSubstrings ? calculateArrayPercentValue(
+                obj.selectedSubstrings ?? [],
+                trans.selectedSubstrings,
+                perc
+            ) : obj.selectedSubstrings)
         }
-    }
-
-    private getStyle(object: HighlightedSyntaxValueType): Record<string, React.CSSProperties> {
-        return styles[object.highlightStyle ?? this.getAnimationStyle().highlightTextStyle]
     }
 
     protected toCanvasAnimation(animationStyle: AnimationStyle): HighlightedTextCanvasAnimation {
@@ -374,6 +390,12 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
             })
         }
         return result
+    }
+
+    protected convertSelectionToTransformObject (selection: HighlightedTextCanvasAnimationSelection): Partial<HighlightedTextParamsType> {
+        return {
+            selectedSubstrings: selection.substrings
+        }
     }
 
 }

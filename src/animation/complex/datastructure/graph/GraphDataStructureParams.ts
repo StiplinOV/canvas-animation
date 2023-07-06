@@ -59,6 +59,13 @@ export interface GraphDataStructureParamsType extends ObjectParams {
 
 export default class GraphDataStructureParams extends ComplexCanvasAnimationParams<GraphDataStructureParamsType> {
 
+    protected getZeroParams (): Omit<GraphDataStructureParamsType, keyof ObjectParams> {
+        return {
+            edges: [],
+            vertices: []
+        }
+    }
+
     protected getIncludedAnimationParamsByParameter (object: GraphDataStructureParamsType): Map<string, SimpleCanvasAnimationParams> {
         const {
             vertexStyle,

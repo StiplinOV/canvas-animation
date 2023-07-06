@@ -14,6 +14,24 @@ export interface BezierParamsType extends OnlyBezierParamsType, ObjectParams {
 
 export default class BezierCanvasAnimationParams extends SimpleCanvasAnimationParams<BezierParamsType> {
 
+    protected getZeroParams (): Omit<BezierParamsType, keyof ObjectParams> {
+        return {
+            originRelativePoints: [{
+                x: 0,
+                y: 0
+            }, {
+                x: 0,
+                y: 0
+            }, {
+                x: 0,
+                y: 0
+            }, {
+                x: 0,
+                y: 0
+            }]
+        }
+    }
+
     mergeWithTransformation (obj: BezierParamsType, trans: BezierParamsType, perc: number): OnlyBezierParamsType {
         const objPoints = obj.originRelativePoints
         const transPoints = trans.originRelativePoints

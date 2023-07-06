@@ -6,10 +6,10 @@ import { SelectionInfo } from '../SimpleCanvasAnimationParams'
 
 export default class LineCanvasAnimation extends CanvasAnimation<LineParamsType> {
 
-    public drawObject(p5: p5Types, o: LineParamsType, perc: number, selectionInfo: SelectionInfo, style: AnimationStyle): void {
+    public drawObject(p5: p5Types, o: LineParamsType, style: AnimationStyle): void {
         const {origin, endPoint} = o
-        const endX = (endPoint.x - origin.x) * perc
-        const endY = (endPoint.y - origin.y) * perc
+        const endX = endPoint.x - origin.x
+        const endY = endPoint.y - origin.y
         p5.line(0, 0, endX, endY)
     }
 

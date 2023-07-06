@@ -148,14 +148,14 @@ export const FourSum: LessonJsonType = {
                     value: '-2 + -5 +  7 +  7 = 7'
                 },
                 transformations: [{
-                    time: 6000,
-                    duration: 500,
+                    appearTime:       6000,
+                    appearDuration: 500,
                     object: {
                         value: '-2 + -5 +  7 +  7 = 7\n 2 +  3 + -5 +  7 = 7'
                     }
                 }, {
-                    time: 8000,
-                    duration: 500,
+                    appearTime:    8000,
+                    appearDuration: 500,
                     object: {
                         value: '-2 + -5 +  7 +  7 = 7\n 2 +  3 + -5 +  7 = 7\n 2 +  3 +  4 + -2 = 7'
                     }

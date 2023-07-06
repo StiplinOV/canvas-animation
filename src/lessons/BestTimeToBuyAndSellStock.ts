@@ -151,22 +151,22 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 },
                 transformations: [
                     {
-                        time: 37000,
-                        duration: 1000,
+                        appearTime: 37000,
+                        appearDuration: 1000,
                         object: {
                             value: '1) Buy\n2) Sell'
                         }
                     },
                     {
-                        time: 39000,
-                        duration: 1000,
+                        appearTime: 39000,
+                        appearDuration: 1000,
                         object: {
                             value: '1) Buy\n2) Sell\n3) Wait'
                         }
                     },
                     {
-                        time: 41000,
-                        duration: 1000,
+                        appearTime: 41000,
+                        appearDuration: 1000,
                         object: {
                             value: '1) Buy\n2) Sell\n3) Wait\n4) Hold'
                         }
@@ -332,8 +332,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 ],
                 transformations: [
                     {
-                        time: 21000,
-                        duration: 500,
+                        appearTime: 21000,
+                        appearDuration: 500,
                         object: {
                             chartPoints: [
                                 {
@@ -367,8 +367,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                         }
                     },
                     {
-                        time: 22000,
-                        duration: 1000,
+                        appearTime: 22000,
+                        appearDuration: 1000,
                         object: {
                             chartPoints: [
                                 {
@@ -405,8 +405,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                         }
                     },
                     {
-                        time: 27000,
-                        duration: 2000,
+                        appearTime: 27000,
+                        appearDuration: 2000,
                         object: {
                             chartYRanges: [{
                                 coords: [1, 5],
@@ -415,8 +415,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                         }
                     },
                     {
-                        time: 35000,
-                        duration: 2000,
+                        appearTime: 35000,
+                        appearDuration: 2000,
                         object: {
                             chartYRanges: [{
                                 coords: [3, 6],
@@ -425,8 +425,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                         }
                     },
                     {
-                        time: 40000,
-                        duration: 2000,
+                        appearTime: 40000,
+                        appearDuration: 2000,
                         object: {
                             chartYRanges: [{
                                 coords: [1, 6],
@@ -435,21 +435,21 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                         }
                     },
                     {
-                        time: 42000,
-                        duration: 2000,
+                        appearTime: 42000,
+                        appearDuration: 2000,
                         object: { chartYRanges: [] }
                     },
                     {
-                        time: 44000,
-                        duration: 2000,
+                        appearTime: 44000,
+                        appearDuration: 2000,
                         object: {
                             width: 1200,
                             height: 300
                         }
                     },
                     {
-                        time: 113000,
-                        duration: 1000,
+                        appearTime: 113000,
+                        appearDuration: 1000,
                         object: { width: 905 }
                     }
                 ]
@@ -555,8 +555,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
             ],
             transformations: [
                 {
-                    time: 65000,
-                    duration: 500,
+                    appearTime: 65000,
+                    appearDuration: 500,
                     object: {
                         values: [
                             ['', '1', '2', '3', '4', '5', '6'],
@@ -568,8 +568,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     }
                 },
                 {
-                    time: 68000,
-                    duration: 500,
+                    appearTime: 68000,
+                    appearDuration: 500,
                     object: {
                         values: [
                             ['', '1', '2', '3', '4', '5', '6'],
@@ -581,8 +581,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     }
                 },
                 {
-                    time: 71000,
-                    duration: 500,
+                    appearTime: 71000,
+                    appearDuration: 500,
                     object: {
                         values: [
                             ['', '1', '2', '3', '4', '5', '6'],
@@ -594,8 +594,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     }
                 },
                 {
-                    time: 74000,
-                    duration: 500,
+                    appearTime: 74000,
+                    appearDuration: 500,
                     object: {
                         values: [
                             ['', '1', '2', '3', '4', '5', '6'],
@@ -607,8 +607,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     }
                 },
                 {
-                    time: 77000,
-                    duration: 3500,
+                    appearTime: 77000,
+                    appearDuration: 3500,
                     object: {
                         values: [
                             ['', '1', '2', '3', '4', '5', '6'],
@@ -624,8 +624,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     }
                 },
                 {
-                    time: 83000,
-                    duration: 500,
+                    appearTime: 83000,
+                    appearDuration: 500,
                     object: {
                         values: [
                             ['', '1', '2', '3', '4', '5', '6'],
@@ -638,8 +638,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     }
                 },
                 {
-                    time: 103000,
-                    duration: 1000,
+                    appearTime: 103000,
+                    appearDuration: 1000,
                     object: {
                         markedCells: [[2, 1], [3, 1]]
                     },
@@ -648,13 +648,13 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     }
                 },
                 {
-                    time: 111000,
-                    duration: 500,
+                    appearTime: 111000,
+                    appearDuration: 500,
                     object: { markedCells: [[2, 1], [3, 1]] }
                 },
                 {
-                    time: 113000,
-                    duration: 1000,
+                    appearTime: 113000,
+                    appearDuration: 1000,
                     object: {
                         width: 1320,
                         values: [
@@ -670,8 +670,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     }
                 },
                 {
-                    time: 116000,
-                    duration: 1000,
+                    appearTime: 116000,
+                    appearDuration: 1000,
                     object: {
                         values: [
                             ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -684,8 +684,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     }
                 },
                 {
-                    time: 118000,
-                    duration: 1000,
+                    appearTime: 118000,
+                    appearDuration: 1000,
                     object: {
                         values: [
                             ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -698,19 +698,19 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     }
                 },
                 {
-                    time: 120000,
-                    duration: 500,
+                    appearTime: 120000,
+                    appearDuration: 500,
                     object: { markedCells: [] }
                 },
                 {
-                    time: 128000,
-                    duration: 500,
+                    appearTime: 128000,
+                    appearDuration: 500,
                     object: { markedCells: [[1, 1], [4, 1]] },
                     options: { type: 'sequentially' }
                 },
                 {
-                    time: 132000,
-                    duration: 2000,
+                    appearTime: 132000,
+                    appearDuration: 2000,
                     object: {
                         values: [
                             ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -723,8 +723,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     }
                 },
                 {
-                    time: 137000,
-                    duration: 500,
+                    appearTime: 137000,
+                    appearDuration: 500,
                     object: {
                         values: [
                             ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -738,14 +738,14 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     }
                 },
                 {
-                    time: 140000,
-                    duration: 500,
+                    appearTime: 140000,
+                    appearDuration: 500,
                     object: { markedCells: [[2, 1], [3, 1]] },
                     options: { type: 'sequentially' }
                 },
                 {
-                    time: 145000,
-                    duration: 2000,
+                    appearTime: 145000,
+                    appearDuration: 2000,
                     object: {
                         values: [
                             ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -758,8 +758,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     }
                 },
                 {
-                    time: 148000,
-                    duration: 500,
+                    appearTime: 148000,
+                    appearDuration: 500,
                     object: {
                         values: [
                             ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -772,14 +772,14 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     }
                 },
                 {
-                    time: 152000,
-                    duration: 500,
+                    appearTime: 152000,
+                    appearDuration: 500,
                     object: { markedCells: [[1, 1], [4, 1]] },
                     options: { type: 'sequentially' }
                 },
                 {
-                    time: 155000,
-                    duration: 2000,
+                    appearTime: 155000,
+                    appearDuration: 2000,
                     object: {
                         values: [
                             ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -792,8 +792,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     }
                 },
                 {
-                    time: 158000,
-                    duration: 500,
+                    appearTime: 158000,
+                    appearDuration: 500,
                     object: {
                         values: [
                             ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -806,8 +806,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     }
                 },
                 {
-                    time: 161000,
-                    duration: 500,
+                    appearTime: 161000,
+                    appearDuration: 500,
                     object: {
                         values: [
                             ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -820,13 +820,13 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     }
                 },
                 {
-                    time: 163000,
-                    duration: 500,
+                    appearTime: 163000,
+                    appearDuration: 500,
                     object: { markedCells: [] }
                 },
                 {
-                    time: 165000,
-                    duration: 10000,
+                    appearTime: 165000,
+                    appearDuration: 10000,
                     object: {
                         values: [
                             ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -846,8 +846,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     }
                 },
                 {
-                    time: 180000,
-                    duration: 500,
+                    appearTime: 180000,
+                    appearDuration: 500,
                     object: {
                         values: [
                             ['', '1', '2', '3', '4', '5', '6', 'n >= 2'],
@@ -879,7 +879,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     value: {
                         language: 'Java',
                         text: 'public int maxProfit(int[] prices) {\n' +
-                                '\n' +
+                            '\n' +
                             '    int prevBuy = -prices[0];\n' +
                             '    int prevSell = MIN_VALUE;\n' +
                             '    int prevWaitAfterBuy = MIN_VALUE;\n' +

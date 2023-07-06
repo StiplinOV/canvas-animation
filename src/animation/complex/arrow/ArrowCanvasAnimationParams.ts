@@ -44,6 +44,12 @@ export interface ArrowParamsType extends OnlyLineParamsType, ObjectParams {
 
 export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationParams<ArrowParamsType> {
 
+    protected getZeroParams (): Omit<ArrowParamsType, keyof ObjectParams> {
+        return {
+            endPoint: this.getObject().origin
+        }
+    }
+
     protected getIncludedAnimationParamsByParameter (object: ArrowParamsType): Map<string, SimpleCanvasAnimationParams> {
         const result = new Map<string, SimpleCanvasAnimationParams>()
         const { bezierParams } = object

@@ -8,26 +8,16 @@ import { weightToNumber } from '../../CanvasAnimationParams'
 
 export default class RectangleCanvasAnimation extends CanvasAnimation<RectangleParamsType> {
 
-    drawObject (p5: p5Types, object: RectangleParamsType, percent: number, selectionInfo: SelectionInfo, style: AnimationStyle): void {
+    drawObject (p5: p5Types, object: RectangleParamsType, style: AnimationStyle): void {
         const {
             width,
             height,
             cornerRadius
         } = object
-        const weight = calculatePercentValue(
-            weightToNumber(style, object.weight),
-            weightToNumber(style, object.weight) * 2,
-            selectionInfo.percent
-        )
+        const weight = weightToNumber(style, object.weight)
         p5.strokeWeight(weight)
-        p5.fill(
-            calculateColorPercentValue(
-                getFillColor(style, object.fillColor),
-                style.selectedColor,
-                selectionInfo.percent
-            )
-        )
-        p5.rect(width / 2 * (1 - percent), height / 2 * (1 - percent), width * percent, height * percent, cornerRadius)
+        p5.fill(getFillColor(style, object.fillColor))
+        p5.rect(0, 0, width, height, cornerRadius)
     }
 
 }
