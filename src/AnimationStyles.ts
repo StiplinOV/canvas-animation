@@ -55,7 +55,7 @@ const defaultAnimationStyle: AnimationStyle = {
     titleFontSize: 40,
     fontWeight: 0.5,
     monospaceFont: COURIER_NEW_FONT,
-    highlightTextStyle: 'darcula',
+    highlightTextStyle: 'defaultStyle',
     strokeWeight: 1,
     strokeBoldWeight: 3,
     cornerRadius: 0,

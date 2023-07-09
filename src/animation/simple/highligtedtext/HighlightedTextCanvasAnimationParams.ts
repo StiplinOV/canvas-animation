@@ -277,7 +277,6 @@ export const createHighlightedTextValueSegmentType = (object: HighlightedTextVal
     const {text} = object
 
     registerLanguages(...Object.values(languageDefs))
-
     const style = getStyle(animationStyle, object.highlightStyle)
     const highlighter = init(new HighlightedTextCanvasAnimationRenderer(style, animationStyle))
 
@@ -331,7 +330,7 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
 
     protected getZeroParams(): Omit<HighlightedTextParamsType, keyof ObjectParams> {
         return {
-            value: []
+            value: [],
         }
     }
 

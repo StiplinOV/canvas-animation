@@ -21,8 +21,20 @@ export const Demo: LessonJsonType = {
                         duration: 1000
                     }]
                 },
+                selections: [{
+                    time: 3000,
+                    duration: 500,
+                    type: {
+                        code: {
+                            substrings: [{
+                                from: 30,
+                                to: 50,
+                            }]
+                        }
+                    }
+                }],
                 transformations: [{
-                    appearTime: 3000,
+                    appearTime: 5000,
                     appearDuration: 1000,
                     disappearTime: 5000,
                     disappearDuration: 1000,
@@ -31,14 +43,20 @@ export const Demo: LessonJsonType = {
                     }
                 }],
                 object: {
-                    origin: {
-                        x: 10,
-                        y: 10
+                    questionParams: {
+                        fontSize: 33,
+                        options: ["1. FIRST", "2. SECOND", "3. THIRD"],
+                        position: "right"
                     },
-                    width: 1000,
-                    height: 700,
+                    origin: {
+                        x: 0,
+                        y: 0
+                    },
+                    width: 1280,
+                    height: 720,
                     codeFontSize: 22,
                     language: 'Java',
+                    codeHighlightStyle: 'darcula',
                     codeText: 'public int maxProfit(int[] prices) {\n' +
                         '\n' +
                         '\tint prevBuy = -prices[0];\n' +

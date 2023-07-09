@@ -65,7 +65,6 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
                 r.appendDisappearTime(disappear.time, disappear.duration)
             })
         })
-
         return Array.from(result.values())
     }
 
