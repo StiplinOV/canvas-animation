@@ -1,8 +1,8 @@
-import CanvasAnimationParams, { ObjectParams, Params, SelectionType, Transformation } from '../CanvasAnimationParams'
+import CanvasAnimationParams, {ObjectParams, Params, SelectionType} from '../CanvasAnimationParams'
 import p5Types from 'p5'
 import AnimationStyle from '../../AnimationStyles'
 import SimpleCanvasAnimationParams from '../simple/SimpleCanvasAnimationParams'
-import { requireValueFromMap } from '../../common/Utils'
+import {requireValueFromMap} from '../../common/Utils'
 import CanvasAnimation from '../CanvasAnimation'
 
 export interface AnimationSelectedInfo {
@@ -23,34 +23,17 @@ export type AnimationsSetDifferenceType = {
     changed: Map<string, AnimationS2T>
 }
 
-export type AddedAppearParamType = {
-    appearTime: number
-    appearDuration: number
-    params: SimpleCanvasAnimationParams
-}
-
-export type DeletedDisappearParamType = {
-    disappearTime: number
-    disappearDuration: number
-}
-
-export type ChangedTransformParamType = {
-    time: number
-    duration: number
-    s2t: AnimationS2T
-}
-
 export default abstract class ComplexCanvasAnimationParams<T extends ObjectParams = ObjectParams, U = unknown, V extends TransformOptions = TransformOptions>
     extends CanvasAnimationParams<T, V, SelectionType<U>> {
 
     public readonly p5: p5Types
 
-    constructor (params: Params<T, V, SelectionType<U>>, p5: p5Types, animationStyle: AnimationStyle) {
+    constructor(params: Params<T, V, SelectionType<U>>, p5: p5Types, animationStyle: AnimationStyle) {
         super(params, animationStyle)
         this.p5 = p5
     }
 
-    protected toSimpleCanvasAnimationParams():  SimpleCanvasAnimationParams[] {
+    protected toSimpleCanvasAnimationParams(): SimpleCanvasAnimationParams[] {
         const objectParamsWithTime = this.getObjectParamsWithTime()
         if (objectParamsWithTime.length === 0) {
             return []
@@ -69,8 +52,8 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         for (let i = 1; i < objectParamsWithTime.length; i++) {
             const nextObject = objectParamsWithTime[i].objectParams
             const nextObjectParams = this.getIncludedAnimationParamsByParameter(nextObject)
-
             const transformSimpleAnimationsDifference = this.getAnimationsSetDifference(prevObjectParams, nextObjectParams)
+
             this.applySimpleTransformAnimations(result, objectParamsWithTime[i].time, objectParamsWithTime[i].duration, transformSimpleAnimationsDifference)
 
             previousObject = nextObject
@@ -82,11 +65,11 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
                 r.appendDisappearTime(disappear.time, disappear.duration)
             })
         })
-        console.log(JSON.stringify(Array.from(result.values())))
+
         return Array.from(result.values())
     }
 
-    protected applySimpleTransformAnimations (
+    protected applySimpleTransformAnimations(
         animations: Map<string, SimpleCanvasAnimationParams>,
         time: number,
         duration: number,
@@ -113,24 +96,24 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
             }
         })
         deleted.forEach((value, key) => {
-                const deletedAnimation = requireValueFromMap(animations, key)
-                deletedAnimation.appendDisappearTime(time, duration)
-            })
+            const deletedAnimation = requireValueFromMap(animations, key)
+            deletedAnimation.appendDisappearTime(time, duration)
+        })
         changed.forEach((value, key) => animations.get(key)?.appendTransformation({
-                appearTime: time,
-                appearDuration: duration,
+            appearTime: time,
+            appearDuration: duration,
 
-                object: value.target.getObject()
-            }))
+            object: value.target.getObject()
+        }))
     }
 
-    public getIncludedAnimationParams (): Map<string, SimpleCanvasAnimationParams> {
+    public getIncludedAnimationParams(): Map<string, SimpleCanvasAnimationParams> {
         return this.getIncludedAnimationParamsByParameter(this.getObject())
     }
 
-    protected abstract getIncludedAnimationParamsByParameter (object: T): Map<string, SimpleCanvasAnimationParams>
+    protected abstract getIncludedAnimationParamsByParameter(object: T): Map<string, SimpleCanvasAnimationParams>
 
-    getAnimationsSetDifference (
+    getAnimationsSetDifference(
         left: Map<string, SimpleCanvasAnimationParams>,
         right: Map<string, SimpleCanvasAnimationParams>
     ): AnimationsSetDifferenceType {
@@ -159,11 +142,11 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         }
     }
 
-    toCanvasAnimations (animationStyle: AnimationStyle): CanvasAnimation[] {
+    toCanvasAnimations(animationStyle: AnimationStyle): CanvasAnimation[] {
         return this.toSimpleCanvasAnimationParams().flatMap(p => p.toCanvasAnimations(animationStyle))
     }
 
-    mergeWithTransformation (obj: T, trans: Partial<T>, perc: number, animationStyle: AnimationStyle): Omit<T, keyof ObjectParams> {
+    mergeWithTransformation(obj: T, trans: Partial<T>, perc: number, animationStyle: AnimationStyle): Omit<T, keyof ObjectParams> {
         return obj
     }
 

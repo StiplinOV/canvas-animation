@@ -24,6 +24,8 @@ export const Demo: LessonJsonType = {
                 transformations: [{
                     appearTime: 3000,
                     appearDuration: 1000,
+                    disappearTime: 5000,
+                    disappearDuration: 1000,
                     object: {
                         codeText: "blablabla"
                     }

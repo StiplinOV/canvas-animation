@@ -1,9 +1,12 @@
-import { ObjectParams, SelectionType } from '../../CanvasAnimationParams'
+import {ObjectParams, SelectionType} from '../../CanvasAnimationParams'
 import ComplexCanvasAnimationParams from '../ComplexCanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
-import HighlightedTextCanvasAnimationParams, { HighlightedStyleName, languageDefs } from '../../simple/highligtedtext/HighlightedTextCanvasAnimationParams'
+import HighlightedTextCanvasAnimationParams, {
+    HighlightedStyleName,
+    languageDefs
+} from '../../simple/highligtedtext/HighlightedTextCanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
-import { calculateArrayPercentValue, calculatePercentValue, calculateTextPercentValue } from '../../../common/Utils'
+import {calculateArrayPercentValue, calculatePercentValue, calculateTextPercentValue} from '../../../common/Utils'
 
 export interface CodeQuestionnaireParamsType extends ObjectParams {
     codeText: string
@@ -29,7 +32,7 @@ export interface CodeQuestionnaireCanvasAnimationSelection extends SelectionType
 
 export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanvasAnimationParams<CodeQuestionnaireParamsType, CodeQuestionnaireCanvasAnimationSelection> {
 
-    protected getIncludedAnimationParamsByParameter (object: CodeQuestionnaireParamsType): Map<string, SimpleCanvasAnimationParams> {
+    protected getIncludedAnimationParamsByParameter(object: CodeQuestionnaireParamsType): Map<string, SimpleCanvasAnimationParams> {
         const result = new Map<string, SimpleCanvasAnimationParams>()
         result.set("codePart", new HighlightedTextCanvasAnimationParams({
             object: {
@@ -48,7 +51,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         return result
     }
 
-    protected getZeroParams (): Omit<CodeQuestionnaireParamsType, keyof ObjectParams> {
+    protected getZeroParams(): Omit<CodeQuestionnaireParamsType, keyof ObjectParams> {
         return {
             width: this.getObject().width,
             height: this.getObject().height,
@@ -58,19 +61,19 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         }
     }
 
-    mergeWithTransformation (obj: CodeQuestionnaireParamsType, trans: Partial<CodeQuestionnaireParamsType>, perc: number, animationStyle: AnimationStyle): Omit<CodeQuestionnaireParamsType, keyof ObjectParams> {
+    mergeWithTransformation(obj: CodeQuestionnaireParamsType, trans: Partial<CodeQuestionnaireParamsType>, perc: number, animationStyle: AnimationStyle): Omit<CodeQuestionnaireParamsType, keyof ObjectParams> {
         return {
-                codeText: trans.codeText ? calculateTextPercentValue(obj.codeText, trans.codeText, perc) : obj.codeText,
-                language: (trans.language && perc > 0.5) ? trans.language : obj.language,
-                highlightStyle: (trans.highlightStyle && perc > 0.5) ? trans.highlightStyle : obj.highlightStyle,
-                codeSelectedSubstrings: trans.codeSelectedSubstrings ? calculateArrayPercentValue(obj.codeSelectedSubstrings ?? [], trans.codeSelectedSubstrings, perc) : obj.codeSelectedSubstrings,
-                codeFontSize: trans.codeFontSize ? calculatePercentValue(obj.codeFontSize, trans.codeFontSize, perc) : obj.codeFontSize,
-            width: trans.width ? calculatePercentValue(obj.width, trans.width, perc): obj.width,
-            height: trans.height ? calculatePercentValue(obj.height, trans.height, perc): obj.height,
+            codeText: trans.codeText ? calculateTextPercentValue(obj.codeText, trans.codeText, perc) : obj.codeText,
+            language: (trans.language && perc > 0.5) ? trans.language : obj.language,
+            highlightStyle: (trans.highlightStyle && perc > 0.5) ? trans.highlightStyle : obj.highlightStyle,
+            codeSelectedSubstrings: trans.codeSelectedSubstrings ? calculateArrayPercentValue(obj.codeSelectedSubstrings ?? [], trans.codeSelectedSubstrings, perc) : obj.codeSelectedSubstrings,
+            codeFontSize: trans.codeFontSize ? calculatePercentValue(obj.codeFontSize, trans.codeFontSize, perc) : obj.codeFontSize,
+            width: trans.width ? calculatePercentValue(obj.width, trans.width, perc) : obj.width,
+            height: trans.height ? calculatePercentValue(obj.height, trans.height, perc) : obj.height,
         }
     }
 
-    protected convertSelectionToTransformObject (selection: SelectionType<CodeQuestionnaireCanvasAnimationSelection>): Partial<CodeQuestionnaireParamsType> {
+    protected convertSelectionToTransformObject(selection: SelectionType<CodeQuestionnaireCanvasAnimationSelection>): Partial<CodeQuestionnaireParamsType> {
         return {
             codeSelectedSubstrings: selection.type?.code.substrings
         }
