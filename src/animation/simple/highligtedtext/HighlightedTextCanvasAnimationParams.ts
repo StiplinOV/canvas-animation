@@ -1,4 +1,4 @@
-import {calculateArrayPercentValue, calculatePercentValue} from '../../../common/Utils'
+import {calculateArrayPercentValue, calculateColorPercentValue, calculatePercentValue} from '../../../common/Utils'
 import { ObjectParams, SelectionType } from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle, { ColorType, WebSafeFontsType } from '../../../AnimationStyles'
@@ -266,7 +266,7 @@ const styles = {
     zenburn
 }
 
-export const getStyle = (animationStyle: AnimationStyle, styleName?: HighlightedStyleName, ): Record<string, React.CSSProperties> => {
+export const getStyle = (animationStyle: AnimationStyle, styleName?: HighlightedStyleName): Record<string, React.CSSProperties> => {
     return styles[styleName ?? animationStyle.highlightTextStyle]
 }
 
@@ -281,6 +281,16 @@ export const createHighlightedTextValueSegmentType = (object: HighlightedTextVal
     const highlighter = init(new HighlightedTextCanvasAnimationRenderer(style, animationStyle))
 
     return process(highlighter, text, languageDefs[object.language].name).value
+}
+
+export const calculateBackgroundColor = (params: HighlightedTextParamsType, animationStyle: AnimationStyle): string => {
+    if (Array.isArray(params.value)) {
+        return params.backgroundColor ?? animationStyle.backgroundColor
+    }
+    if (params.value.highlightStyle) {
+        return String(styles[params.value.highlightStyle].hljs.background)
+    }
+    return params.backgroundColor ?? animationStyle.backgroundColor
 }
 
 export type HighlightedStyleName = keyof typeof styles
@@ -305,9 +315,7 @@ interface OnlyHighlightedTextParamsType {
     value: HighlightedTextValueType
     fontSize?: number
     font?: WebSafeFontsType | 'monospace'
-    highlightStyle?: HighlightedStyleName | {
-        backgroundColor?: string
-    }
+    backgroundColor?: string
     selectedSubstrings?: {
         from: number,
         to: number,
@@ -331,6 +339,7 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
     protected getZeroParams(): Omit<HighlightedTextParamsType, keyof ObjectParams> {
         return {
             value: [],
+            backgroundColor: calculateBackgroundColor(this.getObject(), this.getAnimationStyle())
         }
     }
 
@@ -340,14 +349,19 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
         perc: number,
         style: AnimationStyle
     ): OnlyHighlightedTextParamsType {
-        let {fontSize, width, height, highlightStyle} = obj
+        let {fontSize, width, height} = obj
         fontSize ??= style.fontSize
         width ??= 0
         height ??= 0
         const value = createHighlightedTextValueSegmentType(obj.value, this.getAnimationStyle())
         const transValue = createHighlightedTextValueSegmentType(trans.value || [], this.getAnimationStyle())
+        const backgroundColor = calculateBackgroundColor(obj, style)
+        let transBackgroundColor = trans.backgroundColor
+        if (!transBackgroundColor && !Array.isArray(trans.value) && trans.value?.highlightStyle){
+            transBackgroundColor = String(styles[trans.value?.highlightStyle].hljs.background)
+        }
         return {
-            highlightStyle: (trans.highlightStyle && perc >= 0.5) ? trans.highlightStyle : highlightStyle,
+            backgroundColor: transBackgroundColor ? calculateColorPercentValue(backgroundColor, transBackgroundColor, perc): backgroundColor,
             value: trans.value ? this.calculateValuePercentValue(value, transValue, perc) : obj.value,
             fontSize: trans.fontSize ? calculatePercentValue(fontSize, trans.fontSize, perc) : fontSize,
             font: (trans.font && perc >= 0.5) ? trans.font : obj.font,

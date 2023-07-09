@@ -21,7 +21,8 @@ export const Demo: LessonJsonType = {
                         duration: 1000
                     }]
                 },
-                selections: [{
+                selections: [
+                    {
                     time: 3000,
                     duration: 500,
                     type: {
@@ -30,6 +31,15 @@ export const Demo: LessonJsonType = {
                                 from: 30,
                                 to: 50,
                             }]
+                        }
+                    }
+                },
+                    {
+                    time: 3500,
+                    duration: 500,
+                    type: {
+                        questionnaire: {
+                            lines: [0,2]
                         }
                     }
                 }],

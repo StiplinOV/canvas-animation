@@ -83,11 +83,18 @@ export const calculateArrayPercentValue = <T> (from: T[], to: T[], percent: numb
     }
     let toStartsWithFrom = true
     let fromStartsWithTo = true
-    for (let i = 0; i < Math.min(from.length, to.length); i++) {
-        if (JSON.stringify(from[i]) !== JSON.stringify(to[i])) {
-            toStartsWithFrom = false
-            fromStartsWithTo = false
-            break
+    if (from.length === 0) {
+        fromStartsWithTo = false
+    }
+    if (to.length === 0) {
+        toStartsWithFrom = false
+    } else {
+        for (let i = 0; i < Math.min(from.length, to.length); i++) {
+            if (JSON.stringify(from[i]) !== JSON.stringify(to[i])) {
+                toStartsWithFrom = false
+                fromStartsWithTo = false
+                break
+            }
         }
     }
     if (toStartsWithFrom) {
@@ -101,7 +108,7 @@ export const calculateArrayPercentValue = <T> (from: T[], to: T[], percent: numb
     } else if (fromStartsWithTo) {
         const numberOfStates = from.length - to.length + 1
         const currentState = Math.floor(calculatePercentValue(1, numberOfStates, percent))
-        return from.slice(0, from.length - currentState)
+        return from.slice(0, from.length - currentState + 1)
     } else {
         const numberOfStates = from.length + to.length
         const currentState = Math.floor(calculatePercentValue(1, numberOfStates, percent))

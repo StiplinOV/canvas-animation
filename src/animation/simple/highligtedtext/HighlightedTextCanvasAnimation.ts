@@ -1,14 +1,14 @@
 import p5Types from 'p5'
-import AnimationStyle, { getFontColor } from '../../../AnimationStyles'
+import AnimationStyle, {getFontColor} from '../../../AnimationStyles'
 import {
+    calculateBackgroundColor,
     createHighlightedTextValueSegmentType,
     getStyle,
     HighlightedTextParamsType,
     HighlightedTextValueSegmentType
 } from './HighlightedTextCanvasAnimationParams'
 import CanvasAnimation from '../../CanvasAnimation'
-import { mergeIntervals } from '../../../common/Alghoritm'
-import { calculateColorPercentValue } from '../../../common/Utils'
+import {mergeIntervals} from '../../../common/Alghoritm'
 
 type rectParams = {
     x: number
@@ -19,7 +19,7 @@ type rectParams = {
 
 export default class HighlightedTextCanvasAnimation extends CanvasAnimation<HighlightedTextParamsType> {
 
-    public drawObject (p5: p5Types, o: HighlightedTextParamsType, animationStyle: AnimationStyle): void {
+    public drawObject(p5: p5Types, o: HighlightedTextParamsType, animationStyle: AnimationStyle): void {
         const fontSize = o.fontSize ?? animationStyle.fontSize
         const widthParam = o.width ?? 0
         const heightParam = (o.height ?? 0)
@@ -33,20 +33,12 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
             height
         } = this.process(p5, o, animationStyle, borderX, borderY, true)
 
-        p5.fill(this.calculateBackgroundColor(o, animationStyle))
+        p5.fill(calculateBackgroundColor(o, animationStyle))
         p5.rect(x, y, width, height)
         this.process(p5, o, animationStyle, borderX, borderY)
     }
 
-    private calculateBackgroundColor (params: HighlightedTextParamsType, animationStyle: AnimationStyle): string {
-        if (typeof params.highlightStyle === 'string' || !params.highlightStyle) {
-            const style = getStyle(animationStyle, params.highlightStyle)
-            return String(style.hljs.background)
-        }
-        return params.highlightStyle?.backgroundColor ?? animationStyle.backgroundColor
-    }
-
-    public process (
+    public process(
         p5: p5Types,
         o: HighlightedTextParamsType,
         animationStyle: AnimationStyle,
@@ -95,7 +87,7 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
             }
             if (!dry) {
                 p5.fill(textColor)
-                p5.stroke(this.calculateBackgroundColor(o, animationStyle))
+                p5.stroke(calculateBackgroundColor(o, animationStyle))
                 p5.text(value, x, y)
             }
             x += textWidth
@@ -110,7 +102,7 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
         }
     }
 
-    private splitSegmentsAccordingToSelections (
+    private splitSegmentsAccordingToSelections(
         segments: HighlightedTextValueSegmentType[],
         o: HighlightedTextParamsType
     ): { segment: HighlightedTextValueSegmentType, selected: boolean }[] {

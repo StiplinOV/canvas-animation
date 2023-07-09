@@ -22,6 +22,7 @@ export interface CodeQuestionnaireParamsType extends ObjectParams {
         from: number
         to: number
     }[],
+    questionnaireSelectedLines?: number[],
     codeFontSize: number
     width: number
     height: number
@@ -33,11 +34,14 @@ export interface CodeQuestionnaireParamsType extends ObjectParams {
 }
 
 export interface CodeQuestionnaireCanvasAnimationSelection {
-    code: {
-        substrings?: {
+    code?: {
+        substrings: {
             from: number,
             to: number
         }[]
+    },
+    questionnaire?: {
+        lines: number[]
     }
 }
 
@@ -81,7 +85,6 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         result.set("codePart", new HighlightedTextCanvasAnimationParams({
             object: {
                 origin: object.origin,
-                highlightStyle: object.codeHighlightStyle,
                 value: {
                     text: object.codeText,
                     highlightStyle: object.codeHighlightStyle,
@@ -102,7 +105,23 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
             if (value.length > 0) {
                 value.splice(value.length - 1, 1)
             }
-
+            const selectedSubstrings  = []
+            let curSubstringPosition = 0
+            for (let i = 0; i < value.length; i++) {
+                const valueSegment = value[i]
+                if ( valueSegment === "newline") {
+                    curSubstringPosition++
+                    continue
+                }
+                const lineNumber = i/2
+                if (object.questionnaireSelectedLines?.includes(lineNumber)) {
+                    selectedSubstrings.push({
+                        from: curSubstringPosition,
+                        to: curSubstringPosition+ valueSegment.value.length
+                    })
+                }
+                curSubstringPosition += valueSegment.value.length
+            }
             result.set("questionPart", new HighlightedTextCanvasAnimationParams({
                 object: {
                     origin: questionPartOrigin,
@@ -110,7 +129,8 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
                     value: value,
                     zIndex: 1,
                     width: questionParamWidth,
-                    height: questionParamHeight
+                    height: questionParamHeight,
+                    selectedSubstrings: selectedSubstrings
                 }
             }, this.getAnimationStyle()))
         }
@@ -133,6 +153,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
             language: (trans.language && perc > 0.5) ? trans.language : obj.language,
             codeHighlightStyle: (trans.codeHighlightStyle && perc > 0.5) ? trans.codeHighlightStyle : obj.codeHighlightStyle,
             codeSelectedSubstrings: trans.codeSelectedSubstrings ? calculateArrayPercentValue(obj.codeSelectedSubstrings ?? [], trans.codeSelectedSubstrings, perc) : obj.codeSelectedSubstrings,
+            questionnaireSelectedLines: trans.questionnaireSelectedLines ? calculateArrayPercentValue(obj.questionnaireSelectedLines ?? [], trans.questionnaireSelectedLines, perc) : obj.questionnaireSelectedLines,
             codeFontSize: trans.codeFontSize ? calculatePercentValue(obj.codeFontSize, trans.codeFontSize, perc) : obj.codeFontSize,
             width: trans.width ? calculatePercentValue(obj.width, trans.width, perc) : obj.width,
             height: trans.height ? calculatePercentValue(obj.height, trans.height, perc) : obj.height,
@@ -141,7 +162,8 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
 
     protected convertSelectionToTransformObject(selection: SelectionType<CodeQuestionnaireCanvasAnimationSelection>): Partial<CodeQuestionnaireParamsType> {
         return {
-            codeSelectedSubstrings: selection.type?.code.substrings
+            codeSelectedSubstrings: selection.type?.code?.substrings,
+            questionnaireSelectedLines: selection.type?.questionnaire?.lines
         }
     }
 
