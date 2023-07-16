@@ -1,4 +1,4 @@
-import { Point, ZeroPoint } from './Point'
+import {Point, ZeroPoint} from './Point'
 import p5Types from 'p5'
 
 /*
@@ -60,11 +60,6 @@ export interface PresenceParamType {
     disappearDuration: number
 }
 
-export interface PresenceParamsType {
-    appears: EventTimeParam[]
-    disappears: EventTimeParam[]
-}
-
 export type render2DArrayType = 'leftToRight' | 'upToDown'
 export type rotationType = {
     axis: Point
@@ -77,24 +72,17 @@ export const calculatePointPercentValue = (from: Point, to: Point, percent: numb
         x: calculatePercentValue(from.x, to.x, percent),
         y: calculatePercentValue(from.y, to.y, percent)
     })
-export const calculateArrayPercentValue = <T> (from: T[], to: T[], percent: number): T[] => {
+export const calculateArrayPercentValue = <T>(from: T[], to: T[], percent: number): T[] => {
     if (JSON.stringify(from) === JSON.stringify(to)) {
         return from
     }
     let toStartsWithFrom = true
     let fromStartsWithTo = true
-    if (from.length === 0) {
-        fromStartsWithTo = false
-    }
-    if (to.length === 0) {
-        toStartsWithFrom = false
-    } else {
-        for (let i = 0; i < Math.min(from.length, to.length); i++) {
-            if (JSON.stringify(from[i]) !== JSON.stringify(to[i])) {
-                toStartsWithFrom = false
-                fromStartsWithTo = false
-                break
-            }
+    for (let i = 0; i < Math.min(from.length, to.length); i++) {
+        if (JSON.stringify(from[i]) !== JSON.stringify(to[i])) {
+            toStartsWithFrom = false
+            fromStartsWithTo = false
+            break
         }
     }
     if (toStartsWithFrom) {
@@ -104,7 +92,7 @@ export const calculateArrayPercentValue = <T> (from: T[], to: T[], percent: numb
     if (toStartsWithFrom) {
         const numberOfStates = to.length - from.length + 1
         const currentState = Math.floor(calculatePercentValue(1, numberOfStates, percent))
-        return to.slice(0, from.length + currentState)
+        return to.slice(0, from.length + currentState - 1)
     } else if (fromStartsWithTo) {
         const numberOfStates = from.length - to.length + 1
         const currentState = Math.floor(calculatePercentValue(1, numberOfStates, percent))
@@ -178,63 +166,32 @@ export const calculateRotationsPercentValue = (from: rotationType[], to: rotatio
     return result
 }
 
-export const toAppearanceParamType = (values: Partial<PresenceParamsType>): PresenceParamsType => ({
-    appears: values.appears ?? [],
-    disappears: values.disappears ?? []
-})
-export const toPresenceParam = (time: number, appearanceParam: PresenceParamsType): PresenceParamType => {
-    let appearTimes: number[] = []
-    let disappearTimes: number[] = []
-    const appearTimeDurations = new Map<number, number>()
-    const disappearTimeDurations = new Map<number, number>()
-    appearanceParam.appears.forEach(a => {
-        appearTimes.push(a.time)
-        appearTimeDurations.set(a.time, a.duration)
-    })
-    appearanceParam.disappears.forEach(d => {
-        disappearTimes.push(d.time)
-        disappearTimeDurations.set(d.time, d.duration)
-    })
-    appearTimes = appearTimes.sort((l, r) => l - r)
-    disappearTimes = disappearTimes.sort((l, r) => l - r)
+export const toPresenceParamType = (values?: Partial<PresenceParamType>[]): PresenceParamType[] => values ? values.map(v => ({
+    appearTime: v.appearTime ?? 0,
+    appearDuration: v.appearDuration ?? 0,
+    disappearTime: v.disappearTime ?? Number.POSITIVE_INFINITY,
+    disappearDuration: v.disappearDuration ?? 0
+})): []
 
-    let appearTime = Number.MAX_VALUE
-    let disappearTime = Number.MAX_VALUE
-    for (let i = 0; i < appearTimes.length; i++) {
-        appearTime = appearTimes[i]
-        if (appearTime === time) {
-            appearTime = time
-            break
-        } else if (appearTime > time) {
-            if (i > 0) {
-                appearTime = appearTimes[i - 1]
-            }
-            break
+export const toPresenceParam = (time: number, presenceParams: PresenceParamType[], skipStartTime?: boolean): PresenceParamType | null => {
+    for (let i = 0; i < presenceParams.length; i++) {
+        const presenceParam = presenceParams[i]
+        if (((skipStartTime && time > presenceParam.appearTime) || time >= presenceParam.appearTime) && time < (presenceParam.disappearTime + presenceParam.disappearDuration)) {
+            return presenceParam
         }
     }
-    for (let i = 0; i < disappearTimes.length; i++) {
-        if (disappearTimes[i] > appearTime) {
-            disappearTime = disappearTimes[i]
-            break
-        }
-    }
+    return null
+}
 
-    return {
-        appearTime,
-        disappearTime,
-        appearDuration: appearTimeDurations.get(appearTime) ?? 0,
-        disappearDuration: disappearTimeDurations.get(disappearTime) ?? 0
-    }
+export const needAppearObject = (time: number, presenceParams: PresenceParamType[], skipStartTime?: boolean): boolean => {
+    return toPresenceParam(time, presenceParams, skipStartTime) !== null
 }
-export const needAppearObject = (time: number, appearanceParams: PresenceParamsType): boolean => {
-    const presenceParam = toPresenceParam(time, appearanceParams)
-    if (presenceParam.appearTime > time) {
-        return false
-    }
-    return presenceParam.disappearTime + presenceParam.disappearDuration > time
-}
-export const toAppearancePercent = (time: number, appearanceParams: PresenceParamsType): number => {
+
+export const toAppearancePercent = (time: number, appearanceParams: PresenceParamType[]): number => {
     const appearanceParam = toPresenceParam(time, appearanceParams)
+    if (appearanceParam === null) {
+        return 0
+    }
     const {
         appearTime,
         appearDuration,
@@ -328,14 +285,14 @@ export const rotateVector = (p5: p5Types, point: Point, angle: number): Point =>
         y: resultVector.y
     }
 }
-export const requireValueFromMap = <K, V> (map: Map<K, V>, key: K): V => {
+export const requireValueFromMap = <K, V>(map: Map<K, V>, key: K): V => {
     const value = map.get(key)
     if (value !== undefined) {
         return value
     }
     throw new Error(`Key ${String(key)} is absent in map`)
 }
-export const mergeValueToMap = <K, V, C extends V[] | Set<V>> (m: Map<K, C>, k: K, v: V, c: () => C): void => {
+export const mergeValueToMap = <K, V, C extends V[] | Set<V>>(m: Map<K, C>, k: K, v: V, c: () => C): void => {
     let collection = m.get(k)
     if (!collection) {
         collection = c()

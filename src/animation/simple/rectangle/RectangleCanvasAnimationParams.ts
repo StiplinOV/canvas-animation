@@ -1,8 +1,9 @@
-import {calculatePercentValue} from '../../../common/Utils'
+import {addPoints, calculatePercentValue} from '../../../common/Utils'
 import {ObjectParams} from '../../CanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import RectangleCanvasAnimation from './RectangleCanvasAnimation'
+import {Point} from "../../../common/Point";
 
 interface onlyRectangleParamsType {
     width: number
@@ -33,8 +34,8 @@ export default class RectangleCanvasAnimationParams extends SimpleCanvasAnimatio
 
     getZeroParams (): Omit<RectangleParamsType, keyof ObjectParams> {
         return {
-            width: 0,
-            height: 0
+            width: this.getObject().width,
+            height: this.getObject().height,
         }
     }
 

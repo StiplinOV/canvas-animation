@@ -2,7 +2,7 @@ import CanvasAnimationParams, {ObjectParams, Params, SelectionType} from '../Can
 import p5Types from 'p5'
 import AnimationStyle from '../../AnimationStyles'
 import SimpleCanvasAnimationParams from '../simple/SimpleCanvasAnimationParams'
-import {requireValueFromMap} from '../../common/Utils'
+import {calculateArrayPercentValue, requireValueFromMap} from '../../common/Utils'
 import CanvasAnimation from '../CanvasAnimation'
 
 export interface AnimationSelectedInfo {
@@ -39,11 +39,12 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
             return []
         }
         const initialObjectParams = objectParamsWithTime[0]
-        const result = this.getIncludedAnimationParamsByParameter(initialObjectParams.objectParams)
 
-        this.getAppearanceParam().appears.forEach(appear => {
+        const result = this.getIncludedAnimationParamsByParameter(initialObjectParams.objectParams)
+        this.getPresenceParam().forEach(presence => {
             result.forEach(r => {
-                r.appendAppearTime(appear.time, appear.duration)
+                r.clearPresence()
+                r.appendPresence(presence)
             })
         })
 
@@ -60,11 +61,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
             prevObjectParams = nextObjectParams
         }
 
-        this.getAppearanceParam().disappears.forEach(disappear => {
-            result.forEach(r => {
-                r.appendDisappearTime(disappear.time, disappear.duration)
-            })
-        })
+
         return Array.from(result.values())
     }
 
@@ -81,22 +78,31 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         } = diff
         added.forEach((value, key) => {
             const pastParams = animations.get(key)
-
             if (pastParams) {
-                pastParams.appendAppearTime(time, duration)
+                pastParams.appendPresence({
+                    appearTime: time,
+                    appearDuration: duration,
+                })
                 pastParams.appendTransformation({
                     appearTime: time,
                     appearDuration: duration,
                     object: value.getObject()
                 })
             } else {
-                value.appendAppearTime(time, duration)
+                value.appendPresence({
+                    appearTime: time,
+                    appearDuration: duration,
+                })
                 animations.set(key, value)
             }
         })
         deleted.forEach((value, key) => {
             const deletedAnimation = requireValueFromMap(animations, key)
-            deletedAnimation.appendDisappearTime(time, duration)
+            const presenceParam = deletedAnimation.getPresenceParam()
+            presenceParam[presenceParam.length - 1].disappearTime = time
+            presenceParam[presenceParam.length - 1].disappearDuration = duration
+
+            deletedAnimation.setPresenceParam(presenceParam)
         })
         changed.forEach((value, key) => animations.get(key)?.appendTransformation({
             appearTime: time,
@@ -110,6 +116,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         return this.getIncludedAnimationParamsByParameter(this.getObject())
     }
 
+    //TODO косяк с presence
     protected abstract getIncludedAnimationParamsByParameter(object: T): Map<string, SimpleCanvasAnimationParams>
 
     getAnimationsSetDifference(

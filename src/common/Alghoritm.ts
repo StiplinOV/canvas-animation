@@ -24,6 +24,30 @@ export const findAllArrayIndexGroupsBy = (numberOfElements: number, numberOfElem
 }
 
 export type IntervalType = { start: number, end: number }
+export const intervalContainsIntersections = (intervals: IntervalType[]): boolean => {
+    if (intervals.length === 0) {
+        return false
+    }
+    if (intervals[0].end < intervals[0].start) {
+        return true
+    }
+    if (intervals.length === 1) {
+        return false
+    }
+    const sorted = intervals.sort((l,r) => l.start - r.start)
+    let prevInterval = sorted[0]
+    for (let i = 1; i < sorted.length; i++) {
+        const interval = sorted[i]
+        if (interval.end < interval.start) {
+            return true
+        }
+        if (interval.start < prevInterval.end) {
+            return true
+        }
+        prevInterval = interval
+    }
+    return false
+}
 export const mergeIntervals = (input: IntervalType[]): IntervalType[] => {
     if (input.length <= 1) {
         return input

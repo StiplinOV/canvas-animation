@@ -82,24 +82,10 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     verticalAlign: 'center',
                     fontSize: 65
                 },
-                presenceParameters: {
-                    appears: [{
-                        time: 0,
-                        duration: 2000
-                    }]
-                }
+                presenceParameters: [{appearTime:0,appearDuration:2000}]
             },
             {
-                presenceParameters: {
-                    appears: [{
-                        time: 30000,
-                        duration: 500
-                    }],
-                    disappears: [{
-                        time: 35000,
-                        duration: 500
-                    }]
-                },
+                presenceParameters: [{appearTime:30000,appearDuration:500,disappearTime:35000,disappearDuration:500}],
                 object: {
                     origin: {
                         x: 1050,
@@ -110,16 +96,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 }
             },
             {
-                presenceParameters: {
-                    appears: [{
-                        time: 32000,
-                        duration: 500
-                    }],
-                    disappears: [{
-                        time: 35000,
-                        duration: 500
-                    }]
-                },
+                presenceParameters: [{appearTime:32000,appearDuration:500,disappearTime:35000,disappearDuration:500}],
                 object: {
                     origin: {
                         x: 1050,
@@ -130,16 +107,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 }
             },
             {
-                presenceParameters: {
-                    appears: [{
-                        time: 35000,
-                        duration: 1000
-                    }],
-                    disappears: [{
-                        time: 46000,
-                        duration: 1000
-                    }]
-                },
+                presenceParameters: [{appearTime:35000,appearDuration:1000,disappearTime:46000,disappearDuration:1000}],
                 object: {
                     verticalAlign: 'top',
                     origin: {
@@ -188,16 +156,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     indexTitle: 'Number of day',
                     firstIndex: 1
                 },
-                presenceParameters: {
-                    appears: [{
-                        time: 5000,
-                        duration: 4000
-                    }],
-                    disappears: [{
-                        time: 35000,
-                        duration: 4000
-                    }]
-                }
+                presenceParameters: [{appearTime:5000,appearDuration:4000,disappearTime:35000,disappearDuration:4000}]
             }
         ],
         xyChart: [
@@ -277,12 +236,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                         }]
                     ]
                 },
-                presenceParameters: {
-                    appears: [{
-                        time: 10000,
-                        duration: 4000
-                    }]
-                },
+                presenceParameters: [{appearTime:10000,appearDuration:4000}],
                 selections: [
                     {
                         time: 15000,
@@ -456,12 +410,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
             }
         ],
         table: [{
-            presenceParameters: {
-                appears: [{
-                    time: 44000,
-                    duration: 2000
-                }]
-            },
+            presenceParameters: [{appearTime:44000,appearDuration:2000}],
             object: {
                 origin: {
                     x: 240,
@@ -864,12 +813,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
         ],
         highlightedText: [
             {
-                presenceParameters: {
-                    appears: [{
-                        time: 191000,
-                        duration: 10000
-                    }]
-                },
+                presenceParameters: [{appearTime:191000,appearDuration:10000}],
                 object: {
                     origin: {
                         x: 370,

@@ -25,16 +25,7 @@ export const ContainerWithMostWater: LessonJsonType = {
     animations: {
         xyChart: [
             {
-                presenceParameters: {
-                    appears: [{
-                        time: 0,
-                        duration: 2000
-                    }],
-                    disappears: [{
-                        time: 70000,
-                        duration: 2000
-                    }]
-                },
+                presenceParameters: [{appearTime:0,appearDuration:2000,disappearTime:70000,disappearDuration:2000}],
                 object: {
                     origin: {
                         x: 200,
@@ -896,16 +887,7 @@ export const ContainerWithMostWater: LessonJsonType = {
             }
         ],
         text: [{
-            presenceParameters: {
-                appears: [{
-                    time: 29000,
-                    duration: 500
-                }],
-                disappears: [{
-                    time: 70000,
-                    duration: 500
-                }]
-            },
+            presenceParameters: [{appearTime:29000,appearDuration:500,disappearTime:70000,disappearDuration:500}],
             object: {
                 fontSize: 28,
                 origin: {
@@ -953,12 +935,7 @@ export const ContainerWithMostWater: LessonJsonType = {
         }],
         highlightedText: [
             {
-                presenceParameters: {
-                    appears: [{
-                        time: 73000,
-                        duration: 10000
-                    }]
-                },
+                presenceParameters: [{appearTime:73000,appearDuration:10000}],
                 object: {
                     origin: {
                         x: 200,

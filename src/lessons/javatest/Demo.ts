@@ -1,4 +1,4 @@
-import { LessonJsonType } from '../../AnimationsJsonType'
+import {LessonJsonType} from '../../AnimationsJsonType'
 
 export const Demo: LessonJsonType = {
     sound: require('./../Lofi_Jazz_Cafe_Cozy_Evening.mp3'),
@@ -11,149 +11,102 @@ export const Demo: LessonJsonType = {
     animations: {
         codeQuestionnaire: [
             {
-                presenceParameters: {
-                    appears: [{
-                        time: 1000,
-                        duration: 1000
-                    }],
-                    disappears: [{
-                        time: 9000,
-                        duration: 1000
-                    }]
-                },
+                presenceParameters: [{
+                        appearTime: 1000,
+                        appearDuration: 1000,
+                        disappearTime: 30000,
+                        disappearDuration: 5000
+                }],
                 selections: [
                     {
-                    time: 3000,
-                    duration: 500,
-                    type: {
-                        code: {
-                            substrings: [{
-                                from: 30,
-                                to: 50,
-                            }]
+                        time: 15000,
+                        duration: 2000,
+                        type: {
+                            code: {
+                                substrings: [{
+                                    from: 30,
+                                    to: 50,
+                                }]
+                            }
                         }
-                    }
-                },
-                    {
-                    time: 3500,
-                    duration: 500,
-                    type: {
-                        questionnaire: {
-                            lines: [0,2]
-                        }
-                    }
-                }],
-                transformations: [{
-                    appearTime: 5000,
-                    appearDuration: 1000,
-                    disappearTime: 5000,
-                    disappearDuration: 1000,
-                    object: {
-                        codeText: "blablabla"
-                    }
-                }],
-                object: {
-                    questionParams: {
-                        fontSize: 33,
-                        options: ["1. FIRST", "2. SECOND", "3. THIRD"],
-                        position: "right"
                     },
+                    {
+                        time: 20000,
+                        duration: 2000,
+                        type: {
+                            code: {
+                                substrings: [{
+                                    from: 60,
+                                    to: 70,
+                                }]
+                            }
+                        }
+                    },
+                    {
+                        time: 25000,
+                        duration: 1000,
+                        type: {
+                            questionnaire: {
+                                lines: [1]
+                            }
+                        }
+                    }],
+                transformations: [
+                    {
+                        appearTime: 5000,
+                        appearDuration: 1000,
+                        object: {
+                            codePartHeight: 360,
+                            questionParamsFontSize: 25,
+                            questionParamsPosition: "down",
+                        }
+                    },
+                    {
+                        appearTime: 7000,
+                        appearDuration: 1000,
+                        object: {
+                            questionParamsOptions: [
+                                "A. unknown",
+                                "B. great",
+                                "C. good",
+                                "D. bad",
+                                "E. unknowngreatgoodbad",
+                                "F. Exactly one line needs to be changed for the code to compile.",
+                                "G. Exactly two line needs to be changed for the code to compile.",
+                                "H. None of the above"
+                            ],
+                        }
+                    },
+                    {
+                        appearTime: 10000,
+                        appearDuration: 1000,
+                        object: {
+                            language: "Java",
+                        }
+                    }
+                ],
+                object: {
+                    title: "What is the result of executing the following code snippet?",
+                    titleFontSize: 50,
                     origin: {
                         x: 0,
                         y: 0
                     },
                     width: 1280,
                     height: 720,
-                    codeFontSize: 22,
-                    language: 'Java',
+                    codeFontSize: 25,
                     codeHighlightStyle: 'darcula',
-                    codeText: 'public int maxProfit(int[] prices) {\n' +
-                        '\n' +
-                        '\tint prevBuy = -prices[0];\n' +
-                        '\tint prevSell = MIN_VALUE;\n' +
-                        '\tint prevWaitAfterBuy = MIN_VALUE;\n' +
-                        '\tint prevWaitAfterNothing = 0;\n' +
-                        '\n' +
-                        '\tfor (int i = 1; i < prices.length; i++) {\n' +
-                        '\t\tint price = prices[i];\n' +
-                        '\t\tint buy = max(prevSell, prevWaitAfterNothing) - price;\n' +
-                        '\t\tint sell = max(prevBuy, prevWaitAfterBuy) + price;\n' +
-                        '\t\tint waitAfterNothing = max(prevWaitAfterNothing, prevSell);\n' +
-                        '\t\tprevBuy = buy;\n' +
-                        '\t\tprevSell = sell;\n' +
-                        '\t\tprevWaitAfterBuy = waitAfterBuy;\n' +
-                        '\t\tprevWaitAfterNothing = waitAfterNothing;\n' +
-                        '\t}\n' +
-                        '\n' +
-                        '\treturn max(\n' +
-                        '\t\tmax(prevBuy, prevSell),\n' +
-                        '\t\tmax(prevWaitAfterBuy, prevWaitAfterNothing)\n' +
-                        '\t);\n' +
-                        '}'
+                    codeText: 'final int score1 = 8, score2 = 3;\n' +
+                        'char myScore = 7;\n' +
+                        'var goal = switch (myScore) {\n' +
+                        '\tdefault -> {if(10>score1) yield "unknown";}\n' +
+                        '\tcase score1 -> "great";\n' +
+                        '\tcase 2, 4, 6 -> "good";\n' +
+                        '\tcase score2, 0 -> {"bad";}' +
+                        '};\n' +
+                        'System.out.println(goal);'
                 }
             }
         ],
-        // highlightedText: [
-        //     {
-        //         presenceParameters: {
-        //             appears: [{
-        //                 time: 1000,
-        //                 duration: 5000
-        //             }],
-        //             disappears: [{
-        //                 time: 9000,
-        //                 duration: 5000
-        //             }]
-        //         },
-        //         selections: [
-        //             {
-        //                 time: 6000,
-        //                 duration: 3000,
-        //                 substrings: [{
-        //                     from: 10,
-        //                     to: 50
-        //                 }, {
-        //                     from: 80,
-        //                     to: 150
-        //                 }]
-        //             }
-        //         ],
-        //         object: {
-        //             origin: {
-        //                 x: 10,
-        //                 y: 10
-        //             },
-        //             width: 1000,
-        //             height: 700,
-        //             fontSize: 22,
-        //             value: {
-        //                 language: 'Java',
-        //                 text: 'public int maxProfit(int[] prices) {\n' +
-        //                     '\n' +
-        //                     '\tint prevBuy = -prices[0];\n' +
-        //                     '\tint prevSell = MIN_VALUE;\n' +
-        //                     '\tint prevWaitAfterBuy = MIN_VALUE;\n' +
-        //                     '\tint prevWaitAfterNothing = 0;\n' +
-        //                     '\n' +
-        //                     '\tfor (int i = 1; i < prices.length; i++) {\n' +
-        //                     '\t\tint price = prices[i];\n' +
-        //                     '\t\tint buy = max(prevSell, prevWaitAfterNothing) - price;\n' +
-        //                     '\t\tint sell = max(prevBuy, prevWaitAfterBuy) + price;\n' +
-        //                     '\t\tint waitAfterNothing = max(prevWaitAfterNothing, prevSell);\n' +
-        //                     '\t\tprevBuy = buy;\n' +
-        //                     '\t\tprevSell = sell;\n' +
-        //                     '\t\tprevWaitAfterBuy = waitAfterBuy;\n' +
-        //                     '\t\tprevWaitAfterNothing = waitAfterNothing;\n' +
-        //                     '\t}\n' +
-        //                     '\n' +
-        //                     '\treturn max(\n' +
-        //                     '\t\tmax(prevBuy, prevSell),\n' +
-        //                     '\t\tmax(prevWaitAfterBuy, prevWaitAfterNothing)\n' +
-        //                     '\t);\n' +
-        //                     '}'
-        //             },
-        //         }
-        //     }
-        // ]
     }
 }

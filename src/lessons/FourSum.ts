@@ -10,12 +10,7 @@ export const FourSum: LessonJsonType = {
     cameras: [],
     animations: {
         array: [{
-            presenceParameters: {
-                appears: [{
-                    time: 0,
-                    duration: 1000
-                }]
-            },
+            presenceParameters: [{appearTime:0,appearDuration:1000}],
             object: {
                 origin: {
                     x: 50,
@@ -59,12 +54,7 @@ export const FourSum: LessonJsonType = {
         }],
         highlightedText: [
             {
-                presenceParameters: {
-                    appears: [{
-                        time: 11000,
-                        duration: 500
-                    }]
-                },
+                presenceParameters: [{appearTime:11000,appearDuration:500}],
                 object: {
                     origin: {
                         x: 50,
@@ -98,16 +88,7 @@ export const FourSum: LessonJsonType = {
         ],
         text: [
             {
-                presenceParameters: {
-                    appears: [{
-                        time: 2000,
-                        duration: 500
-                    }],
-                    disappears: [{
-                        time: 10000,
-                        duration: 1000
-                    }]
-                },
+                presenceParameters: [{appearTime:2000,appearDuration:500,disappearTime:10000,disappearDuration:1000}],
                 object: {
                     origin: {
                         x: 50,
@@ -127,16 +108,7 @@ export const FourSum: LessonJsonType = {
 
             },
             {
-                presenceParameters: {
-                    appears: [{
-                        time: 4000,
-                        duration: 500
-                    }],
-                    disappears: [{
-                        time: 10000,
-                        duration: 1000
-                    }]
-                },
+                presenceParameters: [{appearTime:4000,appearDuration:500,disappearTime:10000,disappearDuration:1000}],
                 object: {
                     origin: {
                         x: 150,

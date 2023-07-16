@@ -10,12 +10,7 @@ export const Demo: LessonJsonType = {
     cameras: [],
     animations: {
         array: [{
-            presenceParameters: {
-                appears: [{
-                    time: 0,
-                    duration: 1000
-                }]
-            },
+            presenceParameters: [{appearTime:0,appearDuration:1000}],
             object: {
                 origin: {
                     x: 50,

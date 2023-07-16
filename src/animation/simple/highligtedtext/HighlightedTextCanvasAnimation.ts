@@ -3,12 +3,11 @@ import AnimationStyle, {getFontColor} from '../../../AnimationStyles'
 import {
     calculateBackgroundColor,
     createHighlightedTextValueSegmentType,
-    getStyle,
     HighlightedTextParamsType,
     HighlightedTextValueSegmentType
 } from './HighlightedTextCanvasAnimationParams'
 import CanvasAnimation from '../../CanvasAnimation'
-import {mergeIntervals} from '../../../common/Alghoritm'
+import {animationStyle} from "../../../Animations";
 
 type rectParams = {
     x: number
@@ -32,7 +31,6 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
             width,
             height
         } = this.process(p5, o, animationStyle, borderX, borderY, true)
-
         p5.fill(calculateBackgroundColor(o, animationStyle))
         p5.rect(x, y, width, height)
         this.process(p5, o, animationStyle, borderX, borderY)
@@ -51,10 +49,9 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
 
         let x = borderX
         let y = 0.8 * fontSize + borderY
-        let width = 0
+        let width = x
         for (let i = 0; i < segments.length; i++) {
-            const part = segments[i].segment
-            const selected = segments[i].selected
+            const part = segments[i]
             if (part === 'newline') {
                 y += fontSize * 1.2
                 width = Math.max(width, x)
@@ -69,9 +66,6 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
                 backgroundTextColor
             } = part
             textColor = getFontColor(animationStyle, textColor)
-            if (selected) {
-                textColor = animationStyle.selectedColor
-            }
             value = value.replaceAll('\t', '    ')
             let font = o.font || 'monospace'
             const textFont = font === 'monospace' ? animationStyle.monospaceFont : (font ?? animationStyle.font)
@@ -81,13 +75,15 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
             p5.textSize(fontSize)
             p5.textStyle(textStyle)
             const textWidth = p5.textWidth(value)
-            if (!dry && backgroundTextColor) {
-                p5.fill(backgroundTextColor)
-                p5.rect(x, y - fontSize + 4, textWidth, fontSize)
-            }
             if (!dry) {
+                let backgroundColor = calculateBackgroundColor(o, animationStyle)
+                if (backgroundTextColor) {
+                    p5.fill(backgroundTextColor)
+                    p5.rect(x, y - fontSize + 4, textWidth, fontSize)
+                    backgroundColor = backgroundTextColor
+                }
                 p5.fill(textColor)
-                p5.stroke(calculateBackgroundColor(o, animationStyle))
+                p5.stroke(backgroundColor)
                 p5.text(value, x, y)
             }
             x += textWidth
@@ -105,20 +101,13 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
     private splitSegmentsAccordingToSelections(
         segments: HighlightedTextValueSegmentType[],
         o: HighlightedTextParamsType
-    ): { segment: HighlightedTextValueSegmentType, selected: boolean }[] {
-        const result: { segment: HighlightedTextValueSegmentType, selected: boolean }[] = []
-        let selectionIntervals = o.selectedSubstrings?.map(s => ({
-            start: s.from,
-            end: s.to
-        })) ?? []
+    ): HighlightedTextValueSegmentType[] {
+        const result: HighlightedTextValueSegmentType[] = []
+        let selectionIntervals = o.selectedSubstrings ?? []
 
         if (selectionIntervals.length === 0) {
-            return segments.map(s => ({
-                segment: s,
-                selected: false
-            }))
+            return segments
         }
-        selectionIntervals = mergeIntervals(selectionIntervals)
 
         const splitSegments: HighlightedTextValueSegmentType[] = []
 
@@ -136,44 +125,44 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
             }
             let segmentEndIndex = segmentStartIndex + segment.value.length
 
-            while (currentSelectionIntervalIndex < selectionIntervals.length && currentSelectionInterval.end <= segmentStartIndex) {
+            while (currentSelectionIntervalIndex < selectionIntervals.length && currentSelectionInterval.to <= segmentStartIndex) {
                 currentSelectionInterval = selectionIntervals[currentSelectionIntervalIndex]
                 currentSelectionIntervalIndex++
             }
 
-            let segmentHasStart = currentSelectionInterval.start >= segmentStartIndex && currentSelectionInterval.start < segmentEndIndex
-            let segmentHasEnd = currentSelectionInterval.end > segmentStartIndex && currentSelectionInterval.start <= segmentEndIndex
+            let segmentHasStart = currentSelectionInterval.from >= segmentStartIndex && currentSelectionInterval.from < segmentEndIndex
+            let segmentHasEnd = currentSelectionInterval.to > segmentStartIndex && currentSelectionInterval.from <= segmentEndIndex
 
             if (segmentHasStart && segmentHasEnd) {
                 splitSegments.push({
                     ...segment,
-                    value: segment.value.substring(0, currentSelectionInterval.start - segmentStartIndex)
+                    value: segment.value.substring(0, currentSelectionInterval.from - segmentStartIndex)
                 })
                 splitSegments.push({
                     ...segment,
-                    value: segment.value.substring(currentSelectionInterval.start - segmentStartIndex, currentSelectionInterval.end - segmentStartIndex)
+                    value: segment.value.substring(currentSelectionInterval.from - segmentStartIndex, currentSelectionInterval.to - segmentStartIndex)
                 })
                 splitSegments.push({
                     ...segment,
-                    value: segment.value.substring(currentSelectionInterval.end - segmentStartIndex)
+                    value: segment.value.substring(currentSelectionInterval.to - segmentStartIndex)
                 })
             } else if (segmentHasStart) {
                 splitSegments.push({
                     ...segment,
-                    value: segment.value.substring(0, currentSelectionInterval.start - segmentStartIndex)
+                    value: segment.value.substring(0, currentSelectionInterval.from - segmentStartIndex)
                 })
                 splitSegments.push({
                     ...segment,
-                    value: segment.value.substring(currentSelectionInterval.start - segmentStartIndex)
+                    value: segment.value.substring(currentSelectionInterval.from - segmentStartIndex)
                 })
             } else if (segmentHasEnd) {
                 splitSegments.push({
                     ...segment,
-                    value: segment.value.substring(0, currentSelectionInterval.end - segmentStartIndex)
+                    value: segment.value.substring(0, currentSelectionInterval.to - segmentStartIndex)
                 })
                 splitSegments.push({
                     ...segment,
-                    value: segment.value.substring(currentSelectionInterval.end - segmentStartIndex)
+                    value: segment.value.substring(currentSelectionInterval.to - segmentStartIndex)
                 })
             } else {
                 splitSegments.push(segment)
@@ -186,7 +175,7 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
         segmentStartIndex = 0
 
         for (let i = 0; i < splitSegments.length; i++) {
-            const segment = splitSegments[i]
+            let segment = splitSegments[i]
 
             let segmentEndIndex = segmentStartIndex
             if (segment === 'newline') {
@@ -195,18 +184,22 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
                 segmentEndIndex += segment.value.length
             }
 
-            while (currentSelectionIntervalIndex < selectionIntervals.length && currentSelectionInterval.end <= segmentStartIndex) {
+            while (currentSelectionIntervalIndex < selectionIntervals.length && currentSelectionInterval.to <= segmentStartIndex) {
                 currentSelectionInterval = selectionIntervals[currentSelectionIntervalIndex]
                 currentSelectionIntervalIndex++
             }
 
             let segmentHasInterval =
-                (currentSelectionInterval.start <= segmentStartIndex && currentSelectionInterval.end >= segmentEndIndex)
+                (currentSelectionInterval.from <= segmentStartIndex && currentSelectionInterval.to >= segmentEndIndex)
 
-            result.push({
-                segment: segment,
-                selected: segmentHasInterval
-            })
+            if (segment !== "newline") {
+                segment = {
+                    ...segment,
+                    textColor: segmentHasInterval ? currentSelectionInterval.color ?? animationStyle.selectedColor : segment.textColor,
+                    backgroundTextColor: segmentHasInterval ?? currentSelectionInterval.backgroundColor ? currentSelectionInterval.backgroundColor : segment.backgroundTextColor
+                }
+            }
+            result.push(segment)
             segmentStartIndex = segmentEndIndex
         }
 

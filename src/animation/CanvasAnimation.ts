@@ -24,7 +24,7 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
             dashed
         } = object
 
-        if (!needAppearObject(time, this.params.getAppearanceParam())) {
+        if (!needAppearObject(time, this.params.getPresenceParam())) {
             return
         }
         p5.push()

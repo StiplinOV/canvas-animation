@@ -11,9 +11,12 @@ export default class HighlightedTextCanvasAnimationRenderer implements Renderer<
 
     private readonly animationStyle: AnimationStyle
 
-    constructor(style: Record<string, React.CSSProperties>, animationStyle: AnimationStyle) {
+    private readonly syntaxHighlightingDisabled: boolean
+
+    constructor(style: Record<string, React.CSSProperties>, animationStyle: AnimationStyle, syntaxHighlightingDisabled?: boolean) {
         this.style = style
         this.animationStyle = animationStyle
+        this.syntaxHighlightingDisabled = syntaxHighlightingDisabled ?? false
     }
 
     text(chunkParam: string): HighlightedTextValueSegmentType[] {
@@ -37,9 +40,14 @@ export default class HighlightedTextCanvasAnimationRenderer implements Renderer<
     }
 
     wrap(className: string, chunk: HighlightedTextValueSegmentType[]): HighlightedTextValueSegmentType[] {
-        const properties: React.CSSProperties = {
+        let properties: React.CSSProperties = {
             ...this.style.hljs,
-            ...this.style[className]
+        }
+        if (!this.syntaxHighlightingDisabled) {
+            properties = {
+                ...properties,
+                ...this.style[className]
+            }
         }
         return chunk.map((c): HighlightedTextValueSegmentType => {
             if (c === 'newline') {

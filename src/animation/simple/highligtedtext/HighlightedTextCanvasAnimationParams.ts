@@ -1,7 +1,7 @@
 import {calculateArrayPercentValue, calculateColorPercentValue, calculatePercentValue} from '../../../common/Utils'
-import { ObjectParams, SelectionType } from '../../CanvasAnimationParams'
+import {ObjectParams, SelectionType} from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
-import AnimationStyle, { ColorType, WebSafeFontsType } from '../../../AnimationStyles'
+import AnimationStyle, {ColorType, WebSafeFontsType} from '../../../AnimationStyles'
 import HighlightedTextCanvasAnimation from './HighlightedTextCanvasAnimation'
 import {THE_STYLE} from 'p5'
 import {
@@ -19,7 +19,8 @@ import {
     Haskell,
     Haxe,
     HTTP,
-    INI, init,
+    INI,
+    init,
     Java,
     JavaScript,
     JSON as JSONDef,
@@ -32,7 +33,21 @@ import {
     Matlab,
     Maxima,
     Nginx,
-    Nix, OpenSCAD, PHP, process, Python, registerLanguages, Rust, Scheme, SCSS, Shell, SQL, TeX, TypeScript, XML, YAML
+    Nix,
+    OpenSCAD,
+    PHP,
+    process,
+    Python,
+    registerLanguages,
+    Rust,
+    Scheme,
+    SCSS,
+    Shell,
+    SQL,
+    TeX,
+    TypeScript,
+    XML,
+    YAML
 } from 'highlight-ts'
 import {
     a11yDark,
@@ -118,10 +133,17 @@ import {
     solarizedDark,
     solarizedLight,
     srcery,
-    sunburst, tomorrow, tomorrowNight,
+    sunburst,
+    tomorrow,
+    tomorrowNight,
     tomorrowNightBlue,
     tomorrowNightBright,
-    tomorrowNightEighties, vs, vs2015, xcode, xt256, zenburn
+    tomorrowNightEighties,
+    vs,
+    vs2015,
+    xcode,
+    xt256,
+    zenburn
 } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 import HighlightedTextCanvasAnimationRenderer from './HighlightedTextCanvasAnimationRenderer'
 import React from 'react'
@@ -278,9 +300,13 @@ export const createHighlightedTextValueSegmentType = (object: HighlightedTextVal
 
     registerLanguages(...Object.values(languageDefs))
     const style = getStyle(animationStyle, object.highlightStyle)
-    const highlighter = init(new HighlightedTextCanvasAnimationRenderer(style, animationStyle))
+    const highlighter = init(new HighlightedTextCanvasAnimationRenderer(style, animationStyle, !Boolean(object.language)))
+    let lang
+    if (object.language) {
+        lang = languageDefs[object.language].name
+    }
 
-    return process(highlighter, text, languageDefs[object.language].name).value
+    return process(highlighter, text, lang).value
 }
 
 export const calculateBackgroundColor = (params: HighlightedTextParamsType, animationStyle: AnimationStyle): string => {
@@ -305,7 +331,7 @@ export type HighlightedTextValueSegmentType = {
 
 export type HighlightedSyntaxValueType = {
     text: string
-    language: keyof typeof languageDefs
+    language?: keyof typeof languageDefs
     highlightStyle?: HighlightedStyleName
 }
 
@@ -319,6 +345,8 @@ interface OnlyHighlightedTextParamsType {
     selectedSubstrings?: {
         from: number,
         to: number,
+        color?: string,
+        backgroundColor?: string
     }[]
     width?: number
     height?: number
@@ -330,7 +358,9 @@ export interface HighlightedTextParamsType extends ObjectParams, OnlyHighlighted
 export interface HighlightedTextCanvasAnimationSelection extends SelectionType {
     substrings?: {
         from: number,
-        to: number
+        to: number,
+        color?: string,
+        backgroundColor?: string
     }[]
 }
 
@@ -357,16 +387,16 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
         const transValue = createHighlightedTextValueSegmentType(trans.value || [], this.getAnimationStyle())
         const backgroundColor = calculateBackgroundColor(obj, style)
         let transBackgroundColor = trans.backgroundColor
-        if (!transBackgroundColor && !Array.isArray(trans.value) && trans.value?.highlightStyle){
+        if (!transBackgroundColor && !Array.isArray(trans.value) && trans.value?.highlightStyle) {
             transBackgroundColor = String(styles[trans.value?.highlightStyle].hljs.background)
         }
         return {
-            backgroundColor: transBackgroundColor ? calculateColorPercentValue(backgroundColor, transBackgroundColor, perc): backgroundColor,
+            backgroundColor: transBackgroundColor ? calculateColorPercentValue(backgroundColor, transBackgroundColor, perc) : backgroundColor,
             value: trans.value ? this.calculateValuePercentValue(value, transValue, perc) : obj.value,
             fontSize: trans.fontSize ? calculatePercentValue(fontSize, trans.fontSize, perc) : fontSize,
             font: (trans.font && perc >= 0.5) ? trans.font : obj.font,
-            width: trans.width != undefined? calculatePercentValue(width, trans.width, perc) : width,
-            height: trans.height != undefined? calculatePercentValue(height, trans.height, perc) : height,
+            width: trans.width != undefined ? calculatePercentValue(width, trans.width, perc) : width,
+            height: trans.height != undefined ? calculatePercentValue(height, trans.height, perc) : height,
             selectedSubstrings: (trans.selectedSubstrings ? calculateArrayPercentValue(
                 obj.selectedSubstrings ?? [],
                 trans.selectedSubstrings,
@@ -405,7 +435,7 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
         return result
     }
 
-    protected convertSelectionToTransformObject (selection: HighlightedTextCanvasAnimationSelection): Partial<HighlightedTextParamsType> {
+    protected convertSelectionToTransformObject(selection: HighlightedTextCanvasAnimationSelection): Partial<HighlightedTextParamsType> {
         return {
             selectedSubstrings: selection.substrings
         }

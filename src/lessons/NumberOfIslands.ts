@@ -10,12 +10,7 @@ export const NumberOfIslands: LessonJsonType = {
     cameras: [],
     animations: {
         matrix: [{
-            presenceParameters: {
-                appears: [{
-                    time: 0,
-                    duration: 1000
-                }]
-            },
+            presenceParameters: [{appearTime:0,appearDuration:1000}],
             selections: [
                 {
                     time: 2000,

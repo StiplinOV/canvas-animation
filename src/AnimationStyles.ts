@@ -24,6 +24,7 @@ export default interface AnimationStyle {
     primaryColor: string
     secondaryColor: string
     selectedColor: string
+    backgroundSelectedColor: string
     font: WebSafeFontsType
     fontSize: number
     titleFontSize: number
@@ -50,6 +51,7 @@ const defaultAnimationStyle: AnimationStyle = {
     primaryColor: '#637899',
     secondaryColor: '#ff4d00',
     selectedColor: '#FF0000',
+    backgroundSelectedColor: '#FFFF00',
     font: 'Verdana',
     fontSize: 14,
     titleFontSize: 40,
