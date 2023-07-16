@@ -1,10 +1,9 @@
 import { ObjectParams } from '../../CanvasAnimationParams'
 import { addPoints, render2DArrayType } from '../../../common/Utils'
-import ComplexCanvasAnimationParams, { TransformOptions } from '../ComplexCanvasAnimationParams'
-import LineCanvasAnimationParams from '../../simple/line/LineCanvasAnimationParams'
-import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
-import EllipseCanvasAnimationParams from '../../simple/ellipse/EllipseCanvasAnimationParams'
-import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
+import ComplexCanvasAnimationParams, {
+    CanvasAnimationParamsType,
+    TransformOptions
+} from '../ComplexCanvasAnimationParams'
 
 export interface TableParamsType extends ObjectParams {
     values: string[][]
@@ -42,8 +41,8 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         }
     }
 
-    protected getIncludedAnimationParamsByParameter (object: TableParamsType): Map<string, SimpleCanvasAnimationParams> {
-        const result = new Map<string, SimpleCanvasAnimationParams>()
+    protected getIncludedAnimationParamsByParameter (object: TableParamsType): Map<string, CanvasAnimationParamsType> {
+        const result = new Map<string, CanvasAnimationParamsType>()
         const {
             values,
             height,
@@ -66,8 +65,9 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                 const columnWidth = columnWidths[j]
 
                 if (i !== values.length - 1) {
-                    result.set(`horizontal line ${i} ${j}`, new LineCanvasAnimationParams({
-                        object: {
+                    result.set(`horizontal line ${i} ${j}`, {
+                        type: "line",
+                        objectParams: {
                             origin: addPoints(origin, {
                                 x: accumulatedWidth,
                                 y: rowHeight * (i + 1)
@@ -79,12 +79,13 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                             weight: this.isBoldHorizontalLine(object, i, j) ? 'bold' : 'normal',
                             rotations
                         }
-                    }, this.getAnimationStyle()))
+                    })
                 }
                 accumulatedWidth += columnWidth
                 if (j < columnWidths.length - 1) {
-                    result.set(`vertical line ${i} ${j}`, new LineCanvasAnimationParams({
-                        object: {
+                    result.set(`vertical line ${i} ${j}`, {
+                        type: "line",
+                        objectParams: {
                             origin: addPoints(origin, {
                                 x: accumulatedWidth,
                                 y: i * rowHeight
@@ -96,12 +97,13 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                             weight: this.isBoldVerticalLine(object, i, j) ? 'bold' : 'normal',
                             rotations
                         }
-                    }, this.getAnimationStyle()))
+                    })
                 }
                 markedCells.forEach(markedCell => {
                     if (markedCell[0] === i && markedCell[1] === j) {
-                        result.set(`markedCell ${i} ${j}`, new EllipseCanvasAnimationParams({
-                            object: {
+                        result.set(`markedCell ${i} ${j}`, {
+                            type: "ellipse",
+                            objectParams: {
                                 origin: addPoints(origin, {
                                     x: accumulatedWidth - columnWidth / 2,
                                     y: rowHeight * i + (rowHeight / 2)
@@ -113,11 +115,12 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                                 strokeColor: 'secondary',
                                 rotations
                             }
-                        }, this.getAnimationStyle()))
+                        })
                     }
                 })
-                result.set(title ? `title ${i} ${j}` : `value ${i} ${j}`, new TextCanvasAnimationParams({
-                    object: {
+                result.set(title ? `title ${i} ${j}` : `value ${i} ${j}`, {
+                    type: "text",
+                    objectParams: {
                         fontSize: object.fontSize,
                         origin: addPoints(origin, {
                             x: accumulatedWidth - columnWidth / 2,
@@ -129,7 +132,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                         textStyle,
                         rotations
                     }
-                }, this.getAnimationStyle()))
+                })
             }
         }
         return result

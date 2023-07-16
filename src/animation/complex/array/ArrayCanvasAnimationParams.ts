@@ -1,6 +1,8 @@
 import { ObjectParams } from '../../CanvasAnimationParams'
 import { addPoints } from '../../../common/Utils'
-import ComplexCanvasAnimationParams, { AnimationSelectedInfo } from '../ComplexCanvasAnimationParams'
+import ComplexCanvasAnimationParams, {
+    CanvasAnimationParamsType
+} from '../ComplexCanvasAnimationParams'
 import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
 import ArrayElement, { ElementStyle, ElementType } from './ArrayElement'
@@ -33,8 +35,8 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
         }
     }
 
-    protected getIncludedAnimationParamsByParameter (object: ArrayParamsType): Map<string, SimpleCanvasAnimationParams> {
-        const result = new Map<string, SimpleCanvasAnimationParams>()
+    protected getIncludedAnimationParamsByParameter (object: ArrayParamsType): Map<string, CanvasAnimationParamsType> {
+        const result = new Map<string, CanvasAnimationParamsType>()
         const {
             title,
             values,
@@ -50,8 +52,9 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
         const arrayRectangleWidth = (width - (values.length - 1) * partHeight) / values.length
         let partShift = 0
         if (title) {
-            result.set('array title', new TextCanvasAnimationParams({
-                object: {
+            result.set('array title', {
+                type: "text",
+                objectParams: {
                     value: title,
                     origin: addPoints(origin, {
                         x: width / 2,
@@ -62,7 +65,7 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
                     verticalAlign: 'top',
                     rotations
                 }
-            }, this.getAnimationStyle()))
+            })
             partShift += partHeight * 2
         }
         values.forEach((valueParam, index) => {
@@ -93,8 +96,9 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
         partShift += partHeight * 4
         if (!hideIndices) {
             values.forEach((valueParam, index) => {
-                result.set(`index text ${index}`, new TextCanvasAnimationParams({
-                    object: {
+                result.set(`index text ${index}`, {
+                    type: "text",
+                    objectParams: {
                         value: String(index + (firstIndex ?? 0)),
                         origin: addPoints(origin, {
                             x: index * (arrayRectangleWidth + partHeight) + arrayRectangleWidth / 2,
@@ -104,13 +108,14 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
                         horizontalAlign: 'center',
                         rotations
                     }
-                }, this.getAnimationStyle()))
+                })
             })
         }
         partShift += partHeight
         if (indexTitle) {
-            result.set('index title', new TextCanvasAnimationParams({
-                object: {
+            result.set('index title', {
+                type: "text",
+                objectParams: {
                     value: indexTitle,
                     origin: addPoints(origin, {
                         x: width / 2,
@@ -120,7 +125,7 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
                     horizontalAlign: 'center',
                     rotations
                 }
-            }, this.getAnimationStyle()))
+            })
             partShift += partHeight
         }
         values.forEach((valueParam, index) => {

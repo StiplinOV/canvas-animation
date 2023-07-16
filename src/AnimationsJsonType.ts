@@ -27,23 +27,33 @@ import {
     CodeQuestionnaireParamsType
 } from './animation/complex/codequestionnaire/CodeQuestionnaireCanvasAnimationParams'
 
+export type SimpleObjectTypeToGenericTypes = {
+    circle: [CircleParamsType, unknown, SelectionType]
+    ellipse: [EllipseParamsType, unknown, SelectionType]
+    bezier: [BezierParamsType, unknown, SelectionType]
+    highlightedText: [HighlightedTextParamsType, unknown, HighlightedTextCanvasAnimationSelection]
+    line: [LineParamsType, unknown, SelectionType]
+    rectangle: [RectangleParamsType, unknown, SelectionType]
+    text: [TextParamsType, unknown, SelectionType]
+}
+
+export type ObjectTypeToGenericTypes = SimpleObjectTypeToGenericTypes & {
+    array: [ArrayParamsType, TransformOptions, SelectionType<ArraySelectorType>]
+    matrix: [MatrixParamsType, TransformOptions, SelectionType<MatrixSelectorType>]
+    arrow: [ArrowParamsType, TransformOptions, SelectionType]
+    codeQuestionnaire: [CodeQuestionnaireParamsType, TransformOptions,SelectionType<CodeQuestionnaireCanvasAnimationSelection>]
+    table: [TableParamsType, TableTransformOptionsType, SelectionType<TableSelectorType>]
+    xyChart: [XyChartParamsType, TransformOptions, SelectionType<XyChartSelectorType>]
+    graphDataStructure: [GraphDataStructureParamsType, TransformOptions, SelectionType]
+    numberLine: [NumberLineParamsType, TransformOptions, SelectionType]
+}
+
+export type ObjectTypeToParamTypesMapping = {
+    [key in keyof ObjectTypeToGenericTypes]: Params<ObjectTypeToGenericTypes[key][0],ObjectTypeToGenericTypes[key][1], ObjectTypeToGenericTypes[key][2]>
+}
+
 export type AnimationsJsonType = {
-    // TODO dequeue
-    array?: Params<ArrayParamsType, TransformOptions, SelectionType<ArraySelectorType>>[]
-    matrix?: Params<MatrixParamsType, TransformOptions, SelectionType<MatrixSelectorType>>[]
-    arrow?: Params<ArrowParamsType, TransformOptions>[]
-    circle?: Params<CircleParamsType>[]
-    codeQuestionnaire?: Params<CodeQuestionnaireParamsType, TransformOptions, SelectionType<CodeQuestionnaireCanvasAnimationSelection>>[]
-    ellipse?: Params<EllipseParamsType>[]
-    bezier?: Params<BezierParamsType>[]
-    highlightedText?: Params<HighlightedTextParamsType, unknown, HighlightedTextCanvasAnimationSelection>[]
-    line?: Params<LineParamsType>[]
-    rectangle?: Params<RectangleParamsType>[]
-    table?: Params<TableParamsType, TableTransformOptionsType, SelectionType<TableSelectorType>>[]
-    text?: Params<TextParamsType>[]
-    xyChart?: Params<XyChartParamsType, TransformOptions, SelectionType<XyChartSelectorType>>[]
-    graphDataStructure?: Params<GraphDataStructureParamsType, TransformOptions>[]
-    numberLine?: Params<NumberLineParamsType, TransformOptions>[]
+    [key in keyof ObjectTypeToGenericTypes]?: ObjectTypeToParamTypesMapping[key][]
 }
 
 export type LessonJsonType = {

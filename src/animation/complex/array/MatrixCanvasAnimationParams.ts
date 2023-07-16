@@ -1,8 +1,8 @@
 import { ObjectParams } from '../../CanvasAnimationParams'
 import { addPoints } from '../../../common/Utils'
-import ComplexCanvasAnimationParams, { AnimationSelectedInfo } from '../ComplexCanvasAnimationParams'
-import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
-import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
+import ComplexCanvasAnimationParams, {
+    CanvasAnimationParamsType
+} from '../ComplexCanvasAnimationParams'
 import { Point } from '../../../common/Point'
 import ArrayElement, { ElementStyle, ElementType } from './ArrayElement'
 
@@ -28,8 +28,8 @@ export default class MatrixCanvasAnimationParams extends ComplexCanvasAnimationP
         }
     }
 
-    protected getIncludedAnimationParamsByParameter (object: MatrixParamsType): Map<string, SimpleCanvasAnimationParams> {
-        const result = new Map<string, SimpleCanvasAnimationParams>()
+    protected getIncludedAnimationParamsByParameter (object: MatrixParamsType): Map<string, CanvasAnimationParamsType> {
+        const result = new Map<string, CanvasAnimationParamsType>()
         const {
             title,
             values,
@@ -51,8 +51,9 @@ export default class MatrixCanvasAnimationParams extends ComplexCanvasAnimationP
         }
 
         if (title) {
-            result.set('title', new TextCanvasAnimationParams({
-                object: {
+            result.set('title', {
+                type: "text",
+                objectParams: {
                     origin: addPoints(origin, {
                         x: matrixWidth / 2,
                         y: rowGap + valueHeight / 2
@@ -62,7 +63,7 @@ export default class MatrixCanvasAnimationParams extends ComplexCanvasAnimationP
                     verticalAlign: 'center',
                     fontSize
                 }
-            }, this.getAnimationStyle()))
+            })
         }
         for (let i = 0; i < values.length; i++) {
             const row = values[i]

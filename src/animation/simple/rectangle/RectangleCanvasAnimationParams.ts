@@ -34,9 +34,16 @@ export default class RectangleCanvasAnimationParams extends SimpleCanvasAnimatio
 
     getZeroParams (): Omit<RectangleParamsType, keyof ObjectParams> {
         return {
-            width: this.getObject().width,
-            height: this.getObject().height,
+            width: 0,
+            height: 0,
         }
+    }
+
+    protected getZeroObjectOrigin(): Point {
+        return addPoints(this.getObject().origin, {
+            x: this.getObject().width / 2,
+            y: this.getObject().height / 2
+        });
     }
 
 }

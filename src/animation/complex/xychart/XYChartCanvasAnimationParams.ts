@@ -1,13 +1,10 @@
 import { Point } from '../../../common/Point'
 import { addPoints } from '../../../common/Utils'
 import { ObjectParams } from '../../CanvasAnimationParams'
-import ComplexCanvasAnimationParams, { AnimationSelectedInfo } from '../ComplexCanvasAnimationParams'
+import ComplexCanvasAnimationParams, {
+    CanvasAnimationParamsType
+} from '../ComplexCanvasAnimationParams'
 import ArrowCanvasAnimationParams from '../arrow/ArrowCanvasAnimationParams'
-import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
-import LineCanvasAnimationParams from '../../simple/line/LineCanvasAnimationParams'
-import CircleCanvasAnimationParams from '../../simple/circle/CircleCanvasAnimationParams'
-import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
-import RectangleCanvasAnimationParams from '../../simple/rectangle/RectangleCanvasAnimationParams'
 import { ColorType } from '../../../AnimationStyles'
 
 const coordinateDashWidth = 20
@@ -99,8 +96,8 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         }
     }
 
-    protected getIncludedAnimationParamsByParameter (object: XyChartParamsType): Map<string, SimpleCanvasAnimationParams> {
-        const result = new Map<string, SimpleCanvasAnimationParams>()
+    protected getIncludedAnimationParamsByParameter (object: XyChartParamsType): Map<string, CanvasAnimationParamsType> {
+        const result = new Map<string, CanvasAnimationParamsType>()
         const {
             height,
             width
@@ -135,8 +132,9 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                 fillColor = 'background'
             }
 
-            result.set(`chartBar ${index}`, new RectangleCanvasAnimationParams({
-                object: {
+            result.set(`chartBar ${index}`, {
+                type: "rectangle",
+                objectParams: {
                     origin: {
                         x: x - width / 2,
                         y
@@ -146,7 +144,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     fillColor,
                     zIndex: value.zIndex ?? 1
                 }
-            }, this.getAnimationStyle()))
+            })
             if (value.pointer) {
                 new ArrowCanvasAnimationParams({
                     object: {
@@ -177,17 +175,19 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                 textPosition = 'above'
             }
             const pointCoordinate = this.convertPointToCoordinate(object, curPoint)
-            result.set(`chartPoint ${index}`, new CircleCanvasAnimationParams({
-                object: {
+            result.set(`chartPoint ${index}`, {
+                type: "circle",
+                objectParams: {
                     origin: pointCoordinate,
                     diameter: chartPointsDiameter,
                     weight: 2,
                     zIndex: 2,
                     rotations
                 }
-            }, this.getAnimationStyle()))
-            result.set(`chartPointValue ${index}`, new TextCanvasAnimationParams({
-                object: {
+            })
+            result.set(`chartPointValue ${index}`, {
+                type: "text",
+                objectParams: {
                     origin: {
                         x: pointCoordinate.x,
                         y: pointCoordinate.y + (textPosition === 'below' ? 10 : -10)
@@ -198,16 +198,17 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     fontSize: 15,
                     rotations
                 }
-            }, this.getAnimationStyle()))
+            })
         })
-        objChartLines.forEach((line, index) => result.set(`chartLine ${index}`, new LineCanvasAnimationParams({
-            object: {
+        objChartLines.forEach((line, index) => result.set(`chartLine ${index}`, {
+            type: "line",
+            objectParams: {
                 origin: this.convertPointToCoordinate(object, line[0]),
                 endPoint: this.convertPointToCoordinate(object, line[1]),
                 weight: 3,
                 rotations
             }
-        }, this.getAnimationStyle())))
+        }))
 
         this.getChartYRangeParams(object).forEach((v, k) => result.set(k, v))
         this.getChartXRangeParams(object).forEach((v, k) => result.set(k, v))
@@ -224,21 +225,22 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             }
             const width = Math.abs(x0 - x1)
             const height = Math.abs(y0 - y1)
-            result.set(`backgroundSelectedRectangleArea ${index}`, new RectangleCanvasAnimationParams({
-                object: {
+            result.set(`backgroundSelectedRectangleArea ${index}`, {
+                type: "rectangle",
+                objectParams: {
                     origin: leftUpCornerPoint,
                     width,
                     height,
                     fillColor: value.color,
                     zIndex: value.zIndex ?? -1
                 }
-            }, this.getAnimationStyle()))
+            })
         })
         return result
     }
 
-    private getXCoordinateAxisParams (object: XyChartParamsType): Map<string, SimpleCanvasAnimationParams> {
-        const result = new Map<string, SimpleCanvasAnimationParams>()
+    private getXCoordinateAxisParams (object: XyChartParamsType): Map<string, CanvasAnimationParamsType> {
+        const result = new Map<string, CanvasAnimationParamsType>()
         const {
             width,
             origin
@@ -264,8 +266,9 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             })
         }
 
-        result.set('xText', new TextCanvasAnimationParams({
-            object: {
+        result.set('xText', {
+            type: "text",
+            objectParams: {
                 origin: addPoints(origin, {
                     x: width / 2,
                     y: coordinateDashWidth * 2
@@ -276,12 +279,13 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                 verticalAlign: 'top',
                 rotations
             }
-        }, this.getAnimationStyle()))
+        })
         xScale.forEach((value, index) => {
             const x = this.getXForValue(object, value.position)
             if (!object.hideXAxis) {
-                result.set(`xScaleLine ${index}`, new LineCanvasAnimationParams({
-                    object: {
+                result.set(`xScaleLine ${index}`, {
+                    type: "line",
+                    objectParams: {
                         origin: {
                             x,
                             y: -coordinateDashWidth / 2 + origin.y
@@ -293,10 +297,11 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                         zIndex: -1,
                         rotations
                     }
-                }, this.getAnimationStyle()))
+                })
             }
-            result.set(`xScaleValue ${index}`, new TextCanvasAnimationParams({
-                object: {
+            result.set(`xScaleValue ${index}`, {
+                type: "text",
+                objectParams: {
                     origin: {
                         x,
                         y: Number(coordinateDashWidth) + origin.y
@@ -306,14 +311,14 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     horizontalAlign: 'center',
                     rotations
                 }
-            }, this.getAnimationStyle()))
+            })
         })
 
         return result
     }
 
-    private getYCoordinateAxisParams (object: XyChartParamsType): Map<string, SimpleCanvasAnimationParams> {
-        const result = new Map<string, SimpleCanvasAnimationParams>()
+    private getYCoordinateAxisParams (object: XyChartParamsType): Map<string, CanvasAnimationParamsType> {
+        const result = new Map<string, CanvasAnimationParamsType>()
         const {
             height,
             origin
@@ -343,8 +348,9 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             x: -coordinateDashWidth * 2,
             y: -height / 2
         })
-        result.set('yText', new TextCanvasAnimationParams({
-            object: {
+        result.set('yText', {
+            type: "text",
+            objectParams: {
                 origin: yTextOrigin,
                 value: yAxisName,
                 fontSize: 20,
@@ -355,13 +361,14 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     angle: -Math.PI / 2
                 }]
             }
-        }, this.getAnimationStyle()))
+        })
 
         yScale.forEach((value, index) => {
             const y = this.getYForValue(object, value.position)
             if (!object.hideYAxis) {
-                result.set(`yScaleLine ${index}`, new LineCanvasAnimationParams({
-                    object: {
+                result.set(`yScaleLine ${index}`, {
+                    type: "line",
+                    objectParams: {
                         origin: {
                             x: -coordinateDashWidth / 2 + origin.x,
                             y
@@ -373,10 +380,11 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                         zIndex: -1,
                         rotations
                     }
-                }, this.getAnimationStyle()))
+                })
             }
-            result.set(`yScaleValue ${index}`, new TextCanvasAnimationParams({
-                object: {
+            result.set(`yScaleValue ${index}`, {
+                type: "text",
+                objectParams: {
                     origin: {
                         x: -Number(coordinateDashWidth) + origin.x,
                         y
@@ -386,13 +394,13 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     horizontalAlign: 'center',
                     rotations
                 }
-            }, this.getAnimationStyle()))
+            })
         })
         return result
     }
 
-    private getChartYRangeParams (object: XyChartParamsType): Map<string, SimpleCanvasAnimationParams> {
-        const result = new Map<string, SimpleCanvasAnimationParams>()
+    private getChartYRangeParams (object: XyChartParamsType): Map<string, CanvasAnimationParamsType> {
+        const result = new Map<string, CanvasAnimationParamsType>()
         const {
             width,
             origin
@@ -407,8 +415,9 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             const firstPointY = this.getYForValue(object, objChartRange.coords[0])
             const secondPointY = this.getYForValue(object, objChartRange.coords[1])
             const endXCoord = width + index * 20 + origin.x + 60
-            result.set(`objectChartYRangeFirstLine ${index}`, new LineCanvasAnimationParams({
-                object: {
+            result.set(`objectChartYRangeFirstLine ${index}`, {
+                type: "line",
+                objectParams: {
                     origin: {
                         x: origin.x,
                         y: firstPointY
@@ -420,9 +429,10 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     dashed: [5, 10, 30, 10],
                     rotations
                 }
-            }, this.getAnimationStyle()))
-            result.set(`objectChartYRangeSecondLine ${index}`, new LineCanvasAnimationParams({
-                object: {
+            })
+            result.set(`objectChartYRangeSecondLine ${index}`, {
+                type: "line",
+                objectParams: {
                     origin: {
                         x: origin.x,
                         y: secondPointY
@@ -434,7 +444,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     dashed: [5, 10, 30, 10],
                     rotations
                 }
-            }, this.getAnimationStyle()))
+            })
             new ArrowCanvasAnimationParams(
                 {
                     object: {
@@ -458,8 +468,9 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                 x: endXCoord,
                 y: (firstPointY + secondPointY) / 2
             }
-            result.set(`objectChartYRangeValue ${index}`, new TextCanvasAnimationParams({
-                object: {
+            result.set(`objectChartYRangeValue ${index}`, {
+                type: "text",
+                objectParams: {
                     origin: objChartRangeValueOrigin,
                     value: objChartRange.value,
                     horizontalAlign: 'center',
@@ -469,14 +480,14 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                         angle: -Math.PI / 2
                     }]
                 }
-            }, this.getAnimationStyle()))
+            })
         })
 
         return result
     }
 
-    private getChartXRangeParams (object: XyChartParamsType): Map<string, SimpleCanvasAnimationParams> {
-        const result = new Map<string, SimpleCanvasAnimationParams>()
+    private getChartXRangeParams (object: XyChartParamsType): Map<string, CanvasAnimationParamsType> {
+        const result = new Map<string, CanvasAnimationParamsType>()
         const { origin } = object
         const rotations = object.rotations ?? []
         let objChartXRanges: ChartRangeType[] = []
@@ -488,8 +499,9 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             const firstPointX = this.getXForValue(object, objChartRange.coords[0])
             const secondPointX = this.getXForValue(object, objChartRange.coords[1])
             const startYCoord = index * 20 + origin.y + 60
-            result.set(`objectChartXRangeFirstLine ${index}`, new LineCanvasAnimationParams({
-                object: {
+            result.set(`objectChartXRangeFirstLine ${index}`, {
+                type: "line",
+                objectParams: {
                     origin: {
                         x: firstPointX,
                         y: origin.y
@@ -501,9 +513,10 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     dashed: [5, 10, 30, 10],
                     rotations
                 }
-            }, this.getAnimationStyle()))
-            result.set(`objectChartXRangeSecondLine ${index}`, new LineCanvasAnimationParams({
-                object: {
+            })
+            result.set(`objectChartXRangeSecondLine ${index}`, {
+                type: "line",
+                objectParams: {
                     origin: {
                         x: secondPointX,
                         y: origin.y
@@ -515,7 +528,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     dashed: [5, 10, 30, 10],
                     rotations
                 }
-            }, this.getAnimationStyle()))
+            })
             new ArrowCanvasAnimationParams(
                 {
                     object: {
@@ -539,15 +552,16 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                 x: (firstPointX + secondPointX) / 2,
                 y: startYCoord
             }
-            result.set(`objectChartXRangeValue ${index}`, new TextCanvasAnimationParams({
-                object: {
+            result.set(`objectChartXRangeValue ${index}`, {
+                type: "text",
+                objectParams: {
                     origin: objChartRangeValueOrigin,
                     value: objChartRange.value,
                     horizontalAlign: 'center',
                     fontSize: 20,
                     rotations
                 }
-            }, this.getAnimationStyle()))
+            })
         })
 
         return result

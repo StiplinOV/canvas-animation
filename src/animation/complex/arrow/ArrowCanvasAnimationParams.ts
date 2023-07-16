@@ -7,17 +7,14 @@ import {
     subtractPoints
 } from '../../../common/Utils'
 import { ObjectParams } from '../../CanvasAnimationParams'
-import ComplexCanvasAnimationParams from '../ComplexCanvasAnimationParams'
-import LineCanvasAnimationParams, {
+import ComplexCanvasAnimationParams, {CanvasAnimationParamsType} from '../ComplexCanvasAnimationParams'
+import {
     LineParamsType,
     OnlyLineParamsType
 } from '../../simple/line/LineCanvasAnimationParams'
-import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
 import { Point, ZeroPoint } from '../../../common/Point'
 import { HORIZ_ALIGN, THE_STYLE, VERT_ALIGN } from 'p5'
 import { ColorType, WebSafeFontsType } from '../../../AnimationStyles'
-import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
-import BezierCanvasAnimationParams from '../../simple/bezier/BezierCanvasAnimationParams'
 
 const arrowBaseLength = 10
 const arrowBaseWidth = 10
@@ -50,13 +47,13 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
         }
     }
 
-    protected getIncludedAnimationParamsByParameter (object: ArrowParamsType): Map<string, SimpleCanvasAnimationParams> {
-        const result = new Map<string, SimpleCanvasAnimationParams>()
+    protected getIncludedAnimationParamsByParameter (object: ArrowParamsType): Map<string, CanvasAnimationParamsType> {
+        const result = new Map<string, CanvasAnimationParamsType>()
         const { bezierParams } = object
-        let leftHalfArrowHeadParams: SimpleCanvasAnimationParams | null = null
-        let rightHalfArrowHeadParams: SimpleCanvasAnimationParams | null = null
-        let leftHalfArrowTailParams: SimpleCanvasAnimationParams | null = null
-        let rightHalfArrowTailParams: SimpleCanvasAnimationParams | null = null
+        let leftHalfArrowHeadParams: CanvasAnimationParamsType | null = null
+        let rightHalfArrowHeadParams: CanvasAnimationParamsType | null = null
+        let leftHalfArrowTailParams: CanvasAnimationParamsType | null = null
+        let rightHalfArrowTailParams: CanvasAnimationParamsType | null = null
         const shaftParams = this.createShaftArrowParams(object)
         const arrowHeadLineParams: Partial<LineParamsType> = {
             weight: object.weight,
@@ -68,39 +65,43 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
             const startPoint = bezierParams?.point3 ?? object.origin
             const endPoint = object.endPoint
             const [left, right] = this.createArrowHeadLinePoints(startPoint, endPoint)
-            leftHalfArrowHeadParams = new LineCanvasAnimationParams({
-                object: {
+            leftHalfArrowHeadParams = {
+                type: "line",
+                objectParams: {
                     ...arrowHeadLineParams,
                     origin: object.endPoint,
                     endPoint: left
                 }
-            }, this.getAnimationStyle())
-            rightHalfArrowHeadParams = new LineCanvasAnimationParams({
-                object: {
+            }
+            rightHalfArrowHeadParams = {
+                type: "line",
+                objectParams: {
                     ...arrowHeadLineParams,
                     origin: object.endPoint,
                     endPoint: right
                 }
-            }, this.getAnimationStyle())
+            }
         }
         if (object.startType === 'Arrow') {
             const startPoint = bezierParams?.point2 ?? object.endPoint
             const endPoint = object.origin
             const [left, right] = this.createArrowHeadLinePoints(startPoint, endPoint)
-            leftHalfArrowTailParams = new LineCanvasAnimationParams({
-                object: {
+            leftHalfArrowTailParams = {
+                type: "line",
+                objectParams: {
                     ...arrowHeadLineParams,
                     origin: object.origin,
                     endPoint: left
                 }
-            }, this.getAnimationStyle())
-            rightHalfArrowTailParams = new LineCanvasAnimationParams({
-                object: {
+            }
+            rightHalfArrowTailParams = {
+                type: "line",
+                objectParams: {
                     ...arrowHeadLineParams,
                     origin: object.origin,
                     endPoint: right
                 }
-            }, this.getAnimationStyle())
+            }
         }
         result.set('shaft', shaftParams)
         leftHalfArrowHeadParams && result.set('left half arrow head', leftHalfArrowHeadParams)
@@ -110,8 +111,9 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
 
         if (object.label) {
             const [horizontalAlign, verticalAlign] = this.calculateTextAlign(object)
-            result.set('label', new TextCanvasAnimationParams({
-                object: {
+            result.set('label', {
+                type: "text",
+                objectParams: {
                     origin: this.calculateLabelPosition(object),
                     fillColor: object.label.fillColor,
                     fontSize: object.label.fontSize,
@@ -121,13 +123,13 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
                     verticalAlign,
                     value: object.label.value
                 }
-            }, this.getAnimationStyle()))
+            })
         }
 
         return result
     }
 
-    private createShaftArrowParams (object: ArrowParamsType): SimpleCanvasAnimationParams {
+    private createShaftArrowParams (object: ArrowParamsType): CanvasAnimationParamsType {
         const objectParams: Partial<ObjectParams> = {
             weight: object.weight,
             zIndex: object.zIndex,
@@ -136,8 +138,9 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
             dashed: object.dashed
         }
         if (object.bezierParams) {
-            return new BezierCanvasAnimationParams({
-                object: {
+            return {
+                type: "bezier",
+                objectParams: {
                     ...objectParams,
                     origin: object.origin,
                     originRelativePoints: [
@@ -147,15 +150,16 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
                         subtractPoints(object.endPoint, object.origin)
                     ]
                 }
-            }, this.getAnimationStyle())
+            }
         }
-        return new LineCanvasAnimationParams({
-            object: {
+        return {
+            type: "line",
+            objectParams: {
                 ...objectParams,
                 origin: object.origin,
                 endPoint: object.endPoint
             }
-        }, this.getAnimationStyle())
+        }
     }
 
     private createArrowHeadLinePoints (tail: Point, head: Point): [Point, Point] {

@@ -1,10 +1,7 @@
 import { ObjectParams } from '../../CanvasAnimationParams'
 import { addPoints } from '../../../common/Utils'
-import ComplexCanvasAnimationParams from '../ComplexCanvasAnimationParams'
-import RectangleCanvasAnimationParams from '../../simple/rectangle/RectangleCanvasAnimationParams'
-import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
+import ComplexCanvasAnimationParams, {CanvasAnimationParamsType} from '../ComplexCanvasAnimationParams'
 import { ColorType } from '../../../AnimationStyles'
-import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
 import { THE_STYLE } from 'p5'
 
 export type ElementStyle = {
@@ -35,8 +32,8 @@ export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElem
         }
     }
 
-    protected getIncludedAnimationParamsByParameter (object: ArrayElementParamsType): Map<string, SimpleCanvasAnimationParams> {
-        const result = new Map<string, SimpleCanvasAnimationParams>()
+    protected getIncludedAnimationParamsByParameter (object: ArrayElementParamsType): Map<string, CanvasAnimationParamsType> {
+        const result = new Map<string, CanvasAnimationParamsType>()
         const {
             origin,
             height,
@@ -66,17 +63,19 @@ export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElem
                 ...value.style
             }
         }
-        result.set('square', new RectangleCanvasAnimationParams({
-            object: {
+        result.set('square', {
+            type: "rectangle",
+            objectParams: {
                 origin,
                 width,
                 height,
                 fillColor: style.backgroundColor,
                 strokeColor: style.strokeColor
             }
-        }, this.getAnimationStyle()))
-        label && result.set('label', new TextCanvasAnimationParams({
-            object: {
+        })
+        label && result.set('label', {
+            type: "text",
+            objectParams: {
                 origin: addPoints(origin, {
                     x: width / 2,
                     y: height / 2
@@ -88,7 +87,7 @@ export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElem
                 textStyle: style.textStyle,
                 value: label
             }
-        }, this.getAnimationStyle()))
+        })
 
         return result
     }

@@ -1,9 +1,6 @@
 import dagre from 'dagre'
 import { ObjectParams } from '../../../CanvasAnimationParams'
-import ComplexCanvasAnimationParams from '../../ComplexCanvasAnimationParams'
-import SimpleCanvasAnimationParams from '../../../simple/SimpleCanvasAnimationParams'
-import CircleCanvasAnimationParams from '../../../simple/circle/CircleCanvasAnimationParams'
-import TextCanvasAnimationParams from '../../../simple/text/TextCanvasAnimationParams'
+import ComplexCanvasAnimationParams, {CanvasAnimationParamsType} from '../../ComplexCanvasAnimationParams'
 import { addPoints, getVectorAngle, mergeValueToMap, requireValueFromMap, swapPointXY } from '../../../../common/Utils'
 import { THE_STYLE } from 'p5'
 import AnimationStyle, { ColorType, WebSafeFontsType } from '../../../../AnimationStyles'
@@ -66,14 +63,14 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
         }
     }
 
-    protected getIncludedAnimationParamsByParameter (object: GraphDataStructureParamsType): Map<string, SimpleCanvasAnimationParams> {
+    protected getIncludedAnimationParamsByParameter (object: GraphDataStructureParamsType): Map<string, CanvasAnimationParamsType> {
         const {
             vertexStyle,
             edgeStyle,
             origin
         } = object
         const animationStyle = this.getAnimationStyle()
-        const result = new Map<string, SimpleCanvasAnimationParams>()
+        const result = new Map<string, CanvasAnimationParamsType>()
         const vertexEdgeAnglesMap = new Map<string, Set<number>>()
         const vertexIdMap = this.createVertexIdMap(object)
         const edgeIdMap = this.createEdgeIdMap(object)
@@ -111,8 +108,9 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
                 const vertex = requireValueFromMap(vertexIdMap, id)
                 const style = this.calculateVertexStyle(animationStyle, vertexStyle, vertex.style)
 
-                result.set(`vertexCircle ${id}`, new CircleCanvasAnimationParams({
-                    object: {
+                result.set(`vertexCircle ${id}`, {
+                    type: "circle",
+                    objectParams: {
                         origin: addPoints(origin, offset, {
                             x: dagreNode.x,
                             y: dagreNode.y
@@ -121,9 +119,10 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
                         strokeColor: style.strokeColor,
                         fillColor: style.fillColor
                     }
-                }, this.getAnimationStyle()))
-                vertex.label && result.set(`vertexValue ${id}`, new TextCanvasAnimationParams({
-                    object: {
+                })
+                vertex.label && result.set(`vertexValue ${id}`, {
+                    type: "text",
+                    objectParams: {
                         origin: addPoints(origin, offset, {
                             x: dagreNode.x,
                             y: dagreNode.y
@@ -136,7 +135,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
                         textStyle: style.textStyle,
                         fillColor: style.fontColor
                     }
-                }, this.getAnimationStyle()))
+                })
             })
             dagreGraph.edges().forEach((e) => {
                 let vNode: Point = dagreGraph.node(e.v)

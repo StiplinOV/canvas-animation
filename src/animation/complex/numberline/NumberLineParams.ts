@@ -1,10 +1,7 @@
 import { ObjectParams } from '../../CanvasAnimationParams'
-import ComplexCanvasAnimationParams from '../ComplexCanvasAnimationParams'
-import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
+import ComplexCanvasAnimationParams, {CanvasAnimationParamsType} from '../ComplexCanvasAnimationParams'
 import ArrowCanvasAnimationParams from '../arrow/ArrowCanvasAnimationParams'
 import { addPoints } from '../../../common/Utils'
-import LineCanvasAnimationParams from '../../simple/line/LineCanvasAnimationParams'
-import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
 
 const coordinateDashWidth = 20
 
@@ -34,8 +31,8 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
         }
     }
 
-    protected getIncludedAnimationParamsByParameter (object: NumberLineParamsType): Map<string, SimpleCanvasAnimationParams> {
-        const result = new Map<string, SimpleCanvasAnimationParams>()
+    protected getIncludedAnimationParamsByParameter (object: NumberLineParamsType): Map<string, CanvasAnimationParamsType> {
+        const result = new Map<string, CanvasAnimationParamsType>()
         const {
             origin,
             width
@@ -76,8 +73,9 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
         if (length) {
             scale.forEach(value => {
                 const valX = getLineX(value)
-                result.set(`scale ${value}`, new LineCanvasAnimationParams({
-                    object: {
+                result.set(`scale ${value}`, {
+                    type: "line",
+                    objectParams: {
                         origin: addPoints(origin, {
                             x: valX,
                             y: coordinateDashWidth / 2
@@ -87,9 +85,10 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
                             y: -coordinateDashWidth / 2
                         })
                     }
-                }, this.getAnimationStyle()))
-                result.set(`scale value ${value}`, new TextCanvasAnimationParams({
-                    object: {
+                })
+                result.set(`scale value ${value}`, {
+                    type: "text",
+                    objectParams: {
                         origin: addPoints(origin, {
                             x: valX,
                             y: Number(coordinateDashWidth)
@@ -99,7 +98,7 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
                         verticalAlign: 'top',
                         fontSize
                     }
-                }, this.getAnimationStyle()))
+                })
             })
         }
         const maxLayer = ranges.reduce((l, r) => Math.max(l, r.layer), 0)
@@ -139,8 +138,9 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
                 const x = getLineX(c)
                 const rangeYCoord = Math.min(rangeYCoordsMap.get(rangeKey) ?? 0, layerLineY - coordinateDashWidth / 2)
                 rangeYCoordsMap.set(rangeKey, rangeYCoord)
-                result.set(rangeKey, new LineCanvasAnimationParams({
-                    object: {
+                result.set(rangeKey, {
+                    type: "line",
+                    objectParams: {
                         origin: addPoints(origin, {
                             x,
                             y: rangeYCoord
@@ -151,7 +151,7 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
                         }),
                         dashed
                     }
-                }, this.getAnimationStyle()))
+                })
             })
         })
 

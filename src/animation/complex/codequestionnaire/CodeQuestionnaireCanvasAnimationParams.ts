@@ -1,7 +1,6 @@
 import {ObjectParams, SelectionType} from '../../CanvasAnimationParams'
-import ComplexCanvasAnimationParams from '../ComplexCanvasAnimationParams'
-import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
-import HighlightedTextCanvasAnimationParams, {
+import ComplexCanvasAnimationParams, {CanvasAnimationParamsType} from '../ComplexCanvasAnimationParams'
+import {
     HighlightedStyleName,
     HighlightedTextValueSegmentType,
     languageDefs
@@ -14,8 +13,6 @@ import {
     calculateTextPercentValue
 } from '../../../common/Utils'
 import {animationStyle} from "../../../Animations";
-import TextCanvasAnimationParams from "../../simple/text/TextCanvasAnimationParams";
-import RectangleCanvasAnimationParams from "../../simple/rectangle/RectangleCanvasAnimationParams";
 import { Point } from '../../../common/Point'
 
 export interface CodeQuestionnaireParamsType extends ObjectParams {
@@ -53,11 +50,12 @@ export interface CodeQuestionnaireCanvasAnimationSelection {
 
 export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanvasAnimationParams<CodeQuestionnaireParamsType, CodeQuestionnaireCanvasAnimationSelection> {
 
-    protected getIncludedAnimationParamsByParameter(object: CodeQuestionnaireParamsType): Map<string, SimpleCanvasAnimationParams> {
-        const result = new Map<string, SimpleCanvasAnimationParams>()
+    protected getIncludedAnimationParamsByParameter(object: CodeQuestionnaireParamsType): Map<string, CanvasAnimationParamsType> {
+        const result = new Map<string, CanvasAnimationParamsType>()
         if (object.title) {
-            result.set("titleText", new TextCanvasAnimationParams({
-                object: {
+            result.set("titleText", {
+                type: "text",
+                objectParams: {
                     boxWidth: object.width,
                     boxHeight: this.getTitleHeight(object),
                     horizontalAlign: "center",
@@ -67,18 +65,22 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
                     fontSize: object.titleFontSize ?? 30,
                     zIndex: 1
                 }
-            }, this.getAnimationStyle()))
-            result.set("titleRect", new RectangleCanvasAnimationParams({
-                object: {
+            })
+            result.set("titleRect", {
+                type: "rectangle",
+                appearType: "immediate",
+                disappearType: "immediateAtTheEnd",
+                objectParams: {
                     origin: object.origin,
                     width: object.width,
                     height: this.getTitleHeight(object),
                     fillColor: animationStyle.primaryColor
                 }
-            },this.getAnimationStyle()))
+            })
         }
-        result.set("codePart", new HighlightedTextCanvasAnimationParams({
-            object: {
+        result.set("codePart", {
+            type: "highlightedText",
+            objectParams: {
                 origin: this.getCodePartOrigin(object),
                 value: {
                     text: object.codeText,
@@ -91,7 +93,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
                 height: this.getCodePartHeight(object),
                 zIndex: 0
             }
-        }, this.getAnimationStyle()))
+        })
         if (object.questionParamsOptions && object.questionParamsOptions.length > 0) {
             const value: HighlightedTextValueSegmentType[] = object.questionParamsOptions.flatMap(o => ([{
                 textStyle: "normal",
@@ -119,8 +121,9 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
                 }
                 curSubstringPosition += valueSegment.value.length
             }
-            result.set("questionPart", new HighlightedTextCanvasAnimationParams({
-                object: {
+            result.set("questionPart", {
+                type: "highlightedText",
+                objectParams: {
                     origin: this.getQuestionPartOrigin(object),
                     fontSize: object.questionParamsFontSize ?? 20,
                     value: value,
@@ -129,7 +132,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
                     height: this.getQuestionPartHeight(object),
                     selectedSubstrings: selectedSubstrings
                 }
-            }, this.getAnimationStyle()))
+            })
         }
         return result
     }
