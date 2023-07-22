@@ -3,7 +3,7 @@ import {ObjectParams} from '../../CanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import RectangleCanvasAnimation from './RectangleCanvasAnimation'
-import {Point} from "../../../common/Point";
+import {Point} from '../../../common/Point'
 
 interface onlyRectangleParamsType {
     width: number
@@ -32,10 +32,10 @@ export default class RectangleCanvasAnimationParams extends SimpleCanvasAnimatio
         return new RectangleCanvasAnimation(this, animationStyle)
     }
 
-    getZeroParams (): Omit<RectangleParamsType, keyof ObjectParams> {
+    getZeroParams(): Omit<RectangleParamsType, keyof ObjectParams> {
         return {
             width: 0,
-            height: 0,
+            height: 0
         }
     }
 
@@ -43,7 +43,7 @@ export default class RectangleCanvasAnimationParams extends SimpleCanvasAnimatio
         return addPoints(this.getObject().origin, {
             x: this.getObject().width / 2,
             y: this.getObject().height / 2
-        });
+        })
     }
 
 }

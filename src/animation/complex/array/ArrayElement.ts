@@ -27,7 +27,7 @@ export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElem
 
     protected getZeroParams (): Omit<ArrayElementParamsType, keyof ObjectParams> {
         return {
-            value: "",
+            value: '',
             height: 0
         }
     }
@@ -64,7 +64,7 @@ export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElem
             }
         }
         result.set('square', {
-            type: "rectangle",
+            type: 'rectangle',
             objectParams: {
                 origin,
                 width,
@@ -74,7 +74,7 @@ export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElem
             }
         })
         label && result.set('label', {
-            type: "text",
+            type: 'text',
             objectParams: {
                 origin: addPoints(origin, {
                     x: width / 2,

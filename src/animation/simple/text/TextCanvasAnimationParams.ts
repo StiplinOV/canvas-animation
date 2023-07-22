@@ -1,6 +1,6 @@
-import {HORIZ_ALIGN, VERT_ALIGN, THE_STYLE} from 'p5'
+import {HORIZ_ALIGN, THE_STYLE, VERT_ALIGN} from 'p5'
 import {calculatePercentValue, calculateTextPercentValue} from '../../../common/Utils'
-import { ObjectParams, SelectionType } from '../../CanvasAnimationParams'
+import {ObjectParams} from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle, {WebSafeFontsType} from '../../../AnimationStyles'
 import TextCanvasAnimation from './TextCanvasAnimation'
@@ -40,9 +40,9 @@ export default class TextCanvasAnimationParams extends SimpleCanvasAnimationPara
         return new TextCanvasAnimation(this, animationStyle)
     }
 
-    getZeroParams ():  Omit<TextParamsType, keyof ObjectParams> {
+    getZeroParams(): Omit<TextParamsType, keyof ObjectParams> {
         return {
-            value: "",
+            value: ''
         }
     }
 

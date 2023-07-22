@@ -52,7 +52,7 @@ export default class MatrixCanvasAnimationParams extends ComplexCanvasAnimationP
 
         if (title) {
             result.set('title', {
-                type: "text",
+                type: 'text',
                 objectParams: {
                     origin: addPoints(origin, {
                         x: matrixWidth / 2,

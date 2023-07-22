@@ -4,14 +4,14 @@ import AnimationStyle from '../../AnimationStyles'
 import SimpleCanvasAnimationParams from '../simple/SimpleCanvasAnimationParams'
 import {PresenceParamType, requireValueFromMap} from '../../common/Utils'
 import CanvasAnimation from '../CanvasAnimation'
-import {TextParamsType} from "../simple/text/TextCanvasAnimationParams";
-import {RectangleParamsType} from "../simple/rectangle/RectangleCanvasAnimationParams";
-import {CircleParamsType} from "../simple/circle/CircleCanvasAnimationParams";
-import {EllipseParamsType} from "../simple/ellipse/EllipseCanvasAnimationParams";
-import {BezierParamsType} from "../simple/bezier/BezierCanvasAnimationParams";
-import {HighlightedTextParamsType} from "../simple/highligtedtext/HighlightedTextCanvasAnimationParams";
-import {LineParamsType} from "../simple/line/LineCanvasAnimationParams";
-import {TypeToSimpleParamsConstructorMapping} from "../../Animations";
+import {TextParamsType} from '../simple/text/TextCanvasAnimationParams'
+import {RectangleParamsType} from '../simple/rectangle/RectangleCanvasAnimationParams'
+import {CircleParamsType} from '../simple/circle/CircleCanvasAnimationParams'
+import {EllipseParamsType} from '../simple/ellipse/EllipseCanvasAnimationParams'
+import {BezierParamsType} from '../simple/bezier/BezierCanvasAnimationParams'
+import {HighlightedTextParamsType} from '../simple/highligtedtext/HighlightedTextCanvasAnimationParams'
+import {LineParamsType} from '../simple/line/LineCanvasAnimationParams'
+import {TypeToSimpleParamsConstructorMapping} from '../../Animations'
 
 export interface AnimationSelectedInfo {
     key: string
@@ -42,8 +42,8 @@ export type TypeToObjectMapping = {
 }
 
 export type CanvasAnimationParamsType<T extends keyof TypeToObjectMapping = keyof TypeToObjectMapping> = {
-    appearType?: "immediate"
-    disappearType?: "immediate" | "immediateAtTheEnd"
+    appearType?: 'immediate'
+    disappearType?: 'immediate' | 'immediateAtTheEnd'
     type: T
     objectParams: TypeToObjectMapping[T]
 }
@@ -65,7 +65,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         }
         const initialObjectParams = objectParamsWithTime[0]
 
-        const result = new Map<string, SimpleCanvasAnimationParams>
+        const result = new Map<string, SimpleCanvasAnimationParams>()
         const includedAnimationParams = this.getIncludedAnimationParamsByParameter(initialObjectParams.objectParams)
         includedAnimationParams.forEach((params, key) => {
             const simpleParamsObject = this.createSimpleParamsObject(
@@ -73,25 +73,24 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
                 this.getPresenceParam().map(p => {
                     let disappearDuration = p.disappearDuration
                     let disappearTime = p.disappearTime
-                    if (params.disappearType === "immediate") {
+                    if (params.disappearType === 'immediate') {
                         disappearDuration = 0
                     }
-                    if (params.disappearType === "immediateAtTheEnd") {
+                    if (params.disappearType === 'immediateAtTheEnd') {
                         disappearTime = p.disappearTime + p.disappearDuration
                         disappearDuration = 0
                     }
                     return {
                         ...p,
-                        appearDuration: params.appearType === "immediate" ? 0 : p.appearDuration,
-                        disappearTime: disappearTime,
-                        disappearDuration: disappearDuration
+                        appearDuration: params.appearType === 'immediate' ? 0 : p.appearDuration,
+                        disappearTime,
+                        disappearDuration
                     }
                 })
             )
             result.set(key, simpleParamsObject)
         })
 
-        let previousObject = initialObjectParams.objectParams
         let prevObjectParams = includedAnimationParams
         for (let i = 1; i < objectParamsWithTime.length; i++) {
             const nextObject = objectParamsWithTime[i].objectParams
@@ -100,10 +99,10 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
 
             this.applySimpleTransformAnimations(result, objectParamsWithTime[i].time, objectParamsWithTime[i].duration, transformSimpleAnimationsDifference)
 
-            previousObject = nextObject
             prevObjectParams = nextObjectParams
         }
 
+        console.log(JSON.stringify(Array.from(result.values())))
         return Array.from(result.values())
     }
 
@@ -123,7 +122,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
             if (pastParams) {
                 pastParams.appendPresence({
                     appearTime: time,
-                    appearDuration: duration,
+                    appearDuration: duration
                 })
                 pastParams.appendTransformation({
                     appearTime: time,
@@ -131,11 +130,11 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
                     object: value.objectParams
                 })
             } else {
-                const simpleParamsObject =  this.createSimpleParamsObject(value)
+                const simpleParamsObject = this.createSimpleParamsObject(value)
 
                 simpleParamsObject.appendPresence({
                     appearTime: time,
-                    appearDuration: value.appearType === "immediate" ? 0 : duration,
+                    appearDuration: value.appearType === 'immediate' ? 0 : duration
                 })
                 animations.set(key, simpleParamsObject)
             }
@@ -145,10 +144,10 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
             const presenceParam = deletedAnimation.getPresenceParam()
             let disappearDuration = duration
             let disappearTime = time
-            if (value.disappearType === "immediate") {
+            if (value.disappearType === 'immediate') {
                 disappearDuration = 0
             }
-            if (value.disappearType === "immediateAtTheEnd") {
+            if (value.disappearType === 'immediateAtTheEnd') {
                 disappearTime = time + duration
                 disappearDuration = 0
             }

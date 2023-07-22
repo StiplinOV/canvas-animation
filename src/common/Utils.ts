@@ -166,17 +166,22 @@ export const calculateRotationsPercentValue = (from: rotationType[], to: rotatio
     return result
 }
 
-export const toPresenceParamType = (values?: Partial<PresenceParamType>[]): PresenceParamType[] => values ? values.map(v => ({
-    appearTime: v.appearTime ?? 0,
-    appearDuration: v.appearDuration ?? 0,
-    disappearTime: v.disappearTime ?? Number.POSITIVE_INFINITY,
-    disappearDuration: v.disappearDuration ?? 0
-})): []
+export const toPresenceParamType = (values?: Partial<PresenceParamType>[]): PresenceParamType[] => {
+    if (values) {
+        return values.map(v => ({
+            appearTime: v.appearTime ?? 0,
+            appearDuration: v.appearDuration ?? 0,
+            disappearTime: v.disappearTime ?? Number.POSITIVE_INFINITY,
+            disappearDuration: v.disappearDuration ?? 0
+        }))
+    }
+    return []
+}
 
 export const toPresenceParam = (time: number, presenceParams: PresenceParamType[], skipStartTime?: boolean): PresenceParamType | null => {
     for (let i = 0; i < presenceParams.length; i++) {
         const presenceParam = presenceParams[i]
-        if (((skipStartTime && time > presenceParam.appearTime) || time >= presenceParam.appearTime) && time < (presenceParam.disappearTime + presenceParam.disappearDuration)) {
+        if (((skipStartTime && time > presenceParam.appearTime) ?? time >= presenceParam.appearTime) && time < (presenceParam.disappearTime + presenceParam.disappearDuration)) {
             return presenceParam
         }
     }
@@ -184,6 +189,7 @@ export const toPresenceParam = (time: number, presenceParams: PresenceParamType[
 }
 
 export const needAppearObject = (time: number, presenceParams: PresenceParamType[], skipStartTime?: boolean): boolean => {
+    // console.log(time, presenceParams, skipStartTime, toPresenceParam(time, presenceParams, skipStartTime) !== null)
     return toPresenceParam(time, presenceParams, skipStartTime) !== null
 }
 

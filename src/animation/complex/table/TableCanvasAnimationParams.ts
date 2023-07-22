@@ -66,7 +66,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
 
                 if (i !== values.length - 1) {
                     result.set(`horizontal line ${i} ${j}`, {
-                        type: "line",
+                        type: 'line',
                         objectParams: {
                             origin: addPoints(origin, {
                                 x: accumulatedWidth,
@@ -84,7 +84,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                 accumulatedWidth += columnWidth
                 if (j < columnWidths.length - 1) {
                     result.set(`vertical line ${i} ${j}`, {
-                        type: "line",
+                        type: 'line',
                         objectParams: {
                             origin: addPoints(origin, {
                                 x: accumulatedWidth,
@@ -102,7 +102,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                 markedCells.forEach(markedCell => {
                     if (markedCell[0] === i && markedCell[1] === j) {
                         result.set(`markedCell ${i} ${j}`, {
-                            type: "ellipse",
+                            type: 'ellipse',
                             objectParams: {
                                 origin: addPoints(origin, {
                                     x: accumulatedWidth - columnWidth / 2,
@@ -119,7 +119,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                     }
                 })
                 result.set(title ? `title ${i} ${j}` : `value ${i} ${j}`, {
-                    type: "text",
+                    type: 'text',
                     objectParams: {
                         fontSize: object.fontSize,
                         origin: addPoints(origin, {

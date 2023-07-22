@@ -1,9 +1,7 @@
 import p5Types from 'p5'
 import AnimationStyle, { getFontColor } from '../../../AnimationStyles'
 import { TextParamsType } from './TextCanvasAnimationParams'
-import { calculateColorPercentValue, calculatePercentValue } from '../../../common/Utils'
 import CanvasAnimation from '../../CanvasAnimation'
-import { SelectionInfo } from '../SimpleCanvasAnimationParams'
 
 export default class TextCanvasAnimation extends CanvasAnimation<TextParamsType> {
 
@@ -17,7 +15,7 @@ export default class TextCanvasAnimation extends CanvasAnimation<TextParamsType>
             verticalAlign,
             textStyle
         } = o
-        let textSize = fontSize ?? style.fontSize
+        const textSize = fontSize ?? style.fontSize
 
         p5.strokeWeight(style.fontWeight)
         p5.stroke('#FFFFFF')

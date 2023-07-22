@@ -6,8 +6,8 @@ import {
     needAppearObject,
     PresenceParamType,
     rotationType,
-    toPresenceParamType,
-    toAppearancePercent
+    toAppearancePercent,
+    toPresenceParamType
 } from '../common/Utils'
 import {Point, ZeroPoint} from '../common/Point'
 import AnimationStyle, {ColorType, getFillColor, getStrokeColor} from '../AnimationStyles'
@@ -63,7 +63,7 @@ export interface SelectionType<T = unknown> {
 
 export type Transformation<T extends ObjectParams, U> = {
     object: Partial<T>
-    presence: PresenceParamType,
+    presence: PresenceParamType
     options?: U
 }
 
@@ -82,14 +82,14 @@ const transformationParamToTransformation = <T extends ObjectParams, U>(t: Trans
         appearTime: t.appearTime ?? 0,
         appearDuration: t.appearDuration ?? 0,
         disappearTime: t.disappearTime ?? Number.POSITIVE_INFINITY,
-        disappearDuration: t.disappearDuration ?? 0,
+        disappearDuration: t.disappearDuration ?? 0
     },
     options: t.options
 })
 
 export type ObjectParamsWithPresence<T extends ObjectParams> = {
     objectParams: T
-    time: number,
+    time: number
     duration: number
 }
 
@@ -123,9 +123,12 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
         this.checkPresenceParam()
     }
 
-    private checkPresenceParam() {
-        if (intervalContainsIntersections(this.presenceParam.map(p => ({start: p.appearTime, end: p.disappearTime + p.disappearDuration})))) {
-            throw new Error(`intervalContainsIntersections: ${this.presenceParam} ${this.object}`)
+    private checkPresenceParam(): void {
+        if (intervalContainsIntersections(this.presenceParam.map(p => ({
+            start: p.appearTime,
+            end: p.disappearTime + p.disappearDuration
+        })))) {
+            throw new Error(`intervalContainsIntersections: ${JSON.stringify(this.presenceParam)} ${JSON.stringify(this.object)}`)
         }
     }
 
@@ -137,11 +140,11 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
         this.presenceParam = presenceParam
     }
 
-    public appendPresence(presence: Partial<PresenceParamType>) {
+    public appendPresence(presence: Partial<PresenceParamType>): void {
         this.presenceParam.push(toPresenceParamType([presence])[0])
     }
 
-    public clearPresence() {
+    public clearPresence(): void {
         this.presenceParam = []
     }
 
@@ -161,7 +164,7 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
             const nextTime = points[i]
             const duration = nextTime - time
             let objectParams = this.calculateObjectParamsInTime(nextTime, true)
-            if (duration === 0 ) {
+            if (duration === 0) {
                 objectParams = this.calculateObjectParamsInTime(nextTime)
             }
             result.push({
@@ -173,7 +176,7 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
             time = nextTime
         }
 
-        return result.sort((l, r) => l.time == r.time ? l.duration - r.duration : l.time - r.time)
+        return result.sort((l, r) => l.time === r.time ? l.duration - r.duration : l.time - r.time)
     }
 
     public calculateObjectParamsInTime(time: number, skipStartTime?: boolean): T {
@@ -181,7 +184,7 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
         const sourceObject = this.getZeroObject()
         let result = {...sourceObject}
 
-        if (!needAppearObject(time, this.presenceParam,skipStartTime)) {
+        if (!needAppearObject(time, this.presenceParam, skipStartTime)) {
             return result
         }
 
@@ -258,8 +261,8 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
 
     public abstract mergeWithTransformation(obj: T, trans: Partial<T>, perc: number, animationStyle: AnimationStyle): Omit<T, keyof ObjectParams>
 
-
-    public getZIndex(time: number, animationStyle: AnimationStyle): number {//ХУ Е ТА
+    // ХУ Е ТА
+    public getZIndex(time: number, animationStyle: AnimationStyle): number {
         let result = this.object.zIndex ?? animationStyle.zIndex
         this.getTransformations()
             .filter(t => needAppearObject(time, [t.presence]))
@@ -283,7 +286,7 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
             ...this.getObject(),
             ...this.getZeroParams(),
             origin: this.getZeroObjectOrigin(),
-            zIndex: Number.MIN_VALUE,
+            zIndex: this.object.zIndex
         }
     }
 
@@ -303,7 +306,7 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
             ...this.calculateSelectionTransformations(),
             ...this.getPresenceParam().map(p => ({
                 object: this.getObject(),
-                presence: p,
+                presence: p
             })),
             ...this.getPresenceParam().map(p => ({
                 object: this.getZeroObject(),
@@ -311,9 +314,9 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
                     appearTime: p.disappearTime,
                     appearDuration: p.disappearDuration,
                     disappearTime: Number.POSITIVE_INFINITY,
-                    disappearDuration: 0,
+                    disappearDuration: 0
                 }
-            })),
+            }))
         ].sort((l, r) => {
             if (l.presence.appearTime === r.presence.appearTime) {
                 return l.presence.appearDuration - r.presence.appearDuration

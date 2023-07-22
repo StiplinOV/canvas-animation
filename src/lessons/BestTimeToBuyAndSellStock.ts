@@ -1,4 +1,4 @@
-import { LessonJsonType } from '../AnimationsJsonType'
+import {LessonJsonType} from '../AnimationsJsonType'
 
 export const BestTimeToBuyAndSellStock: LessonJsonType = {
     sound: require('./Lofi_Jazz_Cafe_Cozy_Evening.mp3'),
@@ -82,10 +82,15 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     verticalAlign: 'center',
                     fontSize: 65
                 },
-                presenceParameters: [{appearTime:0,appearDuration:2000}]
+                presenceParameters: [{appearTime: 0, appearDuration: 2000}]
             },
             {
-                presenceParameters: [{appearTime:30000,appearDuration:500,disappearTime:35000,disappearDuration:500}],
+                presenceParameters: [{
+                    appearTime: 30000,
+                    appearDuration: 500,
+                    disappearTime: 35000,
+                    disappearDuration: 500
+                }],
                 object: {
                     origin: {
                         x: 1050,
@@ -96,7 +101,12 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 }
             },
             {
-                presenceParameters: [{appearTime:32000,appearDuration:500,disappearTime:35000,disappearDuration:500}],
+                presenceParameters: [{
+                    appearTime: 32000,
+                    appearDuration: 500,
+                    disappearTime: 35000,
+                    disappearDuration: 500
+                }],
                 object: {
                     origin: {
                         x: 1050,
@@ -107,7 +117,12 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 }
             },
             {
-                presenceParameters: [{appearTime:35000,appearDuration:1000,disappearTime:46000,disappearDuration:1000}],
+                presenceParameters: [{
+                    appearTime: 35000,
+                    appearDuration: 1000,
+                    disappearTime: 46000,
+                    disappearDuration: 1000
+                }],
                 object: {
                     verticalAlign: 'top',
                     origin: {
@@ -156,7 +171,12 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     indexTitle: 'Number of day',
                     firstIndex: 1
                 },
-                presenceParameters: [{appearTime:5000,appearDuration:4000,disappearTime:35000,disappearDuration:4000}]
+                presenceParameters: [{
+                    appearTime: 5000,
+                    appearDuration: 4000,
+                    disappearTime: 35000,
+                    disappearDuration: 4000
+                }]
             }
         ],
         xyChart: [
@@ -236,52 +256,52 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                         }]
                     ]
                 },
-                presenceParameters: [{appearTime:10000,appearDuration:4000}],
+                presenceParameters: [{appearTime: 10000, appearDuration: 4000}],
                 selections: [
                     {
                         time: 15000,
                         duration: 5000,
-                        type: { points: 'all' }
+                        type: {points: 'all'}
                     },
                     {
                         time: 23000,
                         duration: 500,
-                        type: { points: [1] }
+                        type: {points: [1]}
                     },
                     {
                         time: 25000,
                         duration: 500,
-                        type: { points: [4] }
+                        type: {points: [4]}
                     },
                     {
                         time: 60000,
                         duration: 500,
-                        type: { points: [0] }
+                        type: {points: [0]}
                     },
                     {
                         time: 65000,
                         duration: 500,
-                        type: { yScaleValues: [7] }
+                        type: {yScaleValues: [7]}
                     },
                     {
                         time: 87000,
                         duration: 500,
-                        type: { xScaleValues: [1] }
+                        type: {xScaleValues: [1]}
                     },
                     {
                         time: 92000,
                         duration: 500,
-                        type: { yScaleValues: [1] }
+                        type: {yScaleValues: [1]}
                     },
                     {
                         time: 123000,
                         duration: 500,
-                        type: { xScaleValues: [2] }
+                        type: {xScaleValues: [2]}
                     },
                     {
                         time: 125000,
                         duration: 500,
-                        type: { yScaleValues: [1] }
+                        type: {yScaleValues: [1]}
                     }
                 ],
                 transformations: [
@@ -391,7 +411,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     {
                         appearTime: 42000,
                         appearDuration: 2000,
-                        object: { chartYRanges: [] }
+                        object: {chartYRanges: []}
                     },
                     {
                         appearTime: 44000,
@@ -404,13 +424,13 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     {
                         appearTime: 113000,
                         appearDuration: 1000,
-                        object: { width: 905 }
+                        object: {width: 905}
                     }
                 ]
             }
         ],
         table: [{
-            presenceParameters: [{appearTime:44000,appearDuration:2000}],
+            presenceParameters: [{appearTime: 44000, appearDuration: 2000}],
             object: {
                 origin: {
                     x: 240,
@@ -499,7 +519,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 {
                     time: 182000,
                     duration: 10000,
-                    type: { values: [[5, 7]] }
+                    type: {values: [[5, 7]]}
                 }
             ],
             transformations: [
@@ -599,7 +619,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 {
                     appearTime: 111000,
                     appearDuration: 500,
-                    object: { markedCells: [[2, 1], [3, 1]] }
+                    object: {markedCells: [[2, 1], [3, 1]]}
                 },
                 {
                     appearTime: 113000,
@@ -649,13 +669,13 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 {
                     appearTime: 120000,
                     appearDuration: 500,
-                    object: { markedCells: [] }
+                    object: {markedCells: []}
                 },
                 {
                     appearTime: 128000,
                     appearDuration: 500,
-                    object: { markedCells: [[1, 1], [4, 1]] },
-                    options: { type: 'sequentially' }
+                    object: {markedCells: [[1, 1], [4, 1]]},
+                    options: {type: 'sequentially'}
                 },
                 {
                     appearTime: 132000,
@@ -689,8 +709,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 {
                     appearTime: 140000,
                     appearDuration: 500,
-                    object: { markedCells: [[2, 1], [3, 1]] },
-                    options: { type: 'sequentially' }
+                    object: {markedCells: [[2, 1], [3, 1]]},
+                    options: {type: 'sequentially'}
                 },
                 {
                     appearTime: 145000,
@@ -723,8 +743,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 {
                     appearTime: 152000,
                     appearDuration: 500,
-                    object: { markedCells: [[1, 1], [4, 1]] },
-                    options: { type: 'sequentially' }
+                    object: {markedCells: [[1, 1], [4, 1]]},
+                    options: {type: 'sequentially'}
                 },
                 {
                     appearTime: 155000,
@@ -771,7 +791,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 {
                     appearTime: 163000,
                     appearDuration: 500,
-                    object: { markedCells: [] }
+                    object: {markedCells: []}
                 },
                 {
                     appearTime: 165000,
@@ -813,7 +833,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
         ],
         highlightedText: [
             {
-                presenceParameters: [{appearTime:191000,appearDuration:10000}],
+                presenceParameters: [{appearTime: 191000, appearDuration: 10000}],
                 object: {
                     origin: {
                         x: 370,

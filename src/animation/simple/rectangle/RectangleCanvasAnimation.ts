@@ -1,14 +1,12 @@
 import p5Types from 'p5'
-import { RectangleParamsType } from './RectangleCanvasAnimationParams'
+import {RectangleParamsType} from './RectangleCanvasAnimationParams'
 import CanvasAnimation from '../../CanvasAnimation'
-import AnimationStyle, { getFillColor } from '../../../AnimationStyles'
-import { SelectionInfo } from '../SimpleCanvasAnimationParams'
-import { calculateColorPercentValue, calculatePercentValue } from '../../../common/Utils'
-import { weightToNumber } from '../../CanvasAnimationParams'
+import AnimationStyle, {getFillColor} from '../../../AnimationStyles'
+import {weightToNumber} from '../../CanvasAnimationParams'
 
 export default class RectangleCanvasAnimation extends CanvasAnimation<RectangleParamsType> {
 
-    drawObject (p5: p5Types, object: RectangleParamsType, style: AnimationStyle): void {
+    drawObject(p5: p5Types, object: RectangleParamsType, style: AnimationStyle): void {
         const {
             width,
             height,

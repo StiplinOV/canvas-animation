@@ -109,7 +109,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
                 const style = this.calculateVertexStyle(animationStyle, vertexStyle, vertex.style)
 
                 result.set(`vertexCircle ${id}`, {
-                    type: "circle",
+                    type: 'circle',
                     objectParams: {
                         origin: addPoints(origin, offset, {
                             x: dagreNode.x,
@@ -121,7 +121,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
                     }
                 })
                 vertex.label && result.set(`vertexValue ${id}`, {
-                    type: "text",
+                    type: 'text',
                     objectParams: {
                         origin: addPoints(origin, offset, {
                             x: dagreNode.x,

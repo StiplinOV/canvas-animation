@@ -66,7 +66,7 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
             const endPoint = object.endPoint
             const [left, right] = this.createArrowHeadLinePoints(startPoint, endPoint)
             leftHalfArrowHeadParams = {
-                type: "line",
+                type: 'line',
                 objectParams: {
                     ...arrowHeadLineParams,
                     origin: object.endPoint,
@@ -74,7 +74,7 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
                 }
             }
             rightHalfArrowHeadParams = {
-                type: "line",
+                type: 'line',
                 objectParams: {
                     ...arrowHeadLineParams,
                     origin: object.endPoint,
@@ -87,7 +87,7 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
             const endPoint = object.origin
             const [left, right] = this.createArrowHeadLinePoints(startPoint, endPoint)
             leftHalfArrowTailParams = {
-                type: "line",
+                type: 'line',
                 objectParams: {
                     ...arrowHeadLineParams,
                     origin: object.origin,
@@ -95,7 +95,7 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
                 }
             }
             rightHalfArrowTailParams = {
-                type: "line",
+                type: 'line',
                 objectParams: {
                     ...arrowHeadLineParams,
                     origin: object.origin,
@@ -112,7 +112,7 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
         if (object.label) {
             const [horizontalAlign, verticalAlign] = this.calculateTextAlign(object)
             result.set('label', {
-                type: "text",
+                type: 'text',
                 objectParams: {
                     origin: this.calculateLabelPosition(object),
                     fillColor: object.label.fillColor,
@@ -139,7 +139,7 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
         }
         if (object.bezierParams) {
             return {
-                type: "bezier",
+                type: 'bezier',
                 objectParams: {
                     ...objectParams,
                     origin: object.origin,
@@ -153,7 +153,7 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
             }
         }
         return {
-            type: "line",
+            type: 'line',
             objectParams: {
                 ...objectParams,
                 origin: object.origin,

@@ -2,10 +2,11 @@ import React, { ReactElement } from 'react'
 import './App.css'
 import { AnimationPlayer } from './components/player/AnimationPlayer'
 import { useWindowDimensions } from './hook/UseWindowDimensions'
-import { Demo } from './lessons/javatest/Demo'
+import {CliLegalEntryPointMethods} from "./lessons/javatest/Building Blocks/1_CliLegalEntryPointMethods";
+import {calculateArrayPercentValue} from "./common/Utils";
 
 const App = (): ReactElement => {
-    const lesson = Demo
+    const lesson = CliLegalEntryPointMethods
     const canvasTop = 50
     const left = (useWindowDimensions().width - lesson.canvasDimensions.width) / 2
 

@@ -1,4 +1,4 @@
-import { LessonJsonType } from '../AnimationsJsonType'
+import {LessonJsonType} from '../AnimationsJsonType'
 
 export const Demo: LessonJsonType = {
     sound: require('./Lofi_Jazz_Cafe_Cozy_Evening.mp3'),
@@ -10,7 +10,7 @@ export const Demo: LessonJsonType = {
     cameras: [],
     animations: {
         array: [{
-            presenceParameters: [{appearTime:0,appearDuration:1000}],
+            presenceParameters: [{appearTime: 0, appearDuration: 1000}],
             object: {
                 origin: {
                     x: 50,

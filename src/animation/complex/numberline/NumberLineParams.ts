@@ -27,7 +27,7 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
 
     protected getZeroParams (): Omit<NumberLineParamsType, keyof ObjectParams> {
         return {
-            width: 0,
+            width: 0
         }
     }
 
@@ -74,7 +74,7 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
             scale.forEach(value => {
                 const valX = getLineX(value)
                 result.set(`scale ${value}`, {
-                    type: "line",
+                    type: 'line',
                     objectParams: {
                         origin: addPoints(origin, {
                             x: valX,
@@ -87,7 +87,7 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
                     }
                 })
                 result.set(`scale value ${value}`, {
-                    type: "text",
+                    type: 'text',
                     objectParams: {
                         origin: addPoints(origin, {
                             x: valX,
@@ -139,7 +139,7 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
                 const rangeYCoord = Math.min(rangeYCoordsMap.get(rangeKey) ?? 0, layerLineY - coordinateDashWidth / 2)
                 rangeYCoordsMap.set(rangeKey, rangeYCoord)
                 result.set(rangeKey, {
-                    type: "line",
+                    type: 'line',
                     objectParams: {
                         origin: addPoints(origin, {
                             x,

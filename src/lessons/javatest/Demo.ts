@@ -1,5 +1,6 @@
 import {LessonJsonType} from '../../AnimationsJsonType'
 
+// https://docs.oracle.com/javase/specs/jls/se17/html/jls-12.html#jls-12.1.4
 export const Demo: LessonJsonType = {
     sound: require('./../Lofi_Jazz_Cafe_Cozy_Evening.mp3'),
     canvasDimensions: {
@@ -12,10 +13,10 @@ export const Demo: LessonJsonType = {
         codeQuestionnaire: [
             {
                 presenceParameters: [{
-                        appearTime: 1000,
-                        appearDuration: 1000,
-                        disappearTime: 30000,
-                        disappearDuration: 5000
+                    appearTime: 1000,
+                    appearDuration: 1000,
+                    disappearTime: 30000,
+                    disappearDuration: 5000
                 }],
                 selections: [
                     {
@@ -25,7 +26,7 @@ export const Demo: LessonJsonType = {
                             code: {
                                 substrings: [{
                                     from: 30,
-                                    to: 50,
+                                    to: 50
                                 }]
                             }
                         }
@@ -37,7 +38,7 @@ export const Demo: LessonJsonType = {
                             code: {
                                 substrings: [{
                                     from: 60,
-                                    to: 70,
+                                    to: 70
                                 }]
                             }
                         }
@@ -52,61 +53,50 @@ export const Demo: LessonJsonType = {
                         }
                     }],
                 transformations: [
-                    {
-                        appearTime: 5000,
-                        appearDuration: 1000,
-                        object: {
-                            codePartHeight: 360,
-                            questionParamsFontSize: 25,
-                            questionParamsPosition: "down",
-                        }
-                    },
+                    // {
+                    //     appearTime: 5000,
+                    //     appearDuration: 1000,
+                    //     object: {
+                    //         questionParamsOptions: ['', '', '', '', '', ''],
+                    //         questionParamsFontSize: 25,
+                    //         questionParamsPosition: 'down',
+                    //     }
+                    // },
                     {
                         appearTime: 7000,
                         appearDuration: 1000,
                         object: {
                             questionParamsOptions: [
-                                "A. unknown",
-                                "B. great",
-                                "C. good",
-                                "D. bad",
-                                "E. unknowngreatgoodbad",
-                                "F. Exactly one line needs to be changed for the code to compile.",
-                                "G. Exactly two line needs to be changed for the code to compile.",
-                                "H. None of the above"
+                                'A. private static void main(String[] args)',
+                                'B. public static final main(String[] args)',
+                                'C. public void main(String[] args)',
+                                'D. public static final void main(String[] args)',
+                                'E. public static void main(String[] args)',
+                                'F. public static main(String[] args)'
                             ],
+                            questionParamsPosition: 'down',
+                            questionParamsFontSize: 35
                         }
                     },
                     {
                         appearTime: 10000,
                         appearDuration: 1000,
                         object: {
-                            language: "Java",
+                            language: 'Java'
                         }
                     }
                 ],
                 object: {
-                    title: "What is the result of executing the following code snippet?",
+                    title: 'Which of the following are legal entry point methods that can be run from the command line? (Choose all that apply.)',
                     titleFontSize: 50,
                     origin: {
                         x: 0,
                         y: 0
                     },
                     width: 1280,
-                    height: 720,
-                    codeFontSize: 25,
-                    codeHighlightStyle: 'darcula',
-                    codeText: 'final int score1 = 8, score2 = 3;\n' +
-                        'char myScore = 7;\n' +
-                        'var goal = switch (myScore) {\n' +
-                        '\tdefault -> {if(10>score1) yield "unknown";}\n' +
-                        '\tcase score1 -> "great";\n' +
-                        '\tcase 2, 4, 6 -> "good";\n' +
-                        '\tcase score2, 0 -> {"bad";}' +
-                        '};\n' +
-                        'System.out.println(goal);'
+                    height: 720
                 }
             }
-        ],
+        ]
     }
 }

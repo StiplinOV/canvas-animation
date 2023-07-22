@@ -2,8 +2,6 @@ import p5Types from 'p5'
 import AnimationStyle from '../../../AnimationStyles'
 import { BezierParamsType } from './BezierCanvasAnimationParams'
 import CanvasAnimation from '../../CanvasAnimation'
-import { calculatePointsPercentValue } from '../../../common/Utils'
-import { SelectionInfo } from '../SimpleCanvasAnimationParams'
 
 export default class BezierCanvasAnimation extends CanvasAnimation<BezierParamsType> {
 

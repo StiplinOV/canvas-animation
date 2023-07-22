@@ -41,7 +41,7 @@ export default class HighlightedTextCanvasAnimationRenderer implements Renderer<
 
     wrap(className: string, chunk: HighlightedTextValueSegmentType[]): HighlightedTextValueSegmentType[] {
         let properties: React.CSSProperties = {
-            ...this.style.hljs,
+            ...this.style.hljs
         }
         if (!this.syntaxHighlightingDisabled) {
             properties = {

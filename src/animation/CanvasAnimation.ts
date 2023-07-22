@@ -23,7 +23,6 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
             rotations,
             dashed
         } = object
-
         if (!needAppearObject(time, this.params.getPresenceParam())) {
             return
         }

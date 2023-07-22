@@ -300,7 +300,7 @@ export const createHighlightedTextValueSegmentType = (object: HighlightedTextVal
 
     registerLanguages(...Object.values(languageDefs))
     const style = getStyle(animationStyle, object.highlightStyle)
-    const highlighter = init(new HighlightedTextCanvasAnimationRenderer(style, animationStyle, !Boolean(object.language)))
+    const highlighter = init(new HighlightedTextCanvasAnimationRenderer(style, animationStyle, !object.language))
     let lang
     if (object.language) {
         lang = languageDefs[object.language].name
@@ -327,6 +327,7 @@ export type HighlightedTextValueSegmentType = {
     textWeight?: number
     textColor?: ColorType
     backgroundTextColor?: string
+    strikethrough?: boolean
 } | 'newline'
 
 export type HighlightedSyntaxValueType = {
@@ -343,11 +344,13 @@ interface OnlyHighlightedTextParamsType {
     font?: WebSafeFontsType | 'monospace'
     backgroundColor?: string
     selectedSubstrings?: {
-        from: number,
-        to: number,
-        color?: string,
+        from: number
+        to: number
+        color?: string
         backgroundColor?: string
+        strikethrough?: boolean
     }[]
+    lineSpacing?: number
     width?: number
     height?: number
 }
@@ -357,9 +360,9 @@ export interface HighlightedTextParamsType extends ObjectParams, OnlyHighlighted
 
 export interface HighlightedTextCanvasAnimationSelection extends SelectionType {
     substrings?: {
-        from: number,
-        to: number,
-        color?: string,
+        from: number
+        to: number
+        color?: string
         backgroundColor?: string
     }[]
 }
@@ -384,7 +387,7 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
         width ??= 0
         height ??= 0
         const value = createHighlightedTextValueSegmentType(obj.value, this.getAnimationStyle())
-        const transValue = createHighlightedTextValueSegmentType(trans.value || [], this.getAnimationStyle())
+        const transValue = createHighlightedTextValueSegmentType(trans.value ?? [], this.getAnimationStyle())
         const backgroundColor = calculateBackgroundColor(obj, style)
         let transBackgroundColor = trans.backgroundColor
         if (!transBackgroundColor && !Array.isArray(trans.value) && trans.value?.highlightStyle) {
@@ -395,13 +398,9 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
             value: trans.value ? this.calculateValuePercentValue(value, transValue, perc) : obj.value,
             fontSize: trans.fontSize ? calculatePercentValue(fontSize, trans.fontSize, perc) : fontSize,
             font: (trans.font && perc >= 0.5) ? trans.font : obj.font,
-            width: trans.width != undefined ? calculatePercentValue(width, trans.width, perc) : width,
-            height: trans.height != undefined ? calculatePercentValue(height, trans.height, perc) : height,
-            selectedSubstrings: (trans.selectedSubstrings ? calculateArrayPercentValue(
-                obj.selectedSubstrings ?? [],
-                trans.selectedSubstrings,
-                perc
-            ) : obj.selectedSubstrings)
+            width: trans.width !== undefined ? calculatePercentValue(width, trans.width, perc) : width,
+            height: trans.height !== undefined ? calculatePercentValue(height, trans.height, perc) : height,
+            selectedSubstrings: (trans.selectedSubstrings ? calculateArrayPercentValue(obj.selectedSubstrings ?? [], trans.selectedSubstrings, perc) : obj.selectedSubstrings)
         }
     }
 

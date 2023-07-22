@@ -1,4 +1,4 @@
-import { LessonJsonType } from '../AnimationsJsonType'
+import {LessonJsonType} from '../AnimationsJsonType'
 
 export const MergeKSortedLists: LessonJsonType = {
     sound: require('./Lofi_Jazz_Cafe_Cozy_Evening.mp3'),
@@ -11,7 +11,7 @@ export const MergeKSortedLists: LessonJsonType = {
     animations: {
         graphDataStructure: [
             {
-                presenceParameters: [{appearTime:0,appearDuration:1000}],
+                presenceParameters: [{appearTime: 0, appearDuration: 1000}],
                 object: {
                     origin: {
                         x: 100,
@@ -99,8 +99,8 @@ export const MergeKSortedLists: LessonJsonType = {
                     ]
                 },
                 transformations: [{
-                    appearTime:      2000,
-                    appearDuration:1000,
+                    appearTime: 2000,
+                    appearDuration: 1000,
                     object: {
                         edges: [
                             {
@@ -138,8 +138,8 @@ export const MergeKSortedLists: LessonJsonType = {
                         ]
                     }
                 }, {
-                   appearTime:      4000,
-                   appearDuration:1000,
+                    appearTime: 4000,
+                    appearDuration: 1000,
                     object: {
                         edges: [
                             {
@@ -177,7 +177,7 @@ export const MergeKSortedLists: LessonJsonType = {
                         ]
                     }
                 }, {
-                    appearTime:     6000,
+                    appearTime: 6000,
                     appearDuration: 1000,
                     object: {
                         edges: [

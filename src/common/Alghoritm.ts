@@ -34,7 +34,7 @@ export const intervalContainsIntersections = (intervals: IntervalType[]): boolea
     if (intervals.length === 1) {
         return false
     }
-    const sorted = intervals.sort((l,r) => l.start - r.start)
+    const sorted = intervals.sort((l, r) => l.start - r.start)
     let prevInterval = sorted[0]
     for (let i = 1; i < sorted.length; i++) {
         const interval = sorted[i]
@@ -89,6 +89,6 @@ export const convertPercentToFadeInFadeOut = (percent: number, duration?: number
     return ((1 - percent) * duration) / fadeDuration
 }
 
-export const uniqueArray = <T>(array: Array<T>): Array<T> => {
+export const uniqueArray = <T>(array: T[]): T[] => {
     return array.filter((value, index, array) => array.indexOf(value) === index)
 }

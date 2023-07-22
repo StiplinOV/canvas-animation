@@ -24,7 +24,7 @@ import MatrixCanvasAnimationParams from './animation/complex/array/MatrixCanvasA
 import NumberLineCanvasAnimationParams from './animation/complex/numberline/NumberLineParams'
 import CodeQuestionnaireCanvasAnimationParams
     from './animation/complex/codequestionnaire/CodeQuestionnaireCanvasAnimationParams'
-import SimpleCanvasAnimationParams from "./animation/simple/SimpleCanvasAnimationParams";
+import SimpleCanvasAnimationParams from './animation/simple/SimpleCanvasAnimationParams'
 
 export const animationStyle = getAnimationStyle('default')
 
@@ -37,7 +37,7 @@ export const TypeToSimpleParamsConstructorMapping: {
     highlightedText: (p, p5, animationStyle) => new HighlightedTextCanvasAnimationParams(p, animationStyle),
     line: (p, p5, animationStyle) => new LineCanvasAnimationParams(p, animationStyle),
     rectangle: (p, p5, animationStyle) => new RectangleCanvasAnimationParams(p, animationStyle),
-    text: (p, p5, animationStyle) => new TextCanvasAnimationParams(p, animationStyle),
+    text: (p, p5, animationStyle) => new TextCanvasAnimationParams(p, animationStyle)
 }
 
 export const TypeToConstructorMapping: {
@@ -51,7 +51,7 @@ export const TypeToConstructorMapping: {
     table: (p, p5, animationStyle) => new TableCanvasAnimationParams(p, p5, animationStyle),
     xyChart: (p, p5, animationStyle) => new XYChartCanvasAnimationParams(p, p5, animationStyle),
     graphDataStructure: (p, p5, animationStyle) => new GraphDataStructureParams(p, p5, animationStyle),
-    numberLine: (p, p5, animationStyle) => new NumberLineCanvasAnimationParams(p, p5, animationStyle),
+    numberLine: (p, p5, animationStyle) => new NumberLineCanvasAnimationParams(p, p5, animationStyle)
 }
 
 export const canvasAnimations: (json: AnimationsJsonType, p5: p5Types) => CanvasAnimationParams[] = (json, p5) => {

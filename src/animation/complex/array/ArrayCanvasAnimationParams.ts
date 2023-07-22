@@ -3,8 +3,6 @@ import { addPoints } from '../../../common/Utils'
 import ComplexCanvasAnimationParams, {
     CanvasAnimationParamsType
 } from '../ComplexCanvasAnimationParams'
-import TextCanvasAnimationParams from '../../simple/text/TextCanvasAnimationParams'
-import SimpleCanvasAnimationParams from '../../simple/SimpleCanvasAnimationParams'
 import ArrayElement, { ElementStyle, ElementType } from './ArrayElement'
 import ArrowCanvasAnimationParams from '../arrow/ArrowCanvasAnimationParams'
 
@@ -53,7 +51,7 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
         let partShift = 0
         if (title) {
             result.set('array title', {
-                type: "text",
+                type: 'text',
                 objectParams: {
                     value: title,
                     origin: addPoints(origin, {
@@ -97,7 +95,7 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
         if (!hideIndices) {
             values.forEach((valueParam, index) => {
                 result.set(`index text ${index}`, {
-                    type: "text",
+                    type: 'text',
                     objectParams: {
                         value: String(index + (firstIndex ?? 0)),
                         origin: addPoints(origin, {
@@ -114,7 +112,7 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
         partShift += partHeight
         if (indexTitle) {
             result.set('index title', {
-                type: "text",
+                type: 'text',
                 objectParams: {
                     value: indexTitle,
                     origin: addPoints(origin, {

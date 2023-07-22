@@ -7,7 +7,8 @@ import {
     HighlightedTextValueSegmentType
 } from './HighlightedTextCanvasAnimationParams'
 import CanvasAnimation from '../../CanvasAnimation'
-import {animationStyle} from "../../../Animations";
+import {animationStyle} from '../../../Animations'
+import {weightToNumber} from '../../CanvasAnimationParams'
 
 type rectParams = {
     x: number
@@ -25,13 +26,14 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
         const rectWithoutBorder = this.process(p5, o, animationStyle, 0, 0, true)
         const borderX = widthParam > rectWithoutBorder.width ? (widthParam - rectWithoutBorder.width) / 2 : fontSize / 2
         const borderY = heightParam > rectWithoutBorder.height ? (heightParam - rectWithoutBorder.height) / 2 : fontSize / 2
-        let {
+        const {
             x,
             y,
             width,
             height
         } = this.process(p5, o, animationStyle, borderX, borderY, true)
         p5.fill(calculateBackgroundColor(o, animationStyle))
+        p5.strokeWeight(weightToNumber(animationStyle, o.weight))
         p5.rect(x, y, width, height)
         this.process(p5, o, animationStyle, borderX, borderY)
     }
@@ -53,7 +55,7 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
         for (let i = 0; i < segments.length; i++) {
             const part = segments[i]
             if (part === 'newline') {
-                y += fontSize * 1.2
+                y += fontSize * (o.lineSpacing ?? 1.2)
                 width = Math.max(width, x)
                 x = borderX
                 continue
@@ -67,10 +69,9 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
             } = part
             textColor = getFontColor(animationStyle, textColor)
             value = value.replaceAll('\t', '    ')
-            let font = o.font || 'monospace'
+            const font = o.font ?? 'monospace'
             const textFont = font === 'monospace' ? animationStyle.monospaceFont : (font ?? animationStyle.font)
 
-            p5.strokeWeight(textWeight ?? animationStyle.fontWeight)
             p5.textFont(textFont)
             p5.textSize(fontSize)
             p5.textStyle(textStyle)
@@ -84,7 +85,13 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
                 }
                 p5.fill(textColor)
                 p5.stroke(backgroundColor)
+                p5.strokeWeight(textWeight ?? animationStyle.fontWeight)
                 p5.text(value, x, y)
+                if (part.strikethrough) {
+                    p5.stroke(textColor)
+                    p5.strokeWeight(fontSize / 10)
+                    p5.line(x, y - fontSize / 4, x + textWidth, y - fontSize / 4)
+                }
             }
             x += textWidth
             width = Math.max(width, x)
@@ -103,7 +110,7 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
         o: HighlightedTextParamsType
     ): HighlightedTextValueSegmentType[] {
         const result: HighlightedTextValueSegmentType[] = []
-        let selectionIntervals = o.selectedSubstrings ?? []
+        const selectionIntervals = o.selectedSubstrings?.sort((l, r) => l.from - r.from) ?? []
 
         if (selectionIntervals.length === 0) {
             return segments
@@ -123,15 +130,15 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
                 splitSegments.push(segment)
                 continue
             }
-            let segmentEndIndex = segmentStartIndex + segment.value.length
+            const segmentEndIndex = segmentStartIndex + segment.value.length
 
             while (currentSelectionIntervalIndex < selectionIntervals.length && currentSelectionInterval.to <= segmentStartIndex) {
                 currentSelectionInterval = selectionIntervals[currentSelectionIntervalIndex]
                 currentSelectionIntervalIndex++
             }
 
-            let segmentHasStart = currentSelectionInterval.from >= segmentStartIndex && currentSelectionInterval.from < segmentEndIndex
-            let segmentHasEnd = currentSelectionInterval.to > segmentStartIndex && currentSelectionInterval.from <= segmentEndIndex
+            const segmentHasStart = currentSelectionInterval.from >= segmentStartIndex && currentSelectionInterval.from < segmentEndIndex
+            const segmentHasEnd = currentSelectionInterval.to > segmentStartIndex && currentSelectionInterval.from <= segmentEndIndex
 
             if (segmentHasStart && segmentHasEnd) {
                 splitSegments.push({
@@ -189,14 +196,15 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
                 currentSelectionIntervalIndex++
             }
 
-            let segmentHasInterval =
+            const segmentHasInterval =
                 (currentSelectionInterval.from <= segmentStartIndex && currentSelectionInterval.to >= segmentEndIndex)
 
-            if (segment !== "newline") {
+            if (segment !== 'newline') {
                 segment = {
                     ...segment,
                     textColor: segmentHasInterval ? currentSelectionInterval.color ?? animationStyle.selectedColor : segment.textColor,
-                    backgroundTextColor: segmentHasInterval ?? currentSelectionInterval.backgroundColor ? currentSelectionInterval.backgroundColor : segment.backgroundTextColor
+                    backgroundTextColor: segmentHasInterval ?? currentSelectionInterval.backgroundColor ? currentSelectionInterval.backgroundColor : segment.backgroundTextColor,
+                    strikethrough: segmentHasInterval ?? currentSelectionInterval.strikethrough ? currentSelectionInterval.strikethrough : segment.strikethrough
                 }
             }
             result.push(segment)

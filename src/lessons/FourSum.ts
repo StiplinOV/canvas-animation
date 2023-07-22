@@ -1,4 +1,4 @@
-import { LessonJsonType } from '../AnimationsJsonType'
+import {LessonJsonType} from '../AnimationsJsonType'
 
 export const FourSum: LessonJsonType = {
     sound: require('./Lofi_Jazz_Cafe_Cozy_Evening.mp3'),
@@ -10,7 +10,7 @@ export const FourSum: LessonJsonType = {
     cameras: [],
     animations: {
         array: [{
-            presenceParameters: [{appearTime:0,appearDuration:1000}],
+            presenceParameters: [{appearTime: 0, appearDuration: 1000}],
             object: {
                 origin: {
                     x: 50,
@@ -54,7 +54,7 @@ export const FourSum: LessonJsonType = {
         }],
         highlightedText: [
             {
-                presenceParameters: [{appearTime:11000,appearDuration:500}],
+                presenceParameters: [{appearTime: 11000, appearDuration: 500}],
                 object: {
                     origin: {
                         x: 50,
@@ -83,12 +83,17 @@ export const FourSum: LessonJsonType = {
                         }
                     ]
                 },
-                transformations: [],
+                transformations: []
             }
         ],
         text: [
             {
-                presenceParameters: [{appearTime:2000,appearDuration:500,disappearTime:10000,disappearDuration:1000}],
+                presenceParameters: [{
+                    appearTime: 2000,
+                    appearDuration: 500,
+                    disappearTime: 10000,
+                    disappearDuration: 1000
+                }],
                 object: {
                     origin: {
                         x: 50,
@@ -108,7 +113,12 @@ export const FourSum: LessonJsonType = {
 
             },
             {
-                presenceParameters: [{appearTime:4000,appearDuration:500,disappearTime:10000,disappearDuration:1000}],
+                presenceParameters: [{
+                    appearTime: 4000,
+                    appearDuration: 500,
+                    disappearTime: 10000,
+                    disappearDuration: 1000
+                }],
                 object: {
                     origin: {
                         x: 150,
@@ -120,13 +130,13 @@ export const FourSum: LessonJsonType = {
                     value: '-2 + -5 +  7 +  7 = 7'
                 },
                 transformations: [{
-                    appearTime:       6000,
+                    appearTime: 6000,
                     appearDuration: 500,
                     object: {
                         value: '-2 + -5 +  7 +  7 = 7\n 2 +  3 + -5 +  7 = 7'
                     }
                 }, {
-                    appearTime:    8000,
+                    appearTime: 8000,
                     appearDuration: 500,
                     object: {
                         value: '-2 + -5 +  7 +  7 = 7\n 2 +  3 + -5 +  7 = 7\n 2 +  3 +  4 + -2 = 7'
