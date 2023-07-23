@@ -1,5 +1,4 @@
 import {THE_STYLE} from 'p5'
-import { SelectionAlgorithm } from './animation/CanvasAnimationParams'
 import { HighlightedStyleName } from './animation/simple/highligtedtext/HighlightedTextCanvasAnimationParams'
 
 export const COURIER_NEW_FONT = 'Courier New'
@@ -40,7 +39,7 @@ export default interface AnimationStyle {
     objectRotation: number
     textStyle: THE_STYLE
     zIndex: number
-    selectionAlgorithm: SelectionAlgorithm
+//    selectionAlgorithm: SelectionAlgorithm
 }
 
 const defaultAnimationStyle: AnimationStyle = {
@@ -67,10 +66,10 @@ const defaultAnimationStyle: AnimationStyle = {
     vertexFontSize: 30,
     edgeFontSize: 20,
     zIndex: 0,
-    selectionAlgorithm: {
-        func: 'fadeinFadeOut',
-        params: [150]
-    }
+    // selectionAlgorithm: {
+    //     func: 'fadeinFadeOut',
+    //     params: [150]
+    // }
 }
 const createAnimationStyles = (): Record<string, Partial<AnimationStyle>> => ({
     default: defaultAnimationStyle,
@@ -89,7 +88,7 @@ export const getAnimationStyle = (key: keyof typeof animationStyles): AnimationS
     }
 }
 
-export const getStrokeColor = (animationStyle: AnimationStyle, color?: ColorType): string => {
+export const getStrokeColor = (animationStyle: AnimationStyle, color?: ColorType | null): string => {
     if (color === 'primary') {
         return animationStyle.primaryColor
     }
@@ -102,7 +101,7 @@ export const getStrokeColor = (animationStyle: AnimationStyle, color?: ColorType
     return color ?? animationStyle.strokeColor
 }
 
-export const getFillColor = (animationStyle: AnimationStyle, color?: ColorType): string => {
+export const getFillColor = (animationStyle: AnimationStyle, color: ColorType | null): string => {
     if (color === 'primary') {
         return animationStyle.primaryColor
     }
@@ -115,7 +114,7 @@ export const getFillColor = (animationStyle: AnimationStyle, color?: ColorType):
     return color ?? animationStyle.fillColor
 }
 
-export const getFontColor = (animationStyle: AnimationStyle, color?: ColorType): string => {
+export const getFontColor = (animationStyle: AnimationStyle, color?: ColorType | null): string => {
     if (color === 'primary') {
         return animationStyle.primaryColor
     }

@@ -1,4 +1,4 @@
-import {ObjectParams, SelectionType} from '../../CanvasAnimationParams'
+import {ObjectParams} from '../../CanvasAnimationParams'
 import ComplexCanvasAnimationParams, {CanvasAnimationParamsType} from '../ComplexCanvasAnimationParams'
 import {
     HighlightedStyleName,
@@ -14,10 +14,11 @@ import {
 } from '../../../common/Utils'
 import {animationStyle} from '../../../Animations'
 import {Point} from '../../../common/Point'
+import {AnimationObjectParams} from "../../../object/AnimationParams";
 
 const CODE_QUESTIONNAIRE_LINE_SPACING = 2
 
-export interface CodeQuestionnaireParamsType extends ObjectParams {
+export interface CodeQuestionnaireParamsType extends AnimationObjectParams {
     codeText?: string
     language?: keyof typeof languageDefs
     codeHighlightStyle?: HighlightedStyleName
@@ -59,6 +60,12 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
             result.set('titleText', {
                 type: 'text',
                 objectParams: {
+                    weight: null,
+                    dashed: null,
+                    strokeColor: null,
+                    fillColor: null,
+                    rotations: [],
+
                     boxWidth: object.width,
                     boxHeight: this.getTitleHeight(object),
                     horizontalAlign: 'center',
@@ -74,6 +81,12 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
                 appearType: 'immediate',
                 disappearType: 'immediateAtTheEnd',
                 objectParams: {
+                    weight: null,
+                    dashed: null,
+                    strokeColor: null,
+                    zIndex: 0,
+                    rotations: [],
+
                     origin: object.origin,
                     width: object.width,
                     height: this.getTitleHeight(object),
@@ -85,6 +98,12 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
             result.set('codePart', {
                 type: 'highlightedText',
                 objectParams: {
+                    weight: null,
+                    dashed: null,
+                    fillColor: null,
+                    strokeColor: null,
+                    rotations: [],
+
                     origin: this.getCodePartOrigin(object),
                     value: {
                         text: object.codeText,
@@ -117,7 +136,6 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
 
             object.questionParamsStrikethroughOptions?.forEach(l => {
                 const valueSegment = value[l * 2]
-                console.log(valueSegment)
                 let curSubstringPosition = 0
                 for (let i = 0; i < l * 2; i++) {
                     const seg = value[i]
@@ -164,6 +182,12 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
             result.set('questionPart', {
                 type: 'highlightedText',
                 objectParams: {
+                    weight: null,
+                    dashed: null,
+                    fillColor: null,
+                    strokeColor: null,
+                    rotations: [],
+
                     origin: this.getQuestionPartOrigin(object),
                     fontSize: object.questionParamsFontSize ?? 20,
                     value,
@@ -282,11 +306,11 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         }
     }
 
-    protected convertSelectionToTransformObject(selection: SelectionType<CodeQuestionnaireCanvasAnimationSelection>): Partial<CodeQuestionnaireParamsType> {
-        return {
-            codeSelectedSubstrings: selection.type?.code?.substrings ?? [],
-            questionnaireSelectedLines: selection.type?.questionnaire?.lines ?? []
-        }
-    }
+    // protected convertSelectionToTransformObject(selection: SelectionType<CodeQuestionnaireCanvasAnimationSelection>): Partial<CodeQuestionnaireParamsType> {
+    //     return {
+    //         codeSelectedSubstrings: selection.type?.code?.substrings ?? [],
+    //         questionnaireSelectedLines: selection.type?.questionnaire?.lines ?? []
+    //     }
+    // }
 
 }

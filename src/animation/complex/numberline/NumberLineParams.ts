@@ -2,6 +2,7 @@ import { ObjectParams } from '../../CanvasAnimationParams'
 import ComplexCanvasAnimationParams, {CanvasAnimationParamsType} from '../ComplexCanvasAnimationParams'
 import ArrowCanvasAnimationParams from '../arrow/ArrowCanvasAnimationParams'
 import { addPoints } from '../../../common/Utils'
+import {AnimationObjectParams} from "../../../object/AnimationParams";
 
 const coordinateDashWidth = 20
 
@@ -15,7 +16,7 @@ type ChartRangeTypeWithLayer = ChartRangeType & {
     layer: number
 }
 
-export interface NumberLineParamsType extends ObjectParams {
+export interface NumberLineParamsType extends AnimationObjectParams {
     width: number
     height?: number
     scale?: number[]
@@ -43,19 +44,26 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
         const scale = this.getScale(object)
         const height = object.height ?? 0
 
-        new ArrowCanvasAnimationParams({
-            object: {
-                origin,
-                endPoint: addPoints(origin, {
-                    x: width,
-                    y: 0
-                }),
-                endType: 'Arrow',
-                weight: 'bold'
-            }
-        }, this.p5, animationStyle).getIncludedAnimationParams().forEach((value, key) => {
-            result.set(`axis ${key}`, value)
-        })
+        // new ArrowCanvasAnimationParams({
+        //     object: {
+        //         weight: null,
+        //         dashed: null,
+        //         fillColor: null,
+        //         strokeColor: null,
+        //         rotations: [],
+        //         zIndex: 0,
+        //
+        //         origin,
+        //         endPoint: addPoints(origin, {
+        //             x: width,
+        //             y: 0
+        //         }),
+        //         endType: 'Arrow',
+        //         weight: 'bold'
+        //     }
+        // }, this.p5, animationStyle).getIncludedAnimationParams().forEach((value, key) => {
+        //     result.set(`axis ${key}`, value)
+        // })
         scale.sort((l, r) => l - r)
         const length = scale.length
         const segmentWidth = width / (length + 1)
@@ -76,6 +84,13 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
                 result.set(`scale ${value}`, {
                     type: 'line',
                     objectParams: {
+                        weight: null,
+                        dashed: null,
+                        fillColor: null,
+                        strokeColor: null,
+                        rotations: [],
+                        zIndex: 0,
+
                         origin: addPoints(origin, {
                             x: valX,
                             y: coordinateDashWidth / 2
@@ -89,6 +104,13 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
                 result.set(`scale value ${value}`, {
                     type: 'text',
                     objectParams: {
+                        weight: null,
+                        dashed: null,
+                        fillColor: null,
+                        strokeColor: null,
+                        rotations: [],
+                        zIndex: 0,
+
                         origin: addPoints(origin, {
                             x: valX,
                             y: Number(coordinateDashWidth)
@@ -117,22 +139,29 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
             if (height !== 0) {
                 layerLineY = (r.layer + 1) * layerLineYSegment * -1
             }
-            new ArrowCanvasAnimationParams({
-                object: {
-                    origin: addPoints(origin, {
-                        x: startX,
-                        y: layerLineY
-                    }),
-                    endPoint: addPoints(origin, {
-                        x: endX,
-                        y: layerLineY
-                    }),
-                    startType: 'Arrow',
-                    endType: 'Arrow'
-                }
-            }, this.p5, animationStyle).getIncludedAnimationParams().forEach((v, k) => {
-                result.set(`range [${r.coords[0]},${r.coords[1]}] arrow ` + k, v)
-            })
+            // new ArrowCanvasAnimationParams({
+            //     object: {
+            //         weight: null,
+            //         dashed: null,
+            //         fillColor: null,
+            //         strokeColor: null,
+            //         rotations: [],
+            //         zIndex: 0,
+            //
+            //         origin: addPoints(origin, {
+            //             x: startX,
+            //             y: layerLineY
+            //         }),
+            //         endPoint: addPoints(origin, {
+            //             x: endX,
+            //             y: layerLineY
+            //         }),
+            //         startType: 'Arrow',
+            //         endType: 'Arrow'
+            //     }
+            // }, this.p5, animationStyle).getIncludedAnimationParams().forEach((v, k) => {
+            //     result.set(`range [${r.coords[0]},${r.coords[1]}] arrow ` + k, v)
+            // })
             r.coords.forEach(c => {
                 const rangeKey = `range ${c}`
                 const x = getLineX(c)
@@ -141,6 +170,12 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
                 result.set(rangeKey, {
                     type: 'line',
                     objectParams: {
+                        weight: null,
+                        fillColor: null,
+                        strokeColor: null,
+                        rotations: [],
+                        zIndex: 0,
+
                         origin: addPoints(origin, {
                             x,
                             y: rangeYCoord

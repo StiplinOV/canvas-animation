@@ -1,22 +1,23 @@
 import p5Types from 'p5'
-import { addPoints, needAppearObject, rotateVector, subtractPoints } from '../common/Utils'
-import AnimationStyle, { getFillColor, getStrokeColor } from '../AnimationStyles'
-import { LayoutType, ObjectParams, SelectionType, weightToNumber } from './CanvasAnimationParams'
+import {addPoints, needAppearObject, rotateVector, subtractPoints} from '../common/Utils'
+import AnimationStyle, {getFillColor, getStrokeColor} from '../AnimationStyles'
+import {LayoutType, weightToNumber} from './CanvasAnimationParams'
 import SimpleCanvasAnimationParams from './simple/SimpleCanvasAnimationParams'
+import {AnimationObjectParams} from "../object/AnimationParams";
 
-export default abstract class CanvasAnimation<T extends ObjectParams = ObjectParams, V extends SelectionType = SelectionType, U extends SimpleCanvasAnimationParams<T, V> = SimpleCanvasAnimationParams<T, V>> {
+export default abstract class CanvasAnimation<T extends AnimationObjectParams = AnimationObjectParams, U extends SimpleCanvasAnimationParams<T> = SimpleCanvasAnimationParams<T>> {
 
     private readonly params: U
 
     private readonly animationStyle: AnimationStyle
 
-    public constructor (params: U, animationStyle: AnimationStyle) {
+    public constructor(params: U, animationStyle: AnimationStyle) {
         this.params = params
         this.animationStyle = animationStyle
     }
 
-    public draw (p5: p5Types, time: number): void {
-        const { animationStyle } = this
+    public draw(p5: p5Types, time: number): void {
+        const {animationStyle} = this
         const object = this.params.calculateObjectParamsInTime(time)
         const {
             origin,
@@ -27,7 +28,7 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
             return
         }
         p5.push()
-        const rotationsCopy = rotations?.map(r => ({ ...r })) ?? []
+        const rotationsCopy = rotations?.map(r => ({...r})) ?? []
 
         let result = origin
         const angle = rotationsCopy.reduce((l, r) => l + r.angle, 0)
@@ -50,9 +51,9 @@ export default abstract class CanvasAnimation<T extends ObjectParams = ObjectPar
         p5.pop()
     }
 
-    public abstract drawObject (p5: p5Types, obj: T, animationStyle: AnimationStyle): void
+    public abstract drawObject(p5: p5Types, obj: T, animationStyle: AnimationStyle): void
 
-    public getZIndex (time: number, animationStyle: AnimationStyle): number {
+    public getZIndex(time: number, animationStyle: AnimationStyle): number {
         return this.params.getZIndex(time, animationStyle)
     }
 

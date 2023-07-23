@@ -25,33 +25,37 @@ import NumberLineCanvasAnimationParams from './animation/complex/numberline/Numb
 import CodeQuestionnaireCanvasAnimationParams
     from './animation/complex/codequestionnaire/CodeQuestionnaireCanvasAnimationParams'
 import SimpleCanvasAnimationParams from './animation/simple/SimpleCanvasAnimationParams'
+import {MatrixObjectParamsConverter} from "./animation/complex/array/MatrixObjectParamsConverter";
 
 export const animationStyle = getAnimationStyle('default')
 
 export const TypeToSimpleParamsConstructorMapping: {
     [key in keyof SimpleObjectTypeToGenericTypes]: (p: ObjectTypeToParamTypesMapping[key], p5: p5Types, animationStyle: AnimationStyle) => SimpleCanvasAnimationParams
 } = {
-    circle: (p, p5, animationStyle) => new CircleCanvasAnimationParams(p, animationStyle),
-    ellipse: (p, p5, animationStyle) => new EllipseCanvasAnimationParams(p, animationStyle),
-    bezier: (p, p5, animationStyle) => new BezierCanvasAnimationParams(p, animationStyle),
-    highlightedText: (p, p5, animationStyle) => new HighlightedTextCanvasAnimationParams(p, animationStyle),
-    line: (p, p5, animationStyle) => new LineCanvasAnimationParams(p, animationStyle),
-    rectangle: (p, p5, animationStyle) => new RectangleCanvasAnimationParams(p, animationStyle),
-    text: (p, p5, animationStyle) => new TextCanvasAnimationParams(p, animationStyle)
+    // circle: (p, p5, animationStyle) => new CircleCanvasAnimationParams(p, animationStyle),
+    // ellipse: (p, p5, animationStyle) => new EllipseCanvasAnimationParams(p, animationStyle),
+    // bezier: (p, p5, animationStyle) => new BezierCanvasAnimationParams(p, animationStyle),
+    // highlightedText: (p, p5, animationStyle) => new HighlightedTextCanvasAnimationParams(p, animationStyle),
+    // line: (p, p5, animationStyle) => new LineCanvasAnimationParams(p, animationStyle),
+    // rectangle: (p, p5, animationStyle) => new RectangleCanvasAnimationParams(p, animationStyle),
+    // text: (p, p5, animationStyle) => new TextCanvasAnimationParams(p, animationStyle)
 }
 
 export const TypeToConstructorMapping: {
     [key in keyof ObjectTypeToGenericTypes]: (p: ObjectTypeToParamTypesMapping[key], p5: p5Types, animationStyle: AnimationStyle) => CanvasAnimationParams
 } = {
     ...TypeToSimpleParamsConstructorMapping,
-    array: (p, p5, animationStyle) => new ArrayCanvasAnimationParams(p, p5, animationStyle),
-    matrix: (p, p5, animationStyle) => new MatrixCanvasAnimationParams(p, p5, animationStyle),
-    arrow: (p, p5, animationStyle) => new ArrowCanvasAnimationParams(p, p5, animationStyle),
-    codeQuestionnaire: (p, p5, animationStyle) => new CodeQuestionnaireCanvasAnimationParams(p, p5, animationStyle),
-    table: (p, p5, animationStyle) => new TableCanvasAnimationParams(p, p5, animationStyle),
-    xyChart: (p, p5, animationStyle) => new XYChartCanvasAnimationParams(p, p5, animationStyle),
-    graphDataStructure: (p, p5, animationStyle) => new GraphDataStructureParams(p, p5, animationStyle),
-    numberLine: (p, p5, animationStyle) => new NumberLineCanvasAnimationParams(p, p5, animationStyle)
+    //array: (p, p5, animationStyle) => new ArrayCanvasAnimationParams(p, p5, animationStyle),
+    matrix: (p, p5, animationStyle) => {
+        const animationParams = new MatrixObjectParamsConverter().convertJsonParamsToAnimationParams(p)
+        return new MatrixCanvasAnimationParams(animationParams, p5, animationStyle)
+    },
+    // arrow: (p, p5, animationStyle) => new ArrowCanvasAnimationParams(p, p5, animationStyle),
+    // codeQuestionnaire: (p, p5, animationStyle) => new CodeQuestionnaireCanvasAnimationParams(p, p5, animationStyle),
+    // table: (p, p5, animationStyle) => new TableCanvasAnimationParams(p, p5, animationStyle),
+    // xyChart: (p, p5, animationStyle) => new XYChartCanvasAnimationParams(p, p5, animationStyle),
+    // graphDataStructure: (p, p5, animationStyle) => new GraphDataStructureParams(p, p5, animationStyle),
+    // numberLine: (p, p5, animationStyle) => new NumberLineCanvasAnimationParams(p, p5, animationStyle)
 }
 
 export const canvasAnimations: (json: AnimationsJsonType, p5: p5Types) => CanvasAnimationParams[] = (json, p5) => {

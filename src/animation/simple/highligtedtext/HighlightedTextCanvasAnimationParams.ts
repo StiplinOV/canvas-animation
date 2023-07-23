@@ -1,5 +1,5 @@
 import {calculateArrayPercentValue, calculateColorPercentValue, calculatePercentValue} from '../../../common/Utils'
-import {ObjectParams, SelectionType} from '../../CanvasAnimationParams'
+import {ObjectParams} from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle, {ColorType, WebSafeFontsType} from '../../../AnimationStyles'
 import HighlightedTextCanvasAnimation from './HighlightedTextCanvasAnimation'
@@ -147,6 +147,7 @@ import {
 } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 import HighlightedTextCanvasAnimationRenderer from './HighlightedTextCanvasAnimationRenderer'
 import React from 'react'
+import {AnimationObjectParams} from "../../../object/AnimationParams";
 
 export const languageDefs = {
     AccessLog,
@@ -355,19 +356,19 @@ interface OnlyHighlightedTextParamsType {
     height?: number
 }
 
-export interface HighlightedTextParamsType extends ObjectParams, OnlyHighlightedTextParamsType {
+export interface HighlightedTextParamsType extends AnimationObjectParams, OnlyHighlightedTextParamsType {
 }
 
-export interface HighlightedTextCanvasAnimationSelection extends SelectionType {
-    substrings?: {
-        from: number
-        to: number
-        color?: string
-        backgroundColor?: string
-    }[]
-}
+// export interface HighlightedTextCanvasAnimationSelection extends SelectionType {
+//     substrings?: {
+//         from: number
+//         to: number
+//         color?: string
+//         backgroundColor?: string
+//     }[]
+// }
 
-export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAnimationParams<HighlightedTextParamsType, HighlightedTextCanvasAnimationSelection> {
+export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAnimationParams<HighlightedTextParamsType> {
 
     protected getZeroParams(): Omit<HighlightedTextParamsType, keyof ObjectParams> {
         return {
@@ -434,10 +435,10 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
         return result
     }
 
-    protected convertSelectionToTransformObject(selection: HighlightedTextCanvasAnimationSelection): Partial<HighlightedTextParamsType> {
-        return {
-            selectedSubstrings: selection.substrings
-        }
-    }
+    // protected convertSelectionToTransformObject(selection: HighlightedTextCanvasAnimationSelection): Partial<HighlightedTextParamsType> {
+    //     return {
+    //         selectedSubstrings: selection.substrings
+    //     }
+    // }
 
 }

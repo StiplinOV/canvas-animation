@@ -2,9 +2,9 @@ import {TextParamsType} from './animation/simple/text/TextCanvasAnimationParams'
 import {ArrayParamsType, ArraySelectorType} from './animation/complex/array/ArrayCanvasAnimationParams'
 import {CircleParamsType} from './animation/simple/circle/CircleCanvasAnimationParams'
 import {EllipseParamsType} from './animation/simple/ellipse/EllipseCanvasAnimationParams'
-import {Params, SelectionType} from './animation/CanvasAnimationParams'
+//import {Params, SelectionType} from './animation/CanvasAnimationParams'
 import {
-    HighlightedTextCanvasAnimationSelection,
+   // HighlightedTextCanvasAnimationSelection,
     HighlightedTextParamsType
 } from './animation/simple/highligtedtext/HighlightedTextCanvasAnimationParams'
 import {TransformOptions} from './animation/complex/ComplexCanvasAnimationParams'
@@ -26,30 +26,32 @@ import {
     CodeQuestionnaireCanvasAnimationSelection,
     CodeQuestionnaireParamsType
 } from './animation/complex/codequestionnaire/CodeQuestionnaireCanvasAnimationParams'
+import {JsonParams, SelectionType} from "./object/JsonParams";
+import {MatrixJsonObjectParamsType} from "./animation/complex/array/MatrixObjectParamsConverter";
 
 export type SimpleObjectTypeToGenericTypes = {
-    circle: [CircleParamsType, unknown, SelectionType]
-    ellipse: [EllipseParamsType, unknown, SelectionType]
-    bezier: [BezierParamsType, unknown, SelectionType]
-    highlightedText: [HighlightedTextParamsType, unknown, HighlightedTextCanvasAnimationSelection]
-    line: [LineParamsType, unknown, SelectionType]
-    rectangle: [RectangleParamsType, unknown, SelectionType]
-    text: [TextParamsType, unknown, SelectionType]
+    // circle: [CircleParamsType, unknown, SelectionType]
+    // ellipse: [EllipseParamsType, unknown, SelectionType]
+    // bezier: [BezierParamsType, unknown, SelectionType]
+    // highlightedText: [HighlightedTextParamsType, unknown, HighlightedTextCanvasAnimationSelection]
+    // line: [LineParamsType, unknown, SelectionType]
+    // rectangle: [RectangleParamsType, unknown, SelectionType]
+    // text: [TextParamsType, unknown, SelectionType]
 }
 
 export type ObjectTypeToGenericTypes = SimpleObjectTypeToGenericTypes & {
-    array: [ArrayParamsType, TransformOptions, SelectionType<ArraySelectorType>]
-    matrix: [MatrixParamsType, TransformOptions, SelectionType<MatrixSelectorType>]
-    arrow: [ArrowParamsType, TransformOptions, SelectionType]
-    codeQuestionnaire: [CodeQuestionnaireParamsType, TransformOptions, SelectionType<CodeQuestionnaireCanvasAnimationSelection>]
-    table: [TableParamsType, TableTransformOptionsType, SelectionType<TableSelectorType>]
-    xyChart: [XyChartParamsType, TransformOptions, SelectionType<XyChartSelectorType>]
-    graphDataStructure: [GraphDataStructureParamsType, TransformOptions, SelectionType]
-    numberLine: [NumberLineParamsType, TransformOptions, SelectionType]
+    // array: [ArrayParamsType, TransformOptions, SelectionType<ArraySelectorType>]
+    matrix: [MatrixJsonObjectParamsType, TransformOptions, SelectionType<MatrixSelectorType>]
+    // arrow: [ArrowParamsType, TransformOptions, SelectionType]
+    // codeQuestionnaire: [CodeQuestionnaireParamsType, TransformOptions, SelectionType<CodeQuestionnaireCanvasAnimationSelection>]
+    // table: [TableParamsType, TableTransformOptionsType, SelectionType<TableSelectorType>]
+    // xyChart: [XyChartParamsType, TransformOptions, SelectionType<XyChartSelectorType>]
+    // graphDataStructure: [GraphDataStructureParamsType, TransformOptions, SelectionType]
+    // numberLine: [NumberLineParamsType, TransformOptions, SelectionType]
 }
 
 export type ObjectTypeToParamTypesMapping = {
-    [key in keyof ObjectTypeToGenericTypes]: Params<ObjectTypeToGenericTypes[key][0], ObjectTypeToGenericTypes[key][1], ObjectTypeToGenericTypes[key][2]>
+    [key in keyof ObjectTypeToGenericTypes]: JsonParams<ObjectTypeToGenericTypes[key][0], ObjectTypeToGenericTypes[key][1], ObjectTypeToGenericTypes[key][2]>
 }
 
 export type AnimationsJsonType = {

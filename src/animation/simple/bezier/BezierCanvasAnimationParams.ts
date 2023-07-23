@@ -4,12 +4,13 @@ import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
 import BezierCanvasAnimation from './BezierCanvasAnimation'
 import { Point } from '../../../common/Point'
+import {AnimationObjectParams} from "../../../object/AnimationParams";
 
 interface OnlyBezierParamsType {
     originRelativePoints: [Point, Point, Point, Point]
 }
 
-export interface BezierParamsType extends OnlyBezierParamsType, ObjectParams {
+export interface BezierParamsType extends OnlyBezierParamsType, AnimationObjectParams {
 }
 
 export default class BezierCanvasAnimationParams extends SimpleCanvasAnimationParams<BezierParamsType> {

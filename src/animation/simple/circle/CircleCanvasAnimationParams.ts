@@ -3,12 +3,13 @@ import {ObjectParams} from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
 import CircleCanvasAnimation from './CircleCanvasAnimation'
+import {AnimationObjectParams} from "../../../object/AnimationParams";
 
-interface onlyCircleParamsType {
+interface OnlyCircleParamsType {
     diameter: number
 }
 
-export interface CircleParamsType extends onlyCircleParamsType, ObjectParams {
+export interface CircleParamsType extends OnlyCircleParamsType, AnimationObjectParams {
 }
 
 export default class CircleCanvasAnimationParams extends SimpleCanvasAnimationParams<CircleParamsType> {
@@ -19,7 +20,7 @@ export default class CircleCanvasAnimationParams extends SimpleCanvasAnimationPa
         }
     }
 
-    mergeWithTransformation(obj: CircleParamsType, trans: CircleParamsType, perc: number): onlyCircleParamsType {
+    mergeWithTransformation(obj: CircleParamsType, trans: CircleParamsType, perc: number): OnlyCircleParamsType {
         return {
             diameter: trans.diameter ? calculatePercentValue(obj.diameter, trans.diameter, perc) : obj.diameter
         }

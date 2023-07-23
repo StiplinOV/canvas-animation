@@ -4,6 +4,7 @@ import {ObjectParams} from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle, {WebSafeFontsType} from '../../../AnimationStyles'
 import TextCanvasAnimation from './TextCanvasAnimation'
+import {AnimationObjectParams} from "../../../object/AnimationParams";
 
 interface OnlyTextParamsType {
     value: string
@@ -16,7 +17,7 @@ interface OnlyTextParamsType {
     verticalAlign?: VERT_ALIGN
 }
 
-export interface TextParamsType extends ObjectParams, OnlyTextParamsType {
+export interface TextParamsType extends AnimationObjectParams, OnlyTextParamsType {
 }
 
 export default class TextCanvasAnimationParams extends SimpleCanvasAnimationParams<TextParamsType> {

@@ -1,12 +1,9 @@
-import CanvasAnimationParams, {
-    ObjectParams,
-    SelectionType
-} from '../CanvasAnimationParams'
+import CanvasAnimationParams from '../CanvasAnimationParams'
 import AnimationStyle from '../../AnimationStyles'
 import CanvasAnimation from '../CanvasAnimation'
+import {AnimationObjectParams} from "../../object/AnimationParams";
 
-export default abstract class SimpleCanvasAnimationParams<T extends ObjectParams = ObjectParams,
-    V extends SelectionType = SelectionType> extends CanvasAnimationParams<T, unknown, V> {
+export default abstract class SimpleCanvasAnimationParams<T extends AnimationObjectParams = AnimationObjectParams> extends CanvasAnimationParams<T, unknown> {
 
     toCanvasAnimations (animationStyle: AnimationStyle): CanvasAnimation[] {
         return [this.toCanvasAnimation(animationStyle)]

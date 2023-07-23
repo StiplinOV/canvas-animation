@@ -4,12 +4,13 @@ import {ObjectParams} from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
 import LineCanvasAnimation from './LineCanvasAnimation'
+import {AnimationObjectParams} from "../../../object/AnimationParams";
 
 export interface OnlyLineParamsType {
     endPoint: Point
 }
 
-export interface LineParamsType extends ObjectParams, OnlyLineParamsType {
+export interface LineParamsType extends AnimationObjectParams, OnlyLineParamsType {
 }
 
 export default class LineCanvasAnimationParams extends SimpleCanvasAnimationParams<LineParamsType> {

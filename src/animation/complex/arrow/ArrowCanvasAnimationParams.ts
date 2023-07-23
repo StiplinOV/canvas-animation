@@ -15,6 +15,7 @@ import {
 import { Point, ZeroPoint } from '../../../common/Point'
 import { HORIZ_ALIGN, THE_STYLE, VERT_ALIGN } from 'p5'
 import { ColorType, WebSafeFontsType } from '../../../AnimationStyles'
+import {AnimationObjectParams} from "../../../object/AnimationParams";
 
 const arrowBaseLength = 10
 const arrowBaseWidth = 10
@@ -29,7 +30,7 @@ type ArrowLabelType = {
     value: string
 }
 
-export interface ArrowParamsType extends OnlyLineParamsType, ObjectParams {
+export interface ArrowParamsType extends OnlyLineParamsType, AnimationObjectParams {
     startType?: ArrowType
     endType?: ArrowType
     label?: ArrowLabelType | null
@@ -68,6 +69,13 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
             leftHalfArrowHeadParams = {
                 type: 'line',
                 objectParams: {
+                    weight: null,
+                    zIndex: 0,
+                    dashed: null,
+                    strokeColor: null,
+                    fillColor: null,
+                    rotations: [],
+
                     ...arrowHeadLineParams,
                     origin: object.endPoint,
                     endPoint: left
@@ -76,6 +84,13 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
             rightHalfArrowHeadParams = {
                 type: 'line',
                 objectParams: {
+                    weight: null,
+                    zIndex: 0,
+                    dashed: null,
+                    strokeColor: null,
+                    fillColor: null,
+                    rotations: [],
+
                     ...arrowHeadLineParams,
                     origin: object.endPoint,
                     endPoint: right
@@ -89,6 +104,13 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
             leftHalfArrowTailParams = {
                 type: 'line',
                 objectParams: {
+                    weight: null,
+                    zIndex: 0,
+                    dashed: null,
+                    strokeColor: null,
+                    fillColor: null,
+                    rotations: [],
+
                     ...arrowHeadLineParams,
                     origin: object.origin,
                     endPoint: left
@@ -97,6 +119,13 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
             rightHalfArrowTailParams = {
                 type: 'line',
                 objectParams: {
+                    weight: null,
+                    zIndex: 0,
+                    dashed: null,
+                    strokeColor: null,
+                    fillColor: null,
+                    rotations: [],
+
                     ...arrowHeadLineParams,
                     origin: object.origin,
                     endPoint: right
@@ -114,8 +143,14 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
             result.set('label', {
                 type: 'text',
                 objectParams: {
+                    weight: null,
+                    zIndex: 0,
+                    dashed: null,
+                    strokeColor: null,
+                    rotations: [],
+
                     origin: this.calculateLabelPosition(object),
-                    fillColor: object.label.fillColor,
+                    fillColor: object.label.fillColor ?? null,
                     fontSize: object.label.fontSize,
                     textStyle: object.label.textStyle,
                     font: object.label.font,
@@ -130,7 +165,7 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
     }
 
     private createShaftArrowParams (object: ArrowParamsType): CanvasAnimationParamsType {
-        const objectParams: Partial<ObjectParams> = {
+        const objectParams: Partial<AnimationObjectParams> = {
             weight: object.weight,
             zIndex: object.zIndex,
             rotations: object.rotations,
@@ -141,6 +176,13 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
             return {
                 type: 'bezier',
                 objectParams: {
+                    weight: null,
+                    zIndex: 0,
+                    dashed: null,
+                    fillColor: null,
+                    strokeColor: null,
+                    rotations: [],
+
                     ...objectParams,
                     origin: object.origin,
                     originRelativePoints: [
@@ -155,6 +197,13 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
         return {
             type: 'line',
             objectParams: {
+                weight: null,
+                zIndex: 0,
+                dashed: null,
+                fillColor: null,
+                strokeColor: null,
+                rotations: [],
+
                 ...objectParams,
                 origin: object.origin,
                 endPoint: object.endPoint

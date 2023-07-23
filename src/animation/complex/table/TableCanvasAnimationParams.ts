@@ -4,8 +4,9 @@ import ComplexCanvasAnimationParams, {
     CanvasAnimationParamsType,
     TransformOptions
 } from '../ComplexCanvasAnimationParams'
+import {AnimationObjectParams} from "../../../object/AnimationParams";
 
-export interface TableParamsType extends ObjectParams {
+export interface TableParamsType extends AnimationObjectParams {
     values: string[][]
     width: number
     height: number
@@ -31,7 +32,7 @@ export interface TableTransformOptionsType extends TransformOptions {
     }
 }
 
-export default class TableCanvasAnimationParams extends ComplexCanvasAnimationParams<TableParamsType, TableSelectorType, TableTransformOptionsType> {
+export default class TableCanvasAnimationParams extends ComplexCanvasAnimationParams<TableParamsType, TableTransformOptionsType> {
 
     protected getZeroParams (): Omit<TableParamsType, keyof ObjectParams> {
         return {
@@ -68,6 +69,11 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                     result.set(`horizontal line ${i} ${j}`, {
                         type: 'line',
                         objectParams: {
+                            dashed: null,
+                            fillColor: null,
+                            strokeColor: null,
+                            zIndex: 0,
+
                             origin: addPoints(origin, {
                                 x: accumulatedWidth,
                                 y: rowHeight * (i + 1)
@@ -86,6 +92,11 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                     result.set(`vertical line ${i} ${j}`, {
                         type: 'line',
                         objectParams: {
+                            dashed: null,
+                            fillColor: null,
+                            strokeColor: null,
+                            zIndex: 0,
+
                             origin: addPoints(origin, {
                                 x: accumulatedWidth,
                                 y: i * rowHeight
@@ -104,6 +115,9 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                         result.set(`markedCell ${i} ${j}`, {
                             type: 'ellipse',
                             objectParams: {
+                                dashed: null,
+                                fillColor: null,
+
                                 origin: addPoints(origin, {
                                     x: accumulatedWidth - columnWidth / 2,
                                     y: rowHeight * i + (rowHeight / 2)
@@ -121,6 +135,12 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                 result.set(title ? `title ${i} ${j}` : `value ${i} ${j}`, {
                     type: 'text',
                     objectParams: {
+                        weight: null,
+                        dashed: null,
+                        fillColor: null,
+                        strokeColor: null,
+                        zIndex: 0,
+
                         fontSize: object.fontSize,
                         origin: addPoints(origin, {
                             x: accumulatedWidth - columnWidth / 2,

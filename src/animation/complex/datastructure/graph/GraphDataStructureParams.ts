@@ -7,6 +7,7 @@ import AnimationStyle, { ColorType, WebSafeFontsType } from '../../../../Animati
 import ArrowCanvasAnimationParams, { ArrowParamsType, ArrowType } from '../../arrow/ArrowCanvasAnimationParams'
 import { v4 } from 'uuid'
 import { Point } from '../../../../common/Point'
+import {AnimationObjectParams} from "../../../../object/AnimationParams";
 
 type VerticesEdges = {
     vertices: VertexType[]
@@ -46,7 +47,7 @@ type EdgeType = {
     style?: EdgeStyle
 }
 
-export interface GraphDataStructureParamsType extends ObjectParams {
+export interface GraphDataStructureParamsType extends AnimationObjectParams {
     vertices: VertexType[]
     edges: EdgeType[]
     vertexStyle?: VertexStyle
@@ -111,18 +112,29 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
                 result.set(`vertexCircle ${id}`, {
                     type: 'circle',
                     objectParams: {
+                        weight: null,
+                        dashed: null,
+                        rotations: [],
+                        zIndex: 0,
+
                         origin: addPoints(origin, offset, {
                             x: dagreNode.x,
                             y: dagreNode.y
                         }),
                         diameter: style.diameter,
-                        strokeColor: style.strokeColor,
-                        fillColor: style.fillColor
+                        strokeColor: style.strokeColor ?? null,
+                        fillColor: style.fillColor ?? null
                     }
                 })
                 vertex.label && result.set(`vertexValue ${id}`, {
                     type: 'text',
                     objectParams: {
+                        weight: null,
+                        dashed: null,
+                        strokeColor: null,
+                        rotations: [],
+                        zIndex: 0,
+
                         origin: addPoints(origin, offset, {
                             x: dagreNode.x,
                             y: dagreNode.y
@@ -133,7 +145,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
                         horizontalAlign: 'center',
                         font: style.font,
                         textStyle: style.textStyle,
-                        fillColor: style.fontColor
+                        fillColor: style.fontColor ?? null
                     }
                 })
             })
@@ -163,15 +175,22 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
                 const edgeEndPoint = this.calculateEdgePoint(wVertexDiameter, addPoints(origin, offset, wNode), endVertexAngle)
                 mergeValueToMap(vertexEdgeAnglesMap, edge.sourceId, startVertexAngle, () => new Set<number>())
                 mergeValueToMap(vertexEdgeAnglesMap, edge.targetId, endVertexAngle, () => new Set<number>())
-                new ArrowCanvasAnimationParams({
-                    object: {
-                        ...this.calculateArrowParams(animationStyle, edge, edgeStyle),
-                        origin: edgeStartPoint,
-                        endPoint: edgeEndPoint
-                    }
-                }, this.p5, animationStyle).getIncludedAnimationParams().forEach((value, key) => {
-                    result.set(`edgeLine ${e.v}-${e.w} ${key}`, value)
-                })
+                // new ArrowCanvasAnimationParams({
+                //     object: {
+                //         weight: null,
+                //         dashed: null,
+                //         fillColor: null,
+                //         strokeColor: null,
+                //         rotations: [],
+                //         zIndex: 0,
+                //
+                //         ...this.calculateArrowParams(animationStyle, edge, edgeStyle),
+                //         origin: edgeStartPoint,
+                //         endPoint: edgeEndPoint
+                //     }
+                // }, this.p5, animationStyle).getIncludedAnimationParams().forEach((value, key) => {
+                //     result.set(`edgeLine ${e.v}-${e.w} ${key}`, value)
+                // })
             })
             pointedToItselfVertexIdEdgeMap.forEach((edge, vertexId) => {
                 let dagreNode: Point = dagreGraph.node(vertexId)
@@ -183,19 +202,19 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
                     this.calculateVertexStyle(animationStyle, vertexStyle, vertexIdMap.get(vertexId)?.style).diameter
                 )
 
-                new ArrowCanvasAnimationParams({
-                    object: {
-                        ...this.calculateArrowParams(animationStyle, edge, edgeStyle),
-                        origin: addPoints(object.origin, offset, dagreNode, points[0]),
-                        endPoint: addPoints(object.origin, offset, dagreNode, points[3]),
-                        bezierParams: {
-                            point2: addPoints(object.origin, offset, dagreNode, points[1]),
-                            point3: addPoints(object.origin, offset, dagreNode, points[2])
-                        }
-                    }
-                }, this.p5, animationStyle).getIncludedAnimationParams().forEach((value, key) => {
-                    result.set(`edgeLine ${vertexId}-${vertexId} ${key}`, value)
-                })
+                // new ArrowCanvasAnimationParams({
+                //     object: {
+                //         ...this.calculateArrowParams(animationStyle, edge, edgeStyle),
+                //         origin: addPoints(object.origin, offset, dagreNode, points[0]),
+                //         endPoint: addPoints(object.origin, offset, dagreNode, points[3]),
+                //         bezierParams: {
+                //             point2: addPoints(object.origin, offset, dagreNode, points[1]),
+                //             point3: addPoints(object.origin, offset, dagreNode, points[2])
+                //         }
+                //     }
+                // }, this.p5, animationStyle).getIncludedAnimationParams().forEach((value, key) => {
+                //     result.set(`edgeLine ${vertexId}-${vertexId} ${key}`, value)
+                // })
             })
             //
         })

@@ -6,6 +6,7 @@ import ComplexCanvasAnimationParams, {
 } from '../ComplexCanvasAnimationParams'
 import ArrowCanvasAnimationParams from '../arrow/ArrowCanvasAnimationParams'
 import { ColorType } from '../../../AnimationStyles'
+import {AnimationObjectParams} from "../../../object/AnimationParams";
 
 const coordinateDashWidth = 20
 const toScaleType = (value: scaleType | number): scaleType => {
@@ -56,7 +57,7 @@ type Bar = {
     zIndex?: number
 }
 
-export interface XyChartParamsType extends ObjectParams {
+export interface XyChartParamsType extends AnimationObjectParams {
     width: number
     height: number
     xScale?: (scaleType | number)[]
@@ -135,6 +136,11 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             result.set(`chartBar ${index}`, {
                 type: 'rectangle',
                 objectParams: {
+                    weight: null,
+                    dashed: null,
+                    strokeColor: null,
+                    rotations: [],
+
                     origin: {
                         x: x - width / 2,
                         y
@@ -146,24 +152,28 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                 }
             })
             if (value.pointer) {
-                new ArrowCanvasAnimationParams({
-                    object: {
-                        origin: {
-                            x,
-                            y: y - yStepHeight
-                        },
-                        endPoint: {
-                            x,
-                            y: y - coordinateDashWidth / 2
-                        },
-                        endType: 'Arrow',
-                        weight: 'bold',
-                        strokeColor: 'secondary',
-                        zIndex: value.zIndex
-                    }
-                }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
-                    result.set(`chartBarPoint ${index}` + k, v)
-                })
+                // new ArrowCanvasAnimationParams({
+                //     object: {
+                //         dashed: null,
+                //         fillColor: null,
+                //         rotations: [],
+                //
+                //         origin: {
+                //             x,
+                //             y: y - yStepHeight
+                //         },
+                //         endPoint: {
+                //             x,
+                //             y: y - coordinateDashWidth / 2
+                //         },
+                //         endType: 'Arrow',
+                //         weight: 'bold',
+                //         strokeColor: 'secondary',
+                //         zIndex: value.zIndex ?? 0
+                //     }
+                // }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
+                //     result.set(`chartBarPoint ${index}` + k, v)
+                // })
             }
         })
         objChartPoints.forEach((value, index) => {
@@ -178,6 +188,10 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             result.set(`chartPoint ${index}`, {
                 type: 'circle',
                 objectParams: {
+                    dashed: null,
+                    fillColor: null,
+                    strokeColor: null,
+
                     origin: pointCoordinate,
                     diameter: chartPointsDiameter,
                     weight: 2,
@@ -188,6 +202,12 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             result.set(`chartPointValue ${index}`, {
                 type: 'text',
                 objectParams: {
+                    weight: null,
+                    dashed: null,
+                    fillColor: null,
+                    strokeColor: null,
+                    zIndex: 0,
+
                     origin: {
                         x: pointCoordinate.x,
                         y: pointCoordinate.y + (textPosition === 'below' ? 10 : -10)
@@ -203,6 +223,11 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         objChartLines.forEach((line, index) => result.set(`chartLine ${index}`, {
             type: 'line',
             objectParams: {
+                dashed: null,
+                fillColor: null,
+                strokeColor: null,
+                zIndex: 0,
+
                 origin: this.convertPointToCoordinate(object, line[0]),
                 endPoint: this.convertPointToCoordinate(object, line[1]),
                 weight: 3,
@@ -228,10 +253,15 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             result.set(`backgroundSelectedRectangleArea ${index}`, {
                 type: 'rectangle',
                 objectParams: {
+                    weight: null,
+                    dashed: null,
+                    strokeColor: null,
+                    rotations: [],
+
                     origin: leftUpCornerPoint,
                     width,
                     height,
-                    fillColor: value.color,
+                    fillColor: value.color ?? null,
                     zIndex: value.zIndex ?? -1
                 }
             })
@@ -250,25 +280,38 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         const xAxisName = object.xAxisName ?? ''
 
         if (!object.hideXAxis) {
-            new ArrowCanvasAnimationParams({
-                object: {
-                    origin,
-                    endPoint: addPoints(origin, {
-                        x: width,
-                        y: 0
-                    }),
-                    endType: 'Arrow',
-                    weight: 2,
-                    rotations
-                }
-            }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
-                result.set('xArrow ' + k, v)
-            })
+            // new ArrowCanvasAnimationParams({
+            //     object: {
+            //         weight: null,
+            //         dashed: null,
+            //         fillColor: null,
+            //         strokeColor: null,
+            //         rotations: [],
+            //         zIndex: 0,
+            //
+            //         origin,
+            //         endPoint: addPoints(origin, {
+            //             x: width,
+            //             y: 0
+            //         }),
+            //         endType: 'Arrow',
+            //         weight: 2,
+            //         rotations
+            //     }
+            // }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
+            //     result.set('xArrow ' + k, v)
+            // })
         }
 
         result.set('xText', {
             type: 'text',
             objectParams: {
+                weight: null,
+                dashed: null,
+                fillColor: null,
+                strokeColor: null,
+                zIndex: 0,
+
                 origin: addPoints(origin, {
                     x: width / 2,
                     y: coordinateDashWidth * 2
@@ -286,6 +329,11 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                 result.set(`xScaleLine ${index}`, {
                     type: 'line',
                     objectParams: {
+                        weight: null,
+                        dashed: null,
+                        fillColor: null,
+                        strokeColor: null,
+
                         origin: {
                             x,
                             y: -coordinateDashWidth / 2 + origin.y
@@ -302,6 +350,12 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             result.set(`xScaleValue ${index}`, {
                 type: 'text',
                 objectParams: {
+                    weight: null,
+                    dashed: null,
+                    fillColor: null,
+                    strokeColor: null,
+                    zIndex: 0,
+
                     origin: {
                         x,
                         y: Number(coordinateDashWidth) + origin.y
@@ -328,20 +382,27 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         const yAxisName = object.yAxisName ?? ''
 
         if (!object.hideYAxis) {
-            new ArrowCanvasAnimationParams({
-                object: {
-                    origin,
-                    endPoint: addPoints(origin, {
-                        x: 0,
-                        y: -height
-                    }),
-                    endType: 'Arrow',
-                    weight: 2,
-                    rotations
-                }
-            }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
-                result.set('yArrow ' + k, v)
-            })
+            // new ArrowCanvasAnimationParams({
+            //     object: {
+            //         weight: null,
+            //         dashed: null,
+            //         fillColor: null,
+            //         strokeColor: null,
+            //         rotations: [],
+            //         zIndex: 0,
+            //
+            //         origin,
+            //         endPoint: addPoints(origin, {
+            //             x: 0,
+            //             y: -height
+            //         }),
+            //         endType: 'Arrow',
+            //         weight: 2,
+            //         rotations
+            //     }
+            // }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
+            //     result.set('yArrow ' + k, v)
+            // })
         }
 
         const yTextOrigin = addPoints(origin, {
@@ -351,6 +412,12 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         result.set('yText', {
             type: 'text',
             objectParams: {
+                weight: null,
+                dashed: null,
+                fillColor: null,
+                strokeColor: null,
+                zIndex: 0,
+
                 origin: yTextOrigin,
                 value: yAxisName,
                 fontSize: 20,
@@ -369,6 +436,11 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                 result.set(`yScaleLine ${index}`, {
                     type: 'line',
                     objectParams: {
+                        weight: null,
+                        dashed: null,
+                        fillColor: null,
+                        strokeColor: null,
+
                         origin: {
                             x: -coordinateDashWidth / 2 + origin.x,
                             y
@@ -385,6 +457,12 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             result.set(`yScaleValue ${index}`, {
                 type: 'text',
                 objectParams: {
+                    weight: null,
+                    dashed: null,
+                    fillColor: null,
+                    strokeColor: null,
+                    zIndex: 0,
+
                     origin: {
                         x: -Number(coordinateDashWidth) + origin.x,
                         y
@@ -418,6 +496,11 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             result.set(`objectChartYRangeFirstLine ${index}`, {
                 type: 'line',
                 objectParams: {
+                    weight: null,
+                    fillColor: null,
+                    strokeColor: null,
+                    zIndex: 0,
+
                     origin: {
                         x: origin.x,
                         y: firstPointY
@@ -433,6 +516,11 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             result.set(`objectChartYRangeSecondLine ${index}`, {
                 type: 'line',
                 objectParams: {
+                    weight: null,
+                    fillColor: null,
+                    strokeColor: null,
+                    zIndex: 0,
+
                     origin: {
                         x: origin.x,
                         y: secondPointY
@@ -445,25 +533,32 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     rotations
                 }
             })
-            new ArrowCanvasAnimationParams(
-                {
-                    object: {
-                        origin: {
-                            x: endXCoord,
-                            y: firstPointY
-                        },
-                        endPoint: {
-                            x: endXCoord,
-                            y: secondPointY
-                        },
-                        startType: 'Arrow',
-                        endType: 'Arrow',
-                        weight: 2,
-                        rotations
-                    }
-                }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
-                result.set(`objectChartYRangeArrow ${index} ${k}`, v)
-            })
+            // new ArrowCanvasAnimationParams(
+            //     {
+            //         object: {
+            //             weight: null,
+            //             dashed: null,
+            //             fillColor: null,
+            //             strokeColor: null,
+            //             rotations: [],
+            //             zIndex: 0,
+            //
+            //             origin: {
+            //                 x: endXCoord,
+            //                 y: firstPointY
+            //             },
+            //             endPoint: {
+            //                 x: endXCoord,
+            //                 y: secondPointY
+            //             },
+            //             startType: 'Arrow',
+            //             endType: 'Arrow',
+            //             weight: 2,
+            //             rotations
+            //         }
+            //     }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
+            //     result.set(`objectChartYRangeArrow ${index} ${k}`, v)
+            // })
             const objChartRangeValueOrigin = {
                 x: endXCoord,
                 y: (firstPointY + secondPointY) / 2
@@ -471,6 +566,12 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             result.set(`objectChartYRangeValue ${index}`, {
                 type: 'text',
                 objectParams: {
+                    weight: null,
+                    dashed: null,
+                    fillColor: null,
+                    strokeColor: null,
+                    zIndex: 0,
+
                     origin: objChartRangeValueOrigin,
                     value: objChartRange.value,
                     horizontalAlign: 'center',
@@ -502,6 +603,11 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             result.set(`objectChartXRangeFirstLine ${index}`, {
                 type: 'line',
                 objectParams: {
+                    weight: null,
+                    fillColor: null,
+                    strokeColor: null,
+                    zIndex: 0,
+
                     origin: {
                         x: firstPointX,
                         y: origin.y
@@ -517,6 +623,11 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             result.set(`objectChartXRangeSecondLine ${index}`, {
                 type: 'line',
                 objectParams: {
+                    weight: null,
+                    fillColor: null,
+                    strokeColor: null,
+                    zIndex: 0,
+
                     origin: {
                         x: secondPointX,
                         y: origin.y
@@ -529,25 +640,32 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     rotations
                 }
             })
-            new ArrowCanvasAnimationParams(
-                {
-                    object: {
-                        origin: {
-                            x: firstPointX,
-                            y: startYCoord
-                        },
-                        endPoint: {
-                            x: secondPointX,
-                            y: startYCoord
-                        },
-                        startType: 'Arrow',
-                        endType: 'Arrow',
-                        weight: 2,
-                        rotations
-                    }
-                }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
-                result.set(`objectChartXRangeArrow ${index} ${k}`, v)
-            })
+            // new ArrowCanvasAnimationParams(
+            //     {
+            //         object: {
+            //             weight: null,
+            //             dashed: null,
+            //             fillColor: null,
+            //             strokeColor: null,
+            //             rotations: [],
+            //             zIndex: 0,
+            //
+            //             origin: {
+            //                 x: firstPointX,
+            //                 y: startYCoord
+            //             },
+            //             endPoint: {
+            //                 x: secondPointX,
+            //                 y: startYCoord
+            //             },
+            //             startType: 'Arrow',
+            //             endType: 'Arrow',
+            //             weight: 2,
+            //             rotations
+            //         }
+            //     }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
+            //     result.set(`objectChartXRangeArrow ${index} ${k}`, v)
+            // })
             const objChartRangeValueOrigin = {
                 x: (firstPointX + secondPointX) / 2,
                 y: startYCoord
@@ -555,6 +673,12 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             result.set(`objectChartXRangeValue ${index}`, {
                 type: 'text',
                 objectParams: {
+                    weight: null,
+                    dashed: null,
+                    fillColor: null,
+                    strokeColor: null,
+                    zIndex: 0,
+
                     origin: objChartRangeValueOrigin,
                     value: objChartRange.value,
                     horizontalAlign: 'center',

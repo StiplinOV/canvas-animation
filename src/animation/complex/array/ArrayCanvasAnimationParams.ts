@@ -5,8 +5,9 @@ import ComplexCanvasAnimationParams, {
 } from '../ComplexCanvasAnimationParams'
 import ArrayElement, { ElementStyle, ElementType } from './ArrayElement'
 import ArrowCanvasAnimationParams from '../arrow/ArrowCanvasAnimationParams'
+import {AnimationObjectParams} from "../../../object/AnimationParams";
 
-export interface ArrayParamsType extends ObjectParams {
+export interface ArrayParamsType extends AnimationObjectParams {
     values: (ElementType | string | boolean | number)[]
     height: number
     width?: number
@@ -53,6 +54,12 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
             result.set('array title', {
                 type: 'text',
                 objectParams: {
+                    weight: null,
+                    zIndex: 0,
+                    dashed: null,
+                    strokeColor: null,
+                    fillColor: null,
+
                     value: title,
                     origin: addPoints(origin, {
                         x: width / 2,
@@ -77,19 +84,26 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
                     }
                 }
             }
-            new ArrayElement({
-                object: {
-                    origin: addPoints(origin, {
-                        x: index * (arrayRectangleWidth + partHeight),
-                        y: partShift
-                    }),
-                    value,
-                    width: arrayRectangleWidth,
-                    height: partHeight * 3
-                }
-            }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
-                result.set(`${k} ${index}`, v)
-            })
+            // new ArrayElement({
+            //     object: {
+            //         weight: null,
+            //         zIndex: 0,
+            //         dashed: null,
+            //         strokeColor: null,
+            //         fillColor: null,
+            //         rotations: null,
+            //
+            //         origin: addPoints(origin, {
+            //             x: index * (arrayRectangleWidth + partHeight),
+            //             y: partShift
+            //         }),
+            //         value,
+            //         width: arrayRectangleWidth,
+            //         height: partHeight * 3
+            //     }
+            // }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
+            //     result.set(`${k} ${index}`, v)
+            // })
         })
         partShift += partHeight * 4
         if (!hideIndices) {
@@ -97,6 +111,12 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
                 result.set(`index text ${index}`, {
                     type: 'text',
                     objectParams: {
+                        weight: null,
+                        zIndex: 0,
+                        dashed: null,
+                        strokeColor: null,
+                        fillColor: null,
+
                         value: String(index + (firstIndex ?? 0)),
                         origin: addPoints(origin, {
                             x: index * (arrayRectangleWidth + partHeight) + arrayRectangleWidth / 2,
@@ -114,6 +134,12 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
             result.set('index title', {
                 type: 'text',
                 objectParams: {
+                    weight: null,
+                    zIndex: 0,
+                    dashed: null,
+                    strokeColor: null,
+                    fillColor: null,
+
                     value: indexTitle,
                     origin: addPoints(origin, {
                         x: width / 2,
@@ -128,24 +154,24 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
         }
         values.forEach((valueParam, index) => {
             if (pointers?.includes(index)) {
-                new ArrowCanvasAnimationParams(
-                    {
-                        object: {
-                            origin: addPoints(origin, {
-                                x: index * (arrayRectangleWidth + partHeight) + arrayRectangleWidth / 2,
-                                y: partShift
-                            }),
-                            endPoint: addPoints(origin, {
-                                x: index * (arrayRectangleWidth + partHeight) + arrayRectangleWidth / 2,
-                                y: partShift + arrayRectangleWidth
-                            }),
-                            startType: 'Arrow',
-                            weight: arrayRectangleWidth / 30
-                        }
-                    },
-                    this.p5,
-                    this.getAnimationStyle()
-                ).getIncludedAnimationParams().forEach((v, k) => result.set(`element pointer ${index} ${k}`, v))
+                // new ArrowCanvasAnimationParams(
+                //     {
+                //         object: {
+                //             origin: addPoints(origin, {
+                //                 x: index * (arrayRectangleWidth + partHeight) + arrayRectangleWidth / 2,
+                //                 y: partShift
+                //             }),
+                //             endPoint: addPoints(origin, {
+                //                 x: index * (arrayRectangleWidth + partHeight) + arrayRectangleWidth / 2,
+                //                 y: partShift + arrayRectangleWidth
+                //             }),
+                //             startType: 'Arrow',
+                //             weight: arrayRectangleWidth / 30
+                //         }
+                //     },
+                //     this.p5,
+                //     this.getAnimationStyle()
+                // ).getIncludedAnimationParams().forEach((v, k) => result.set(`element pointer ${index} ${k}`, v))
             }
         })
 

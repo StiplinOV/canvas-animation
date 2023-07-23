@@ -1,4 +1,4 @@
-import CanvasAnimationParams, {ObjectParams, Params, SelectionType} from '../CanvasAnimationParams'
+import CanvasAnimationParams, {ObjectParams} from '../CanvasAnimationParams'
 import p5Types from 'p5'
 import AnimationStyle from '../../AnimationStyles'
 import SimpleCanvasAnimationParams from '../simple/SimpleCanvasAnimationParams'
@@ -12,12 +12,7 @@ import {BezierParamsType} from '../simple/bezier/BezierCanvasAnimationParams'
 import {HighlightedTextParamsType} from '../simple/highligtedtext/HighlightedTextCanvasAnimationParams'
 import {LineParamsType} from '../simple/line/LineCanvasAnimationParams'
 import {TypeToSimpleParamsConstructorMapping} from '../../Animations'
-
-export interface AnimationSelectedInfo {
-    key: string
-    startSelectionPercent?: number
-    endSelectionPercent?: number
-}
+import {AnimationObjectParams, AnimationParams} from "../../object/AnimationParams";
 
 export type AnimationS2T = { source: CanvasAnimationParamsType, target: CanvasAnimationParamsType }
 
@@ -48,17 +43,17 @@ export type CanvasAnimationParamsType<T extends keyof TypeToObjectMapping = keyo
     objectParams: TypeToObjectMapping[T]
 }
 
-export default abstract class ComplexCanvasAnimationParams<T extends ObjectParams = ObjectParams, U = unknown, V extends TransformOptions = TransformOptions>
-    extends CanvasAnimationParams<T, V, SelectionType<U>> {
+export default abstract class ComplexCanvasAnimationParams<T extends AnimationObjectParams = AnimationObjectParams, V extends TransformOptions = TransformOptions>
+    extends CanvasAnimationParams<T, V> {
 
     public readonly p5: p5Types
 
-    constructor(params: Params<T, V, SelectionType<U>>, p5: p5Types, animationStyle: AnimationStyle) {
+    constructor(params: AnimationParams<T, V>, p5: p5Types, animationStyle: AnimationStyle) {
         super(params, animationStyle)
         this.p5 = p5
     }
 
-    protected toSimpleCanvasAnimationParams(): SimpleCanvasAnimationParams[] {
+    private toSimpleCanvasAnimationParams(): SimpleCanvasAnimationParams[] {
         const objectParamsWithTime = this.getObjectParamsWithTime()
         if (objectParamsWithTime.length === 0) {
             return []
@@ -102,11 +97,10 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
             prevObjectParams = nextObjectParams
         }
 
-        console.log(JSON.stringify(Array.from(result.values())))
         return Array.from(result.values())
     }
 
-    protected applySimpleTransformAnimations(
+    private applySimpleTransformAnimations(
         animations: Map<string, SimpleCanvasAnimationParams>,
         time: number,
         duration: number,
@@ -125,8 +119,12 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
                     appearDuration: duration
                 })
                 pastParams.appendTransformation({
-                    appearTime: time,
-                    appearDuration: duration,
+                    presence: {
+                        appearTime: time,
+                        appearDuration: duration,
+                        disappearTime: Number.POSITIVE_INFINITY,
+                        disappearDuration: 0
+                    },
                     object: value.objectParams
                 })
             } else {
@@ -156,8 +154,12 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
             deletedAnimation.setPresenceParam(presenceParam)
         })
         changed.forEach((value, key) => animations.get(key)?.appendTransformation({
-            appearTime: time,
-            appearDuration: duration,
+            presence: {
+                appearTime: time,
+                appearDuration: duration,
+                disappearTime: Number.POSITIVE_INFINITY,
+                disappearDuration: 0
+            },
             object: value.target.objectParams
         }))
     }
@@ -168,7 +170,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
 
     protected abstract getIncludedAnimationParamsByParameter(object: T): Map<string, CanvasAnimationParamsType>
 
-    getAnimationsSetDifference(
+    private getAnimationsSetDifference(
         left: Map<string, CanvasAnimationParamsType>,
         right: Map<string, CanvasAnimationParamsType>
     ): AnimationsSetDifferenceType {
@@ -205,7 +207,7 @@ export default abstract class ComplexCanvasAnimationParams<T extends ObjectParam
         return obj
     }
 
-    createSimpleParamsObject(params: CanvasAnimationParamsType, presenceParameters?: Partial<PresenceParamType>[]): SimpleCanvasAnimationParams {
+    private createSimpleParamsObject(params: CanvasAnimationParamsType, presenceParameters?: Partial<PresenceParamType>[]): SimpleCanvasAnimationParams {
         const constructor = TypeToSimpleParamsConstructorMapping[params.type]
         return constructor(
             {

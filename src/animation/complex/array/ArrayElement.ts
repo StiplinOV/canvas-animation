@@ -3,6 +3,7 @@ import { addPoints } from '../../../common/Utils'
 import ComplexCanvasAnimationParams, {CanvasAnimationParamsType} from '../ComplexCanvasAnimationParams'
 import { ColorType } from '../../../AnimationStyles'
 import { THE_STYLE } from 'p5'
+import {AnimationObjectParams} from "../../../object/AnimationParams";
 
 export type ElementStyle = {
     backgroundColor?: ColorType
@@ -17,7 +18,7 @@ export type ElementType = {
     style?: ElementStyle
 }
 
-export interface ArrayElementParamsType extends ObjectParams {
+export interface ArrayElementParamsType extends AnimationObjectParams {
     value: ElementType | string | boolean | number
     height: number
     width?: number
@@ -66,16 +67,27 @@ export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElem
         result.set('square', {
             type: 'rectangle',
             objectParams: {
+                weight: null,
+                zIndex: 0,
+                dashed: null,
+                rotations: null,
+
                 origin,
                 width,
                 height,
-                fillColor: style.backgroundColor,
-                strokeColor: style.strokeColor
+                fillColor: style.backgroundColor ?? null,
+                strokeColor: style.strokeColor ?? null
             }
         })
         label && result.set('label', {
             type: 'text',
             objectParams: {
+                weight: null,
+                zIndex: 0,
+                dashed: null,
+                strokeColor: null,
+                rotations: null,
+
                 origin: addPoints(origin, {
                     x: width / 2,
                     y: height / 2
@@ -83,7 +95,7 @@ export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElem
                 horizontalAlign: 'center',
                 verticalAlign: 'center',
                 fontSize: style.fontSize ?? fontSize,
-                fillColor: style.fontColor,
+                fillColor: style.fontColor ?? null,
                 textStyle: style.textStyle,
                 value: label
             }

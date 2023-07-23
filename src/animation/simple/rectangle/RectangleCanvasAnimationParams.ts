@@ -4,19 +4,20 @@ import AnimationStyle from '../../../AnimationStyles'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import RectangleCanvasAnimation from './RectangleCanvasAnimation'
 import {Point} from '../../../common/Point'
+import {AnimationObjectParams} from "../../../object/AnimationParams";
 
-interface onlyRectangleParamsType {
+interface OnlyRectangleParamsType {
     width: number
     height: number
     cornerRadius?: number
 }
 
-export interface RectangleParamsType extends onlyRectangleParamsType, ObjectParams {
+export interface RectangleParamsType extends OnlyRectangleParamsType, AnimationObjectParams {
 }
 
 export default class RectangleCanvasAnimationParams extends SimpleCanvasAnimationParams<RectangleParamsType> {
 
-    mergeWithTransformation(obj: RectangleParamsType, trans: Partial<RectangleParamsType>, perc: number, style: AnimationStyle): onlyRectangleParamsType {
+    mergeWithTransformation(obj: RectangleParamsType, trans: Partial<RectangleParamsType>, perc: number, style: AnimationStyle): OnlyRectangleParamsType {
         let cornerRadius = obj.cornerRadius ?? style.cornerRadius
         if (trans.cornerRadius !== undefined) {
             cornerRadius = calculatePercentValue(cornerRadius, trans.cornerRadius, perc)

@@ -5,8 +5,9 @@ import ComplexCanvasAnimationParams, {
 } from '../ComplexCanvasAnimationParams'
 import { Point } from '../../../common/Point'
 import ArrayElement, { ElementStyle, ElementType } from './ArrayElement'
+import {AnimationObjectParams} from "../../../object/AnimationParams";
 
-export interface MatrixParamsType extends ObjectParams {
+export interface MatrixParamsType extends AnimationObjectParams {
     values: (ElementType | string | boolean | number)[][]
     height: number
     width?: number
@@ -19,7 +20,7 @@ export type MatrixSelectorType = {
     elements: Point[] | 'all'
 }
 
-export default class MatrixCanvasAnimationParams extends ComplexCanvasAnimationParams<MatrixParamsType, MatrixSelectorType> {
+export default class MatrixCanvasAnimationParams extends ComplexCanvasAnimationParams<MatrixParamsType> {
 
     protected getZeroParams (): Omit<MatrixParamsType, keyof ObjectParams> {
         return {
@@ -54,6 +55,13 @@ export default class MatrixCanvasAnimationParams extends ComplexCanvasAnimationP
             result.set('title', {
                 type: 'text',
                 objectParams: {
+                    weight: null,
+                    dashed: null,
+                    fillColor: null,
+                    strokeColor: null,
+                    rotations: [],
+                    zIndex: 0,
+
                     origin: addPoints(origin, {
                         x: matrixWidth / 2,
                         y: rowGap + valueHeight / 2
@@ -78,19 +86,26 @@ export default class MatrixCanvasAnimationParams extends ComplexCanvasAnimationP
                         }
                     }
                 }
-                new ArrayElement({
-                    object: {
-                        origin: addPoints(origin, {
-                            x: colGap + j * (valueWidth + colGap),
-                            y: topX + i * (valueHeight + rowGap)
-                        }),
-                        value,
-                        width: valueWidth,
-                        height: valueHeight
-                    }
-                }, this.p5, animationStyle).getIncludedAnimationParams().forEach((v, k) => {
-                    result.set(`${k} [${i}][${j}]`, v)
-                })
+                // new ArrayElement({
+                //     object: {
+                //         weight: null,
+                //         dashed: null,
+                //         fillColor: null,
+                //         strokeColor: null,
+                //         rotations: [],
+                //         zIndex: 0,
+                //
+                //         origin: addPoints(origin, {
+                //             x: colGap + j * (valueWidth + colGap),
+                //             y: topX + i * (valueHeight + rowGap)
+                //         }),
+                //         value,
+                //         width: valueWidth,
+                //         height: valueHeight
+                //     }
+                // }, this.p5, animationStyle).getIncludedAnimationParams().forEach((v, k) => {
+                //     result.set(`${k} [${i}][${j}]`, v)
+                // })
             }
         }
 
