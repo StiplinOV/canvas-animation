@@ -1,25 +1,45 @@
 import {calculatePercentValue} from '../../../common/Utils'
-import {ObjectParams} from '../../CanvasAnimationParams'
+import {AnimationObjectParams, JsonObjectParams} from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
 import CircleCanvasAnimation from './CircleCanvasAnimation'
+import { ObjectParamsObject } from '../../ObjectParamsObject'
 
 interface onlyCircleParamsType {
     diameter: number
 }
 
-export interface CircleParamsType extends onlyCircleParamsType, ObjectParams {
+export interface CircleJsonParamsType extends onlyCircleParamsType, JsonObjectParams {
 }
 
-export default class CircleCanvasAnimationParams extends SimpleCanvasAnimationParams<CircleParamsType> {
+export interface CircleAnimationParamsType extends onlyCircleParamsType, AnimationObjectParams {
+}
 
-    protected getZeroParams (): Omit<CircleParamsType, keyof ObjectParams> {
+export default class CircleCanvasAnimationParams extends SimpleCanvasAnimationParams<CircleJsonParamsType, CircleAnimationParamsType> {
+
+    protected convertJsonObjectToAnimationObject(jsonObject: CircleJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): CircleAnimationParamsType {
+        throw new Error('Method not implemented.')
+    }
+
+    protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<CircleJsonParamsType>): Partial<CircleAnimationParamsType> {
+        throw new Error('Method not implemented.')
+    }
+
+    protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<CircleAnimationParamsType>): void {
+        throw new Error('Method not implemented.')
+    }
+
+    protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): CircleAnimationParamsType {
+        throw new Error('Method not implemented.')
+    }
+
+    protected getZeroParams (): Omit<CircleJsonParamsType, keyof JsonObjectParams> {
         return {
             diameter: 0
         }
     }
 
-    mergeWithTransformation(obj: CircleParamsType, trans: CircleParamsType, perc: number): onlyCircleParamsType {
+    mergeWithTransformation(obj: CircleJsonParamsType, trans: CircleJsonParamsType, perc: number): onlyCircleParamsType {
         return {
             diameter: trans.diameter ? calculatePercentValue(obj.diameter, trans.diameter, perc) : obj.diameter
         }

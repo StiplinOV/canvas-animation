@@ -1,8 +1,9 @@
-import { ObjectParams } from '../../CanvasAnimationParams'
+import {AnimationObjectParams, JsonObjectParams} from '../../CanvasAnimationParams'
 import { addPoints } from '../../../common/Utils'
 import ComplexCanvasAnimationParams, {CanvasAnimationParamsType} from '../ComplexCanvasAnimationParams'
 import { ColorType } from '../../../AnimationStyles'
 import { THE_STYLE } from 'p5'
+import { ObjectParamsObject } from '../../ObjectParamsObject'
 
 export type ElementStyle = {
     backgroundColor?: ColorType
@@ -17,22 +18,44 @@ export type ElementType = {
     style?: ElementStyle
 }
 
-export interface ArrayElementParamsType extends ObjectParams {
+export interface OnlyArrayElementParamsType {
     value: ElementType | string | boolean | number
     height: number
     width?: number
 }
 
-export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElementParamsType> {
+export interface ArrayElementJsonParamsType extends JsonObjectParams, OnlyArrayElementParamsType {
+}
 
-    protected getZeroParams (): Omit<ArrayElementParamsType, keyof ObjectParams> {
+export interface ArrayElementAnimationParamsType extends AnimationObjectParams, OnlyArrayElementParamsType {
+}
+
+export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElementJsonParamsType, ArrayElementAnimationParamsType> {
+
+    protected convertJsonObjectToAnimationObject(jsonObject: ArrayElementJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): ArrayElementAnimationParamsType {
+        throw new Error('Method not implemented.')
+    }
+
+    protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<ArrayElementJsonParamsType>): Partial<ArrayElementAnimationParamsType> {
+        throw new Error('Method not implemented.')
+    }
+
+    protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<ArrayElementAnimationParamsType>): void {
+        throw new Error('Method not implemented.')
+    }
+
+    protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): ArrayElementAnimationParamsType {
+        throw new Error('Method not implemented.')
+    }
+
+    protected getZeroParams (): Omit<ArrayElementJsonParamsType, keyof JsonObjectParams> {
         return {
             value: '',
             height: 0
         }
     }
 
-    protected getIncludedAnimationParamsByParameter (object: ArrayElementParamsType): Map<string, CanvasAnimationParamsType> {
+    protected getIncludedAnimationParamsByParameter (object: ArrayElementJsonParamsType): Map<string, CanvasAnimationParamsType> {
         const result = new Map<string, CanvasAnimationParamsType>()
         const {
             origin,

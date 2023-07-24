@@ -1,18 +1,16 @@
 import {
-    calculateColorPercentValue,
     calculatePercentValue,
-    calculatePointPercentValue,
-    calculateRotationsPercentValue,
     needAppearObject,
     PresenceParamType,
-    rotationType,
+    RotationType,
     toAppearancePercent,
     toPresenceParamType
 } from '../common/Utils'
-import {Point, ZeroPoint} from '../common/Point'
-import AnimationStyle, {ColorType, getFillColor, getStrokeColor} from '../AnimationStyles'
+import {Point} from '../common/Point'
+import AnimationStyle, {ColorType} from '../AnimationStyles'
 import CanvasAnimation from './CanvasAnimation'
 import {intervalContainsIntersections, uniqueArray} from '../common/Alghoritm'
+import {ObjectParamsObject} from './ObjectParamsObject'
 
 type WeightType = number | 'normal' | 'bold'
 
@@ -28,14 +26,24 @@ export const weightToNumber = (style: AnimationStyle, weight?: WeightType): numb
     return weight ?? style.strokeWeight
 }
 
-export interface ObjectParams {
+export interface JsonObjectParams {
     weight?: WeightType
     zIndex?: number
     dashed?: number[]
     strokeColor?: ColorType
     fillColor?: ColorType
     origin: Point
-    rotations?: rotationType[]
+    rotations?: RotationType[]
+}
+
+export interface AnimationObjectParams {
+    weight: WeightType
+    zIndex: number
+    dashed: number[]
+    strokeColor: ColorType
+    fillColor: ColorType
+    origin: Point
+    rotations: RotationType[]
 }
 
 interface FuncNameParamTypeMap {
@@ -47,13 +55,6 @@ export type SelectionAlgorithm<T extends keyof FuncNameParamTypeMap = keyof Func
     params: FuncNameParamTypeMap[T]
 }
 
-export const fadeinFadeOut = (duration?: number): SelectionAlgorithm => {
-    return {
-        func: 'fadeinFadeOut',
-        params: [duration]
-    }
-}
-
 export interface SelectionType<T = unknown> {
     time: number
     duration: number
@@ -61,13 +62,13 @@ export interface SelectionType<T = unknown> {
     selectionAlgorithm?: SelectionAlgorithm
 }
 
-export type Transformation<T extends ObjectParams, U> = {
+export type Transformation<T extends AnimationObjectParams, U> = {
     object: Partial<T>
     presence: PresenceParamType
     options?: U
 }
 
-export type TransformationParam<T extends ObjectParams, U> = {
+export type TransformationParam<T extends JsonObjectParams, U> = {
     object: Partial<T>
     appearTime?: number
     appearDuration?: number
@@ -76,24 +77,13 @@ export type TransformationParam<T extends ObjectParams, U> = {
     options?: U
 }
 
-const transformationParamToTransformation = <T extends ObjectParams, U>(t: TransformationParam<T, U>): Transformation<T, U> => ({
-    object: t.object,
-    presence: {
-        appearTime: t.appearTime ?? 0,
-        appearDuration: t.appearDuration ?? 0,
-        disappearTime: t.disappearTime ?? Number.POSITIVE_INFINITY,
-        disappearDuration: t.disappearDuration ?? 0
-    },
-    options: t.options
-})
-
-export type ObjectParamsWithPresence<T extends ObjectParams> = {
+export type ObjectParamsWithPresence<T extends AnimationObjectParams> = {
     objectParams: T
     time: number
     duration: number
 }
 
-export type Params<T extends ObjectParams, U = unknown, V extends SelectionType = SelectionType> = {
+export type Params<T extends JsonObjectParams, U = unknown, V extends SelectionType = SelectionType> = {
     transformations?: TransformationParam<T, U>[]
     selections?: V[]
     object: T
@@ -101,27 +91,59 @@ export type Params<T extends ObjectParams, U = unknown, V extends SelectionType 
     layout?: LayoutType
 }
 
-export default abstract class CanvasAnimationParams<T extends ObjectParams = ObjectParams,
-    U = unknown,
-    V extends SelectionType = SelectionType> {
+export default abstract class CanvasAnimationParams<
+    T extends JsonObjectParams = JsonObjectParams,
+    U extends AnimationObjectParams = AnimationObjectParams,
+    V = unknown,
+    W extends SelectionType = SelectionType
+> {
 
     private presenceParam: PresenceParamType[]
-    private readonly transformations: Transformation<T, U>[]
-    private readonly selections: V[]
-    private readonly object: T
+    private readonly transformations: Transformation<U, V>[]
+    private readonly object: U
     private readonly layout: LayoutType
     private readonly animationStyle: AnimationStyle
 
-    public constructor(params: Params<T, U, V>, animationStyle: AnimationStyle) {
-        const transformations = params.transformations ?? []
+    public constructor(params: Params<T, V, W>, animationStyle: AnimationStyle) {
         this.presenceParam = toPresenceParamType(params.presenceParameters)
-        this.selections = params.selections ?? []
-        this.transformations = transformations.map(t => transformationParamToTransformation(t))
-        this.object = params.object
-        this.layout = params.layout ?? 'absolute'
+        this.transformations = params.transformations?.map(t => this.transformationParamToTransformation(t)) ?? []
+        this.transformations.push(...this.calculateSelectionTransformations(params.selections))
         this.animationStyle = animationStyle
+        const animationObjectDefaultParams = this.convertJsonObjectToAnimationObjectDefaultParams(params.object)
+        this.object = this.convertJsonObjectToAnimationObject(params.object, animationObjectDefaultParams)
+        this.layout = params.layout ?? 'absolute'
         this.checkPresenceParam()
     }
+
+    private transformationParamToTransformation(t: TransformationParam<T, V>): Transformation<U, V> {
+        return {
+            object: this.convertTransformJsonObjectToTransformAnimationObject(t.object),
+            presence: {
+                appearTime: t.appearTime ?? 0,
+                appearDuration: t.appearDuration ?? 0,
+                disappearTime: t.disappearTime ?? Number.POSITIVE_INFINITY,
+                disappearDuration: t.disappearDuration ?? 0
+            },
+            options: t.options
+        }
+    }
+
+    private convertJsonObjectToAnimationObjectDefaultParams(jsonObject: JsonObjectParams): AnimationObjectParams {
+        const animationStyle = this.getAnimationStyle()
+        return {
+            weight: jsonObject.weight ?? animationStyle.strokeWeight,
+            zIndex: jsonObject.zIndex ?? 0,
+            dashed: jsonObject.dashed ?? [],
+            strokeColor: jsonObject.strokeColor ?? animationStyle.strokeColor,
+            fillColor: jsonObject.fillColor ?? animationStyle.fillColor,
+            origin: jsonObject.origin,
+            rotations: jsonObject.rotations ?? []
+        }
+    }
+
+    protected abstract convertJsonObjectToAnimationObject(jsonObject: T, animationObjectDefaultParams: AnimationObjectParams): U
+
+    protected abstract convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<T>): Partial<U>
 
     private checkPresenceParam(): void {
         if (intervalContainsIntersections(this.presenceParam.map(p => ({
@@ -144,12 +166,8 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
         this.presenceParam.push(toPresenceParamType([presence])[0])
     }
 
-    public clearPresence(): void {
-        this.presenceParam = []
-    }
-
-    public getObjectParamsWithTime(): ObjectParamsWithPresence<T>[] {
-        const result: ObjectParamsWithPresence<T>[] = []
+    protected getObjectParamsWithTime(): ObjectParamsWithPresence<U>[] {
+        const result: ObjectParamsWithPresence<U>[] = []
         const starts = uniqueArray([
             ...this.getPresenceParam(),
             ...this.getTransformations().map(t => t.presence)
@@ -179,87 +197,31 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
         return result.sort((l, r) => l.time === r.time ? l.duration - r.duration : l.time - r.time)
     }
 
-    public calculateObjectParamsInTime(time: number, skipStartTime?: boolean): T {
-        const animationStyle = this.getAnimationStyle()
+    public calculateObjectParamsInTime(time: number, skipStartTime?: boolean): U {
         const sourceObject = this.getZeroObject()
-        let result = {...sourceObject}
+        const result = new ObjectParamsObject()
+        result.setAnimationObjectParams(sourceObject, this.getAnimationStyle())
+        this.appendParamsToObjectParamsObject(result, sourceObject)
 
-        if (!needAppearObject(time, this.presenceParam, skipStartTime)) {
-            return result
+        if (needAppearObject(time, this.presenceParam, skipStartTime)) {
+            this.getTransformations()
+                .filter(t => needAppearObject(time, [t.presence], skipStartTime))
+                .forEach((t) => {
+                    const percent = toAppearancePercent(time, [t.presence])
+
+                    const transformObjectParamsObject = new ObjectParamsObject()
+                    transformObjectParamsObject.setAnimationObjectParams(t.object, this.getAnimationStyle())
+                    this.appendParamsToObjectParamsObject(transformObjectParamsObject, t.object)
+
+                    result.merge(transformObjectParamsObject, percent)
+                })
         }
-
-        this.getTransformations()
-            .filter(t => needAppearObject(time, [t.presence], skipStartTime))
-            .forEach((t) => {
-                const transformationObject = t.object
-                const percent = toAppearancePercent(time, [t.presence])
-                if (transformationObject.fillColor) {
-                    result.fillColor = calculateColorPercentValue(
-                        getFillColor(animationStyle, result.fillColor),
-                        getFillColor(animationStyle, transformationObject.fillColor),
-                        percent
-                    )
-                }
-                if (transformationObject.strokeColor) {
-                    result.strokeColor = calculateColorPercentValue(
-                        getStrokeColor(animationStyle, result.strokeColor),
-                        getStrokeColor(animationStyle, transformationObject.strokeColor),
-                        percent
-                    )
-                }
-                if (transformationObject.origin) {
-                    result.origin = calculatePointPercentValue(result.origin, transformationObject.origin, percent)
-                }
-                if (transformationObject.zIndex !== undefined) {
-                    result.zIndex = calculatePercentValue(result.zIndex ?? 0, transformationObject.zIndex, percent)
-                }
-                if (transformationObject.weight) {
-                    result.weight = calculatePercentValue(
-                        weightToNumber(animationStyle, result.weight),
-                        weightToNumber(animationStyle, transformationObject.weight), percent
-                    )
-                }
-                if (transformationObject.rotations) {
-                    result.rotations = calculateRotationsPercentValue(
-                        result.rotations ?? [{
-                            axis: ZeroPoint,
-                            angle: 0
-                        }],
-                        transformationObject.rotations,
-                        percent
-                    )
-                }
-                const transformDashed = transformationObject.dashed
-                const resultDashed = result.dashed ?? []
-                if (transformDashed && (transformDashed.length || resultDashed.length)) {
-                    let resultLength = 1
-                    if (resultDashed.length) {
-                        resultLength *= resultDashed.length
-                    }
-                    if (transformDashed.length) {
-                        resultLength *= transformDashed.length
-                    }
-
-                    const sourceCopy = []
-                    const transformCopy = []
-                    for (let i = 0; i < resultLength; i++) {
-                        sourceCopy.push(resultDashed.length ? resultDashed[i % resultDashed.length] : 0)
-                        transformCopy.push(transformDashed.length ? transformDashed[i % transformDashed.length] : 0)
-                    }
-                    for (let i = 0; i < resultLength; i++) {
-                        sourceCopy[i] = calculatePercentValue(sourceCopy[i], transformCopy[i], percent)
-                    }
-                    result.dashed = sourceCopy
-                }
-                result = {
-                    ...result,
-                    ...this.mergeWithTransformation(result, transformationObject, percent, animationStyle)
-                }
-            })
-        return result
+        return this.convertObjectParamsObjectToAnimationParams(result, result.toAnimationObjectParams())
     }
 
-    public abstract mergeWithTransformation(obj: T, trans: Partial<T>, perc: number, animationStyle: AnimationStyle): Omit<T, keyof ObjectParams>
+    protected abstract appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<U>): void
+
+    protected abstract convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): U
 
     // ХУ Е ТА
     public getZIndex(time: number, animationStyle: AnimationStyle): number {
@@ -277,11 +239,11 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
         return result
     }
 
-    public getObject(): T {
+    public getObject(): U {
         return this.object
     }
 
-    public getZeroObject(): T {
+    public getZeroObject(): U {
         return {
             ...this.getObject(),
             ...this.getZeroParams(),
@@ -294,16 +256,15 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
         return this.getObject().origin
     }
 
-    protected abstract getZeroParams(): Omit<T, keyof ObjectParams>
+    protected abstract getZeroParams(): Omit<Partial<U>, keyof AnimationObjectParams>
 
-    public appendTransformation(transformation: TransformationParam<T, U>): void {
-        this.transformations.push(transformationParamToTransformation(transformation))
+    public appendTransformation(transformation: TransformationParam<T, V>): void {
+        this.transformations.push(this.transformationParamToTransformation(transformation))
     }
 
-    public getTransformations(): Transformation<T, U>[] {
+    public getTransformations(): Transformation<U, V>[] {
         return [
             ...this.transformations,
-            ...this.calculateSelectionTransformations(),
             ...this.getPresenceParam().map(p => ({
                 object: this.getObject(),
                 presence: p
@@ -325,8 +286,8 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
         })
     }
 
-    private calculateSelectionTransformations(): Transformation<T, U>[] {
-        return this.selections.map(selection => ({
+    private calculateSelectionTransformations(selections?: W[]): Transformation<U, V>[] {
+        return selections?.map(selection => ({
             object: this.convertSelectionToTransformObject(selection),
             presence: {
                 appearTime: selection.time,
@@ -334,10 +295,10 @@ export default abstract class CanvasAnimationParams<T extends ObjectParams = Obj
                 disappearTime: selection.time + selection.duration / 2,
                 disappearDuration: selection.duration / 2
             }
-        }))
+        })) ?? []
     }
 
-    protected convertSelectionToTransformObject(selection: V): Partial<T> {
+    protected convertSelectionToTransformObject(selection: W): Partial<U> {
         return {}
     }
 

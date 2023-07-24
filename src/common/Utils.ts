@@ -61,7 +61,7 @@ export interface PresenceParamType {
 }
 
 export type render2DArrayType = 'leftToRight' | 'upToDown'
-export type rotationType = {
+export type RotationType = {
     axis: Point
     angle: number
 }
@@ -139,14 +139,14 @@ export const calculateColorPercentValue = (from: string, to: string, percent: nu
 
     return `#${r}${g}${b}`
 }
-export const calculateRotationPercentValue = (from: rotationType, to: rotationType, percent: number): rotationType => {
+export const calculateRotationPercentValue = (from: RotationType, to: RotationType, percent: number): RotationType => {
     return {
         axis: calculatePointPercentValue(from.axis, to.axis, percent),
         angle: calculatePercentValue(from.angle, to.angle, percent)
     }
 }
-export const calculateRotationsPercentValue = (from: rotationType[], to: rotationType[], percent: number): rotationType[] => {
-    const result: rotationType[] = []
+export const calculateRotationsPercentValue = (from: RotationType[], to: RotationType[], percent: number): RotationType[] => {
+    const result: RotationType[] = []
     while (from.length < to.length) {
         from.push({
             axis: ZeroPoint,
@@ -189,7 +189,6 @@ export const toPresenceParam = (time: number, presenceParams: PresenceParamType[
 }
 
 export const needAppearObject = (time: number, presenceParams: PresenceParamType[], skipStartTime?: boolean): boolean => {
-    // console.log(time, presenceParams, skipStartTime, toPresenceParam(time, presenceParams, skipStartTime) !== null)
     return toPresenceParam(time, presenceParams, skipStartTime) !== null
 }
 

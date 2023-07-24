@@ -6,15 +6,16 @@ import {
     rotateVector,
     subtractPoints
 } from '../../../common/Utils'
-import { ObjectParams } from '../../CanvasAnimationParams'
+import {AnimationObjectParams, JsonObjectParams} from '../../CanvasAnimationParams'
 import ComplexCanvasAnimationParams, {CanvasAnimationParamsType} from '../ComplexCanvasAnimationParams'
 import {
-    LineParamsType,
+    LineJsonParamsType,
     OnlyLineParamsType
 } from '../../simple/line/LineCanvasAnimationParams'
 import { Point, ZeroPoint } from '../../../common/Point'
 import { HORIZ_ALIGN, THE_STYLE, VERT_ALIGN } from 'p5'
 import { ColorType, WebSafeFontsType } from '../../../AnimationStyles'
+import { ObjectParamsObject } from '../../ObjectParamsObject'
 
 const arrowBaseLength = 10
 const arrowBaseWidth = 10
@@ -29,7 +30,7 @@ type ArrowLabelType = {
     value: string
 }
 
-export interface ArrowParamsType extends OnlyLineParamsType, ObjectParams {
+export interface OnlyArrowParamsType extends OnlyLineParamsType {
     startType?: ArrowType
     endType?: ArrowType
     label?: ArrowLabelType | null
@@ -39,15 +40,39 @@ export interface ArrowParamsType extends OnlyLineParamsType, ObjectParams {
     }
 }
 
-export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationParams<ArrowParamsType> {
+export interface ArrowJsonParamsType extends OnlyArrowParamsType, JsonObjectParams {
 
-    protected getZeroParams (): Omit<ArrowParamsType, keyof ObjectParams> {
+}
+
+export interface ArrowAnimationParamsType extends OnlyArrowParamsType, AnimationObjectParams {
+
+}
+
+export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationParams<ArrowJsonParamsType, ArrowAnimationParamsType> {
+
+    protected convertJsonObjectToAnimationObject(jsonObject: ArrowJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): ArrowAnimationParamsType {
+        throw new Error('Method not implemented.')
+    }
+
+    protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<ArrowJsonParamsType>): Partial<ArrowAnimationParamsType> {
+        throw new Error('Method not implemented.')
+    }
+
+    protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<ArrowAnimationParamsType>): void {
+        throw new Error('Method not implemented.')
+    }
+
+    protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): ArrowAnimationParamsType {
+        throw new Error('Method not implemented.')
+    }
+
+    protected getZeroParams (): Omit<ArrowJsonParamsType, keyof JsonObjectParams> {
         return {
             endPoint: this.getObject().origin
         }
     }
 
-    protected getIncludedAnimationParamsByParameter (object: ArrowParamsType): Map<string, CanvasAnimationParamsType> {
+    protected getIncludedAnimationParamsByParameter (object: ArrowJsonParamsType): Map<string, CanvasAnimationParamsType> {
         const result = new Map<string, CanvasAnimationParamsType>()
         const { bezierParams } = object
         let leftHalfArrowHeadParams: CanvasAnimationParamsType | null = null
@@ -55,7 +80,7 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
         let leftHalfArrowTailParams: CanvasAnimationParamsType | null = null
         let rightHalfArrowTailParams: CanvasAnimationParamsType | null = null
         const shaftParams = this.createShaftArrowParams(object)
-        const arrowHeadLineParams: Partial<LineParamsType> = {
+        const arrowHeadLineParams: Partial<LineJsonParamsType> = {
             weight: object.weight,
             zIndex: object.zIndex,
             rotations: object.rotations,
@@ -129,8 +154,8 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
         return result
     }
 
-    private createShaftArrowParams (object: ArrowParamsType): CanvasAnimationParamsType {
-        const objectParams: Partial<ObjectParams> = {
+    private createShaftArrowParams (object: ArrowJsonParamsType): CanvasAnimationParamsType {
+        const objectParams: Partial<JsonObjectParams> = {
             weight: object.weight,
             zIndex: object.zIndex,
             rotations: object.rotations,
@@ -176,7 +201,7 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
         return [subtractPoints(head, leftArrowSide), subtractPoints(head, rightArrowSide)]
     }
 
-    private calculateTextAlign (object: ArrowParamsType): [HORIZ_ALIGN, VERT_ALIGN] {
+    private calculateTextAlign (object: ArrowJsonParamsType): [HORIZ_ALIGN, VERT_ALIGN] {
         const { bezierParams } = object
         let horizontalAlign: HORIZ_ALIGN = 'center'
         let verticalAlign: VERT_ALIGN = 'center'
@@ -216,7 +241,7 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
         return [horizontalAlign, verticalAlign]
     }
 
-    private calculateLabelPosition (object: ArrowParamsType): Point {
+    private calculateLabelPosition (object: ArrowJsonParamsType): Point {
         const { bezierParams } = object
         if (bezierParams) {
             return getBezierLineMiddlePoint(object.origin, bezierParams.point2, bezierParams.point3, object.endPoint)

@@ -1,20 +1,26 @@
 import p5Types from 'p5'
 import AnimationStyle, { getFontColor } from '../../../AnimationStyles'
-import { TextParamsType } from './TextCanvasAnimationParams'
+import {TextAnimationParamsType} from './TextCanvasAnimationParams'
 import CanvasAnimation from '../../CanvasAnimation'
 
-export default class TextCanvasAnimation extends CanvasAnimation<TextParamsType> {
+export default class TextCanvasAnimation extends CanvasAnimation<TextAnimationParamsType> {
 
-    public drawObject (p5: p5Types, o: TextParamsType, style: AnimationStyle): void {
+    public drawObject (p5: p5Types, o: TextAnimationParamsType, style: AnimationStyle): void {
         const {
-            boxHeight,
-            boxWidth,
             fontSize,
             value,
             horizontalAlign,
             verticalAlign,
             textStyle
         } = o
+        let boxWidth
+        let boxHeight
+        if (o.boxWidth !== null) {
+            boxWidth = o.boxWidth
+        }
+        if (o.boxHeight !== null) {
+            boxHeight = o.boxHeight
+        }
         const textSize = fontSize ?? style.fontSize
 
         p5.strokeWeight(style.fontWeight)

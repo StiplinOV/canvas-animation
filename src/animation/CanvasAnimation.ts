@@ -1,10 +1,20 @@
 import p5Types from 'p5'
 import { addPoints, needAppearObject, rotateVector, subtractPoints } from '../common/Utils'
 import AnimationStyle, { getFillColor, getStrokeColor } from '../AnimationStyles'
-import { LayoutType, ObjectParams, SelectionType, weightToNumber } from './CanvasAnimationParams'
+import {
+    LayoutType,
+    JsonObjectParams,
+    SelectionType,
+    weightToNumber,
+    AnimationObjectParams
+} from './CanvasAnimationParams'
 import SimpleCanvasAnimationParams from './simple/SimpleCanvasAnimationParams'
 
-export default abstract class CanvasAnimation<T extends ObjectParams = ObjectParams, V extends SelectionType = SelectionType, U extends SimpleCanvasAnimationParams<T, V> = SimpleCanvasAnimationParams<T, V>> {
+export default abstract class CanvasAnimation<
+    T extends AnimationObjectParams = AnimationObjectParams,
+    V extends SelectionType = SelectionType,
+    U extends SimpleCanvasAnimationParams<JsonObjectParams, T, V> = SimpleCanvasAnimationParams<JsonObjectParams, T, V>
+> {
 
     private readonly params: U
 

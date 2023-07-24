@@ -1,5 +1,5 @@
-import {calculateArrayPercentValue, calculateColorPercentValue, calculatePercentValue} from '../../../common/Utils'
-import {ObjectParams, SelectionType} from '../../CanvasAnimationParams'
+import {calculateArrayPercentValue} from '../../../common/Utils'
+import {AnimationObjectParams, JsonObjectParams, SelectionType} from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle, {ColorType, WebSafeFontsType} from '../../../AnimationStyles'
 import HighlightedTextCanvasAnimation from './HighlightedTextCanvasAnimation'
@@ -147,6 +147,7 @@ import {
 } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 import HighlightedTextCanvasAnimationRenderer from './HighlightedTextCanvasAnimationRenderer'
 import React from 'react'
+import {ObjectParamsObject} from '../../ObjectParamsObject'
 
 export const languageDefs = {
     AccessLog,
@@ -309,7 +310,7 @@ export const createHighlightedTextValueSegmentType = (object: HighlightedTextVal
     return process(highlighter, text, lang).value
 }
 
-export const calculateBackgroundColor = (params: HighlightedTextParamsType, animationStyle: AnimationStyle): string => {
+export const calculateBackgroundColor = (params: HighlightedTextJsonParamsType, animationStyle: AnimationStyle): string => {
     if (Array.isArray(params.value)) {
         return params.backgroundColor ?? animationStyle.backgroundColor
     }
@@ -338,7 +339,7 @@ export type HighlightedSyntaxValueType = {
 
 export type HighlightedTextValueType = HighlightedSyntaxValueType | HighlightedTextValueSegmentType[]
 
-interface OnlyHighlightedTextParamsType {
+export interface HighlightedTextJsonParamsType extends JsonObjectParams {
     value: HighlightedTextValueType
     fontSize?: number
     font?: WebSafeFontsType | 'monospace'
@@ -355,7 +356,21 @@ interface OnlyHighlightedTextParamsType {
     height?: number
 }
 
-export interface HighlightedTextParamsType extends ObjectParams, OnlyHighlightedTextParamsType {
+export interface HighlightedTextAnimationParamsType extends AnimationObjectParams {
+    value: HighlightedTextValueSegmentType[]
+    fontSize: number
+    font: WebSafeFontsType | 'monospace'
+    backgroundColor: string
+    selectedSubstrings: {
+        from: number
+        to: number
+        color?: string
+        backgroundColor?: string
+        strikethrough?: boolean
+    }[]
+    lineSpacing: number
+    width: number
+    height: number
 }
 
 export interface HighlightedTextCanvasAnimationSelection extends SelectionType {
@@ -367,40 +382,12 @@ export interface HighlightedTextCanvasAnimationSelection extends SelectionType {
     }[]
 }
 
-export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAnimationParams<HighlightedTextParamsType, HighlightedTextCanvasAnimationSelection> {
+export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAnimationParams<HighlightedTextJsonParamsType, HighlightedTextAnimationParamsType, HighlightedTextCanvasAnimationSelection> {
 
-    protected getZeroParams(): Omit<HighlightedTextParamsType, keyof ObjectParams> {
+    protected getZeroParams(): Omit<Partial<HighlightedTextAnimationParamsType>, keyof AnimationObjectParams> {
         return {
             value: [],
             backgroundColor: calculateBackgroundColor(this.getObject(), this.getAnimationStyle())
-        }
-    }
-
-    mergeWithTransformation(
-        obj: HighlightedTextParamsType,
-        trans: Partial<HighlightedTextParamsType>,
-        perc: number,
-        style: AnimationStyle
-    ): OnlyHighlightedTextParamsType {
-        let {fontSize, width, height} = obj
-        fontSize ??= style.fontSize
-        width ??= 0
-        height ??= 0
-        const value = createHighlightedTextValueSegmentType(obj.value, this.getAnimationStyle())
-        const transValue = createHighlightedTextValueSegmentType(trans.value ?? [], this.getAnimationStyle())
-        const backgroundColor = calculateBackgroundColor(obj, style)
-        let transBackgroundColor = trans.backgroundColor
-        if (!transBackgroundColor && !Array.isArray(trans.value) && trans.value?.highlightStyle) {
-            transBackgroundColor = String(styles[trans.value?.highlightStyle].hljs.background)
-        }
-        return {
-            backgroundColor: transBackgroundColor ? calculateColorPercentValue(backgroundColor, transBackgroundColor, perc) : backgroundColor,
-            value: trans.value ? this.calculateValuePercentValue(value, transValue, perc) : obj.value,
-            fontSize: trans.fontSize ? calculatePercentValue(fontSize, trans.fontSize, perc) : fontSize,
-            font: (trans.font && perc >= 0.5) ? trans.font : obj.font,
-            width: trans.width !== undefined ? calculatePercentValue(width, trans.width, perc) : width,
-            height: trans.height !== undefined ? calculatePercentValue(height, trans.height, perc) : height,
-            selectedSubstrings: (trans.selectedSubstrings ? calculateArrayPercentValue(obj.selectedSubstrings ?? [], trans.selectedSubstrings, perc) : obj.selectedSubstrings)
         }
     }
 
@@ -434,9 +421,58 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
         return result
     }
 
-    protected convertSelectionToTransformObject(selection: HighlightedTextCanvasAnimationSelection): Partial<HighlightedTextParamsType> {
+    protected convertSelectionToTransformObject(selection: HighlightedTextCanvasAnimationSelection): Partial<HighlightedTextAnimationParamsType> {
         return {
             selectedSubstrings: selection.substrings
+        }
+    }
+
+    protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<HighlightedTextAnimationParamsType>): void {
+        params.value !== undefined && objectParamsObject.setArrayParam('value', params.value)
+        params.fontSize !== undefined && objectParamsObject.setNumberParam('fontSize', params.fontSize)
+        params.font !== undefined && objectParamsObject.setStringLiteralParam('font', params.font)
+        params.backgroundColor && objectParamsObject.setColorParam('backgroundColor', params.backgroundColor)
+        params.selectedSubstrings && objectParamsObject.setArrayParam('selectedSubstrings', params.selectedSubstrings)
+        params.lineSpacing !== undefined && objectParamsObject.setNumberParam('lineSpacing', params.lineSpacing)
+        params.width !== undefined && objectParamsObject.setNumberParam('width', params.width)
+        params.height !== undefined && objectParamsObject.setNumberParam('height', params.height)
+    }
+
+    protected convertJsonObjectToAnimationObject(jsonObject: HighlightedTextJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): HighlightedTextAnimationParamsType {
+        const animationStyle = this.getAnimationStyle()
+
+        return {
+            ...animationObjectDefaultParams,
+            ...jsonObject,
+            value: createHighlightedTextValueSegmentType(jsonObject.value, this.getAnimationStyle()).flatMap(f => this.splitTextValueSegmentType(f)),
+            fontSize: jsonObject.fontSize ?? animationStyle.fontSize,
+            font: jsonObject.font ?? animationStyle.monospaceFont,
+            backgroundColor: jsonObject.backgroundColor ?? animationStyle.backgroundColor,
+            selectedSubstrings: jsonObject.selectedSubstrings ?? [],
+            lineSpacing: jsonObject.lineSpacing ?? animationStyle.lineSpacing,
+            width: jsonObject.width ?? 0,
+            height: jsonObject.height ?? 0
+        }
+    }
+
+    protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): HighlightedTextAnimationParamsType {
+        return {
+            ...initialDefaultParams,
+            value: objectParamsObject.getArrayParam('value'),
+            fontSize: objectParamsObject.getNumberParam('fontSize'),
+            font: objectParamsObject.getStringLiteralParam<WebSafeFontsType | 'monospace'>('font'),
+            backgroundColor: objectParamsObject.getColorParam('backgroundColor'),
+            selectedSubstrings: objectParamsObject.getArrayParam('selectedSubstrings'),
+            lineSpacing: objectParamsObject.getNumberParam('lineSpacing'),
+            width: objectParamsObject.getNumberParam('width'),
+            height: objectParamsObject.getNumberParam('height')
+        }
+    }
+
+    protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<HighlightedTextJsonParamsType>): Partial<HighlightedTextAnimationParamsType> {
+        return {
+            ...jsonObject,
+            value: jsonObject.value ? createHighlightedTextValueSegmentType(jsonObject.value, this.getAnimationStyle()).flatMap(f => this.splitTextValueSegmentType(f)) : undefined
         }
     }
 

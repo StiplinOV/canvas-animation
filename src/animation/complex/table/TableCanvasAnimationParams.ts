@@ -1,11 +1,12 @@
-import { ObjectParams } from '../../CanvasAnimationParams'
+import {AnimationObjectParams, JsonObjectParams} from '../../CanvasAnimationParams'
 import { addPoints, render2DArrayType } from '../../../common/Utils'
 import ComplexCanvasAnimationParams, {
     CanvasAnimationParamsType,
     TransformOptions
 } from '../ComplexCanvasAnimationParams'
+import { ObjectParamsObject } from '../../ObjectParamsObject'
 
-export interface TableParamsType extends ObjectParams {
+export interface OnlyTableParamsType {
     values: string[][]
     width: number
     height: number
@@ -16,6 +17,14 @@ export interface TableParamsType extends ObjectParams {
     boldHorizontalLines?: (number | [number, number])[]
     boldVerticalLines?: (number | [number, number])[]
     markedCells?: number[][]
+}
+
+export interface TableJsonParamsType extends JsonObjectParams, OnlyTableParamsType {
+
+}
+
+export interface TableAnimationParamsType extends AnimationObjectParams, OnlyTableParamsType {
+
 }
 
 export type TableSelectorType = {
@@ -31,9 +40,25 @@ export interface TableTransformOptionsType extends TransformOptions {
     }
 }
 
-export default class TableCanvasAnimationParams extends ComplexCanvasAnimationParams<TableParamsType, TableSelectorType, TableTransformOptionsType> {
+export default class TableCanvasAnimationParams extends ComplexCanvasAnimationParams<TableJsonParamsType, TableAnimationParamsType, TableSelectorType, TableTransformOptionsType> {
 
-    protected getZeroParams (): Omit<TableParamsType, keyof ObjectParams> {
+    protected convertJsonObjectToAnimationObject(jsonObject: TableJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): TableAnimationParamsType {
+        throw new Error('Method not implemented.')
+    }
+
+    protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<TableJsonParamsType>): Partial<TableAnimationParamsType> {
+        throw new Error('Method not implemented.')
+    }
+
+    protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<TableAnimationParamsType>): void {
+        throw new Error('Method not implemented.')
+    }
+
+    protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): TableAnimationParamsType {
+        throw new Error('Method not implemented.')
+    }
+
+    protected getZeroParams (): Omit<TableJsonParamsType, keyof JsonObjectParams> {
         return {
             values: [],
             width: 0,
@@ -41,7 +66,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         }
     }
 
-    protected getIncludedAnimationParamsByParameter (object: TableParamsType): Map<string, CanvasAnimationParamsType> {
+    protected getIncludedAnimationParamsByParameter (object: TableJsonParamsType): Map<string, CanvasAnimationParamsType> {
         const result = new Map<string, CanvasAnimationParamsType>()
         const {
             values,
@@ -138,7 +163,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         return result
     }
 
-    private calculateRowColumnsWidths (object: TableParamsType): number[][] {
+    private calculateRowColumnsWidths (object: TableJsonParamsType): number[][] {
         const result: number[][] = []
         const {
             values,
@@ -183,7 +208,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         return result
     }
 
-    private calculateRowColumnsWidthsFromParam (object: TableParamsType): number[][] {
+    private calculateRowColumnsWidthsFromParam (object: TableJsonParamsType): number[][] {
         const {
             width,
             columnWidthProportions
@@ -206,7 +231,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         return result
     }
 
-    private calculateVerticalTitleWidth (object: TableParamsType): number {
+    private calculateVerticalTitleWidth (object: TableJsonParamsType): number {
         const {
             verticalTitles,
             values,
@@ -256,7 +281,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         return result
     }
 
-    private isBoldHorizontalLine (object: TableParamsType, i: number, j: number): boolean {
+    private isBoldHorizontalLine (object: TableJsonParamsType, i: number, j: number): boolean {
         const {
             horizontalTitles,
             boldHorizontalLines
@@ -281,7 +306,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         return false
     }
 
-    private isBoldVerticalLine (object: TableParamsType, i: number, j: number): boolean {
+    private isBoldVerticalLine (object: TableJsonParamsType, i: number, j: number): boolean {
         const {
             verticalTitles,
             boldVerticalLines

@@ -1,27 +1,47 @@
 import {calculatePercentValue} from '../../../common/Utils'
-import {ObjectParams} from '../../CanvasAnimationParams'
+import {AnimationObjectParams, JsonObjectParams} from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
 import EllipseCanvasAnimation from './EllipseCanvasAnimation'
+import { ObjectParamsObject } from '../../ObjectParamsObject'
 
-interface onlyEllipseParamsType {
+interface OnlyEllipseParamsType {
     width: number
     height: number
 }
 
-export interface EllipseParamsType extends onlyEllipseParamsType, ObjectParams {
+export interface EllipseJsonParamsType extends OnlyEllipseParamsType, JsonObjectParams {
 }
 
-export default class EllipseCanvasAnimationParams extends SimpleCanvasAnimationParams<EllipseParamsType> {
+export interface EllipseAnimationParamsType extends OnlyEllipseParamsType, AnimationObjectParams {
+}
 
-    protected getZeroParams(): Omit<EllipseParamsType, keyof ObjectParams> {
+export default class EllipseCanvasAnimationParams extends SimpleCanvasAnimationParams<EllipseJsonParamsType, EllipseAnimationParamsType> {
+
+    protected convertJsonObjectToAnimationObject(jsonObject: EllipseJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): EllipseAnimationParamsType {
+        throw new Error('Method not implemented.')
+    }
+
+    protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<EllipseJsonParamsType>): Partial<EllipseAnimationParamsType> {
+        throw new Error('Method not implemented.')
+    }
+
+    protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<EllipseAnimationParamsType>): void {
+        throw new Error('Method not implemented.')
+    }
+
+    protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): EllipseAnimationParamsType {
+        throw new Error('Method not implemented.')
+    }
+
+    protected getZeroParams(): Omit<EllipseJsonParamsType, keyof JsonObjectParams> {
         return {
             width: 0,
             height: 0
         }
     }
 
-    mergeWithTransformation(obj: EllipseParamsType, trans: EllipseParamsType, perc: number): onlyEllipseParamsType {
+    mergeWithTransformation(obj: EllipseJsonParamsType, trans: EllipseJsonParamsType, perc: number): OnlyEllipseParamsType {
         return {
             width: trans.width ? calculatePercentValue(obj.width, trans.width, perc) : obj.width,
             height: trans.height ? calculatePercentValue(obj.height, trans.height, perc) : obj.height

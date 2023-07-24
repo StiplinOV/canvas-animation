@@ -1,12 +1,13 @@
 import dagre from 'dagre'
-import { ObjectParams } from '../../../CanvasAnimationParams'
+import {AnimationObjectParams, JsonObjectParams} from '../../../CanvasAnimationParams'
 import ComplexCanvasAnimationParams, {CanvasAnimationParamsType} from '../../ComplexCanvasAnimationParams'
 import { addPoints, getVectorAngle, mergeValueToMap, requireValueFromMap, swapPointXY } from '../../../../common/Utils'
 import { THE_STYLE } from 'p5'
 import AnimationStyle, { ColorType, WebSafeFontsType } from '../../../../AnimationStyles'
-import ArrowCanvasAnimationParams, { ArrowParamsType, ArrowType } from '../../arrow/ArrowCanvasAnimationParams'
+import ArrowCanvasAnimationParams, { ArrowJsonParamsType, ArrowType } from '../../arrow/ArrowCanvasAnimationParams'
 import { v4 } from 'uuid'
 import { Point } from '../../../../common/Point'
+import { ObjectParamsObject } from '../../../ObjectParamsObject'
 
 type VerticesEdges = {
     vertices: VertexType[]
@@ -46,7 +47,7 @@ type EdgeType = {
     style?: EdgeStyle
 }
 
-export interface GraphDataStructureParamsType extends ObjectParams {
+export interface OnlyGraphDataStructureJsonType {
     vertices: VertexType[]
     edges: EdgeType[]
     vertexStyle?: VertexStyle
@@ -54,16 +55,40 @@ export interface GraphDataStructureParamsType extends ObjectParams {
     transpose?: boolean
 }
 
-export default class GraphDataStructureParams extends ComplexCanvasAnimationParams<GraphDataStructureParamsType> {
+export interface GraphDataStructureJsonParamsType extends JsonObjectParams, OnlyGraphDataStructureJsonType {
 
-    protected getZeroParams (): Omit<GraphDataStructureParamsType, keyof ObjectParams> {
+}
+
+export interface GraphDataStructureAnimationParamsType extends AnimationObjectParams, OnlyGraphDataStructureJsonType {
+
+}
+
+export default class GraphDataStructureParams extends ComplexCanvasAnimationParams<GraphDataStructureJsonParamsType, GraphDataStructureAnimationParamsType> {
+
+    protected convertJsonObjectToAnimationObject(jsonObject: GraphDataStructureJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): GraphDataStructureAnimationParamsType {
+        throw new Error('Method not implemented.')
+    }
+
+    protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<GraphDataStructureJsonParamsType>): Partial<GraphDataStructureAnimationParamsType> {
+        throw new Error('Method not implemented.')
+    }
+
+    protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<GraphDataStructureAnimationParamsType>): void {
+        throw new Error('Method not implemented.')
+    }
+
+    protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): GraphDataStructureAnimationParamsType {
+        throw new Error('Method not implemented.')
+    }
+
+    protected getZeroParams (): Omit<GraphDataStructureJsonParamsType, keyof JsonObjectParams> {
         return {
             edges: [],
             vertices: []
         }
     }
 
-    protected getIncludedAnimationParamsByParameter (object: GraphDataStructureParamsType): Map<string, CanvasAnimationParamsType> {
+    protected getIncludedAnimationParamsByParameter (object: GraphDataStructureJsonParamsType): Map<string, CanvasAnimationParamsType> {
         const {
             vertexStyle,
             edgeStyle,
@@ -261,7 +286,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
         }
     }
 
-    private calculateArrowParams (animationStyle: AnimationStyle, edge: EdgeType, globalStyle?: EdgeStyle): Partial<ArrowParamsType> {
+    private calculateArrowParams (animationStyle: AnimationStyle, edge: EdgeType, globalStyle?: EdgeStyle): Partial<ArrowJsonParamsType> {
         const edgeStyle: EdgeStyle = {
             fontSize: animationStyle.edgeFontSize,
             ...globalStyle,
@@ -289,7 +314,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
         return dagreGraph
     }
 
-    private createVertexIdMap (object: GraphDataStructureParamsType): Map<string, VertexType> {
+    private createVertexIdMap (object: GraphDataStructureJsonParamsType): Map<string, VertexType> {
         const result = new Map<string, VertexType>()
 
         object.vertices.forEach(v => {
@@ -300,7 +325,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
         return result
     }
 
-    private createEdgeIdMap (object: GraphDataStructureParamsType): Map<string, EdgeType> {
+    private createEdgeIdMap (object: GraphDataStructureJsonParamsType): Map<string, EdgeType> {
         const result = new Map<string, EdgeType>()
 
         object.edges.forEach(e => result.set(JSON.stringify({

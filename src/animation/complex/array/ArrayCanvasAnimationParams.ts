@@ -1,12 +1,13 @@
-import { ObjectParams } from '../../CanvasAnimationParams'
+import {AnimationObjectParams, JsonObjectParams} from '../../CanvasAnimationParams'
 import { addPoints } from '../../../common/Utils'
 import ComplexCanvasAnimationParams, {
     CanvasAnimationParamsType
 } from '../ComplexCanvasAnimationParams'
 import ArrayElement, { ElementStyle, ElementType } from './ArrayElement'
 import ArrowCanvasAnimationParams from '../arrow/ArrowCanvasAnimationParams'
+import { ObjectParamsObject } from '../../ObjectParamsObject'
 
-export interface ArrayParamsType extends ObjectParams {
+export interface OnlyArrayParamsType {
     values: (ElementType | string | boolean | number)[]
     height: number
     width?: number
@@ -19,21 +20,45 @@ export interface ArrayParamsType extends ObjectParams {
     pointers?: number[]
 }
 
+export interface ArrayJsonParamsType extends JsonObjectParams, OnlyArrayParamsType {
+
+}
+
+export interface ArrayAnimationParamsType extends AnimationObjectParams, OnlyArrayParamsType {
+
+}
+
 export type ArraySelectorType = {
     values?: 'all' | number[]
     allNElementsInSequence?: number
 }
 
-export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationParams<ArrayParamsType, ArraySelectorType> {
+export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationParams<ArrayJsonParamsType, ArrayAnimationParamsType, ArraySelectorType> {
 
-    protected getZeroParams (): Omit<ArrayParamsType, keyof ObjectParams> {
+    protected convertJsonObjectToAnimationObject(jsonObject: ArrayJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): ArrayAnimationParamsType {
+        throw new Error('Method not implemented.')
+    }
+
+    protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<ArrayJsonParamsType>): Partial<ArrayAnimationParamsType> {
+        throw new Error('Method not implemented.')
+    }
+
+    protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<ArrayAnimationParamsType>): void {
+        throw new Error('Method not implemented.')
+    }
+
+    protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): ArrayAnimationParamsType {
+        throw new Error('Method not implemented.')
+    }
+
+    protected getZeroParams (): Omit<ArrayJsonParamsType, keyof JsonObjectParams> {
         return {
             values: [],
             height: 0
         }
     }
 
-    protected getIncludedAnimationParamsByParameter (object: ArrayParamsType): Map<string, CanvasAnimationParamsType> {
+    protected getIncludedAnimationParamsByParameter (object: ArrayJsonParamsType): Map<string, CanvasAnimationParamsType> {
         const result = new Map<string, CanvasAnimationParamsType>()
         const {
             title,
@@ -152,14 +177,14 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
         return result
     }
 
-    private calculateWidth (object: ArrayParamsType): number {
+    private calculateWidth (object: ArrayJsonParamsType): number {
         const { values } = object
         const partHeight = this.calculatePartHeight(object)
         const arrayHeight = partHeight * 3
         return object.width ?? (values.length * arrayHeight + (values.length - 1) * partHeight)
     }
 
-    private calculatePartHeight (object: ArrayParamsType): number {
+    private calculatePartHeight (object: ArrayJsonParamsType): number {
         const {
             title,
             indexTitle,

@@ -1,11 +1,11 @@
 import p5Types from 'p5'
 import AnimationStyle from '../../../AnimationStyles'
-import { BezierParamsType } from './BezierCanvasAnimationParams'
+import {BezierAnimationParamsType} from './BezierCanvasAnimationParams'
 import CanvasAnimation from '../../CanvasAnimation'
 
-export default class BezierCanvasAnimation extends CanvasAnimation<BezierParamsType> {
+export default class BezierCanvasAnimation extends CanvasAnimation<BezierAnimationParamsType> {
 
-    public drawObject (p5: p5Types, object: BezierParamsType, style: AnimationStyle): void {
+    public drawObject (p5: p5Types, object: BezierAnimationParamsType, style: AnimationStyle): void {
         const points = object.originRelativePoints
 
         p5.noFill()

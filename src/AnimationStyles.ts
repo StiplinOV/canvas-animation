@@ -29,7 +29,7 @@ export default interface AnimationStyle {
     fontSize: number
     titleFontSize: number
     fontWeight: number
-    monospaceFont: string
+    monospaceFont: typeof COURIER_NEW_FONT
     highlightTextStyle: HighlightedStyleName
     vertexFontSize: number
     vertexDiameter: number
@@ -41,6 +41,7 @@ export default interface AnimationStyle {
     textStyle: THE_STYLE
     zIndex: number
     selectionAlgorithm: SelectionAlgorithm
+    lineSpacing: number
 }
 
 const defaultAnimationStyle: AnimationStyle = {
@@ -70,7 +71,8 @@ const defaultAnimationStyle: AnimationStyle = {
     selectionAlgorithm: {
         func: 'fadeinFadeOut',
         params: [150]
-    }
+    },
+    lineSpacing: 1.2
 }
 const createAnimationStyles = (): Record<string, Partial<AnimationStyle>> => ({
     default: defaultAnimationStyle,

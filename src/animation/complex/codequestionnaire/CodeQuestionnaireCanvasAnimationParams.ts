@@ -1,23 +1,23 @@
-import {ObjectParams, SelectionType} from '../../CanvasAnimationParams'
+import {AnimationObjectParams, JsonObjectParams, SelectionType} from '../../CanvasAnimationParams'
 import ComplexCanvasAnimationParams, {CanvasAnimationParamsType} from '../ComplexCanvasAnimationParams'
 import {
     HighlightedStyleName,
     HighlightedTextValueSegmentType,
     languageDefs
 } from '../../simple/highligtedtext/HighlightedTextCanvasAnimationParams'
-import AnimationStyle from '../../../AnimationStyles'
-import {
-    addPoints,
-    calculateArrayPercentValue,
-    calculatePercentValue,
-    calculateTextPercentValue
-} from '../../../common/Utils'
+import {addPoints} from '../../../common/Utils'
 import {animationStyle} from '../../../Animations'
 import {Point} from '../../../common/Point'
+import {ObjectParamsObject} from '../../ObjectParamsObject'
 
 const CODE_QUESTIONNAIRE_LINE_SPACING = 2
 
-export interface CodeQuestionnaireParamsType extends ObjectParams {
+export interface OnlyCodeQuestionnaireParams {
+    width: number
+    height: number
+}
+
+export interface CodeQuestionnaireJsonParams extends JsonObjectParams, OnlyCodeQuestionnaireParams {
     codeText?: string
     language?: keyof typeof languageDefs
     codeHighlightStyle?: HighlightedStyleName
@@ -27,8 +27,6 @@ export interface CodeQuestionnaireParamsType extends ObjectParams {
     }[]
     questionnaireSelectedLines?: number[]
     codeFontSize?: number
-    width: number
-    height: number
     codePartWidth?: number
     codePartHeight?: number
     questionParamsPosition?: 'right' | 'center' | 'down'
@@ -37,6 +35,26 @@ export interface CodeQuestionnaireParamsType extends ObjectParams {
     questionParamsStrikethroughOptions?: number[]
     title?: string
     titleFontSize?: number
+}
+
+export interface CodeQuestionnaireAnimationObjectParams extends AnimationObjectParams, OnlyCodeQuestionnaireParams {
+    codeText: string
+    language: keyof typeof languageDefs | null
+    codeHighlightStyle: HighlightedStyleName | null
+    codeSelectedSubstrings: {
+        from: number
+        to: number
+    }[]
+    questionnaireSelectedLines: number[]
+    codeFontSize: number
+    codePartWidth: number
+    codePartHeight: number
+    questionParamsPosition: 'right' | 'center' | 'down'
+    questionParamsOptions: string[]
+    questionParamsFontSize: number
+    questionParamsStrikethroughOptions: number[]
+    title: string
+    titleFontSize: number
 }
 
 export interface CodeQuestionnaireCanvasAnimationSelection {
@@ -51,9 +69,40 @@ export interface CodeQuestionnaireCanvasAnimationSelection {
     }
 }
 
-export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanvasAnimationParams<CodeQuestionnaireParamsType, CodeQuestionnaireCanvasAnimationSelection> {
+export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanvasAnimationParams<CodeQuestionnaireJsonParams, CodeQuestionnaireAnimationObjectParams, CodeQuestionnaireCanvasAnimationSelection> {
 
-    protected getIncludedAnimationParamsByParameter(object: CodeQuestionnaireParamsType): Map<string, CanvasAnimationParamsType> {
+    protected convertJsonObjectToAnimationObject(
+        jsonObject: CodeQuestionnaireJsonParams,
+        animationObjectDefaultParams: AnimationObjectParams
+    ): CodeQuestionnaireAnimationObjectParams {
+        const animationStyle = this.getAnimationStyle()
+        return {
+            ...animationObjectDefaultParams,
+            ...jsonObject,
+            codeText: jsonObject.codeText ?? '',
+            language: jsonObject.language ?? null,
+            codeHighlightStyle: jsonObject.codeHighlightStyle ?? null,
+            codeSelectedSubstrings: jsonObject.codeSelectedSubstrings ?? [],
+            questionnaireSelectedLines: jsonObject.questionnaireSelectedLines ?? [],
+            codeFontSize: jsonObject.codeFontSize ?? animationStyle.fontSize,
+            codePartWidth: jsonObject.codePartWidth ?? 0,
+            codePartHeight: jsonObject.codePartHeight ?? 0,
+            questionParamsPosition: jsonObject.questionParamsPosition ?? 'down',
+            questionParamsOptions: jsonObject.questionParamsOptions ?? [],
+            questionParamsFontSize: jsonObject.questionParamsFontSize ?? animationStyle.fontSize,
+            questionParamsStrikethroughOptions: jsonObject.questionParamsStrikethroughOptions ?? [],
+            title: jsonObject.title ?? '',
+            titleFontSize: jsonObject.titleFontSize ?? animationStyle.titleFontSize
+        }
+    }
+
+    protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<CodeQuestionnaireJsonParams>): Partial<CodeQuestionnaireAnimationObjectParams> {
+        return {
+            ...jsonObject
+        }
+    }
+
+    protected getIncludedAnimationParamsByParameter(object: CodeQuestionnaireAnimationObjectParams): Map<string, CanvasAnimationParamsType> {
         const result = new Map<string, CanvasAnimationParamsType>()
         if (object.title) {
             result.set('titleText', {
@@ -88,8 +137,8 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
                     origin: this.getCodePartOrigin(object),
                     value: {
                         text: object.codeText,
-                        highlightStyle: object.codeHighlightStyle,
-                        language: object.language
+                        highlightStyle: object.codeHighlightStyle ?? undefined,
+                        language: object.language ?? undefined
                     },
                     selectedSubstrings: object.codeSelectedSubstrings ?? [],
                     fontSize: object.codeFontSize,
@@ -117,7 +166,6 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
 
             object.questionParamsStrikethroughOptions?.forEach(l => {
                 const valueSegment = value[l * 2]
-                console.log(valueSegment)
                 let curSubstringPosition = 0
                 for (let i = 0; i < l * 2; i++) {
                     const seg = value[i]
@@ -178,11 +226,11 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         return result
     }
 
-    private getTitleHeight(object: CodeQuestionnaireParamsType): number {
+    private getTitleHeight(object: CodeQuestionnaireAnimationObjectParams): number {
         return object.titleFontSize ? object.titleFontSize * 3 : 0
     }
 
-    private getCodePartHeight(object: CodeQuestionnaireParamsType): number {
+    private getCodePartHeight(object: CodeQuestionnaireAnimationObjectParams): number {
         if (object.codePartHeight) {
             return object.codePartHeight
         }
@@ -196,7 +244,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         return result
     }
 
-    private getCodePartWidth(object: CodeQuestionnaireParamsType): number {
+    private getCodePartWidth(object: CodeQuestionnaireAnimationObjectParams): number {
         let result = object.width
         if (object.questionParamsPosition === 'right') {
             result /= 2
@@ -204,7 +252,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         return result
     }
 
-    private getQuestionPartHeight(object: CodeQuestionnaireParamsType): number {
+    private getQuestionPartHeight(object: CodeQuestionnaireAnimationObjectParams): number {
         if (object.questionParamsPosition === 'center') {
             return object.height / 2
         }
@@ -214,7 +262,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         return object.height - this.getTitleHeight(object) - this.getCodePartHeight(object)
     }
 
-    private getQuestionPartWidth(object: CodeQuestionnaireParamsType): number {
+    private getQuestionPartWidth(object: CodeQuestionnaireAnimationObjectParams): number {
         if (object.questionParamsPosition === 'center') {
             return object.width / 2
         }
@@ -224,11 +272,11 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         return object.width - this.getCodePartWidth(object)
     }
 
-    private getCodePartOrigin(object: CodeQuestionnaireParamsType): Point {
+    private getCodePartOrigin(object: CodeQuestionnaireAnimationObjectParams): Point {
         return addPoints(object.origin, {y: this.getTitleHeight(object)})
     }
 
-    private getQuestionPartOrigin(object: CodeQuestionnaireParamsType): Point {
+    private getQuestionPartOrigin(object: CodeQuestionnaireAnimationObjectParams): Point {
         if (object.questionParamsPosition === 'down') {
             return addPoints(this.getCodePartOrigin(object), {y: this.getCodePartHeight(object)})
         } else if (object.questionParamsPosition === 'right') {
@@ -243,49 +291,66 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         }
     }
 
-    protected getZeroParams(): Omit<CodeQuestionnaireParamsType, keyof ObjectParams> {
+    protected getZeroParams(): Omit<CodeQuestionnaireAnimationObjectParams, keyof AnimationObjectParams> {
+        const animationStyle = this.getAnimationStyle()
         return {
-            width: this.getObject().width,
-            height: this.getObject().height,
-            codePartWidth: this.getObject().codePartWidth,
+            ...this.getObject(),
             questionParamsOptions: [],
             questionParamsStrikethroughOptions: [],
             codeText: '',
-            language: this.getObject().language,
-            codeFontSize: this.getObject().codeFontSize,
-            title: this.getObject().title,
-            titleFontSize: this.getObject().titleFontSize
+            codeHighlightStyle: animationStyle.highlightTextStyle,
+            codeSelectedSubstrings: [],
+            questionnaireSelectedLines: [],
+            questionParamsPosition: 'down',
+            questionParamsFontSize: animationStyle.fontSize
         }
     }
 
-    mergeWithTransformation(obj: CodeQuestionnaireParamsType, trans: Partial<CodeQuestionnaireParamsType>, perc: number, animationStyle: AnimationStyle): Omit<CodeQuestionnaireParamsType, keyof ObjectParams> {
-        const codePartHeight = this.getCodePartHeight(obj)
-        const codePartWidth = this.getCodePartWidth(obj)
-
-        return {
-            codePartHeight: trans.codePartHeight ? calculatePercentValue(codePartHeight, trans.codePartHeight, perc) : obj.codePartHeight,
-            codePartWidth: trans.codePartWidth ? calculatePercentValue(codePartWidth, trans.codePartWidth, perc) : codePartWidth,
-            questionParamsPosition: trans.questionParamsPosition && perc > 0.5 ? trans.questionParamsPosition : obj.questionParamsPosition,
-            questionParamsFontSize: trans.questionParamsFontSize ? calculatePercentValue(obj.questionParamsFontSize ?? 20, trans.questionParamsFontSize, perc) : obj.questionParamsFontSize,
-            questionParamsOptions: trans.questionParamsOptions ? calculateArrayPercentValue(obj.questionParamsOptions ?? [], trans.questionParamsOptions, perc) : obj.questionParamsOptions,
-            questionParamsStrikethroughOptions: trans.questionParamsStrikethroughOptions ? calculateArrayPercentValue(obj.questionParamsStrikethroughOptions ?? [], trans.questionParamsStrikethroughOptions, perc) : obj.questionParamsStrikethroughOptions,
-            title: trans.title ? calculateTextPercentValue(obj.title ?? '', trans.title, perc) : obj.title,
-            titleFontSize: trans.titleFontSize ? calculatePercentValue(obj.titleFontSize ?? 0, trans.titleFontSize, perc) : obj.titleFontSize,
-            codeText: trans.codeText ? calculateTextPercentValue(obj.codeText ?? '', trans.codeText, perc) : obj.codeText,
-            language: (trans.language && perc > 0.5) ? trans.language : obj.language,
-            codeHighlightStyle: (trans.codeHighlightStyle && perc > 0.5) ? trans.codeHighlightStyle : obj.codeHighlightStyle,
-            codeSelectedSubstrings: trans.codeSelectedSubstrings ? calculateArrayPercentValue(obj.codeSelectedSubstrings ?? [], trans.codeSelectedSubstrings, perc) : obj.codeSelectedSubstrings,
-            questionnaireSelectedLines: trans.questionnaireSelectedLines ? calculateArrayPercentValue(obj.questionnaireSelectedLines ?? [], trans.questionnaireSelectedLines, perc) : obj.questionnaireSelectedLines,
-            codeFontSize: trans.codeFontSize ? calculatePercentValue(obj.codeFontSize ?? animationStyle.titleFontSize, trans.codeFontSize, perc) : obj.codeFontSize,
-            width: trans.width ? calculatePercentValue(obj.width, trans.width, perc) : obj.width,
-            height: trans.height ? calculatePercentValue(obj.height, trans.height, perc) : obj.height
-        }
-    }
-
-    protected convertSelectionToTransformObject(selection: SelectionType<CodeQuestionnaireCanvasAnimationSelection>): Partial<CodeQuestionnaireParamsType> {
+    protected convertSelectionToTransformObject(selection: SelectionType<CodeQuestionnaireCanvasAnimationSelection>): Partial<CodeQuestionnaireJsonParams> {
         return {
             codeSelectedSubstrings: selection.type?.code?.substrings ?? [],
             questionnaireSelectedLines: selection.type?.questionnaire?.lines ?? []
+        }
+    }
+
+    protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<CodeQuestionnaireAnimationObjectParams>): void {
+        params.codeText !== undefined && objectParamsObject.setStringParam('codeText', params.codeText)
+        params.language !== undefined && objectParamsObject.setStringLiteralParam('language', params.language ?? '')
+        params.codeHighlightStyle !== undefined && objectParamsObject.setStringLiteralParam('codeHighlightStyle', params.codeHighlightStyle ?? '')
+        params.codeSelectedSubstrings && objectParamsObject.setArrayParam('codeSelectedSubstrings', params.codeSelectedSubstrings)
+        params.questionnaireSelectedLines && objectParamsObject.setArrayParam('questionnaireSelectedLines', params.questionnaireSelectedLines)
+        params.codeFontSize && objectParamsObject.setNumberParam('codeFontSize', params.codeFontSize)
+        params.width !== undefined && objectParamsObject.setNumberParam('width', params.width)
+        params.height !== undefined && objectParamsObject.setNumberParam('height', params.height)
+        params.codePartWidth !== undefined && objectParamsObject.setNumberParam('codePartWidth', params.codePartWidth)
+        params.codePartHeight !== undefined && objectParamsObject.setNumberParam('codePartHeight', params.codePartHeight)
+        params.questionParamsPosition && objectParamsObject.setStringLiteralParam('questionParamsPosition', params.questionParamsPosition)
+        params.questionParamsOptions && objectParamsObject.setArrayParam('questionParamsOptions', params.questionParamsOptions)
+        params.questionParamsFontSize && objectParamsObject.setNumberParam('questionParamsFontSize', params.questionParamsFontSize)
+        params.questionParamsStrikethroughOptions && objectParamsObject.setArrayParam('questionParamsStrikethroughOptions', params.questionParamsStrikethroughOptions)
+        params.title && objectParamsObject.setStringParam('title', params.title)
+        params.titleFontSize && objectParamsObject.setNumberParam('titleFontSize', params.titleFontSize)
+    }
+
+    protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): CodeQuestionnaireAnimationObjectParams {
+        return {
+            ...initialDefaultParams,
+            codeText: objectParamsObject.getStringParam('codeText'),
+            language: objectParamsObject.getStringLiteralParam<keyof typeof languageDefs>('language'),
+            codeHighlightStyle: objectParamsObject.getStringLiteralParam<HighlightedStyleName>('codeHighlightStyle'),
+            codeSelectedSubstrings: objectParamsObject.getArrayParam('codeSelectedSubstrings'),
+            questionnaireSelectedLines: objectParamsObject.getArrayParam('questionnaireSelectedLines'),
+            codeFontSize: objectParamsObject.getNumberParam('codeFontSize'),
+            width: objectParamsObject.getNumberParam('width'),
+            height: objectParamsObject.getNumberParam('height'),
+            codePartWidth: objectParamsObject.getNumberParam('codePartWidth'),
+            codePartHeight: objectParamsObject.getNumberParam('codePartHeight'),
+            questionParamsPosition: objectParamsObject.getStringLiteralParam<'right' | 'center' | 'down'>('questionParamsPosition'),
+            questionParamsOptions: objectParamsObject.getArrayParam('questionParamsOptions'),
+            questionParamsFontSize: objectParamsObject.getNumberParam('questionParamsFontSize'),
+            questionParamsStrikethroughOptions: objectParamsObject.getArrayParam('questionParamsStrikethroughOptions'),
+            title: objectParamsObject.getStringParam('title'),
+            titleFontSize: objectParamsObject.getNumberParam('titleFontSize')
         }
     }
 

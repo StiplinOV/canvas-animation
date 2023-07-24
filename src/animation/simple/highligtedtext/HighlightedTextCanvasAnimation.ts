@@ -2,8 +2,8 @@ import p5Types from 'p5'
 import AnimationStyle, {getFontColor} from '../../../AnimationStyles'
 import {
     calculateBackgroundColor,
-    createHighlightedTextValueSegmentType,
-    HighlightedTextParamsType,
+    createHighlightedTextValueSegmentType, HighlightedTextAnimationParamsType,
+    HighlightedTextJsonParamsType,
     HighlightedTextValueSegmentType
 } from './HighlightedTextCanvasAnimationParams'
 import CanvasAnimation from '../../CanvasAnimation'
@@ -17,9 +17,9 @@ type rectParams = {
     height: number
 }
 
-export default class HighlightedTextCanvasAnimation extends CanvasAnimation<HighlightedTextParamsType> {
+export default class HighlightedTextCanvasAnimation extends CanvasAnimation<HighlightedTextAnimationParamsType> {
 
-    public drawObject(p5: p5Types, o: HighlightedTextParamsType, animationStyle: AnimationStyle): void {
+    public drawObject(p5: p5Types, o: HighlightedTextAnimationParamsType, animationStyle: AnimationStyle): void {
         const fontSize = o.fontSize ?? animationStyle.fontSize
         const widthParam = o.width ?? 0
         const heightParam = (o.height ?? 0)
@@ -40,7 +40,7 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
 
     public process(
         p5: p5Types,
-        o: HighlightedTextParamsType,
+        o: HighlightedTextAnimationParamsType,
         animationStyle: AnimationStyle,
         borderX: number,
         borderY: number,
@@ -55,7 +55,7 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
         for (let i = 0; i < segments.length; i++) {
             const part = segments[i]
             if (part === 'newline') {
-                y += fontSize * (o.lineSpacing ?? 1.2)
+                y += fontSize * o.lineSpacing
                 width = Math.max(width, x)
                 x = borderX
                 continue
@@ -107,7 +107,7 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
 
     private splitSegmentsAccordingToSelections(
         segments: HighlightedTextValueSegmentType[],
-        o: HighlightedTextParamsType
+        o: HighlightedTextJsonParamsType
     ): HighlightedTextValueSegmentType[] {
         const result: HighlightedTextValueSegmentType[] = []
         const selectionIntervals = o.selectedSubstrings?.sort((l, r) => l.from - r.from) ?? []

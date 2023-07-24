@@ -1,7 +1,8 @@
-import { ObjectParams } from '../../CanvasAnimationParams'
+import {AnimationObjectParams, JsonObjectParams} from '../../CanvasAnimationParams'
 import ComplexCanvasAnimationParams, {CanvasAnimationParamsType} from '../ComplexCanvasAnimationParams'
 import ArrowCanvasAnimationParams from '../arrow/ArrowCanvasAnimationParams'
 import { addPoints } from '../../../common/Utils'
+import { ObjectParamsObject } from '../../ObjectParamsObject'
 
 const coordinateDashWidth = 20
 
@@ -15,7 +16,7 @@ type ChartRangeTypeWithLayer = ChartRangeType & {
     layer: number
 }
 
-export interface NumberLineParamsType extends ObjectParams {
+export interface OnlyNumberLineParamsType {
     width: number
     height?: number
     scale?: number[]
@@ -23,15 +24,39 @@ export interface NumberLineParamsType extends ObjectParams {
     fontSize?: number
 }
 
-export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimationParams<NumberLineParamsType> {
+export interface NumberLineJsonParamsType extends JsonObjectParams, OnlyNumberLineParamsType {
 
-    protected getZeroParams (): Omit<NumberLineParamsType, keyof ObjectParams> {
+}
+
+export interface NumberLineAnimationParamsType extends AnimationObjectParams, OnlyNumberLineParamsType {
+
+}
+
+export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimationParams<NumberLineJsonParamsType, NumberLineAnimationParamsType> {
+
+    protected convertJsonObjectToAnimationObject(jsonObject: NumberLineJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): NumberLineAnimationParamsType {
+        throw new Error('Method not implemented.')
+    }
+
+    protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<NumberLineJsonParamsType>): Partial<NumberLineAnimationParamsType> {
+        throw new Error('Method not implemented.')
+    }
+
+    protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<NumberLineAnimationParamsType>): void {
+        throw new Error('Method not implemented.')
+    }
+
+    protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): NumberLineAnimationParamsType {
+        throw new Error('Method not implemented.')
+    }
+
+    protected getZeroParams (): Omit<NumberLineJsonParamsType, keyof JsonObjectParams> {
         return {
             width: 0
         }
     }
 
-    protected getIncludedAnimationParamsByParameter (object: NumberLineParamsType): Map<string, CanvasAnimationParamsType> {
+    protected getIncludedAnimationParamsByParameter (object: NumberLineJsonParamsType): Map<string, CanvasAnimationParamsType> {
         const result = new Map<string, CanvasAnimationParamsType>()
         const {
             origin,
@@ -158,13 +183,13 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
         return result
     }
 
-    private getScale (object: NumberLineParamsType): number[] {
+    private getScale (object: NumberLineJsonParamsType): number[] {
         const scale = object.scale ?? []
         const ranges = object.ranges?.map(r => r.coords).flatMap(r => r) ?? []
         return [...scale, ...ranges].filter((value, index, array) => array.indexOf(value) === index)
     }
 
-    private getRangesWithLayers (object: NumberLineParamsType): ChartRangeTypeWithLayer[] {
+    private getRangesWithLayers (object: NumberLineJsonParamsType): ChartRangeTypeWithLayer[] {
         const { ranges } = object
         const results: Map<number, ChartRangeType[]> = new Map<number, ChartRangeType[]>()
         const result: ChartRangeTypeWithLayer[] = []

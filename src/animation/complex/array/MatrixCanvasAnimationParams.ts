@@ -1,12 +1,13 @@
-import { ObjectParams } from '../../CanvasAnimationParams'
+import {AnimationObjectParams, JsonObjectParams} from '../../CanvasAnimationParams'
 import { addPoints } from '../../../common/Utils'
 import ComplexCanvasAnimationParams, {
     CanvasAnimationParamsType
 } from '../ComplexCanvasAnimationParams'
 import { Point } from '../../../common/Point'
 import ArrayElement, { ElementStyle, ElementType } from './ArrayElement'
+import { ObjectParamsObject } from '../../ObjectParamsObject'
 
-export interface MatrixParamsType extends ObjectParams {
+export interface OnlyMatrixParamsType {
     values: (ElementType | string | boolean | number)[][]
     height: number
     width?: number
@@ -15,20 +16,44 @@ export interface MatrixParamsType extends ObjectParams {
     valueStyle?: Map<number, ElementType>
 }
 
+export interface MatrixJsonParamsType extends JsonObjectParams, OnlyMatrixParamsType {
+
+}
+
+export interface MatrixAnimationParamsType extends AnimationObjectParams, OnlyMatrixParamsType {
+
+}
+
 export type MatrixSelectorType = {
     elements: Point[] | 'all'
 }
 
-export default class MatrixCanvasAnimationParams extends ComplexCanvasAnimationParams<MatrixParamsType, MatrixSelectorType> {
+export default class MatrixCanvasAnimationParams extends ComplexCanvasAnimationParams<MatrixJsonParamsType, MatrixAnimationParamsType, MatrixSelectorType> {
 
-    protected getZeroParams (): Omit<MatrixParamsType, keyof ObjectParams> {
+    protected convertJsonObjectToAnimationObject(jsonObject: MatrixJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): MatrixAnimationParamsType {
+        throw new Error('Method not implemented.')
+    }
+
+    protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<MatrixJsonParamsType>): Partial<MatrixAnimationParamsType> {
+        throw new Error('Method not implemented.')
+    }
+
+    protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<MatrixAnimationParamsType>): void {
+        throw new Error('Method not implemented.')
+    }
+
+    protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): MatrixAnimationParamsType {
+        throw new Error('Method not implemented.')
+    }
+
+    protected getZeroParams (): Omit<MatrixJsonParamsType, keyof JsonObjectParams> {
         return {
             values: [],
             height: 0
         }
     }
 
-    protected getIncludedAnimationParamsByParameter (object: MatrixParamsType): Map<string, CanvasAnimationParamsType> {
+    protected getIncludedAnimationParamsByParameter (object: MatrixJsonParamsType): Map<string, CanvasAnimationParamsType> {
         const result = new Map<string, CanvasAnimationParamsType>()
         const {
             title,
@@ -97,14 +122,14 @@ export default class MatrixCanvasAnimationParams extends ComplexCanvasAnimationP
         return result
     }
 
-    private getNumberOfRows (object: MatrixParamsType): number {
+    private getNumberOfRows (object: MatrixJsonParamsType): number {
         let result = object.values.length
         object.title && result++
 
         return result
     }
 
-    private getNumberOfCols (object: MatrixParamsType): number {
+    private getNumberOfCols (object: MatrixJsonParamsType): number {
         return object.values.map(v => v.length).reduce((l, r) => Math.max(l, r), 0)
     }
 

@@ -1,11 +1,12 @@
 import { Point } from '../../../common/Point'
 import { addPoints } from '../../../common/Utils'
-import { ObjectParams } from '../../CanvasAnimationParams'
+import {AnimationObjectParams, JsonObjectParams} from '../../CanvasAnimationParams'
 import ComplexCanvasAnimationParams, {
     CanvasAnimationParamsType
 } from '../ComplexCanvasAnimationParams'
 import ArrowCanvasAnimationParams from '../arrow/ArrowCanvasAnimationParams'
 import { ColorType } from '../../../AnimationStyles'
+import { ObjectParamsObject } from '../../ObjectParamsObject'
 
 const coordinateDashWidth = 20
 const toScaleType = (value: scaleType | number): scaleType => {
@@ -56,7 +57,7 @@ type Bar = {
     zIndex?: number
 }
 
-export interface XyChartParamsType extends ObjectParams {
+export interface OnlyXyChartParamsType {
     width: number
     height: number
     xScale?: (scaleType | number)[]
@@ -79,6 +80,14 @@ export interface XyChartParamsType extends ObjectParams {
     }[]
 }
 
+export interface XyChartJsonParamsType extends JsonObjectParams, OnlyXyChartParamsType {
+
+}
+
+export interface XyChartAnimationParamsType extends AnimationObjectParams, OnlyXyChartParamsType {
+
+}
+
 export type XyChartSelectorType = {
     points?: 'all' | number[]
     lines?: 'all'
@@ -87,16 +96,32 @@ export type XyChartSelectorType = {
     bars?: 'all' | 'allPairsInSequence' | number[]
 }
 
-export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimationParams<XyChartParamsType, XyChartSelectorType> {
+export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimationParams<XyChartJsonParamsType, XyChartAnimationParamsType, XyChartSelectorType> {
 
-    protected getZeroParams (): Omit<XyChartParamsType, keyof ObjectParams> {
+    protected convertJsonObjectToAnimationObject(jsonObject: XyChartJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): XyChartAnimationParamsType {
+        throw new Error('Method not implemented.')
+    }
+
+    protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<XyChartJsonParamsType>): Partial<XyChartAnimationParamsType> {
+        throw new Error('Method not implemented.')
+    }
+
+    protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<XyChartAnimationParamsType>): void {
+        throw new Error('Method not implemented.')
+    }
+
+    protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): XyChartAnimationParamsType {
+        throw new Error('Method not implemented.')
+    }
+
+    protected getZeroParams (): Omit<XyChartJsonParamsType, keyof JsonObjectParams> {
         return {
             width: 0,
             height: 0
         }
     }
 
-    protected getIncludedAnimationParamsByParameter (object: XyChartParamsType): Map<string, CanvasAnimationParamsType> {
+    protected getIncludedAnimationParamsByParameter (object: XyChartJsonParamsType): Map<string, CanvasAnimationParamsType> {
         const result = new Map<string, CanvasAnimationParamsType>()
         const {
             height,
@@ -239,7 +264,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         return result
     }
 
-    private getXCoordinateAxisParams (object: XyChartParamsType): Map<string, CanvasAnimationParamsType> {
+    private getXCoordinateAxisParams (object: XyChartJsonParamsType): Map<string, CanvasAnimationParamsType> {
         const result = new Map<string, CanvasAnimationParamsType>()
         const {
             width,
@@ -317,7 +342,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         return result
     }
 
-    private getYCoordinateAxisParams (object: XyChartParamsType): Map<string, CanvasAnimationParamsType> {
+    private getYCoordinateAxisParams (object: XyChartJsonParamsType): Map<string, CanvasAnimationParamsType> {
         const result = new Map<string, CanvasAnimationParamsType>()
         const {
             height,
@@ -399,7 +424,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         return result
     }
 
-    private getChartYRangeParams (object: XyChartParamsType): Map<string, CanvasAnimationParamsType> {
+    private getChartYRangeParams (object: XyChartJsonParamsType): Map<string, CanvasAnimationParamsType> {
         const result = new Map<string, CanvasAnimationParamsType>()
         const {
             width,
@@ -486,7 +511,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         return result
     }
 
-    private getChartXRangeParams (object: XyChartParamsType): Map<string, CanvasAnimationParamsType> {
+    private getChartXRangeParams (object: XyChartJsonParamsType): Map<string, CanvasAnimationParamsType> {
         const result = new Map<string, CanvasAnimationParamsType>()
         const { origin } = object
         const rotations = object.rotations ?? []
@@ -567,21 +592,21 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         return result
     }
 
-    private getXForValue (object: XyChartParamsType, xValue: number): number {
+    private getXForValue (object: XyChartJsonParamsType, xValue: number): number {
         return this.convertPointToCoordinate(object, {
             x: xValue,
             y: 0
         }).x
     }
 
-    private getYForValue (object: XyChartParamsType, yValue: number): number {
+    private getYForValue (object: XyChartJsonParamsType, yValue: number): number {
         return this.convertPointToCoordinate(object, {
             x: 0,
             y: yValue
         }).y
     }
 
-    private convertPointToCoordinate (object: XyChartParamsType, point: Point): Point {
+    private convertPointToCoordinate (object: XyChartJsonParamsType, point: Point): Point {
         return {
             x: this.scaleCoordinateValue(object.width, object.xScale ?? [], object.origin.x, point.x),
             y: this.scaleCoordinateValue(object.height, object.yScale ?? [], object.origin.y, -point.y)
