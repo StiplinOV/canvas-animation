@@ -4,6 +4,7 @@ import {
     calculatePercentValue,
     calculatePointPercentValue,
     calculateRotationsPercentValue,
+    calculateSetPercentValue,
     calculateTextPercentValue,
     requireValueFromMap,
     RotationType
@@ -27,6 +28,8 @@ export class ObjectParamsObject {
     private readonly numberParams: Map<string, number> = new Map<string, number>()
 
     private readonly arrayParams: Map<string, unknown[]> = new Map<string, unknown[]>()
+
+    private readonly setParams: Map<string, Set<unknown>> = new Map<string, Set<unknown>>()
 
     private readonly rotationsParams: Map<string, RotationType[]> = new Map<string, RotationType[]>()
 
@@ -54,6 +57,9 @@ export class ObjectParamsObject {
             })
             other.arrayParams.forEach((v, k) => {
                 this.arrayParams.set(k, v)
+            })
+            other.setParams.forEach((v, k) => {
+                this.setParams.set(k, v)
             })
             other.rotationsParams.forEach((v, k) => {
                 this.rotationsParams.set(k, v)
@@ -92,6 +98,10 @@ export class ObjectParamsObject {
         this.arrayParams.set(key, param)
     }
 
+    public setSetParam<T>(key: string, param: Set<T>): void {
+        this.setParams.set(key, param)
+    }
+
     public setRotationsParam(key: string, param: RotationType[]): void {
         this.rotationsParams.set(key, param)
     }
@@ -126,6 +136,10 @@ export class ObjectParamsObject {
 
     public getArrayParam<T>(key: string): T[] {
         return requireValueFromMap(this.arrayParams, key) as T[]
+    }
+
+    public getSetParam<T>(key: string): Set<T> {
+        return requireValueFromMap(this.setParams, key) as Set<T>
     }
 
     public getRotationsParam(key: string): RotationType[] {
@@ -173,6 +187,16 @@ export class ObjectParamsObject {
             const currentValue = this.arrayParams.get(key) ?? []
             const desireValue = other.getArrayParam(key)
             this.setArrayParam(key, calculateArrayPercentValue(currentValue, desireValue, percent))
+        })
+        other.setParams.forEach((value, key) => {
+            const currentValue = this.setParams.get(key) ?? new Set()
+            const desireValue = other.getSetParam(key)
+            calculateSetPercentValue(currentValue, desireValue, percent)
+
+            this.setSetParam(
+                key,
+                calculateSetPercentValue(currentValue, desireValue, percent)
+            )
         })
         other.rotationsParams.forEach((value, key) => {
             const currentValue = this.rotationsParams.get(key) ?? []

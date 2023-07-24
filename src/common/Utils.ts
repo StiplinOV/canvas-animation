@@ -72,6 +72,21 @@ export const calculatePointPercentValue = (from: Point, to: Point, percent: numb
         x: calculatePercentValue(from.x, to.x, percent),
         y: calculatePercentValue(from.y, to.y, percent)
     })
+export const calculateSetPercentValue = <T>(from: Set<T>, to: Set<T>, percent: number): Set<T> => {
+    const setIntersection = new Set<T>()
+    const fromUniqueSet = new Set<T>(from)
+    const toUniqueSet = new Set<T>(to)
+    from.forEach(v => to.has(v) && setIntersection.add(v))
+    setIntersection.forEach(v => {
+        fromUniqueSet.has(v) && fromUniqueSet.delete(v)
+        toUniqueSet.has(v) && toUniqueSet.delete(v)
+    })
+    const fromUniqueSetArray = Array.from(fromUniqueSet.values())
+    const toUniqueSetArray = Array.from(toUniqueSet.values())
+    const resultDeltaArray = calculateArrayPercentValue(fromUniqueSetArray, toUniqueSetArray, percent)
+    resultDeltaArray.forEach(v => setIntersection.add(v))
+    return setIntersection
+}
 export const calculateArrayPercentValue = <T>(from: T[], to: T[], percent: number): T[] => {
     if (JSON.stringify(from) === JSON.stringify(to)) {
         return from

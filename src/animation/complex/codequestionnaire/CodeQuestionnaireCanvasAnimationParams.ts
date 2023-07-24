@@ -327,7 +327,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         params.questionParamsPosition && objectParamsObject.setStringLiteralParam('questionParamsPosition', params.questionParamsPosition)
         params.questionParamsOptions && objectParamsObject.setArrayParam('questionParamsOptions', params.questionParamsOptions)
         params.questionParamsFontSize && objectParamsObject.setNumberParam('questionParamsFontSize', params.questionParamsFontSize)
-        params.questionParamsStrikethroughOptions && objectParamsObject.setArrayParam('questionParamsStrikethroughOptions', params.questionParamsStrikethroughOptions)
+        params.questionParamsStrikethroughOptions && objectParamsObject.setSetParam('questionParamsStrikethroughOptions', new Set(params.questionParamsStrikethroughOptions))
         params.title && objectParamsObject.setStringParam('title', params.title)
         params.titleFontSize && objectParamsObject.setNumberParam('titleFontSize', params.titleFontSize)
     }
@@ -348,7 +348,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
             questionParamsPosition: objectParamsObject.getStringLiteralParam<'right' | 'center' | 'down'>('questionParamsPosition'),
             questionParamsOptions: objectParamsObject.getArrayParam('questionParamsOptions'),
             questionParamsFontSize: objectParamsObject.getNumberParam('questionParamsFontSize'),
-            questionParamsStrikethroughOptions: objectParamsObject.getArrayParam('questionParamsStrikethroughOptions'),
+            questionParamsStrikethroughOptions: Array.from(objectParamsObject.getSetParam<number>('questionParamsStrikethroughOptions').values()),
             title: objectParamsObject.getStringParam('title'),
             titleFontSize: objectParamsObject.getNumberParam('titleFontSize')
         }

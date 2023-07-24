@@ -75,7 +75,7 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                         appearTime: 36000,
                         appearDuration: 1000,
                         object: {
-                            questionParamsStrikethroughOptions: [0, 1, 5, 2]
+                            questionParamsStrikethroughOptions: [0, 1, 2, 5]
                         }
                     }
                 ]
