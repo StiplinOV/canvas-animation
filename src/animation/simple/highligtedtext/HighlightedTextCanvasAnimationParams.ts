@@ -356,18 +356,20 @@ export interface HighlightedTextJsonParamsType extends JsonObjectParams {
     height?: number
 }
 
+type SelectedSubstring = {
+    from: number
+    to: number
+    color?: string
+    backgroundColor?: string
+    strikethrough?: boolean
+}
+
 export interface HighlightedTextAnimationParamsType extends AnimationObjectParams {
     value: HighlightedTextValueSegmentType[]
     fontSize: number
     font: WebSafeFontsType | 'monospace'
     backgroundColor: string
-    selectedSubstrings: {
-        from: number
-        to: number
-        color?: string
-        backgroundColor?: string
-        strikethrough?: boolean
-    }[]
+    selectedSubstrings: SelectedSubstring[]
     lineSpacing: number
     width: number
     height: number
@@ -432,7 +434,7 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
         params.fontSize !== undefined && objectParamsObject.setNumberParam('fontSize', params.fontSize)
         params.font !== undefined && objectParamsObject.setStringLiteralParam('font', params.font)
         params.backgroundColor && objectParamsObject.setColorParam('backgroundColor', params.backgroundColor)
-        params.selectedSubstrings && objectParamsObject.setArrayParam('selectedSubstrings', params.selectedSubstrings)
+        params.selectedSubstrings && objectParamsObject.setSetParam('selectedSubstrings', new Set(params.selectedSubstrings))
         params.lineSpacing !== undefined && objectParamsObject.setNumberParam('lineSpacing', params.lineSpacing)
         params.width !== undefined && objectParamsObject.setNumberParam('width', params.width)
         params.height !== undefined && objectParamsObject.setNumberParam('height', params.height)
@@ -462,7 +464,7 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
             fontSize: objectParamsObject.getNumberParam('fontSize'),
             font: objectParamsObject.getStringLiteralParam<WebSafeFontsType | 'monospace'>('font'),
             backgroundColor: objectParamsObject.getColorParam('backgroundColor'),
-            selectedSubstrings: objectParamsObject.getArrayParam('selectedSubstrings'),
+            selectedSubstrings: Array.from(objectParamsObject.getSetParam<SelectedSubstring>('selectedSubstrings').values()),
             lineSpacing: objectParamsObject.getNumberParam('lineSpacing'),
             width: objectParamsObject.getNumberParam('width'),
             height: objectParamsObject.getNumberParam('height')

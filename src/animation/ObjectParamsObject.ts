@@ -191,7 +191,6 @@ export class ObjectParamsObject {
         other.setParams.forEach((value, key) => {
             const currentValue = this.setParams.get(key) ?? new Set()
             const desireValue = other.getSetParam(key)
-            calculateSetPercentValue(currentValue, desireValue, percent)
 
             this.setSetParam(
                 key,

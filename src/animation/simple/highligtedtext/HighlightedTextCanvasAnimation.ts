@@ -80,6 +80,7 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
                 let backgroundColor = calculateBackgroundColor(o, animationStyle)
                 if (backgroundTextColor) {
                     p5.fill(backgroundTextColor)
+                    p5.stroke(backgroundTextColor)
                     p5.rect(x, y - fontSize + 4, textWidth, fontSize)
                     backgroundColor = backgroundTextColor
                 }

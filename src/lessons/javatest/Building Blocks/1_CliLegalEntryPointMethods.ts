@@ -36,7 +36,7 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                         duration: 1000,
                         type: {
                             questionnaire: {
-                                lines: [4]
+                                lines: [4, 5]
                             }
                         }
                     }

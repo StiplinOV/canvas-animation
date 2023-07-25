@@ -111,7 +111,6 @@ export default abstract class ComplexCanvasAnimationParams<
 
             prevObjectParams = nextObjectParams
         }
-
         return Array.from(result.values())
     }
 

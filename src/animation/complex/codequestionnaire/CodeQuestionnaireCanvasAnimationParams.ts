@@ -9,6 +9,7 @@ import {addPoints} from '../../../common/Utils'
 import {animationStyle} from '../../../Animations'
 import {Point} from '../../../common/Point'
 import {ObjectParamsObject} from '../../ObjectParamsObject'
+import {uniqueArray} from '../../../common/Alghoritm'
 
 const CODE_QUESTIONNAIRE_LINE_SPACING = 2
 
@@ -163,51 +164,30 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
                 backgroundColor?: string
                 strikethrough?: boolean
             }[] = []
-
-            object.questionParamsStrikethroughOptions?.forEach(l => {
-                const valueSegment = value[l * 2]
+            const selectedLines = uniqueArray([...object.questionParamsStrikethroughOptions, ...object.questionnaireSelectedLines])
+            for (let i = 0; i < object.questionParamsOptions.length; i++) {
+                const valueSegment = value[i * 2]
+                if (!selectedLines.includes(i) || valueSegment === 'newline') {
+                    continue
+                }
                 let curSubstringPosition = 0
-                for (let i = 0; i < l * 2; i++) {
-                    const seg = value[i]
+                for (let j = 0; j < i * 2; j++) {
+                    const seg = value[j]
                     if (seg === 'newline') {
                         curSubstringPosition++
                     } else {
                         curSubstringPosition += seg.value.length
                     }
-                }
-                if (valueSegment === 'newline') {
-                    return
                 }
 
                 selectedSubstrings.push({
                     from: curSubstringPosition,
                     to: curSubstringPosition + valueSegment.value.length,
                     color: animationStyle.fontColor,
-                    strikethrough: true
+                    strikethrough: object.questionParamsStrikethroughOptions.includes(i),
+                    backgroundColor: object.questionnaireSelectedLines.includes(i) ? animationStyle.backgroundSelectedColor : undefined
                 })
-            })
-            object.questionnaireSelectedLines?.forEach(l => {
-                const valueSegment = value[l * 2]
-                let curSubstringPosition = 0
-                for (let i = 0; i < l * 2; i++) {
-                    const seg = value[i]
-                    if (seg === 'newline') {
-                        curSubstringPosition++
-                    } else {
-                        curSubstringPosition += seg.value.length
-                    }
-                }
-                if (valueSegment === 'newline') {
-                    return
-                }
-
-                selectedSubstrings.push({
-                    from: curSubstringPosition,
-                    to: curSubstringPosition + valueSegment.value.length,
-                    backgroundColor: animationStyle.backgroundSelectedColor,
-                    color: animationStyle.fontColor
-                })
-            })
+            }
 
             result.set('questionPart', {
                 type: 'highlightedText',
@@ -318,7 +298,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         params.language !== undefined && objectParamsObject.setStringLiteralParam('language', params.language ?? '')
         params.codeHighlightStyle !== undefined && objectParamsObject.setStringLiteralParam('codeHighlightStyle', params.codeHighlightStyle ?? '')
         params.codeSelectedSubstrings && objectParamsObject.setArrayParam('codeSelectedSubstrings', params.codeSelectedSubstrings)
-        params.questionnaireSelectedLines && objectParamsObject.setArrayParam('questionnaireSelectedLines', params.questionnaireSelectedLines)
+        params.questionnaireSelectedLines && objectParamsObject.setSetParam('questionnaireSelectedLines', new Set(params.questionnaireSelectedLines))
         params.codeFontSize && objectParamsObject.setNumberParam('codeFontSize', params.codeFontSize)
         params.width !== undefined && objectParamsObject.setNumberParam('width', params.width)
         params.height !== undefined && objectParamsObject.setNumberParam('height', params.height)
@@ -339,7 +319,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
             language: objectParamsObject.getStringLiteralParam<keyof typeof languageDefs>('language'),
             codeHighlightStyle: objectParamsObject.getStringLiteralParam<HighlightedStyleName>('codeHighlightStyle'),
             codeSelectedSubstrings: objectParamsObject.getArrayParam('codeSelectedSubstrings'),
-            questionnaireSelectedLines: objectParamsObject.getArrayParam('questionnaireSelectedLines'),
+            questionnaireSelectedLines: Array.from(objectParamsObject.getSetParam<number>('questionnaireSelectedLines').values()),
             codeFontSize: objectParamsObject.getNumberParam('codeFontSize'),
             width: objectParamsObject.getNumberParam('width'),
             height: objectParamsObject.getNumberParam('height'),

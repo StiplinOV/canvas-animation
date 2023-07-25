@@ -76,10 +76,10 @@ export const calculateSetPercentValue = <T>(from: Set<T>, to: Set<T>, percent: n
     const setIntersection = new Set<T>()
     const fromUniqueSet = new Set<T>(from)
     const toUniqueSet = new Set<T>(to)
-    from.forEach(v => to.has(v) && setIntersection.add(v))
+    from.forEach(v => new Set(Array.from(to.values()).map(v => JSON.stringify(v))).has(JSON.stringify(v)) && setIntersection.add(v))
     setIntersection.forEach(v => {
-        fromUniqueSet.has(v) && fromUniqueSet.delete(v)
-        toUniqueSet.has(v) && toUniqueSet.delete(v)
+        new Set(Array.from(fromUniqueSet.values()).map(v => JSON.stringify(v))).has(JSON.stringify(v)) && fromUniqueSet.delete(v)
+        new Set(Array.from(toUniqueSet.values()).map(v => JSON.stringify(v))).has(JSON.stringify(v)) && toUniqueSet.delete(v)
     })
     const fromUniqueSetArray = Array.from(fromUniqueSet.values())
     const toUniqueSetArray = Array.from(toUniqueSet.values())
