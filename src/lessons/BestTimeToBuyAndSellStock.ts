@@ -611,10 +611,10 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     appearDuration: 1000,
                     object: {
                         markedCells: [[2, 1], [3, 1]]
-                    },
-                    options: {
-                        type: 'sequentially'
                     }
+                    // options: {
+                    //     type: 'sequentially'
+                    // }
                 },
                 {
                     appearTime: 111000,
@@ -674,8 +674,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 {
                     appearTime: 128000,
                     appearDuration: 500,
-                    object: {markedCells: [[1, 1], [4, 1]]},
-                    options: {type: 'sequentially'}
+                    object: {markedCells: [[1, 1], [4, 1]]}
+                    // options: {type: 'sequentially'}
                 },
                 {
                     appearTime: 132000,
@@ -709,8 +709,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 {
                     appearTime: 140000,
                     appearDuration: 500,
-                    object: {markedCells: [[2, 1], [3, 1]]},
-                    options: {type: 'sequentially'}
+                    object: {markedCells: [[2, 1], [3, 1]]}
+                    // options: {type: 'sequentially'}
                 },
                 {
                     appearTime: 145000,
@@ -743,8 +743,8 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                 {
                     appearTime: 152000,
                     appearDuration: 500,
-                    object: {markedCells: [[1, 1], [4, 1]]},
-                    options: {type: 'sequentially'}
+                    object: {markedCells: [[1, 1], [4, 1]]}
+                    // options: {type: 'sequentially'}
                 },
                 {
                     appearTime: 155000,
@@ -807,7 +807,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                         ]
                     },
                     options: {
-                        type: 'sequentially',
+                        // type: 'sequentially',
                         renderValues: {
                             direction: 'upToDown',
                             immediacy: true

@@ -1,3 +1,5 @@
+import {AppearAlgorithm} from '../animation/CanvasAnimationParams'
+
 export const findAllArrayIndexGroupsBy = (numberOfElements: number, numberOfElementsInGroup: number, startIndexParam?: number): number[][] => {
     const startIndex = startIndexParam ?? 0
     if (numberOfElements - startIndex < numberOfElementsInGroup) {
@@ -75,18 +77,13 @@ export const mergeIntervals = (input: IntervalType[]): IntervalType[] => {
     return input
 }
 
-export const convertPercentToFadeInFadeOut = (percent: number, duration?: number, fadeDuration?: number): number => {
-    if (!duration || !fadeDuration) {
-        duration = 1
-        fadeDuration = 0.5
-    }
-    if (percent < fadeDuration / duration) {
-        return (percent * duration) / fadeDuration
-    }
-    if (percent < 1 - (fadeDuration / duration)) {
+export const convertPercentAccordingToAlgorithm = (percent: number, algorithm: AppearAlgorithm): number => {
+    if (algorithm.func === 'linear') {
+        return percent
+    } else if (algorithm.func === 'immediate') {
         return 1
     }
-    return ((1 - percent) * duration) / fadeDuration
+    throw new Error(`Wrong algorithm parameter ${JSON.stringify(algorithm)}`)
 }
 
 export const uniqueArray = <T>(array: T[]): T[] => {

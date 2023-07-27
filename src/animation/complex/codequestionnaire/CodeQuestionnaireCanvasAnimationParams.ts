@@ -1,5 +1,12 @@
-import {AnimationObjectParams, JsonObjectParams, SelectionType} from '../../CanvasAnimationParams'
-import ComplexCanvasAnimationParams, {CanvasAnimationParamsType} from '../ComplexCanvasAnimationParams'
+import {
+    AnimationObjectParams,
+    JsonObjectParams,
+    SelectionType,
+    TransformObjectParams
+} from '../../CanvasAnimationParams'
+import ComplexCanvasAnimationParams, {
+    CanvasAnimationParamsType
+} from '../ComplexCanvasAnimationParams'
 import {
     HighlightedStyleName,
     HighlightedTextValueSegmentType,
@@ -185,7 +192,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
                     to: curSubstringPosition + valueSegment.value.length,
                     color: animationStyle.fontColor,
                     strikethrough: object.questionParamsStrikethroughOptions.includes(i),
-                    backgroundColor: object.questionnaireSelectedLines.includes(i) ? animationStyle.backgroundSelectedColor : undefined
+                    backgroundColor: object.questionnaireSelectedLines.includes(i) ? animationStyle.backgroundSelectedColor : animationStyle.backgroundColor
                 })
             }
 
@@ -286,11 +293,15 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         }
     }
 
-    protected convertSelectionToTransformObject(selection: SelectionType<CodeQuestionnaireCanvasAnimationSelection>): Partial<CodeQuestionnaireJsonParams> {
-        return {
-            codeSelectedSubstrings: selection.type?.code?.substrings ?? [],
-            questionnaireSelectedLines: selection.type?.questionnaire?.lines ?? []
-        }
+    protected convertSelectionToTransformObjectParams(selection: SelectionType<CodeQuestionnaireCanvasAnimationSelection>): TransformObjectParams<CodeQuestionnaireAnimationObjectParams>[] {
+        return [{
+            transformObject: {
+                codeSelectedSubstrings: selection.type?.code?.substrings ?? [],
+                questionnaireSelectedLines: selection.type?.questionnaire?.lines ?? []
+            },
+            appearType: 'immediate',
+            disappearType: 'immediateAtTheEnd'
+        }]
     }
 
     protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<CodeQuestionnaireAnimationObjectParams>): void {
@@ -298,7 +309,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         params.language !== undefined && objectParamsObject.setStringLiteralParam('language', params.language ?? '')
         params.codeHighlightStyle !== undefined && objectParamsObject.setStringLiteralParam('codeHighlightStyle', params.codeHighlightStyle ?? '')
         params.codeSelectedSubstrings && objectParamsObject.setArrayParam('codeSelectedSubstrings', params.codeSelectedSubstrings)
-        params.questionnaireSelectedLines && objectParamsObject.setSetParam('questionnaireSelectedLines', new Set(params.questionnaireSelectedLines))
+        params.questionnaireSelectedLines && objectParamsObject.setSetParam('questionnaireSelectedLines', params.questionnaireSelectedLines)
         params.codeFontSize && objectParamsObject.setNumberParam('codeFontSize', params.codeFontSize)
         params.width !== undefined && objectParamsObject.setNumberParam('width', params.width)
         params.height !== undefined && objectParamsObject.setNumberParam('height', params.height)
@@ -307,7 +318,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         params.questionParamsPosition && objectParamsObject.setStringLiteralParam('questionParamsPosition', params.questionParamsPosition)
         params.questionParamsOptions && objectParamsObject.setArrayParam('questionParamsOptions', params.questionParamsOptions)
         params.questionParamsFontSize && objectParamsObject.setNumberParam('questionParamsFontSize', params.questionParamsFontSize)
-        params.questionParamsStrikethroughOptions && objectParamsObject.setSetParam('questionParamsStrikethroughOptions', new Set(params.questionParamsStrikethroughOptions))
+        params.questionParamsStrikethroughOptions && objectParamsObject.setSetParam('questionParamsStrikethroughOptions', params.questionParamsStrikethroughOptions)
         params.title && objectParamsObject.setStringParam('title', params.title)
         params.titleFontSize && objectParamsObject.setNumberParam('titleFontSize', params.titleFontSize)
     }

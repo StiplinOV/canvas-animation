@@ -10,8 +10,13 @@ import {
     RotationType
 } from '../common/Utils'
 import {Point, ZeroPoint} from '../common/Point'
-import {AnimationObjectParams, weightToNumber} from './CanvasAnimationParams'
+import {
+    AnimationObjectParams,
+    AppearAlgorithm,
+    weightToNumber
+} from './CanvasAnimationParams'
 import AnimationStyle, {getFillColor, getStrokeColor} from '../AnimationStyles'
+import {convertPercentAccordingToAlgorithm} from '../common/Alghoritm'
 
 export class ObjectParamsObject {
 
@@ -59,6 +64,7 @@ export class ObjectParamsObject {
                 this.arrayParams.set(k, v)
             })
             other.setParams.forEach((v, k) => {
+                this.setSetParam(k, other.getSetParam(k))
                 this.setParams.set(k, v)
             })
             other.rotationsParams.forEach((v, k) => {
@@ -98,8 +104,18 @@ export class ObjectParamsObject {
         this.arrayParams.set(key, param)
     }
 
-    public setSetParam<T>(key: string, param: Set<T>): void {
-        this.setParams.set(key, param)
+    public setSetParam<T>(key: string, param: T[]): void {
+        const stringifySet = new Set<string>()
+        const resultSet = new Set<T>()
+
+        param.forEach(v => {
+            const stringifyValue = JSON.stringify(v)
+            if (!stringifySet.has(stringifyValue)) {
+                stringifySet.add(JSON.stringify(v))
+                resultSet.add(v)
+            }
+        })
+        this.setParams.set(key, resultSet)
     }
 
     public setRotationsParam(key: string, param: RotationType[]): void {
@@ -138,8 +154,8 @@ export class ObjectParamsObject {
         return requireValueFromMap(this.arrayParams, key) as T[]
     }
 
-    public getSetParam<T>(key: string): Set<T> {
-        return requireValueFromMap(this.setParams, key) as Set<T>
+    public getSetParam<T>(key: string): T[] {
+        return Array.from(requireValueFromMap(this.setParams, key).values()) as T[]
     }
 
     public getRotationsParam(key: string): RotationType[] {
@@ -150,7 +166,8 @@ export class ObjectParamsObject {
         return requireValueFromMap(this.dashedParams, key)
     }
 
-    public merge(other: ObjectParamsObject, percent: number): void {
+    public merge(other: ObjectParamsObject, percentParam: number, algorithm: AppearAlgorithm): void {
+        const percent = convertPercentAccordingToAlgorithm(percentParam, algorithm)
         other.booleanParams.forEach((value, key) => {
             if (percent > 0.5) {
                 const desireValue = other.getBooleanParam(key)
@@ -189,9 +206,8 @@ export class ObjectParamsObject {
             this.setArrayParam(key, calculateArrayPercentValue(currentValue, desireValue, percent))
         })
         other.setParams.forEach((value, key) => {
-            const currentValue = this.setParams.get(key) ?? new Set()
+            const currentValue = this.getSetParam(key) ?? []
             const desireValue = other.getSetParam(key)
-
             this.setSetParam(
                 key,
                 calculateSetPercentValue(currentValue, desireValue, percent)

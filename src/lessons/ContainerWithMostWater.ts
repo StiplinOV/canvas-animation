@@ -303,9 +303,9 @@ export const ContainerWithMostWater: LessonJsonType = {
                     {
                         appearTime: 13000,
                         appearDuration: 1000,
-                        options: {
-                            type: 'sequentially'
-                        },
+                        // options: {
+                        //     type: 'sequentially'
+                        // },
                         object: {
                             chartXRanges: [{
                                 coords: [4, 8],

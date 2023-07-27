@@ -72,7 +72,8 @@ export const calculatePointPercentValue = (from: Point, to: Point, percent: numb
         x: calculatePercentValue(from.x, to.x, percent),
         y: calculatePercentValue(from.y, to.y, percent)
     })
-export const calculateSetPercentValue = <T>(from: Set<T>, to: Set<T>, percent: number): Set<T> => {
+
+export const calculateSetPercentValue = <T>(from: T[], to: T[], percent: number): T[] => {
     const setIntersection = new Set<T>()
     const fromUniqueSet = new Set<T>(from)
     const toUniqueSet = new Set<T>(to)
@@ -85,7 +86,7 @@ export const calculateSetPercentValue = <T>(from: Set<T>, to: Set<T>, percent: n
     const toUniqueSetArray = Array.from(toUniqueSet.values())
     const resultDeltaArray = calculateArrayPercentValue(fromUniqueSetArray, toUniqueSetArray, percent)
     resultDeltaArray.forEach(v => setIntersection.add(v))
-    return setIntersection
+    return Array.from(setIntersection.values())
 }
 export const calculateArrayPercentValue = <T>(from: T[], to: T[], percent: number): T[] => {
     if (JSON.stringify(from) === JSON.stringify(to)) {
@@ -196,7 +197,7 @@ export const toPresenceParamType = (values?: Partial<PresenceParamType>[]): Pres
 export const toPresenceParam = (time: number, presenceParams: PresenceParamType[], skipStartTime?: boolean): PresenceParamType | null => {
     for (let i = 0; i < presenceParams.length; i++) {
         const presenceParam = presenceParams[i]
-        if (((skipStartTime && time > presenceParam.appearTime) ?? time >= presenceParam.appearTime) && time < (presenceParam.disappearTime + presenceParam.disappearDuration)) {
+        if ((skipStartTime ? time > presenceParam.appearTime : time >= presenceParam.appearTime) && time < (presenceParam.disappearTime + presenceParam.disappearDuration)) {
             return presenceParam
         }
     }

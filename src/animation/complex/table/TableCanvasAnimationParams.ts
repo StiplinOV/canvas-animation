@@ -1,8 +1,7 @@
-import {AnimationObjectParams, JsonObjectParams} from '../../CanvasAnimationParams'
+import {AnimationObjectParams, JsonObjectParams, TransformationOptions} from '../../CanvasAnimationParams'
 import { addPoints, render2DArrayType } from '../../../common/Utils'
 import ComplexCanvasAnimationParams, {
-    CanvasAnimationParamsType,
-    TransformOptions
+    CanvasAnimationParamsType
 } from '../ComplexCanvasAnimationParams'
 import { ObjectParamsObject } from '../../ObjectParamsObject'
 
@@ -33,7 +32,7 @@ export type TableSelectorType = {
     values?: 'all' | [number, number][]
 }
 
-export interface TableTransformOptionsType extends TransformOptions {
+export interface TableTransformOptionsType extends TransformationOptions {
     renderValues?: {
         direction?: render2DArrayType
         immediacy?: boolean

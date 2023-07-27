@@ -11,6 +11,7 @@ import AnimationStyle, {ColorType} from '../AnimationStyles'
 import CanvasAnimation from './CanvasAnimation'
 import {intervalContainsIntersections, uniqueArray} from '../common/Alghoritm'
 import {ObjectParamsObject} from './ObjectParamsObject'
+import {animationStyle} from '../Animations'
 
 type WeightType = number | 'normal' | 'bold'
 
@@ -46,29 +47,47 @@ export interface AnimationObjectParams {
     rotations: RotationType[]
 }
 
-interface FuncNameParamTypeMap {
-    'fadeinFadeOut': [number?]
+export interface AlgorithmNameParamTypeMap {
+    'linear': []
+    'immediate': []
 }
 
-export type SelectionAlgorithm<T extends keyof FuncNameParamTypeMap = keyof FuncNameParamTypeMap> = {
+export type AppearAlgorithm<T extends keyof AlgorithmNameParamTypeMap = keyof AlgorithmNameParamTypeMap> = {
     func: T
-    params: FuncNameParamTypeMap[T]
+    params: AlgorithmNameParamTypeMap[T]
+}
+
+export const linear = (): AppearAlgorithm => {
+    return {
+        func: 'linear',
+        params: []
+    }
+}
+
+export const immediate = (): AppearAlgorithm => {
+    return {
+        func: 'immediate',
+        params: []
+    }
+}
+
+export type TransformationOptions = {
+    appearAlgorithm?: AppearAlgorithm
 }
 
 export interface SelectionType<T = unknown> {
     time: number
     duration: number
     type?: T
-    selectionAlgorithm?: SelectionAlgorithm
 }
 
-export type Transformation<T extends AnimationObjectParams, U> = {
+export type Transformation<T extends AnimationObjectParams, U extends TransformationOptions> = {
     object: Partial<T>
     presence: PresenceParamType
     options?: U
 }
 
-export type TransformationParam<T extends JsonObjectParams, U> = {
+export type TransformationParam<T extends JsonObjectParams, U extends TransformationOptions> = {
     object: Partial<T>
     appearTime?: number
     appearDuration?: number
@@ -83,7 +102,7 @@ export type ObjectParamsWithPresence<T extends AnimationObjectParams> = {
     duration: number
 }
 
-export type Params<T extends JsonObjectParams, U = unknown, V extends SelectionType = SelectionType> = {
+export type Params<T extends JsonObjectParams, U extends TransformationOptions = TransformationOptions, V extends SelectionType = SelectionType> = {
     transformations?: TransformationParam<T, U>[]
     selections?: V[]
     object: T
@@ -91,10 +110,17 @@ export type Params<T extends JsonObjectParams, U = unknown, V extends SelectionT
     layout?: LayoutType
 }
 
+export type TransformObjectParams<T extends AnimationObjectParams, U extends TransformationOptions = TransformationOptions> = {
+    transformObject: Partial<T>
+    options?: U
+    appearType?: 'immediate'
+    disappearType?: 'immediate' | 'immediateAtTheEnd'
+}
+
 export default abstract class CanvasAnimationParams<
     T extends JsonObjectParams = JsonObjectParams,
     U extends AnimationObjectParams = AnimationObjectParams,
-    V = unknown,
+    V extends TransformationOptions = TransformationOptions,
     W extends SelectionType = SelectionType
 > {
 
@@ -182,6 +208,7 @@ export default abstract class CanvasAnimationParams<
             const nextTime = points[i]
             const duration = nextTime - time
             let objectParams = this.calculateObjectParamsInTime(nextTime, true)
+            // TODO
             if (duration === 0) {
                 objectParams = this.calculateObjectParamsInTime(nextTime)
             }
@@ -193,7 +220,6 @@ export default abstract class CanvasAnimationParams<
 
             time = nextTime
         }
-
         return result.sort((l, r) => l.time === r.time ? l.duration - r.duration : l.time - r.time)
     }
 
@@ -212,8 +238,7 @@ export default abstract class CanvasAnimationParams<
                     const transformObjectParamsObject = new ObjectParamsObject()
                     transformObjectParamsObject.setAnimationObjectParams(t.object, this.getAnimationStyle())
                     this.appendParamsToObjectParamsObject(transformObjectParamsObject, t.object)
-
-                    result.merge(transformObjectParamsObject, percent)
+                    result.merge(transformObjectParamsObject, percent, t.options?.appearAlgorithm ?? animationStyle.appearAlgorithm)
                 })
         }
         return this.convertObjectParamsObjectToAnimationParams(result, result.toAnimationObjectParams())
@@ -287,19 +312,33 @@ export default abstract class CanvasAnimationParams<
     }
 
     private calculateSelectionTransformations(selections?: W[]): Transformation<U, V>[] {
-        return selections?.map(selection => ({
-            object: this.convertSelectionToTransformObject(selection),
-            presence: {
-                appearTime: selection.time,
-                appearDuration: selection.duration / 2,
-                disappearTime: selection.time + selection.duration / 2,
-                disappearDuration: selection.duration / 2
-            }
-        })) ?? []
+        return selections?.flatMap(selection => {
+            return this.convertSelectionToTransformObjectParams(selection).map(t => {
+                let disappearDuration = selection.duration / 2
+                let disappearTime = selection.time + selection.duration / 2
+                if (t.disappearType === 'immediate') {
+                    disappearDuration = 0
+                }
+                if (t.disappearType === 'immediateAtTheEnd') {
+                    disappearTime = selection.time + selection.duration
+                    disappearDuration = 1
+                }
+                return {
+                    object: t.transformObject,
+                    options: t.options,
+                    presence: {
+                        appearTime: selection.time,
+                        appearDuration: t.appearType === 'immediate' ? 1 : selection.duration / 2,
+                        disappearTime,
+                        disappearDuration
+                    }
+                }
+            })
+        }) ?? []
     }
 
-    protected convertSelectionToTransformObject(selection: W): Partial<U> {
-        return {}
+    protected convertSelectionToTransformObjectParams(selection: W): TransformObjectParams<U, V>[] {
+        return [{transformObject: {}}]
     }
 
     public abstract toCanvasAnimations(animationStyle: AnimationStyle): CanvasAnimation[]

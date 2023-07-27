@@ -2,19 +2,27 @@ import p5Types from 'p5'
 import AnimationStyle, {getFontColor} from '../../../AnimationStyles'
 import {
     calculateBackgroundColor,
-    createHighlightedTextValueSegmentType, HighlightedTextAnimationParamsType,
-    HighlightedTextJsonParamsType,
+    createHighlightedTextValueSegmentType,
+    HighlightedTextAnimationParamsType,
     HighlightedTextValueSegmentType
 } from './HighlightedTextCanvasAnimationParams'
 import CanvasAnimation from '../../CanvasAnimation'
-import {animationStyle} from '../../../Animations'
 import {weightToNumber} from '../../CanvasAnimationParams'
+import {uniqueArray} from '../../../common/Alghoritm'
 
 type rectParams = {
     x: number
     y: number
     width: number
     height: number
+}
+
+type SelectedSubstring = {
+    from: number
+    to: number
+    color?: string
+    backgroundColor?: string
+    strikethrough?: boolean
 }
 
 export default class HighlightedTextCanvasAnimation extends CanvasAnimation<HighlightedTextAnimationParamsType> {
@@ -91,7 +99,7 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
                 if (part.strikethrough) {
                     p5.stroke(textColor)
                     p5.strokeWeight(fontSize / 10)
-                    p5.line(x, y - fontSize / 4, x + textWidth, y - fontSize / 4)
+                    p5.line(x - 1, y - fontSize / 4, x + textWidth, y - fontSize / 4)
                 }
             }
             x += textWidth
@@ -108,10 +116,10 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
 
     private splitSegmentsAccordingToSelections(
         segments: HighlightedTextValueSegmentType[],
-        o: HighlightedTextJsonParamsType
+        o: HighlightedTextAnimationParamsType
     ): HighlightedTextValueSegmentType[] {
         const result: HighlightedTextValueSegmentType[] = []
-        const selectionIntervals = o.selectedSubstrings?.sort((l, r) => l.from - r.from) ?? []
+        const selectionIntervals = this.toSelectedIntervals(o)
 
         if (selectionIntervals.length === 0) {
             return segments
@@ -203,9 +211,9 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
             if (segment !== 'newline') {
                 segment = {
                     ...segment,
-                    textColor: segmentHasInterval ? currentSelectionInterval.color ?? animationStyle.selectedColor : segment.textColor,
-                    backgroundTextColor: segmentHasInterval ?? currentSelectionInterval.backgroundColor ? currentSelectionInterval.backgroundColor : segment.backgroundTextColor,
-                    strikethrough: segmentHasInterval ?? currentSelectionInterval.strikethrough ? currentSelectionInterval.strikethrough : segment.strikethrough
+                    textColor: segmentHasInterval ? currentSelectionInterval.color : segment.textColor,
+                    backgroundTextColor: segmentHasInterval ? currentSelectionInterval.backgroundColor : segment.backgroundTextColor,
+                    strikethrough: segmentHasInterval ? currentSelectionInterval.strikethrough : segment.strikethrough
                 }
             }
             result.push(segment)
@@ -213,6 +221,42 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
         }
 
         return result
+    }
+
+    private toSelectedIntervals(o: HighlightedTextAnimationParamsType): SelectedSubstring[] {
+        const backgroundColorOverridesMap = new Map<number, string>()
+        const colorOverridesMap = new Map<number, string>()
+        const strikeTroughOverridesMap = new Map<number, boolean>()
+
+        o.backgroundColorOverrides.forEach(o => {
+            for (let i = o.from; i < o.to; i++) {
+                backgroundColorOverridesMap.set(i, o.backgroundColor)
+            }
+        })
+        o.colorOverrides.forEach(o => {
+            for (let i = o.from; i < o.to; i++) {
+                colorOverridesMap.set(i, o.color)
+            }
+        })
+        o.strikeTroughOverrides.forEach(o => {
+            for (let i = o.from; i < o.to; i++) {
+                strikeTroughOverridesMap.set(i, o.strikethrough)
+            }
+        })
+
+        const numbers = uniqueArray([
+            ...Array.from(backgroundColorOverridesMap.keys()),
+            ...Array.from(colorOverridesMap.keys()),
+            ...Array.from(strikeTroughOverridesMap.keys())
+        ]).sort((l, r) => l - r)
+
+        return numbers.map(n => ({
+            from: n,
+            to: n + 1,
+            backgroundColor: backgroundColorOverridesMap.get(n),
+            color: colorOverridesMap.get(n),
+            strikethrough: strikeTroughOverridesMap.get(n)
+        }))
     }
 
 }

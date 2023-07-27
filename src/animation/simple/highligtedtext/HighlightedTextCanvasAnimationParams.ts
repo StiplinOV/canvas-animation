@@ -1,5 +1,10 @@
 import {calculateArrayPercentValue} from '../../../common/Utils'
-import {AnimationObjectParams, JsonObjectParams, SelectionType} from '../../CanvasAnimationParams'
+import {
+    AnimationObjectParams,
+    JsonObjectParams,
+    SelectionType,
+    TransformObjectParams
+} from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle, {ColorType, WebSafeFontsType} from '../../../AnimationStyles'
 import HighlightedTextCanvasAnimation from './HighlightedTextCanvasAnimation'
@@ -356,12 +361,22 @@ export interface HighlightedTextJsonParamsType extends JsonObjectParams {
     height?: number
 }
 
-type SelectedSubstring = {
+type ColorOverride = {
     from: number
     to: number
-    color?: string
-    backgroundColor?: string
-    strikethrough?: boolean
+    color: string
+}
+
+type BackgroundColorOverride = {
+    from: number
+    to: number
+    backgroundColor: string
+}
+
+type StrikeTroughOverride = {
+    from: number
+    to: number
+    strikethrough: boolean
 }
 
 export interface HighlightedTextAnimationParamsType extends AnimationObjectParams {
@@ -369,7 +384,9 @@ export interface HighlightedTextAnimationParamsType extends AnimationObjectParam
     fontSize: number
     font: WebSafeFontsType | 'monospace'
     backgroundColor: string
-    selectedSubstrings: SelectedSubstring[]
+    colorOverrides: ColorOverride[]
+    backgroundColorOverrides: BackgroundColorOverride[]
+    strikeTroughOverrides: StrikeTroughOverride[]
     lineSpacing: number
     width: number
     height: number
@@ -423,10 +440,27 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
         return result
     }
 
-    protected convertSelectionToTransformObject(selection: HighlightedTextCanvasAnimationSelection): Partial<HighlightedTextAnimationParamsType> {
-        return {
-            selectedSubstrings: selection.substrings
-        }
+    protected convertSelectionToTransformObjectParams(selection: HighlightedTextCanvasAnimationSelection): TransformObjectParams<HighlightedTextAnimationParamsType>[] {
+        const colorOverrides: ColorOverride[] = []
+        const backgroundColorOverrides: BackgroundColorOverride[] = []
+        selection.substrings?.forEach(s => {
+            s.color && colorOverrides.push({
+                from: s.from,
+                to: s.to,
+                color: s.color
+            })
+            s.backgroundColor && backgroundColorOverrides.push({
+                from: s.from,
+                to: s.to,
+                backgroundColor: s.backgroundColor
+            })
+        })
+        return [{
+            transformObject: {
+                colorOverrides,
+                backgroundColorOverrides
+            }
+        }]
     }
 
     protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<HighlightedTextAnimationParamsType>): void {
@@ -434,7 +468,9 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
         params.fontSize !== undefined && objectParamsObject.setNumberParam('fontSize', params.fontSize)
         params.font !== undefined && objectParamsObject.setStringLiteralParam('font', params.font)
         params.backgroundColor && objectParamsObject.setColorParam('backgroundColor', params.backgroundColor)
-        params.selectedSubstrings && objectParamsObject.setSetParam('selectedSubstrings', new Set(params.selectedSubstrings))
+        params.colorOverrides && objectParamsObject.setSetParam('colorOverrides', params.colorOverrides)
+        params.backgroundColorOverrides && objectParamsObject.setSetParam('backgroundColorOverrides', params.backgroundColorOverrides)
+        params.strikeTroughOverrides && objectParamsObject.setSetParam('strikeTroughOverrides', params.strikeTroughOverrides)
         params.lineSpacing !== undefined && objectParamsObject.setNumberParam('lineSpacing', params.lineSpacing)
         params.width !== undefined && objectParamsObject.setNumberParam('width', params.width)
         params.height !== undefined && objectParamsObject.setNumberParam('height', params.height)
@@ -442,6 +478,7 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
 
     protected convertJsonObjectToAnimationObject(jsonObject: HighlightedTextJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): HighlightedTextAnimationParamsType {
         const animationStyle = this.getAnimationStyle()
+        const overrides = this.jsonSelectedSubstringToOverrides(jsonObject)
 
         return {
             ...animationObjectDefaultParams,
@@ -450,7 +487,9 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
             fontSize: jsonObject.fontSize ?? animationStyle.fontSize,
             font: jsonObject.font ?? animationStyle.monospaceFont,
             backgroundColor: jsonObject.backgroundColor ?? animationStyle.backgroundColor,
-            selectedSubstrings: jsonObject.selectedSubstrings ?? [],
+            colorOverrides: overrides.colorOverrides ?? [],
+            backgroundColorOverrides: overrides.backgroundColorOverrides ?? [],
+            strikeTroughOverrides: overrides.strikeTroughOverrides ?? [],
             lineSpacing: jsonObject.lineSpacing ?? animationStyle.lineSpacing,
             width: jsonObject.width ?? 0,
             height: jsonObject.height ?? 0
@@ -464,7 +503,9 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
             fontSize: objectParamsObject.getNumberParam('fontSize'),
             font: objectParamsObject.getStringLiteralParam<WebSafeFontsType | 'monospace'>('font'),
             backgroundColor: objectParamsObject.getColorParam('backgroundColor'),
-            selectedSubstrings: Array.from(objectParamsObject.getSetParam<SelectedSubstring>('selectedSubstrings').values()),
+            colorOverrides: Array.from(objectParamsObject.getSetParam<ColorOverride>('colorOverrides').values()),
+            backgroundColorOverrides: Array.from(objectParamsObject.getSetParam<BackgroundColorOverride>('backgroundColorOverrides').values()),
+            strikeTroughOverrides: Array.from(objectParamsObject.getSetParam<StrikeTroughOverride>('strikeTroughOverrides').values()),
             lineSpacing: objectParamsObject.getNumberParam('lineSpacing'),
             width: objectParamsObject.getNumberParam('width'),
             height: objectParamsObject.getNumberParam('height')
@@ -472,9 +513,47 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
     }
 
     protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<HighlightedTextJsonParamsType>): Partial<HighlightedTextAnimationParamsType> {
+        const overrides = this.jsonSelectedSubstringToOverrides(jsonObject)
         return {
             ...jsonObject,
-            value: jsonObject.value ? createHighlightedTextValueSegmentType(jsonObject.value, this.getAnimationStyle()).flatMap(f => this.splitTextValueSegmentType(f)) : undefined
+            value: jsonObject.value ? createHighlightedTextValueSegmentType(jsonObject.value, this.getAnimationStyle()).flatMap(f => this.splitTextValueSegmentType(f)) : undefined,
+            colorOverrides: overrides.colorOverrides,
+            backgroundColorOverrides: overrides.backgroundColorOverrides,
+            strikeTroughOverrides: overrides.strikeTroughOverrides
+        }
+    }
+
+    private jsonSelectedSubstringToOverrides(jsonObject: Partial<HighlightedTextJsonParamsType>): {
+        colorOverrides?: ColorOverride[]
+        backgroundColorOverrides?: BackgroundColorOverride[]
+        strikeTroughOverrides?: StrikeTroughOverride[]
+    } {
+        const colorOverrides: ColorOverride[] = []
+        const backgroundColorOverrides: BackgroundColorOverride[] = []
+        const strikeTroughOverrides: StrikeTroughOverride[] = []
+
+        jsonObject.selectedSubstrings?.forEach(s => {
+            s.color && colorOverrides.push({
+                from: s.from,
+                to: s.to,
+                color: s.color
+            })
+            s.backgroundColor && backgroundColorOverrides.push({
+                from: s.from,
+                to: s.to,
+                backgroundColor: s.backgroundColor
+            })
+            s.strikethrough && strikeTroughOverrides.push({
+                from: s.from,
+                to: s.to,
+                strikethrough: s.strikethrough
+            })
+        })
+
+        return {
+            colorOverrides: colorOverrides.length > 0 ? colorOverrides : undefined,
+            backgroundColorOverrides: backgroundColorOverrides.length > 0 ? backgroundColorOverrides : undefined,
+            strikeTroughOverrides: strikeTroughOverrides.length > 0 ? strikeTroughOverrides : undefined
         }
     }
 

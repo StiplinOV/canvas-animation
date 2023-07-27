@@ -2,7 +2,7 @@ import CanvasAnimationParams, {
     AnimationObjectParams,
     JsonObjectParams,
     Params,
-    SelectionType
+    SelectionType, TransformationOptions
 } from '../CanvasAnimationParams'
 import p5Types from 'p5'
 import AnimationStyle from '../../AnimationStyles'
@@ -19,10 +19,6 @@ import {LineJsonParamsType} from '../simple/line/LineCanvasAnimationParams'
 import {TypeToSimpleParamsConstructorMapping} from '../../Animations'
 
 export type AnimationS2T = { source: CanvasAnimationParamsType, target: CanvasAnimationParamsType }
-
-export interface TransformOptions {
-    type: 'together' | 'sequentially'
-}
 
 export type AnimationsSetDifferenceType = {
     added: Map<string, CanvasAnimationParamsType>
@@ -51,7 +47,7 @@ export default abstract class ComplexCanvasAnimationParams<
     T extends JsonObjectParams = JsonObjectParams,
     U extends AnimationObjectParams = AnimationObjectParams,
     V = unknown,
-    W extends TransformOptions = TransformOptions
+    W extends TransformationOptions = TransformationOptions
 >
     extends CanvasAnimationParams<T, U, W, SelectionType<V>> {
 

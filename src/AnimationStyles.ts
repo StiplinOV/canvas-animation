@@ -1,5 +1,5 @@
 import {THE_STYLE} from 'p5'
-import { SelectionAlgorithm } from './animation/CanvasAnimationParams'
+import { AppearAlgorithm } from './animation/CanvasAnimationParams'
 import { HighlightedStyleName } from './animation/simple/highligtedtext/HighlightedTextCanvasAnimationParams'
 
 export const COURIER_NEW_FONT = 'Courier New'
@@ -40,7 +40,7 @@ export default interface AnimationStyle {
     objectRotation: number
     textStyle: THE_STYLE
     zIndex: number
-    selectionAlgorithm: SelectionAlgorithm
+    appearAlgorithm: AppearAlgorithm
     lineSpacing: number
 }
 
@@ -68,9 +68,9 @@ const defaultAnimationStyle: AnimationStyle = {
     vertexFontSize: 30,
     edgeFontSize: 20,
     zIndex: 0,
-    selectionAlgorithm: {
-        func: 'fadeinFadeOut',
-        params: [150]
+    appearAlgorithm: {
+        func: 'linear',
+        params: []
     },
     lineSpacing: 1.2
 }
