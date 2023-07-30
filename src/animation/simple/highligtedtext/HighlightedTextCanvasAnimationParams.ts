@@ -485,8 +485,8 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
         })
         return [{
             transformObject: {
-                colorOverrides,
-                backgroundColorOverrides
+                colorOverrides: colorOverrides.length > 0 ? colorOverrides : undefined,
+                backgroundColorOverrides: backgroundColorOverrides.length > 0 ? backgroundColorOverrides : undefined
             },
             appearType: 'immediate',
             disappearType: 'immediateAtTheEnd'

@@ -202,16 +202,18 @@ export default abstract class CanvasAnimationParams<
             ...this.getPresenceParam(),
             ...this.getTransformations().map(t => t.presence)
         ].flatMap(p => [p.appearTime + p.appearDuration, p.disappearTime + p.disappearDuration]))
-        const points = [...starts, ...ends].filter(v => v !== Number.POSITIVE_INFINITY).sort((l, r) => l - r)
+        const points = uniqueArray([...starts, ...ends].filter(v => v !== Number.POSITIVE_INFINITY).flatMap(p => {
+            const result = [p, p + 1]
+            if (p > 0) {
+                result.push(p - 1)
+            }
+            return result
+        })).sort((l, r) => l - r)
         let time = points[0]
         for (let i = 1; i < points.length; i++) {
             const nextTime = points[i]
             const duration = nextTime - time
-            let objectParams = this.calculateObjectParamsInTime(nextTime, true)
-            // TODO
-            if (duration === 0) {
-                objectParams = this.calculateObjectParamsInTime(nextTime)
-            }
+            let objectParams = this.calculateObjectParamsInTime(nextTime)
             result.push({
                 objectParams,
                 time,
@@ -321,14 +323,14 @@ export default abstract class CanvasAnimationParams<
                 }
                 if (t.disappearType === 'immediateAtTheEnd') {
                     disappearTime = selection.time + selection.duration
-                    disappearDuration = 1
+                    disappearDuration = 0
                 }
                 return {
                     object: t.transformObject,
                     options: t.options,
                     presence: {
                         appearTime: selection.time,
-                        appearDuration: t.appearType === 'immediate' ? 1 : selection.duration / 2,
+                        appearDuration: t.appearType === 'immediate' ? 0 : selection.duration / 2,
                         disappearTime,
                         disappearDuration
                     }

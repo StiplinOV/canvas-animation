@@ -205,7 +205,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
                     zIndex: 1,
                     width: this.getQuestionPartWidth(object),
                     height: this.getQuestionPartHeight(object),
-                    selectedSubstrings,
+                    selectedSubstrings: selectedSubstrings.length > 0 ? selectedSubstrings : undefined,
                     lineSpacing: CODE_QUESTIONNAIRE_LINE_SPACING
                 }
             })
@@ -296,8 +296,8 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
     protected convertSelectionToTransformObjectParams(selection: SelectionType<CodeQuestionnaireCanvasAnimationSelection>): TransformObjectParams<CodeQuestionnaireAnimationObjectParams>[] {
         return [{
             transformObject: {
-                codeSelectedSubstrings: selection.type?.code?.substrings ?? [],
-                questionnaireSelectedLines: selection.type?.questionnaire?.lines ?? []
+                codeSelectedSubstrings: selection.type?.code?.substrings,
+                questionnaireSelectedLines: selection.type?.questionnaire?.lines
             },
             appearType: 'immediate',
             disappearType: 'immediateAtTheEnd'

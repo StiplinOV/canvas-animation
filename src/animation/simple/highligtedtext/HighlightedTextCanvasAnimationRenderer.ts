@@ -41,7 +41,6 @@ export default class HighlightedTextCanvasAnimationRenderer implements Renderer<
     }
 
     wrap(className: string, chunk: OutputType): OutputType {
-        console.log(className)
         chunk.values.forEach(v => v.classes.unshift(className))
         return chunk
     }
