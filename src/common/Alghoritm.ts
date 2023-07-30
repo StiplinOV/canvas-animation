@@ -89,3 +89,32 @@ export const convertPercentAccordingToAlgorithm = (percent: number, algorithm: A
 export const uniqueArray = <T>(array: T[]): T[] => {
     return array.filter((value, index, array) => array.indexOf(value) === index)
 }
+
+export const getCssClassesSortedByPriority = (cssSelector: string[]): string [][] => {
+    const findAllBinaryOnePositions = (bitDepth: number, numberOfOnes: number): number [][] => {
+        const result: number[][] = []
+        if (numberOfOnes === 0) {
+            return result
+        }
+        if (bitDepth === numberOfOnes) {
+            const res: number[] = []
+            for (let i = 0; i < bitDepth; i++) {
+                res.push(i)
+            }
+            return [res]
+        }
+        let prevResultForOne = findAllBinaryOnePositions(bitDepth - 1, numberOfOnes - 1).map(arr => [...arr, bitDepth - 1])
+        const prevResultForZero = findAllBinaryOnePositions(bitDepth - 1, numberOfOnes)
+        if (numberOfOnes === 1) {
+            prevResultForOne = [[bitDepth - 1]]
+        }
+
+        return [...prevResultForOne, ...prevResultForZero]
+    }
+
+    const indices: number[][] = []
+    for (let i = cssSelector.length; i > 0; i--) {
+        indices.push(...findAllBinaryOnePositions(cssSelector.length, i))
+    }
+    return indices.map(idices => cssSelector.filter((_, i) => idices.includes(i)))
+}

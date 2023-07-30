@@ -131,10 +131,10 @@ export default abstract class CanvasAnimationParams<
     private readonly animationStyle: AnimationStyle
 
     public constructor(params: Params<T, V, W>, animationStyle: AnimationStyle) {
+        this.animationStyle = animationStyle
         this.presenceParam = toPresenceParamType(params.presenceParameters)
         this.transformations = params.transformations?.map(t => this.transformationParamToTransformation(t)) ?? []
         this.transformations.push(...this.calculateSelectionTransformations(params.selections))
-        this.animationStyle = animationStyle
         const animationObjectDefaultParams = this.convertJsonObjectToAnimationObjectDefaultParams(params.object)
         this.object = this.convertJsonObjectToAnimationObject(params.object, animationObjectDefaultParams)
         this.layout = params.layout ?? 'absolute'

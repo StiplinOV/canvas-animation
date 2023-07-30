@@ -73,33 +73,46 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
                 textStyle,
                 textWeight,
                 textColor,
-                backgroundTextColor
+                backgroundTextColor,
+                strikethrough,
+                underlined,
+                type
             } = part
-            textColor = getFontColor(animationStyle, textColor)
+
             value = value.replaceAll('\t', '    ')
             const font = o.font ?? 'monospace'
             const textFont = font === 'monospace' ? animationStyle.monospaceFont : (font ?? animationStyle.font)
 
             p5.textFont(textFont)
             p5.textSize(fontSize)
-            p5.textStyle(textStyle)
+            textStyle = textStyle ?? (type === 'paragraphTitle' ? 'bold' : textStyle)
+            textColor = textColor ?? (type === 'paragraphTitle' ? 'secondary' : type === 'link' ? 'link' : type)
+            textColor = getFontColor(animationStyle, textColor)
+            underlined = underlined ?? (type === 'link' ? true : underlined)
+
+            p5.textStyle(textStyle ?? animationStyle.textStyle)
             const textWidth = p5.textWidth(value)
             if (!dry) {
                 let backgroundColor = calculateBackgroundColor(o, animationStyle)
                 if (backgroundTextColor) {
                     p5.fill(backgroundTextColor)
                     p5.stroke(backgroundTextColor)
-                    p5.rect(x, y - fontSize + 4, textWidth, fontSize)
+                    p5.rect(x, y - fontSize + 4, textWidth, fontSize + 5)
                     backgroundColor = backgroundTextColor
                 }
                 p5.fill(textColor)
                 p5.stroke(backgroundColor)
                 p5.strokeWeight(textWeight ?? animationStyle.fontWeight)
                 p5.text(value, x, y)
-                if (part.strikethrough) {
+                if (strikethrough) {
                     p5.stroke(textColor)
                     p5.strokeWeight(fontSize / 10)
                     p5.line(x - 1, y - fontSize / 4, x + textWidth, y - fontSize / 4)
+                }
+                if (underlined) {
+                    p5.stroke(textColor)
+                    p5.strokeWeight(fontSize / 10)
+                    p5.line(x - 1, y + 3, x + textWidth, y + 3)
                 }
             }
             x += textWidth

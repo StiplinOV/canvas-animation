@@ -3,7 +3,7 @@ import { AppearAlgorithm } from './animation/CanvasAnimationParams'
 import { HighlightedStyleName } from './animation/simple/highligtedtext/HighlightedTextCanvasAnimationParams'
 
 export const COURIER_NEW_FONT = 'Courier New'
-export type ColorType = string | 'primary' | 'secondary' | 'background'
+export type ColorType = string | 'primary' | 'secondary' | 'background' | 'link'
 
 export type WebSafeFontsType =
     'Arial'
@@ -18,13 +18,17 @@ export type WebSafeFontsType =
 
 export default interface AnimationStyle {
     backgroundColor: string
+    textLinkColor: string
     fontColor: string
     fillColor: string
     strokeColor: string
     primaryColor: string
     secondaryColor: string
     selectedColor: string
+    codeSpecBackgroundColor: string
     backgroundSelectedColor: string
+    highlightedTextStrokeWeight: number
+    highlightedTextStrokeColor: string
     font: WebSafeFontsType
     fontSize: number
     titleFontSize: number
@@ -46,6 +50,8 @@ export default interface AnimationStyle {
 
 const defaultAnimationStyle: AnimationStyle = {
     backgroundColor: '#FFFFFF',
+    codeSpecBackgroundColor: '#D3D3D3',
+    textLinkColor: '#0000FF',
     fontColor: '#000000',
     fillColor: '#FFFFFF',
     strokeColor: '#000000',
@@ -53,6 +59,8 @@ const defaultAnimationStyle: AnimationStyle = {
     secondaryColor: '#ff4d00',
     selectedColor: '#FF0000',
     backgroundSelectedColor: '#FFFF00',
+    highlightedTextStrokeColor: '#485460',
+    highlightedTextStrokeWeight: 5,
     font: 'Verdana',
     fontSize: 14,
     titleFontSize: 40,
@@ -126,6 +134,9 @@ export const getFontColor = (animationStyle: AnimationStyle, color?: ColorType):
     }
     if (color === 'background') {
         return animationStyle.backgroundColor
+    }
+    if (color === 'link') {
+        return animationStyle.textLinkColor
     }
     return color ?? animationStyle.fontColor
 }

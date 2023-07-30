@@ -1,4 +1,3 @@
-import {calculateArrayPercentValue} from '../../../common/Utils'
 import {
     AnimationObjectParams,
     JsonObjectParams,
@@ -153,6 +152,8 @@ import {
 import HighlightedTextCanvasAnimationRenderer from './HighlightedTextCanvasAnimationRenderer'
 import React from 'react'
 import {ObjectParamsObject} from '../../ObjectParamsObject'
+import {Property} from 'csstype'
+import {getCssClassesSortedByPriority} from '../../../common/Alghoritm'
 
 export const languageDefs = {
     AccessLog,
@@ -294,25 +295,57 @@ const styles = {
     zenburn
 }
 
-export const getStyle = (animationStyle: AnimationStyle, styleName?: HighlightedStyleName): Record<string, React.CSSProperties> => {
-    return styles[styleName ?? animationStyle.highlightTextStyle]
-}
-
 export const createHighlightedTextValueSegmentType = (object: HighlightedTextValueType, animationStyle: AnimationStyle): HighlightedTextValueSegmentType[] => {
     if (Array.isArray(object)) {
         return object
     }
     const {text} = object
-
     registerLanguages(...Object.values(languageDefs))
-    const style = getStyle(animationStyle, object.highlightStyle)
-    const highlighter = init(new HighlightedTextCanvasAnimationRenderer(style, animationStyle, !object.language))
+    const style = styles[object.highlightStyle ?? animationStyle.highlightTextStyle]
+    const highlighter = init(new HighlightedTextCanvasAnimationRenderer(style))
     let lang
     if (object.language) {
         lang = languageDefs[object.language].name
     }
 
-    return process(highlighter, text, lang).value
+    const result: HighlightedTextValueSegmentType[] = []
+
+    process(highlighter, text, lang).value.values.forEach(v => {
+        let properties: React.CSSProperties = {}
+        getCssClassesSortedByPriority(['hljs', ...v.classes]).forEach(classes => {
+            const styleKey = classes.map((c, i) => `${i > 0 ? '.' : ''}${c}`).join(' ')
+            const localProperties = style[styleKey]
+
+            properties = {
+                ...localProperties,
+                ...properties
+            }
+        })
+        result.push(...v.segments.map(s => {
+            if (s === 'newline') {
+                return s
+            }
+            return {
+                ...s,
+                textColor: properties.color,
+                textStyle: cssPropToFontStyle(properties),
+                textWeight: cssPropToTextWeight(properties.fontWeight),
+                backgroundTextColor: properties.backgroundColor
+            }
+        }))
+    })
+    return result
+}
+
+const cssPropToFontStyle = (style: React.CSSProperties): THE_STYLE => {
+    if (style.fontWeight === 'bold') {
+        return style.fontStyle === 'italic' ? 'bolditalic' : 'bold'
+    }
+    return style.fontStyle === 'italic' ? 'italic' : 'normal'
+}
+
+const cssPropToTextWeight = (fontWeightParam?: Property.FontWeight): number | undefined => {
+    return typeof fontWeightParam === 'number' ? fontWeightParam : undefined
 }
 
 export const calculateBackgroundColor = (params: HighlightedTextJsonParamsType, animationStyle: AnimationStyle): string => {
@@ -329,11 +362,13 @@ export type HighlightedStyleName = keyof typeof styles
 
 export type HighlightedTextValueSegmentType = {
     value: string
-    textStyle: THE_STYLE
+    textStyle?: THE_STYLE
     textWeight?: number
     textColor?: ColorType
     backgroundTextColor?: string
     strikethrough?: boolean
+    underlined?: boolean
+    type?: 'paragraphTitle' | 'link'
 } | 'newline'
 
 export type HighlightedSyntaxValueType = {
@@ -414,17 +449,6 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
         return new HighlightedTextCanvasAnimation(this, animationStyle)
     }
 
-    private calculateValuePercentValue(
-        fromParam: HighlightedTextValueSegmentType[],
-        toParam: HighlightedTextValueSegmentType[],
-        percent: number
-    ): HighlightedTextValueSegmentType[] {
-        const from = fromParam.flatMap(f => this.splitTextValueSegmentType(f))
-        const to = toParam.flatMap(f => this.splitTextValueSegmentType(f))
-
-        return calculateArrayPercentValue(from, to, percent)
-    }
-
     private splitTextValueSegmentType(param: HighlightedTextValueSegmentType): HighlightedTextValueSegmentType[] {
         const result: HighlightedTextValueSegmentType[] = []
         if (param === 'newline') {
@@ -444,10 +468,14 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
         const colorOverrides: ColorOverride[] = []
         const backgroundColorOverrides: BackgroundColorOverride[] = []
         selection.substrings?.forEach(s => {
-            s.color && colorOverrides.push({
+            let color = s.color
+            if (!s.backgroundColor && !s.color) {
+                color = this.getAnimationStyle().selectedColor
+            }
+            color && colorOverrides.push({
                 from: s.from,
                 to: s.to,
-                color: s.color
+                color
             })
             s.backgroundColor && backgroundColorOverrides.push({
                 from: s.from,
@@ -459,7 +487,9 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
             transformObject: {
                 colorOverrides,
                 backgroundColorOverrides
-            }
+            },
+            appearType: 'immediate',
+            disappearType: 'immediateAtTheEnd'
         }]
     }
 
@@ -483,10 +513,12 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
         return {
             ...animationObjectDefaultParams,
             ...jsonObject,
+            strokeColor: jsonObject.strokeColor ?? animationStyle.highlightedTextStrokeColor,
+            weight: jsonObject.weight ?? animationStyle.highlightedTextStrokeWeight,
             value: createHighlightedTextValueSegmentType(jsonObject.value, this.getAnimationStyle()).flatMap(f => this.splitTextValueSegmentType(f)),
             fontSize: jsonObject.fontSize ?? animationStyle.fontSize,
             font: jsonObject.font ?? animationStyle.monospaceFont,
-            backgroundColor: jsonObject.backgroundColor ?? animationStyle.backgroundColor,
+            backgroundColor: calculateBackgroundColor(jsonObject, this.getAnimationStyle()),
             colorOverrides: overrides.colorOverrides ?? [],
             backgroundColorOverrides: overrides.backgroundColorOverrides ?? [],
             strikeTroughOverrides: overrides.strikeTroughOverrides ?? [],
