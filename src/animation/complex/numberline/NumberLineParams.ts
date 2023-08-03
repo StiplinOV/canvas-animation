@@ -78,7 +78,7 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
                 endType: 'Arrow',
                 weight: 'bold'
             }
-        }, this.p5, animationStyle).getIncludedAnimationParams().forEach((value, key) => {
+        }, this.getP5(), animationStyle).getIncludedAnimationParams().forEach((value, key) => {
             result.set(`axis ${key}`, value)
         })
         scale.sort((l, r) => l - r)
@@ -155,7 +155,7 @@ export default class NumberLineCanvasAnimationParams extends ComplexCanvasAnimat
                     startType: 'Arrow',
                     endType: 'Arrow'
                 }
-            }, this.p5, animationStyle).getIncludedAnimationParams().forEach((v, k) => {
+            }, this.getP5(), animationStyle).getIncludedAnimationParams().forEach((v, k) => {
                 result.set(`range [${r.coords[0]},${r.coords[1]}] arrow ` + k, v)
             })
             r.coords.forEach(c => {

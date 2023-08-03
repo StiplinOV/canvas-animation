@@ -25,8 +25,10 @@ import {
     CodeQuestionnaireCanvasAnimationSelection,
     CodeQuestionnaireJsonParams
 } from './animation/complex/codequestionnaire/CodeQuestionnaireCanvasAnimationParams'
+import {ImageJsonParamsType} from './animation/simple/image/ImageCanvasAnimationParams'
 
 export type SimpleObjectTypeToGenericTypes = {
+    image: [ImageJsonParamsType, TransformationOptions, SelectionType]
     circle: [CircleJsonParamsType, TransformationOptions, SelectionType]
     ellipse: [EllipseJsonParamsType, TransformationOptions, SelectionType]
     bezier: [BezierJsonParamsType, TransformationOptions, SelectionType]

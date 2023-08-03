@@ -12,6 +12,7 @@ import CanvasAnimation from './CanvasAnimation'
 import {intervalContainsIntersections, uniqueArray} from '../common/Alghoritm'
 import {ObjectParamsObject} from './ObjectParamsObject'
 import {animationStyle} from '../Animations'
+import p5Types from 'p5'
 
 type WeightType = number | 'normal' | 'bold'
 
@@ -128,10 +129,12 @@ export default abstract class CanvasAnimationParams<
     private readonly transformations: Transformation<U, V>[]
     private readonly object: U
     private readonly layout: LayoutType
+    private readonly p5: p5Types
     private readonly animationStyle: AnimationStyle
 
-    public constructor(params: Params<T, V, W>, animationStyle: AnimationStyle) {
+    public constructor(params: Params<T, V, W>, p5: p5Types, animationStyle: AnimationStyle) {
         this.animationStyle = animationStyle
+        this.p5 = p5
         this.presenceParam = toPresenceParamType(params.presenceParameters)
         this.transformations = params.transformations?.map(t => this.transformationParamToTransformation(t)) ?? []
         this.transformations.push(...this.calculateSelectionTransformations(params.selections))
@@ -139,6 +142,10 @@ export default abstract class CanvasAnimationParams<
         this.object = this.convertJsonObjectToAnimationObject(params.object, animationObjectDefaultParams)
         this.layout = params.layout ?? 'absolute'
         this.checkPresenceParam()
+    }
+
+    protected getP5(): p5Types {
+        return this.p5
     }
 
     private transformationParamToTransformation(t: TransformationParam<T, V>): Transformation<U, V> {
@@ -194,26 +201,30 @@ export default abstract class CanvasAnimationParams<
 
     protected getObjectParamsWithTime(): ObjectParamsWithPresence<U>[] {
         const result: ObjectParamsWithPresence<U>[] = []
-        const starts = uniqueArray([
-            ...this.getPresenceParam(),
-            ...this.getTransformations().map(t => t.presence)
-        ].flatMap(p => [p.appearTime, p.disappearTime]))
-        const ends = uniqueArray([
-            ...this.getPresenceParam(),
-            ...this.getTransformations().map(t => t.presence)
-        ].flatMap(p => [p.appearTime + p.appearDuration, p.disappearTime + p.disappearDuration]))
-        const points = uniqueArray([...starts, ...ends].filter(v => v !== Number.POSITIVE_INFINITY).flatMap(p => {
-            const result = [p, p + 1]
-            if (p > 0) {
-                result.push(p - 1)
-            }
-            return result
-        })).sort((l, r) => l - r)
+        const points = uniqueArray(
+            [
+                ...this.getPresenceParam(),
+                ...this.getTransformations().map(t => t.presence)
+            ].flatMap(p => [
+                p.appearTime,
+                p.disappearTime,
+                p.appearTime + p.appearDuration,
+                p.disappearTime + p.disappearDuration
+            ])
+                .filter(v => v !== Number.POSITIVE_INFINITY)
+                .flatMap(p => {
+                    const result = [p, p + 1]
+                    if (p > 0) {
+                        result.push(p - 1)
+                    }
+                    return result
+                })
+        ).sort((l, r) => l - r)
         let time = points[0]
         for (let i = 1; i < points.length; i++) {
             const nextTime = points[i]
             const duration = nextTime - time
-            let objectParams = this.calculateObjectParamsInTime(nextTime)
+            const objectParams = this.calculateObjectParamsInTime(nextTime)
             result.push({
                 objectParams,
                 time,

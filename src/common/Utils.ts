@@ -88,6 +88,7 @@ export const calculateSetPercentValue = <T>(from: T[], to: T[], percent: number)
     resultDeltaArray.forEach(v => setIntersection.add(v))
     return Array.from(setIntersection.values())
 }
+
 export const calculateArrayPercentValue = <T>(from: T[], to: T[], percent: number): T[] => {
     if (JSON.stringify(from) === JSON.stringify(to)) {
         return from
@@ -107,15 +108,15 @@ export const calculateArrayPercentValue = <T>(from: T[], to: T[], percent: numbe
     }
     if (toStartsWithFrom) {
         const numberOfStates = to.length - from.length + 1
-        const currentState = Math.floor(calculatePercentValue(1, numberOfStates, percent))
+        const currentState = Math.round(calculatePercentValue(1, numberOfStates, percent))
         return to.slice(0, from.length + currentState - 1)
     } else if (fromStartsWithTo) {
         const numberOfStates = from.length - to.length + 1
-        const currentState = Math.floor(calculatePercentValue(1, numberOfStates, percent))
+        const currentState = Math.round(calculatePercentValue(1, numberOfStates, percent))
         return from.slice(0, from.length - currentState + 1)
     } else {
         const numberOfStates = from.length + to.length
-        const currentState = Math.floor(calculatePercentValue(1, numberOfStates, percent))
+        const currentState = Math.round(calculatePercentValue(1, numberOfStates, percent))
         if (currentState >= 0 && currentState <= from.length) {
             return from.slice(0, from.length - currentState + 1)
         } else {
@@ -142,7 +143,24 @@ export const calculatePointsPercentValue = (from: Point[], to: Point[], percent:
 export const calculateTextPercentValue = (from: string, to: string, percent: number): string => {
     return calculateArrayPercentValue(from.split(''), to.split(''), percent).join('')
 }
-export const calculateColorPercentValue = (from: string, to: string, percent: number): string => {
+
+export const calculateColorPercentValue = (fromParam: string, toParam: string, percent: number): string => {
+    const toColor = (param: string): string => {
+        if (param.match(/^#[0-9ABCDEFabcdef]{3}$/)) {
+            const r = param.substring(1, 2)
+            const g = param.substring(2, 3)
+            const b = param.substring(3, 4)
+
+            return `#${r}${r}${g}${g}${b}${b}`
+        }
+        if (param.match(/^#[0-9ABCDEFabcdef]{6}$/)) {
+            return param
+        }
+        throw new Error(`wrong color: ${param}`)
+    }
+
+    const from = toColor(fromParam)
+    const to = toColor(toParam)
     const fromNumR = parseInt(from.substring(1, 3), 16)
     const toNumR = parseInt(to.substring(1, 3), 16)
     const fromNumG = parseInt(from.substring(3, 5), 16)

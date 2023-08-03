@@ -112,7 +112,7 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
                     width: arrayRectangleWidth,
                     height: partHeight * 3
                 }
-            }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
+            }, this.getP5(), this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
                 result.set(`${k} ${index}`, v)
             })
         })
@@ -168,7 +168,7 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
                             weight: arrayRectangleWidth / 30
                         }
                     },
-                    this.p5,
+                    this.getP5(),
                     this.getAnimationStyle()
                 ).getIncludedAnimationParams().forEach((v, k) => result.set(`element pointer ${index} ${k}`, v))
             }

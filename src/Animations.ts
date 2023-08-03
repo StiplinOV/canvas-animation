@@ -25,19 +25,21 @@ import NumberLineCanvasAnimationParams from './animation/complex/numberline/Numb
 import CodeQuestionnaireCanvasAnimationParams
     from './animation/complex/codequestionnaire/CodeQuestionnaireCanvasAnimationParams'
 import SimpleCanvasAnimationParams from './animation/simple/SimpleCanvasAnimationParams'
+import ImageCanvasAnimationParams from './animation/simple/image/ImageCanvasAnimationParams'
 
 export const animationStyle = getAnimationStyle('default')
 
 export const TypeToSimpleParamsConstructorMapping: {
     [key in keyof SimpleObjectTypeToGenericTypes]: (p: ObjectTypeToParamTypesMapping[key], p5: p5Types, animationStyle: AnimationStyle) => SimpleCanvasAnimationParams
 } = {
-    circle: (p, p5, animationStyle) => new CircleCanvasAnimationParams(p, animationStyle),
-    ellipse: (p, p5, animationStyle) => new EllipseCanvasAnimationParams(p, animationStyle),
-    bezier: (p, p5, animationStyle) => new BezierCanvasAnimationParams(p, animationStyle),
-    highlightedText: (p, p5, animationStyle) => new HighlightedTextCanvasAnimationParams(p, animationStyle),
-    line: (p, p5, animationStyle) => new LineCanvasAnimationParams(p, animationStyle),
-    rectangle: (p, p5, animationStyle) => new RectangleCanvasAnimationParams(p, animationStyle),
-    text: (p, p5, animationStyle) => new TextCanvasAnimationParams(p, animationStyle)
+    image: (p, p5, animationStyle) => new ImageCanvasAnimationParams(p, p5, animationStyle),
+    circle: (p, p5, animationStyle) => new CircleCanvasAnimationParams(p, p5, animationStyle),
+    ellipse: (p, p5, animationStyle) => new EllipseCanvasAnimationParams(p, p5, animationStyle),
+    bezier: (p, p5, animationStyle) => new BezierCanvasAnimationParams(p, p5, animationStyle),
+    highlightedText: (p, p5, animationStyle) => new HighlightedTextCanvasAnimationParams(p, p5, animationStyle),
+    line: (p, p5, animationStyle) => new LineCanvasAnimationParams(p, p5, animationStyle),
+    rectangle: (p, p5, animationStyle) => new RectangleCanvasAnimationParams(p, p5, animationStyle),
+    text: (p, p5, animationStyle) => new TextCanvasAnimationParams(p, p5, animationStyle)
 }
 
 export const TypeToConstructorMapping: {

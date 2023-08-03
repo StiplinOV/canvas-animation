@@ -1,10 +1,8 @@
 import CanvasAnimationParams, {
     AnimationObjectParams,
     JsonObjectParams,
-    Params,
     SelectionType, TransformationOptions
 } from '../CanvasAnimationParams'
-import p5Types from 'p5'
 import AnimationStyle from '../../AnimationStyles'
 import SimpleCanvasAnimationParams from '../simple/SimpleCanvasAnimationParams'
 import {PresenceParamType, requireValueFromMap} from '../../common/Utils'
@@ -50,13 +48,6 @@ export default abstract class ComplexCanvasAnimationParams<
     W extends TransformationOptions = TransformationOptions
 >
     extends CanvasAnimationParams<T, U, W, SelectionType<V>> {
-
-    public readonly p5: p5Types
-
-    constructor(params: Params<T, W, SelectionType<V>>, p5: p5Types, animationStyle: AnimationStyle) {
-        super(params, animationStyle)
-        this.p5 = p5
-    }
 
     protected toSimpleCanvasAnimationParams(): SimpleCanvasAnimationParams[] {
         const objectParamsWithTime = this.getObjectParamsWithTime()
@@ -212,7 +203,7 @@ export default abstract class ComplexCanvasAnimationParams<
                 object: params.objectParams as any,
                 presenceParameters
             },
-            this.p5,
+            this.getP5(),
             this.getAnimationStyle()
         )
     }

@@ -3,7 +3,6 @@ import './App.css'
 import { AnimationPlayer } from './components/player/AnimationPlayer'
 import { useWindowDimensions } from './hook/UseWindowDimensions'
 import {CliLegalEntryPointMethods} from "./lessons/javatest/Building Blocks/1_CliLegalEntryPointMethods";
-import {calculateArrayPercentValue} from "./common/Utils";
 
 const App = (): ReactElement => {
     const lesson = CliLegalEntryPointMethods

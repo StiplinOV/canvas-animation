@@ -187,7 +187,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
                 if (widths.length === widthIndex) {
                     widths.push(0)
                 }
-                widths[widthIndex] = Math.max(widths[widthIndex], this.p5.textWidth(row[rowIndex + widthIndex]))
+                widths[widthIndex] = Math.max(widths[widthIndex], this.getP5().textWidth(row[rowIndex + widthIndex]))
             }
             mergedWidthsMap.set(row.length, widths)
         }
@@ -258,7 +258,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
         let resultIndex = -1
         let maximumWidth = 0
         for (let i = 0; i < strings.length; i++) {
-            const textWidth = this.p5.textWidth(strings[i])
+            const textWidth = this.getP5().textWidth(strings[i])
             if (textWidth > maximumWidth) {
                 resultIndex = i
                 maximumWidth = textWidth
@@ -268,7 +268,7 @@ export default class TableCanvasAnimationParams extends ComplexCanvasAnimationPa
     }
 
     private stringsToWidths (strings: string[], width: number): number[] {
-        return this.calculateWidthsByProportions(strings.map(s => this.p5.textWidth(s)), width)
+        return this.calculateWidthsByProportions(strings.map(s => this.getP5().textWidth(s)), width)
     }
 
     private calculateWidthsByProportions (proportions: number[], width: number): number[] {

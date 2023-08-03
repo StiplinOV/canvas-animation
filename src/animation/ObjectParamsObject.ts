@@ -10,11 +10,7 @@ import {
     RotationType
 } from '../common/Utils'
 import {Point, ZeroPoint} from '../common/Point'
-import {
-    AnimationObjectParams,
-    AppearAlgorithm,
-    weightToNumber
-} from './CanvasAnimationParams'
+import {AnimationObjectParams, AppearAlgorithm, weightToNumber} from './CanvasAnimationParams'
 import AnimationStyle, {getFillColor, getStrokeColor} from '../AnimationStyles'
 import {convertPercentAccordingToAlgorithm} from '../common/Alghoritm'
 
@@ -29,6 +25,8 @@ export class ObjectParamsObject {
     private readonly pointParams: Map<string, Point> = new Map<string, Point>()
 
     private readonly stringLiteralParams: Map<string, string> = new Map<string, string>()
+
+    private readonly objectParams: Map<string, unknown | null> = new Map<string, unknown | null>()
 
     private readonly numberParams: Map<string, number> = new Map<string, number>()
 
@@ -56,6 +54,9 @@ export class ObjectParamsObject {
             })
             other.stringLiteralParams.forEach((v, k) => {
                 this.stringLiteralParams.set(k, v)
+            })
+            other.objectParams.forEach((v, k) => {
+                this.objectParams.set(k, v)
             })
             other.numberParams.forEach((v, k) => {
                 this.numberParams.set(k, v)
@@ -98,6 +99,10 @@ export class ObjectParamsObject {
 
     public setStringLiteralParam(key: string, param: string): void {
         this.stringLiteralParams.set(key, param)
+    }
+
+    public setObjectParam(key: string, param: unknown | null): void {
+        this.objectParams.set(key, param)
     }
 
     public setArrayParam(key: string, param: unknown[]): void {
@@ -150,6 +155,10 @@ export class ObjectParamsObject {
         return requireValueFromMap(this.stringLiteralParams, key) as T
     }
 
+    public getObjectParam<T extends unknown | null>(key: string): T {
+        return requireValueFromMap(this.objectParams, key) as T
+    }
+
     public getArrayParam<T>(key: string): T[] {
         return requireValueFromMap(this.arrayParams, key) as T[]
     }
@@ -193,6 +202,12 @@ export class ObjectParamsObject {
             if (percent > 0.5) {
                 const desireValue = other.getStringLiteralParam(key)
                 this.setStringLiteralParam(key, desireValue)
+            }
+        })
+        other.objectParams.forEach((value, key) => {
+            if (percent > 0.5) {
+                const desireValue = other.getObjectParam(key)
+                this.setObjectParam(key, desireValue)
             }
         })
         other.numberParams.forEach((value, key) => {

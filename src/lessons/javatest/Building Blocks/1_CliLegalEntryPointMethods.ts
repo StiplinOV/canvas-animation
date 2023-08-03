@@ -4,12 +4,12 @@ import {animationStyle} from '../../../Animations'
 // https://docs.oracle.com/javase/specs/
 // https://docs.oracle.com/javase/specs/jls/se17/html/jls-12.html#jls-12.1.4
 export const CliLegalEntryPointMethods: LessonJsonType = {
-    sound: require('./../../Lofi_Jazz_Cafe_Cozy_Evening.mp3'),
+    sound: require('./без названия.mp3'),
     canvasDimensions: {
         width: 1280,
         height: 720
     },
-    endTime: 210000,
+    endTime: 180000,
     cameras: [
         {
             camera: {
@@ -23,15 +23,31 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                 x: 1280,
                 y: 0
             },
-            startTime: 90000,
+            startTime: 11000,
+            transformDuration: 2000
+        },
+        {
+            camera: {
+                x: 1280,
+                y: 720
+            },
+            startTime: 150000,
+            transformDuration: 1000
+        },
+        {
+            camera: {
+                x: 1280,
+                y: 0
+            },
+            startTime: 158000,
             transformDuration: 1000
         },
         {
             camera: {
                 x: 0,
-                y: 0
+                y: 720
             },
-            startTime: 100000,
+            startTime: 165000,
             transformDuration: 1000
         }
     ],
@@ -39,14 +55,14 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
         codeQuestionnaire: [
             {
                 presenceParameters: [{
-                    appearTime: 4000,
-                    appearDuration: 1000
+                    appearTime: 13000,
+                    appearDuration: 5000
                 }],
                 object: {
                     title: 'Which of the following are legal entry point methods that can be run from the command line? (Choose all that apply.)',
                     titleFontSize: 50,
                     origin: {
-                        x: 0,
+                        x: 1280,
                         y: 0
                     },
                     width: 1280,
@@ -55,26 +71,17 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                 },
                 selections: [
                     {
-                        time: 40000,
-                        duration: 5000,
+                        time: 93000,
+                        duration: 25000,
                         type: {
                             questionnaire: {
-                                lines: [3, 4]
+                                lines: [4]
                             }
                         }
                     },
                     {
-                        time: 45000,
-                        duration: 5000,
-                        type: {
-                            questionnaire: {
-                                lines: [3]
-                            }
-                        }
-                    },
-                    {
-                        time: 102000,
-                        duration: 10000,
+                        time: 161000,
+                        duration: 25000,
                         type: {
                             questionnaire: {
                                 lines: [3, 4]
@@ -84,7 +91,7 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                 ],
                 transformations: [
                     {
-                        appearTime: 7000,
+                        appearTime: 22000,
                         appearDuration: 4000,
                         object: {
                             questionParamsOptions: [
@@ -99,22 +106,22 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                         }
                     },
                     {
-                        appearTime: 30000,
-                        appearDuration: 1000,
+                        appearTime: 74000,
+                        appearDuration: 0,
                         object: {
                             questionParamsStrikethroughOptions: [0]
                         }
                     },
                     {
-                        appearTime: 34000,
+                        appearTime: 79500,
                         appearDuration: 1000,
                         object: {
                             questionParamsStrikethroughOptions: [0, 1, 5]
                         }
                     },
                     {
-                        appearTime: 36000,
-                        appearDuration: 1000,
+                        appearTime: 87000,
+                        appearDuration: 0,
                         object: {
                             questionParamsStrikethroughOptions: [0, 1, 2, 5]
                         }
@@ -125,15 +132,37 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
         highlightedText: [
             {
                 presenceParameters: [{
-                    appearTime: 15000,
+                    appearTime: 0,
+                    appearDuration: 0
+                }],
+                object: {
+                    width: 1280,
+                    height: 720,
+                    fontSize: 72,
+                    zIndex: 1,
+                    value: {
+                        text: 'Java SE 17 Developer\nEXAM 1Z0-829'
+                    },
+                    origin: {
+                        x: 0, y: 0
+                    }
+                }
+            },
+            {
+                presenceParameters: [{
+                    appearTime: 53000,
                     appearDuration: 5000,
-                    disappearTime: 22000,
-                    disappearDuration: 5000
+                    disappearTime: 71000,
+                    disappearDuration: 2000
                 }],
                 object: {
                     origin: {
-                        x: 140, y: 210
+                        x: 1550, y: 260
                     },
+                    width: 740,
+                    height: 200,
+                    fontSize: 18,
+                    zIndex: 1,
                     value: [
                         {
                             value: '12.1.4. Invoke Test.main',
@@ -189,19 +218,15 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                             value: '...',
                             textStyle: 'italic'
                         }
-                    ],
-                    width: 1000,
-                    height: 300,
-                    fontSize: 18,
-                    zIndex: 1
+                    ]
                 }
             },
             {
                 presenceParameters: [{
-                    appearTime: 50000,
+                    appearTime: 113000,
                     appearDuration: 5000,
-                    disappearTime: 60000,
-                    disappearDuration: 5000
+                    disappearTime: 129000,
+                    disappearDuration: 1000
                 }],
                 object: {
                     value: [
@@ -400,7 +425,7 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                         }
                     ],
                     origin: {
-                        x: 10, y: 110
+                        x: 1290, y: 110
                     },
                     width: 1260,
                     height: 500,
@@ -410,10 +435,10 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
             },
             {
                 presenceParameters: [{
-                    appearTime: 70000,
+                    appearTime: 131000,
                     appearDuration: 5000,
-                    disappearTime: 80000,
-                    disappearDuration: 5000
+                    disappearTime: 148000,
+                    disappearDuration: 2000
                 }],
                 object: {
                     value: [
@@ -428,7 +453,7 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                         }
                     ],
                     origin: {
-                        x: 140, y: 285
+                        x: 1420, y: 285
                     },
                     width: 1000,
                     height: 150,
@@ -438,64 +463,83 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
             },
             {
                 presenceParameters: [{
-                    appearTime: 90000,
+                    appearTime: 150000,
                     appearDuration: 0
                 }],
                 object: {
                     value: {
-                        text: '',
+                        text: 'public class Parent {\n' +
+                            '    public static final void main(String[] args) {\n' +
+                            '        System.out.println(\'Parent\');\n' +
+                            '    }\n' +
+                            '}\n' +
+                            '\n' +
+                            'class Child extends Parent {\n' +
+                            '    public static void main(String[] args) {\n' +
+                            '        System.out.println(\'Child\');\n' +
+                            '    }\n' +
+                            '}',
                         language: 'Java',
-                        highlightStyle: 'darcula'
+                        highlightStyle: animationStyle.highlightTextStyle
                     },
                     origin: {
-                        x: 1280, y: 0
+                        x: 1280, y: 720
                     },
                     width: 1280,
                     height: 720,
                     fontSize: 30,
                     zIndex: 1
                 },
-                transformations: [
-                    {
-                        appearTime: 91000,
-                        appearDuration: 4000,
-                        object: {
-                            value: {
-                                text: 'public class Parent {\n' +
-                                    '    public static final void main(String[] args) {\n' +
-                                    '        System.out.println(\'Parent\');\n' +
-                                    '    }\n' +
-                                    '}\n' +
-                                    '\n' +
-                                    'class Child extends Parent {\n' +
-                                    '    public static void main(String[] args) {\n' +
-                                    '        System.out.println(\'Child\');\n' +
-                                    '    }\n' +
-                                    '}',
-                                language: 'Java',
-                                highlightStyle: 'darcula'
-                            }
-                        }
-                    }
-                ],
                 selections: [
                     {
-                        time: 96000,
-                        duration: 1000,
+                        time: 154000,
+                        duration: 3000,
                         substrings: [{
                             from: 40,
                             to: 45
                         }]
                     }
                 ]
+            },
+            {
+                presenceParameters: [{
+                    appearTime: 165000,
+                    appearDuration: 6000
+                }],
+                object: {
+                    value: {
+                        text: 'Producted by\n\nOleg Stiplin',
+                        highlightStyle: animationStyle.highlightTextStyle
+                    },
+                    origin: {
+                        x: 0, y: 720
+                    },
+                    width: 1280,
+                    height: 720,
+                    fontSize: 72,
+                    zIndex: 1
+                }
+            },
+            {
+                presenceParameters: [{
+                    appearTime: 166000,
+                    appearDuration: 3000
+                }],
+                object: {
+                    weight: 0,
+                    value: {
+                        text: '\t\t\t\t\t\t\t\t\tsubscribe...',
+                        highlightStyle: animationStyle.highlightTextStyle
+                    },
+                    origin: {
+                        x: 0, y: 1300
+                    },
+                    width: 1280,
+                    height: 100,
+                    fontSize: 36,
+                    zIndex: 2
+                }
             }
         ]
     }
 }
-
-/*
-
-TODO поправить selections transformations
-TODO разобраться с поддержкой внешних иконок
-
-* */

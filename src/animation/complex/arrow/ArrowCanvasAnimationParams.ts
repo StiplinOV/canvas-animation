@@ -188,12 +188,12 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
     }
 
     private createArrowHeadLinePoints (tail: Point, head: Point): [Point, Point] {
-        const angle = getVectorAngle(this.p5, subtractPoints(head, tail))
-        const leftArrowSide = rotateVector(this.p5, {
+        const angle = getVectorAngle(this.getP5(), subtractPoints(head, tail))
+        const leftArrowSide = rotateVector(this.getP5(), {
             x: arrowBaseLength,
             y: arrowBaseWidth / 2
         }, angle)
-        const rightArrowSide = rotateVector(this.p5, {
+        const rightArrowSide = rotateVector(this.getP5(), {
             x: arrowBaseLength,
             y: -arrowBaseWidth / 2
         }, angle)

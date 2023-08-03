@@ -355,7 +355,10 @@ export const calculateBackgroundColor = (params: HighlightedTextJsonParamsType, 
     if (params.value.highlightStyle) {
         return String(styles[params.value.highlightStyle].hljs.background)
     }
-    return params.backgroundColor ?? animationStyle.backgroundColor
+    if (params.backgroundColor) {
+        return params.backgroundColor
+    }
+    return String(styles[animationStyle.highlightTextStyle].hljs.background)
 }
 
 export type HighlightedStyleName = keyof typeof styles

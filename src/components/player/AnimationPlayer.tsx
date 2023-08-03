@@ -15,7 +15,7 @@ export const AnimationPlayer = (props: Props): JSX.Element => {
     const {endTime} = props.lesson
     const {width, height} = props.lesson.canvasDimensions
     const sliderTop = height + props.top + 30
-    const [volumeSliderValue, setVolumeSliderValue] = React.useState<number>(0)
+    const [volumeSliderValue, setVolumeSliderValue] = React.useState<number>(100)
     const [inTimeChanging, setInTimeChanging] = React.useState<boolean>(false)
     const [time, setTime] = React.useState<number>(0)
     const [play, setPlay] = React.useState<boolean>(false)

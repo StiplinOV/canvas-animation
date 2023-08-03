@@ -186,7 +186,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                         strokeColor: 'secondary',
                         zIndex: value.zIndex
                     }
-                }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
+                }, this.getP5(), this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
                     result.set(`chartBarPoint ${index}` + k, v)
                 })
             }
@@ -286,7 +286,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     weight: 2,
                     rotations
                 }
-            }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
+            }, this.getP5(), this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
                 result.set('xArrow ' + k, v)
             })
         }
@@ -364,7 +364,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                     weight: 2,
                     rotations
                 }
-            }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
+            }, this.getP5(), this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
                 result.set('yArrow ' + k, v)
             })
         }
@@ -486,7 +486,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                         weight: 2,
                         rotations
                     }
-                }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
+                }, this.getP5(), this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
                 result.set(`objectChartYRangeArrow ${index} ${k}`, v)
             })
             const objChartRangeValueOrigin = {
@@ -570,7 +570,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                         weight: 2,
                         rotations
                     }
-                }, this.p5, this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
+                }, this.getP5(), this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
                 result.set(`objectChartXRangeArrow ${index} ${k}`, v)
             })
             const objChartRangeValueOrigin = {

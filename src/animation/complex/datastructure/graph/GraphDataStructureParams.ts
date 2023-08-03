@@ -179,7 +179,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
                 }
                 const vVertexDiameter = this.calculateVertexStyle(animationStyle, vertexStyle, requireValueFromMap(vertexIdMap, e.v).style).diameter
                 const wVertexDiameter = this.calculateVertexStyle(animationStyle, vertexStyle, requireValueFromMap(vertexIdMap, e.w).style).diameter
-                const startVertexAngle = getVectorAngle(this.p5, {
+                const startVertexAngle = getVectorAngle(this.getP5(), {
                     x: wNode.x - vNode.x,
                     y: wNode.y - vNode.y
                 }) % (2 * Math.PI)
@@ -194,7 +194,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
                         origin: edgeStartPoint,
                         endPoint: edgeEndPoint
                     }
-                }, this.p5, animationStyle).getIncludedAnimationParams().forEach((value, key) => {
+                }, this.getP5(), animationStyle).getIncludedAnimationParams().forEach((value, key) => {
                     result.set(`edgeLine ${e.v}-${e.w} ${key}`, value)
                 })
             })
@@ -218,7 +218,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
                             point3: addPoints(object.origin, offset, dagreNode, points[2])
                         }
                     }
-                }, this.p5, animationStyle).getIncludedAnimationParams().forEach((value, key) => {
+                }, this.getP5(), animationStyle).getIncludedAnimationParams().forEach((value, key) => {
                     result.set(`edgeLine ${vertexId}-${vertexId} ${key}`, value)
                 })
             })

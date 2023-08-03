@@ -113,7 +113,7 @@ export default class MatrixCanvasAnimationParams extends ComplexCanvasAnimationP
                         width: valueWidth,
                         height: valueHeight
                     }
-                }, this.p5, animationStyle).getIncludedAnimationParams().forEach((v, k) => {
+                }, this.getP5(), animationStyle).getIncludedAnimationParams().forEach((v, k) => {
                     result.set(`${k} [${i}][${j}]`, v)
                 })
             }
