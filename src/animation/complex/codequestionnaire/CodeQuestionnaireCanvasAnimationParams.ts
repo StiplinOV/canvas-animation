@@ -9,14 +9,14 @@ import ComplexCanvasAnimationParams, {
 } from '../ComplexCanvasAnimationParams'
 import {
     HighlightedStyleName,
-    HighlightedTextValueSegmentType,
-    languageDefs
+    HighlightedTextValueSegmentType
 } from '../../simple/highligtedtext/HighlightedTextCanvasAnimationParams'
 import {addPoints} from '../../../common/Utils'
 import {animationStyle} from '../../../Animations'
 import {Point} from '../../../common/Point'
 import {ObjectParamsObject} from '../../ObjectParamsObject'
 import {uniqueArray} from '../../../common/Alghoritm'
+import {SupportedHighlightedLanguages} from '../../../AnimationStyles'
 
 const CODE_QUESTIONNAIRE_LINE_SPACING = 2
 
@@ -27,7 +27,7 @@ export interface OnlyCodeQuestionnaireParams {
 
 export interface CodeQuestionnaireJsonParams extends JsonObjectParams, OnlyCodeQuestionnaireParams {
     codeText?: string
-    language?: keyof typeof languageDefs
+    language?: SupportedHighlightedLanguages
     codeHighlightStyle?: HighlightedStyleName
     codeSelectedSubstrings?: {
         from: number
@@ -47,7 +47,7 @@ export interface CodeQuestionnaireJsonParams extends JsonObjectParams, OnlyCodeQ
 
 export interface CodeQuestionnaireAnimationObjectParams extends AnimationObjectParams, OnlyCodeQuestionnaireParams {
     codeText: string
-    language: keyof typeof languageDefs | null
+    language: SupportedHighlightedLanguages | null
     codeHighlightStyle: HighlightedStyleName | null
     codeSelectedSubstrings: {
         from: number
@@ -327,7 +327,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         return {
             ...initialDefaultParams,
             codeText: objectParamsObject.getStringParam('codeText'),
-            language: objectParamsObject.getStringLiteralParam<keyof typeof languageDefs>('language'),
+            language: objectParamsObject.getStringLiteralParam<SupportedHighlightedLanguages>('language'),
             codeHighlightStyle: objectParamsObject.getStringLiteralParam<HighlightedStyleName>('codeHighlightStyle'),
             codeSelectedSubstrings: objectParamsObject.getArrayParam('codeSelectedSubstrings'),
             questionnaireSelectedLines: Array.from(objectParamsObject.getSetParam<number>('questionnaireSelectedLines').values()),

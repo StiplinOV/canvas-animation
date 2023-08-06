@@ -5,54 +5,10 @@ import {
     TransformObjectParams
 } from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
-import AnimationStyle, {ColorType, WebSafeFontsType} from '../../../AnimationStyles'
+import AnimationStyle, {ColorType, SupportedHighlightedLanguages, WebSafeFontsType} from '../../../AnimationStyles'
 import HighlightedTextCanvasAnimation from './HighlightedTextCanvasAnimation'
 import {THE_STYLE} from 'p5'
-import {
-    AccessLog,
-    Bash,
-    CMake,
-    CoffeeScript,
-    CPlusPlus,
-    CSS,
-    D,
-    Diff,
-    Dockerfile,
-    GCode,
-    GLSL,
-    Haskell,
-    Haxe,
-    HTTP,
-    INI,
-    init,
-    Java,
-    JavaScript,
-    JSON as JSONDef,
-    Less,
-    Lisp,
-    LLVM,
-    Lua,
-    Makefile,
-    Markdown,
-    Matlab,
-    Maxima,
-    Nginx,
-    Nix,
-    OpenSCAD,
-    PHP,
-    process,
-    Python,
-    registerLanguages,
-    Rust,
-    Scheme,
-    SCSS,
-    Shell,
-    SQL,
-    TeX,
-    TypeScript,
-    XML,
-    YAML
-} from 'highlight-ts'
+import hljs from 'highlight.js'
 import {
     a11yDark,
     a11yLight,
@@ -149,54 +105,10 @@ import {
     xt256,
     zenburn
 } from 'react-syntax-highlighter/dist/esm/styles/hljs'
-import HighlightedTextCanvasAnimationRenderer from './HighlightedTextCanvasAnimationRenderer'
 import React from 'react'
 import {ObjectParamsObject} from '../../ObjectParamsObject'
 import {Property} from 'csstype'
 import {getCssClassesSortedByPriority} from '../../../common/Alghoritm'
-
-export const languageDefs = {
-    AccessLog,
-    Bash,
-    CMake,
-    CoffeeScript,
-    CPlusPlus,
-    CSS,
-    D,
-    Diff,
-    Dockerfile,
-    GCode,
-    GLSL,
-    Haskell,
-    Haxe,
-    HTTP,
-    INI,
-    Java,
-    JavaScript,
-    JSONDef,
-    Less,
-    Lisp,
-    LLVM,
-    Lua,
-    Makefile,
-    Markdown,
-    Matlab,
-    Maxima,
-    Nginx,
-    Nix,
-    OpenSCAD,
-    PHP,
-    Python,
-    Rust,
-    Scheme,
-    SCSS,
-    Shell,
-    SQL,
-    TeX,
-    XML,
-    YAML,
-    TypeScript
-}
 
 const styles = {
     a11yDark,
@@ -296,23 +208,49 @@ const styles = {
 }
 
 export const createHighlightedTextValueSegmentType = (object: HighlightedTextValueType, animationStyle: AnimationStyle): HighlightedTextValueSegmentType[] => {
+    type NodeType = string | {
+        children: NodeType[]
+        scope: string
+    }
+    type TextWithScope = {
+        text: string
+        scope: string
+    }
+
     if (Array.isArray(object)) {
         return object
     }
     const {text} = object
-    registerLanguages(...Object.values(languageDefs))
     const style = styles[object.highlightStyle ?? animationStyle.highlightTextStyle]
-    const highlighter = init(new HighlightedTextCanvasAnimationRenderer(style))
-    let lang
-    if (object.language) {
-        lang = languageDefs[object.language].name
+    const emitter = hljs.highlight(text, {language: object.language ?? 'java'})._emitter as any
+    const rootNode = emitter.rootNode as {
+        children: NodeType[]
     }
 
-    const result: HighlightedTextValueSegmentType[] = []
+    const convertNodesToTextsWithScopes = (parentScope: string, nodes: NodeType[]): TextWithScope[] => {
+        return nodes.flatMap(n => {
+            if (typeof n === 'string') {
+                return [{
+                    text: n,
+                    scope: parentScope
+                }]
+            }
+            const scope = parentScope + '.' + n.scope
+            return convertNodesToTextsWithScopes(scope, n.children)
+        })
+    }
 
-    process(highlighter, text, lang).value.values.forEach(v => {
+    let textWithScopes = convertNodesToTextsWithScopes('', rootNode.children)
+    if (object.language === undefined) {
+        textWithScopes = textWithScopes.map(t => ({
+            text: t.text,
+            scope: ''
+        }))
+    }
+
+    return textWithScopes.flatMap(c => {
         let properties: React.CSSProperties = {}
-        getCssClassesSortedByPriority(['hljs', ...v.classes]).forEach(classes => {
+        getCssClassesSortedByPriority(['hljs', ...c.scope.split('.').filter(s => s !== '').reverse().map(v => 'hljs-' + v)]).forEach(classes => {
             const styleKey = classes.map((c, i) => `${i > 0 ? '.' : ''}${c}`).join(' ')
             const localProperties = style[styleKey]
 
@@ -320,21 +258,36 @@ export const createHighlightedTextValueSegmentType = (object: HighlightedTextVal
                 ...localProperties,
                 ...properties
             }
+
         })
-        result.push(...v.segments.map(s => {
-            if (s === 'newline') {
-                return s
+        const texts: string[] = []
+        let buffer = ''
+        const text = c.text
+        for (let i = 0; i < text.length; i++) {
+            if (text.charAt(i) === '\n') {
+                texts.push(buffer)
+                texts.push('\n')
+                buffer = ''
+            } else {
+                buffer = buffer + text.charAt(i)
+            }
+        }
+        if (buffer.length !== 0) {
+            texts.push(buffer)
+        }
+        return texts.map((t): HighlightedTextValueSegmentType => {
+            if (t === '\n') {
+                return 'newline'
             }
             return {
-                ...s,
+                value: t,
                 textColor: properties.color,
                 textStyle: cssPropToFontStyle(properties),
                 textWeight: cssPropToTextWeight(properties.fontWeight),
                 backgroundTextColor: properties.backgroundColor
             }
-        }))
+        })
     })
-    return result
 }
 
 const cssPropToFontStyle = (style: React.CSSProperties): THE_STYLE => {
@@ -376,7 +329,7 @@ export type HighlightedTextValueSegmentType = {
 
 export type HighlightedSyntaxValueType = {
     text: string
-    language?: keyof typeof languageDefs
+    language?: SupportedHighlightedLanguages
     highlightStyle?: HighlightedStyleName
 }
 

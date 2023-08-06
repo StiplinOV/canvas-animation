@@ -73,10 +73,10 @@ export default class RectangleCanvasAnimationParams extends SimpleCanvasAnimatio
         }
     }
 
-    protected getZeroObjectOrigin(): Point {
-        return addPoints(this.getObject().origin, {
-            x: this.getObject().width / 2,
-            y: this.getObject().height / 2
+    protected getZeroObjectOrigin(obj: RectangleAnimationParamsType): Point {
+        return addPoints(obj.origin, {
+            x: obj.width / 2,
+            y: obj.height / 2
         })
     }
 

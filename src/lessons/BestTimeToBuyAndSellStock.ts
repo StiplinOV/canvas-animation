@@ -841,7 +841,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                     },
                     fontSize: 22,
                     value: {
-                        language: 'Java',
+                        language: 'java',
                         text: 'public int maxProfit(int[] prices) {\n' +
                             '\n' +
                             '    int prevBuy = -prices[0];\n' +

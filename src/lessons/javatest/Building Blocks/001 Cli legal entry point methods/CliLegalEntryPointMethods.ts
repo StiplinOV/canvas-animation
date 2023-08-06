@@ -1,5 +1,5 @@
-import {LessonJsonType} from '../../../AnimationsJsonType'
-import {animationStyle} from '../../../Animations'
+import {LessonJsonType} from '../../../../AnimationsJsonType'
+import {animationStyle} from '../../../../Animations'
 
 // https://docs.oracle.com/javase/specs/
 // https://docs.oracle.com/javase/specs/jls/se17/html/jls-12.html#jls-12.1.4
@@ -237,23 +237,35 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                         'newline',
                         'newline',
                         {
-                            value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t',
+                            value: '\t'
+                        },
+                        {
+                            value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t',
                             textStyle: 'italic',
                             backgroundTextColor: animationStyle.codeSpecBackgroundColor
                         },
                         'newline',
                         {
-                            value: '\tMethodModifier:\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t ',
+                            value: '\t'
+                        },
+                        {
+                            value: '\tMethodModifier:\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t ',
                             textStyle: 'italic',
                             backgroundTextColor: animationStyle.codeSpecBackgroundColor
                         },
                         'newline',
                         {
-                            value: '\t\t(one of)\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t',
+                            value: '\t'
+                        },
+                        {
+                            value: '\t\t(one of)\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t',
                             textStyle: 'italic',
                             backgroundTextColor: animationStyle.codeSpecBackgroundColor
                         },
                         'newline',
+                        {
+                            value: '\t'
+                        },
                         {
                             value: '\t\t',
                             backgroundTextColor: animationStyle.codeSpecBackgroundColor
@@ -269,19 +281,25 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                             backgroundTextColor: animationStyle.codeSpecBackgroundColor
                         },
                         {
-                            value: 'public protected private\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t ',
+                            value: 'public protected private\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t ',
                             textStyle: 'normal',
                             backgroundTextColor: animationStyle.codeSpecBackgroundColor
                         },
                         'newline',
                         {
-                            value: '\t\tabstract static final synchronized native strictfp\t\t\t\t\t\t\t\t\t\t\t\t  ',
+                            value: '\t'
+                        },
+                        {
+                            value: '\t\tabstract static final synchronized native strictfp\t\t\t\t\t\t\t\t\t\t\t  ',
                             textStyle: 'normal',
                             backgroundTextColor: animationStyle.codeSpecBackgroundColor
                         },
                         'newline',
                         {
-                            value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t',
+                            value: '\t'
+                        },
+                        {
+                            value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t',
                             textStyle: 'italic',
                             backgroundTextColor: animationStyle.codeSpecBackgroundColor
                         },
@@ -479,7 +497,7 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                             '        System.out.println(\'Child\');\n' +
                             '    }\n' +
                             '}',
-                        language: 'Java',
+                        language: 'java',
                         highlightStyle: animationStyle.highlightTextStyle
                     },
                     origin: {

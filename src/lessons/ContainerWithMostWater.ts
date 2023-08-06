@@ -953,7 +953,7 @@ export const ContainerWithMostWater: LessonJsonType = {
                     },
                     fontSize: 22,
                     value: {
-                        language: 'Java',
+                        language: 'java',
                         text: 'public int maxArea(int[] height) {\n' +
                             '    int result = 0;\n' +
                             '    int leftPointer = 0;\n' +

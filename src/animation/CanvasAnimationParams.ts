@@ -236,15 +236,15 @@ export default abstract class CanvasAnimationParams<
         return result.sort((l, r) => l.time === r.time ? l.duration - r.duration : l.time - r.time)
     }
 
-    public calculateObjectParamsInTime(time: number, skipStartTime?: boolean): U {
+    public calculateObjectParamsInTime(time: number, skipZeroObject?: boolean): U {
         const sourceObject = this.getZeroObject()
         const result = new ObjectParamsObject()
         result.setAnimationObjectParams(sourceObject, this.getAnimationStyle())
         this.appendParamsToObjectParamsObject(result, sourceObject)
 
-        if (needAppearObject(time, this.presenceParam, skipStartTime)) {
-            this.getTransformations()
-                .filter(t => needAppearObject(time, [t.presence], skipStartTime))
+        if (needAppearObject(time, this.presenceParam)) {
+            this.getTransformations(skipZeroObject)
+                .filter(t => needAppearObject(time, [t.presence]))
                 .forEach((t) => {
                     const percent = toAppearancePercent(time, [t.presence])
 
@@ -281,42 +281,49 @@ export default abstract class CanvasAnimationParams<
         return this.object
     }
 
-    public getZeroObject(): U {
+    public getZeroObject(time?: number): U {
+        let object = this.getObject()
+        if (time !== undefined) {
+            object = this.calculateObjectParamsInTime(time, true)
+        }
         return {
-            ...this.getObject(),
-            ...this.getZeroParams(),
-            origin: this.getZeroObjectOrigin(),
+            ...object,
+            ...this.getZeroParams(object),
+            origin: this.getZeroObjectOrigin(object),
             zIndex: this.object.zIndex
         }
     }
 
-    protected getZeroObjectOrigin(): Point {
-        return this.getObject().origin
+    protected getZeroObjectOrigin(obj: U): Point {
+        return obj.origin
     }
 
-    protected abstract getZeroParams(): Omit<Partial<U>, keyof AnimationObjectParams>
+    protected abstract getZeroParams(obj: U): Omit<Partial<U>, keyof AnimationObjectParams>
 
     public appendTransformation(transformation: TransformationParam<T, V>): void {
         this.transformations.push(this.transformationParamToTransformation(transformation))
     }
 
-    public getTransformations(): Transformation<U, V>[] {
-        return [
+    public getTransformations(skipZeroObject?: boolean): Transformation<U, V>[] {
+        const result: Transformation<U, V>[] = [
             ...this.transformations,
             ...this.getPresenceParam().map(p => ({
                 object: this.getObject(),
                 presence: p
-            })),
-            ...this.getPresenceParam().map(p => ({
-                object: this.getZeroObject(),
+            }))
+        ]
+        if (!skipZeroObject) {
+            result.push(...this.getPresenceParam().map(p => ({
+                object: this.getZeroObject(p.disappearTime),
                 presence: {
                     appearTime: p.disappearTime,
                     appearDuration: p.disappearDuration,
                     disappearTime: Number.POSITIVE_INFINITY,
                     disappearDuration: 0
                 }
-            }))
-        ].sort((l, r) => {
+            })))
+        }
+        return result.sort((l, r) => {
             if (l.presence.appearTime === r.presence.appearTime) {
                 return l.presence.appearDuration - r.presence.appearDuration
             }

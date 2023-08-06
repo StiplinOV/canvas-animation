@@ -16,7 +16,6 @@ export interface ImageAnimationParamsType extends AnimationObjectParams {
 export default class ImageCanvasAnimationParams extends SimpleCanvasAnimationParams<ImageJsonParamsType, ImageAnimationParamsType> {
 
     protected convertJsonObjectToAnimationObject(jsonObject: ImageJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): ImageAnimationParamsType {
-        jsonObject.img && console.log('LOAD')
         return {
             ...animationObjectDefaultParams,
             ...jsonObject,

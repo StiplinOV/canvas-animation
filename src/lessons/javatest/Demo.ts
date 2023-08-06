@@ -81,7 +81,7 @@ export const Demo: LessonJsonType = {
                         appearTime: 10000,
                         appearDuration: 1000,
                         object: {
-                            language: 'Java'
+                            language: 'java'
                         }
                     }
                 ],
