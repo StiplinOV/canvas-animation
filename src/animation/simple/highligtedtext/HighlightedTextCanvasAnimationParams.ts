@@ -5,7 +5,12 @@ import {
     TransformObjectParams
 } from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
-import AnimationStyle, {ColorType, SupportedHighlightedLanguages, WebSafeFontsType} from '../../../AnimationStyles'
+import AnimationStyle, {
+    ColorType,
+    getFontColor,
+    SupportedHighlightedLanguages,
+    WebSafeFontsType
+} from '../../../AnimationStyles'
 import HighlightedTextCanvasAnimation from './HighlightedTextCanvasAnimation'
 import {THE_STYLE} from 'p5'
 import hljs from 'highlight.js'
@@ -241,7 +246,7 @@ export const createHighlightedTextValueSegmentType = (object: HighlightedTextVal
     }
 
     let textWithScopes = convertNodesToTextsWithScopes('', rootNode.children)
-    if (object.language === undefined) {
+    if (!object.language) {
         textWithScopes = textWithScopes.map(t => ({
             text: t.text,
             scope: ''
@@ -348,6 +353,8 @@ export interface HighlightedTextJsonParamsType extends JsonObjectParams {
         strikethrough?: boolean
     }[]
     lineSpacing?: number
+    numberedLines?: boolean
+    numberingColor?: string
     width?: number
     height?: number
 }
@@ -379,6 +386,9 @@ export interface HighlightedTextAnimationParamsType extends AnimationObjectParam
     backgroundColorOverrides: BackgroundColorOverride[]
     strikeTroughOverrides: StrikeTroughOverride[]
     lineSpacing: number
+    numberedLines: boolean
+    numberingColor: string
+    numberOfLines: number
     width: number
     height: number
 }
@@ -458,6 +468,9 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
         params.backgroundColorOverrides && objectParamsObject.setSetParam('backgroundColorOverrides', params.backgroundColorOverrides)
         params.strikeTroughOverrides && objectParamsObject.setSetParam('strikeTroughOverrides', params.strikeTroughOverrides)
         params.lineSpacing !== undefined && objectParamsObject.setNumberParam('lineSpacing', params.lineSpacing)
+        params.numberedLines !== undefined && objectParamsObject.setBooleanParam('numberedLines', params.numberedLines)
+        params.numberingColor !== undefined && objectParamsObject.setColorParam('numberingColor', params.numberingColor)
+        params.numberOfLines !== undefined && objectParamsObject.setNumberParam('numberOfLines', params.numberOfLines)
         params.width !== undefined && objectParamsObject.setNumberParam('width', params.width)
         params.height !== undefined && objectParamsObject.setNumberParam('height', params.height)
     }
@@ -465,13 +478,23 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
     protected convertJsonObjectToAnimationObject(jsonObject: HighlightedTextJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): HighlightedTextAnimationParamsType {
         const animationStyle = this.getAnimationStyle()
         const overrides = this.jsonSelectedSubstringToOverrides(jsonObject)
+        const value = createHighlightedTextValueSegmentType(jsonObject.value, this.getAnimationStyle()).flatMap(f => this.splitTextValueSegmentType(f))
+        let numberOfLines = 0
+        if (value.length > 0) {
+            numberOfLines = value.filter(v => v === 'newline').length + 1
+        }
+        let highlightStyle = animationStyle.highlightTextStyle
+        if (!Array.isArray(jsonObject.value)) {
+            highlightStyle = jsonObject.value.highlightStyle ?? highlightStyle
+        }
+        const defaultNumberingColor = getFontColor(animationStyle, styles[highlightStyle].hljs.color)
 
         return {
             ...animationObjectDefaultParams,
             ...jsonObject,
             strokeColor: jsonObject.strokeColor ?? animationStyle.highlightedTextStrokeColor,
             weight: jsonObject.weight ?? animationStyle.highlightedTextStrokeWeight,
-            value: createHighlightedTextValueSegmentType(jsonObject.value, this.getAnimationStyle()).flatMap(f => this.splitTextValueSegmentType(f)),
+            value,
             fontSize: jsonObject.fontSize ?? animationStyle.fontSize,
             font: jsonObject.font ?? animationStyle.monospaceFont,
             backgroundColor: calculateBackgroundColor(jsonObject, this.getAnimationStyle()),
@@ -479,15 +502,20 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
             backgroundColorOverrides: overrides.backgroundColorOverrides ?? [],
             strikeTroughOverrides: overrides.strikeTroughOverrides ?? [],
             lineSpacing: jsonObject.lineSpacing ?? animationStyle.lineSpacing,
+            numberedLines: jsonObject.numberedLines ?? false,
+            numberingColor: jsonObject.numberingColor ?? defaultNumberingColor,
+            numberOfLines,
             width: jsonObject.width ?? 0,
             height: jsonObject.height ?? 0
         }
     }
 
     protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): HighlightedTextAnimationParamsType {
+        const value: HighlightedTextValueSegmentType[] = objectParamsObject.getArrayParam('value')
+
         return {
             ...initialDefaultParams,
-            value: objectParamsObject.getArrayParam('value'),
+            value,
             fontSize: objectParamsObject.getNumberParam('fontSize'),
             font: objectParamsObject.getStringLiteralParam<WebSafeFontsType | 'monospace'>('font'),
             backgroundColor: objectParamsObject.getColorParam('backgroundColor'),
@@ -495,6 +523,9 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
             backgroundColorOverrides: Array.from(objectParamsObject.getSetParam<BackgroundColorOverride>('backgroundColorOverrides').values()),
             strikeTroughOverrides: Array.from(objectParamsObject.getSetParam<StrikeTroughOverride>('strikeTroughOverrides').values()),
             lineSpacing: objectParamsObject.getNumberParam('lineSpacing'),
+            numberedLines: objectParamsObject.getBooleanParam('numberedLines'),
+            numberingColor: objectParamsObject.getColorParam('numberingColor'),
+            numberOfLines: objectParamsObject.getNumberParam('numberOfLines'),
             width: objectParamsObject.getNumberParam('width'),
             height: objectParamsObject.getNumberParam('height')
         }

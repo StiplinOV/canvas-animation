@@ -1,5 +1,5 @@
-import p5Types from 'p5'
-import AnimationStyle, {getFontColor} from '../../../AnimationStyles'
+import p5Types, {THE_STYLE} from 'p5'
+import AnimationStyle, {getFontColor, WebSafeFontsType} from '../../../AnimationStyles'
 import {
     calculateBackgroundColor,
     createHighlightedTextValueSegmentType,
@@ -56,16 +56,73 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
     ): rectParams {
         const segments = this.splitSegmentsAccordingToSelections(createHighlightedTextValueSegmentType(o.value, animationStyle), o)
         const fontSize = o.fontSize ?? animationStyle.fontSize
+        const font = o.font ?? 'monospace'
+        const textFont = font === 'monospace' ? animationStyle.monospaceFont : (font ?? animationStyle.font)
+
+        let rowNumWidth = 0
+        if (o.numberOfLines > 0 && o.numberedLines) {
+            rowNumWidth = this.textWidth(
+                p5,
+                '_'.repeat(String(o.numberOfLines).length + 2),
+                animationStyle,
+                {
+                    font: textFont,
+                    size: fontSize
+                }
+            )
+        }
 
         let x = borderX
         let y = 0.8 * fontSize + borderY
+        let currentRow = 1
+
+        if (o.numberOfLines > 0) {
+            if (!dry && o.numberedLines) {
+                const backgroundColor = calculateBackgroundColor(o, animationStyle)
+                this.text(
+                    p5,
+                    currentRow,
+                    x,
+                    y,
+                    animationStyle,
+                    {
+                        textColor: o.numberingColor,
+                        backgroundColor,
+                        font: textFont,
+                        size: fontSize
+                    }
+                )
+            }
+            x += rowNumWidth
+            currentRow++
+        }
+
         let width = x
+
         for (let i = 0; i < segments.length; i++) {
             const part = segments[i]
             if (part === 'newline') {
                 y += fontSize * o.lineSpacing
                 width = Math.max(width, x)
                 x = borderX
+                if (!dry && o.numberedLines) {
+                    const backgroundColor = calculateBackgroundColor(o, animationStyle)
+                    this.text(
+                        p5,
+                        currentRow,
+                        x,
+                        y,
+                        animationStyle,
+                        {
+                            textColor: o.numberingColor,
+                            backgroundColor,
+                            font: textFont,
+                            size: fontSize
+                        }
+                    )
+                }
+                x += rowNumWidth
+                currentRow++
                 continue
             }
             let {
@@ -80,39 +137,45 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
             } = part
 
             value = value.replaceAll('\t', '    ')
-            const font = o.font ?? 'monospace'
-            const textFont = font === 'monospace' ? animationStyle.monospaceFont : (font ?? animationStyle.font)
-
-            p5.textFont(textFont)
-            p5.textSize(fontSize)
             textStyle = textStyle ?? (type === 'paragraphTitle' ? 'bold' : textStyle)
             textColor = textColor ?? (type === 'paragraphTitle' ? 'secondary' : type === 'link' ? 'link' : type)
             textColor = getFontColor(animationStyle, textColor)
             underlined = underlined ?? (type === 'link' ? true : underlined)
-
-            p5.textStyle(textStyle ?? animationStyle.textStyle)
-            const textWidth = p5.textWidth(value)
+            const textWidth = this.textWidth(
+                p5,
+                value,
+                animationStyle,
+                {
+                    style: textStyle,
+                    font: textFont,
+                    size: fontSize
+                }
+            )
             if (!dry) {
                 let backgroundColor = calculateBackgroundColor(o, animationStyle)
                 if (backgroundTextColor) {
-                    p5.fill(backgroundTextColor)
-                    p5.stroke(backgroundTextColor)
-                    p5.rect(x, y - fontSize + 4, textWidth, fontSize + 5)
+                    this.rect(p5, x, y - fontSize + 4, textWidth, fontSize + 5, backgroundTextColor, backgroundTextColor)
                     backgroundColor = backgroundTextColor
                 }
-                p5.fill(textColor)
-                p5.stroke(backgroundColor)
-                p5.strokeWeight(textWeight ?? animationStyle.fontWeight)
-                p5.text(value, x, y)
+                this.text(
+                    p5,
+                    value,
+                    x,
+                    y,
+                    animationStyle,
+                    {
+                        textColor,
+                        backgroundColor,
+                        font: textFont,
+                        size: fontSize,
+                        weight: textWeight
+                    }
+                )
                 if (strikethrough) {
-                    p5.stroke(textColor)
-                    p5.strokeWeight(fontSize / 10)
-                    p5.line(x - 1, y - fontSize / 4, x + textWidth, y - fontSize / 4)
+                    this.line(p5, x - 1, y - fontSize / 4, x + textWidth, y - fontSize / 4, textColor, fontSize / 10)
                 }
                 if (underlined) {
-                    p5.stroke(textColor)
-                    p5.strokeWeight(fontSize / 10)
-                    p5.line(x - 1, y + 3, x + textWidth, y + 3)
+                    this.line(p5, x - 1, y + 3, x + textWidth, y + 3, textColor, fontSize / 10)
                 }
             }
             x += textWidth
@@ -125,6 +188,60 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
             width: width + borderX,
             height: y + 0.2 * fontSize + borderY
         }
+    }
+
+    private text(
+        p5: p5Types,
+        text: string | number,
+        x: number,
+        y: number,
+        animationStyle: AnimationStyle,
+        textParams?: {
+            textColor?: string
+            backgroundColor?: string
+            style?: THE_STYLE
+            font?: WebSafeFontsType | 'monospace'
+            size?: number
+            weight?: number
+        }
+    ): void {
+        p5.fill(textParams?.textColor ?? animationStyle.fontColor)
+            .stroke(textParams?.backgroundColor ?? animationStyle.backgroundColor)
+            .textStyle(textParams?.style ?? animationStyle.textStyle)
+            .textFont(textParams?.font ?? animationStyle.font)
+            .textSize(textParams?.size ?? animationStyle.fontSize)
+            .strokeWeight(textParams?.weight ?? animationStyle.fontWeight)
+            .text(text, x, y)
+    }
+
+    private textWidth(
+        p5: p5Types,
+        text: string,
+        animationStyle: AnimationStyle,
+        textParams?: {
+            style?: THE_STYLE
+            font?: WebSafeFontsType | 'monospace'
+            size?: number
+            weight?: number
+        }
+    ): number {
+        return p5.textStyle(textParams?.style ?? animationStyle.textStyle)
+            .textFont(textParams?.font ?? animationStyle.font)
+            .textSize(textParams?.size ?? animationStyle.fontSize)
+            .strokeWeight(textParams?.weight ?? animationStyle.fontWeight)
+            .textWidth(text)
+    }
+
+    private rect(p5: p5Types, x: number, y: number, w: number, h: number, fill: string, stroke: string): void {
+        p5.fill(fill)
+        p5.stroke(stroke)
+        p5.rect(x, y, w, h)
+    }
+
+    private line(p5: p5Types, x1: number, y1: number, x2: number, y2: number, color: string, weight: number): void {
+        p5.stroke(color)
+        p5.strokeWeight(weight)
+        p5.line(x1, y1, x2, y2)
     }
 
     private splitSegmentsAccordingToSelections(

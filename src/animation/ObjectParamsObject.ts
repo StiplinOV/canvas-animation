@@ -24,7 +24,7 @@ export class ObjectParamsObject {
 
     private readonly pointParams: Map<string, Point> = new Map<string, Point>()
 
-    private readonly stringLiteralParams: Map<string, string> = new Map<string, string>()
+    private readonly stringLiteralParams: Map<string, string | null> = new Map<string, string>()
 
     private readonly objectParams: Map<string, unknown | null> = new Map<string, unknown | null>()
 
@@ -97,7 +97,7 @@ export class ObjectParamsObject {
         this.numberParams.set(key, param)
     }
 
-    public setStringLiteralParam(key: string, param: string): void {
+    public setStringLiteralParam(key: string, param: string | null): void {
         this.stringLiteralParams.set(key, param)
     }
 
@@ -151,7 +151,7 @@ export class ObjectParamsObject {
         return requireValueFromMap(this.numberParams, key)
     }
 
-    public getStringLiteralParam<T extends string>(key: string): T {
+    public getStringLiteralParam<T extends string | null>(key: string): T {
         return requireValueFromMap(this.stringLiteralParams, key) as T
     }
 
