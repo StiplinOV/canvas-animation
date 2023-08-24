@@ -33,8 +33,10 @@ export interface CodeQuestionnaireJsonParams extends JsonObjectParams, OnlyCodeQ
     codeFontSize?: number
     codePartWidth?: number
     codePartHeight?: number
+    codeLinesNumbered?: boolean
     questionParamsPosition?: 'right' | 'center' | 'down'
     questionParamsOptions?: string[]
+    questionNumberingType?: 'letters' | 'numbers'
     questionParamsFontSize?: number
     questionParamsStrikethroughOptions?: number[]
     questionParamsLineSpacing?: number
@@ -54,8 +56,10 @@ export interface CodeQuestionnaireAnimationObjectParams extends AnimationObjectP
     codeFontSize: number
     codePartWidth: number
     codePartHeight: number
+    codeLinesNumbered: boolean
     questionParamsPosition: 'right' | 'center' | 'down'
     questionParamsOptions: string[]
+    questionNumberingType: 'letters' | 'numbers' | 'none'
     questionParamsFontSize: number
     questionParamsStrikethroughOptions: number[]
     questionParamsLineSpacing: number
@@ -93,6 +97,8 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
             codeFontSize: jsonObject.codeFontSize ?? animationStyle.fontSize,
             codePartWidth: jsonObject.codePartWidth ?? 0,
             codePartHeight: jsonObject.codePartHeight ?? 0,
+            codeLinesNumbered: jsonObject.codeLinesNumbered ?? false,
+            questionNumberingType: jsonObject.questionNumberingType ?? 'none',
             questionParamsPosition: jsonObject.questionParamsPosition ?? 'down',
             questionParamsOptions: jsonObject.questionParamsOptions ?? [],
             questionParamsFontSize: jsonObject.questionParamsFontSize ?? animationStyle.fontSize,
@@ -141,15 +147,20 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
             result.set('codePart', {
                 type: 'highlightedText',
                 objectParams: {
+                    font: 'monospace',
                     origin: this.getCodePartOrigin(object),
                     value: {
                         text: object.codeText,
                         highlightStyle: object.codeHighlightStyle ?? undefined,
                         language: object.language ?? undefined
                     },
-                    selectedSubstrings: object.codeSelectedSubstrings ?? [],
+                    selectedSubstrings: object.codeSelectedSubstrings.map(s => ({
+                        from: s.from,
+                        to: s.to,
+                        backgroundColor: animationStyle.selectedColor
+                    })) ?? [],
                     fontSize: object.codeFontSize,
-                    numberedLines: true,
+                    numberedLines: object.codeLinesNumbered,
                     width: this.getCodePartWidth(object),
                     height: this.getCodePartHeight(object),
                     zIndex: 0
@@ -157,10 +168,27 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
             })
         }
         if (object.questionParamsOptions && object.questionParamsOptions.length > 0) {
-            const value: HighlightedTextValueSegmentType[] = object.questionParamsOptions.flatMap((o, i) => ([{
-                textStyle: 'normal',
-                value: o
-            }, 'newline']))
+            const value: HighlightedTextValueSegmentType[] = object.questionParamsOptions.flatMap((o, i) => {
+                const result: HighlightedTextValueSegmentType[] = []
+                if (object.questionNumberingType === 'numbers') {
+                    result.push({
+                        textStyle: 'bold',
+                        value: `${i + 1}. `
+                    })
+                } else if (object.questionNumberingType === 'letters') {
+                    result.push({
+                        textStyle: 'bold',
+                        value: String.fromCharCode('A'.charCodeAt(0) + i) + '. '
+                    })
+                }
+                result.push({
+                    textStyle: 'normal',
+                    value: o
+                })
+                result.push('newline')
+
+                return result
+            })
             if (value.length > 0) {
                 value.splice(value.length - 1, 1)
             }
@@ -172,13 +200,18 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
                 strikethrough?: boolean
             }[] = []
             const selectedLines = uniqueArray([...object.questionParamsStrikethroughOptions, ...object.questionnaireSelectedLines])
-            for (let i = 0; i < object.questionParamsOptions.length; i++) {
-                const valueSegment = value[i * 2]
-                if (!selectedLines.includes(i) || valueSegment === 'newline') {
+            let lineNumber = 0
+            for (let i = 0; i < value.length; i++) {
+                const valueSegment = value[i]
+                if (valueSegment === 'newline') {
+                    lineNumber++
+                    continue
+                }
+                if (!selectedLines.includes(lineNumber)) {
                     continue
                 }
                 let curSubstringPosition = 0
-                for (let j = 0; j < i * 2; j++) {
+                for (let j = 0; j < i; j++) {
                     const seg = value[j]
                     if (seg === 'newline') {
                         curSubstringPosition++
@@ -191,14 +224,15 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
                     from: curSubstringPosition,
                     to: curSubstringPosition + valueSegment.value.length,
                     color: animationStyle.fontColor,
-                    strikethrough: object.questionParamsStrikethroughOptions.includes(i),
-                    backgroundColor: object.questionnaireSelectedLines.includes(i) ? animationStyle.backgroundSelectedColor : animationStyle.backgroundColor
+                    strikethrough: object.questionParamsStrikethroughOptions.includes(lineNumber),
+                    backgroundColor: object.questionnaireSelectedLines.includes(lineNumber) ? animationStyle.backgroundSelectedColor : animationStyle.backgroundColor
                 })
             }
 
             result.set('questionPart', {
                 type: 'highlightedText',
                 objectParams: {
+                    font: 'monospace',
                     origin: this.getQuestionPartOrigin(object),
                     fontSize: object.questionParamsFontSize ?? 20,
                     value,
@@ -315,11 +349,13 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         params.height !== undefined && objectParamsObject.setNumberParam('height', params.height)
         params.codePartWidth !== undefined && objectParamsObject.setNumberParam('codePartWidth', params.codePartWidth)
         params.codePartHeight !== undefined && objectParamsObject.setNumberParam('codePartHeight', params.codePartHeight)
+        params.codeLinesNumbered !== undefined && objectParamsObject.setBooleanParam('codeLinesNumbered', params.codeLinesNumbered)
         params.questionParamsPosition && objectParamsObject.setStringLiteralParam('questionParamsPosition', params.questionParamsPosition)
         params.questionParamsOptions && objectParamsObject.setArrayParam('questionParamsOptions', params.questionParamsOptions)
         params.questionParamsFontSize && objectParamsObject.setNumberParam('questionParamsFontSize', params.questionParamsFontSize)
         params.questionParamsStrikethroughOptions && objectParamsObject.setSetParam('questionParamsStrikethroughOptions', params.questionParamsStrikethroughOptions)
         params.questionParamsLineSpacing !== undefined && objectParamsObject.setNumberParam('questionParamsLineSpacing', params.questionParamsLineSpacing)
+        params.questionNumberingType !== undefined && objectParamsObject.setStringLiteralParam('questionNumberingType', params.questionNumberingType)
         params.title && objectParamsObject.setStringParam('title', params.title)
         params.titleFontSize && objectParamsObject.setNumberParam('titleFontSize', params.titleFontSize)
     }
@@ -337,11 +373,13 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
             height: objectParamsObject.getNumberParam('height'),
             codePartWidth: objectParamsObject.getNumberParam('codePartWidth'),
             codePartHeight: objectParamsObject.getNumberParam('codePartHeight'),
+            codeLinesNumbered: objectParamsObject.getBooleanParam('codeLinesNumbered'),
             questionParamsPosition: objectParamsObject.getStringLiteralParam<'right' | 'center' | 'down'>('questionParamsPosition'),
             questionParamsOptions: objectParamsObject.getArrayParam('questionParamsOptions'),
             questionParamsFontSize: objectParamsObject.getNumberParam('questionParamsFontSize'),
             questionParamsStrikethroughOptions: Array.from(objectParamsObject.getSetParam<number>('questionParamsStrikethroughOptions').values()),
             questionParamsLineSpacing: objectParamsObject.getNumberParam('questionParamsLineSpacing'),
+            questionNumberingType: objectParamsObject.getStringLiteralParam('questionNumberingType'),
             title: objectParamsObject.getStringParam('title'),
             titleFontSize: objectParamsObject.getNumberParam('titleFontSize')
         }

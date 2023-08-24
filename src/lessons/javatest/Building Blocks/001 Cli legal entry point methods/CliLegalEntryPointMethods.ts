@@ -95,13 +95,14 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                         appearDuration: 4000,
                         object: {
                             questionParamsOptions: [
-                                'A. private static void main(String[] args)',
-                                'B. public static final main(String[] args)',
-                                'C. public void main(String[] args)',
-                                'D. public static final void main(String[] args)',
-                                'E. public static void main(String[] args)',
-                                'F. public static main(String[] args)'
+                                'private static void main(String[] args)',
+                                'public static final main(String[] args)',
+                                'public void main(String[] args)',
+                                'public static final void main(String[] args)',
+                                'public static void main(String[] args)',
+                                'public static main(String[] args)'
                             ],
+                            questionNumberingType: 'letters',
                             questionParamsPosition: 'down',
                             questionParamsLineSpacing: 2
                         }
@@ -158,10 +159,10 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                 }],
                 object: {
                     origin: {
-                        x: 1550, y: 260
+                        x: 1550, y: 285
                     },
                     width: 740,
-                    height: 200,
+                    height: 250,
                     fontSize: 18,
                     zIndex: 1,
                     value: [
@@ -175,6 +176,7 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                             value: '...',
                             textStyle: 'italic'
                         },
+                        'newline',
                         'newline',
                         {
                             value: '\tThe method main must be declared ',
@@ -201,19 +203,19 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                             textStyle: 'bold'
                         },
                         {
-                            value: '.',
+                            value: '. It must specify a formal',
                             textStyle: 'italic'
                         },
                         'newline',
                         {
-                            value: '\tIt must specify a formal parameter whose declared type is',
+                            value: '\tparameter whose declared type is ',
                             textStyle: 'italic'
                         },
-                        'newline',
                         {
-                            value: '\tarray of String.',
+                            value: 'array of String.',
                             textStyle: 'bold'
                         },
+                        'newline',
                         'newline',
                         {
                             value: '...',
@@ -243,7 +245,7 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                         {
                             value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t',
                             textStyle: 'italic',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
+                            type: 'codeSpec'
                         },
                         'newline',
                         {
@@ -252,7 +254,7 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                         {
                             value: '\tMethodModifier:\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t ',
                             textStyle: 'italic',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
+                            type: 'codeSpec'
                         },
                         'newline',
                         {
@@ -261,7 +263,7 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                         {
                             value: '\t\t(one of)\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t',
                             textStyle: 'italic',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
+                            type: 'codeSpec'
                         },
                         'newline',
                         {
@@ -269,22 +271,21 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                         },
                         {
                             value: '\t\t',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
+                            type: 'codeSpec'
                         },
                         {
                             value: 'Annotation',
                             textStyle: 'italic',
-                            type: 'link',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
+                            type: 'codeSpecLink'
                         },
                         {
                             value: ' ',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
+                            type: 'codeSpec'
                         },
                         {
                             value: 'public protected private\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t ',
                             textStyle: 'normal',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
+                            type: 'codeSpec'
                         },
                         'newline',
                         {
@@ -293,7 +294,7 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                         {
                             value: '\t\tabstract static final synchronized native strictfp\t\t\t\t\t\t\t\t\t\t\t  ',
                             textStyle: 'normal',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
+                            type: 'codeSpec'
                         },
                         'newline',
                         {
@@ -302,7 +303,7 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                         {
                             value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t',
                             textStyle: 'italic',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
+                            type: 'codeSpec'
                         },
                         'newline',
                         'newline',
@@ -472,10 +473,10 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                         }
                     ],
                     origin: {
-                        x: 1420, y: 285
+                        x: 1570, y: 300
                     },
-                    width: 1000,
-                    height: 150,
+                    width: 700,
+                    height: 120,
                     fontSize: 18,
                     zIndex: 1
                 }
@@ -527,7 +528,7 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                 }],
                 object: {
                     value: {
-                        text: 'Producted by\n\nOleg Stiplin',
+                        text: 'Produced by\n\nOleg Stiplin',
                         highlightStyle: animationStyle.highlightTextStyle
                     },
                     origin: {

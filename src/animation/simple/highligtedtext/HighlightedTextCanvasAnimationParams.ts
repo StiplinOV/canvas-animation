@@ -289,6 +289,7 @@ export const createHighlightedTextValueSegmentType = (object: HighlightedTextVal
                 textColor: properties.color,
                 textStyle: cssPropToFontStyle(properties),
                 textWeight: cssPropToTextWeight(properties.fontWeight),
+                font: 'monospace',
                 backgroundTextColor: properties.backgroundColor
             }
         })
@@ -329,7 +330,8 @@ export type HighlightedTextValueSegmentType = {
     backgroundTextColor?: string
     strikethrough?: boolean
     underlined?: boolean
-    type?: 'paragraphTitle' | 'link'
+    type?: 'paragraphTitle' | 'link' | 'codeSpec' | 'codeSpecLink' | 'codeSpecExample'
+    font?: WebSafeFontsType | 'monospace'
 } | 'newline'
 
 export type HighlightedSyntaxValueType = {
@@ -380,7 +382,7 @@ type StrikeTroughOverride = {
 export interface HighlightedTextAnimationParamsType extends AnimationObjectParams {
     value: HighlightedTextValueSegmentType[]
     fontSize: number
-    font: WebSafeFontsType | 'monospace'
+    font: WebSafeFontsType
     backgroundColor: string
     colorOverrides: ColorOverride[]
     backgroundColorOverrides: BackgroundColorOverride[]
@@ -496,7 +498,7 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
             weight: jsonObject.weight ?? animationStyle.highlightedTextStrokeWeight,
             value,
             fontSize: jsonObject.fontSize ?? animationStyle.fontSize,
-            font: jsonObject.font ?? animationStyle.monospaceFont,
+            font: jsonObject.font === 'monospace' ? animationStyle.monospaceFont : (jsonObject.font ?? animationStyle.formattedTextFont),
             backgroundColor: calculateBackgroundColor(jsonObject, this.getAnimationStyle()),
             colorOverrides: overrides.colorOverrides ?? [],
             backgroundColorOverrides: overrides.backgroundColorOverrides ?? [],
@@ -517,7 +519,7 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
             ...initialDefaultParams,
             value,
             fontSize: objectParamsObject.getNumberParam('fontSize'),
-            font: objectParamsObject.getStringLiteralParam<WebSafeFontsType | 'monospace'>('font'),
+            font: objectParamsObject.getStringLiteralParam<WebSafeFontsType>('font'),
             backgroundColor: objectParamsObject.getColorParam('backgroundColor'),
             colorOverrides: Array.from(objectParamsObject.getSetParam<ColorOverride>('colorOverrides').values()),
             backgroundColorOverrides: Array.from(objectParamsObject.getSetParam<BackgroundColorOverride>('backgroundColorOverrides').values()),
@@ -533,8 +535,11 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
 
     protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<HighlightedTextJsonParamsType>): Partial<HighlightedTextAnimationParamsType> {
         const overrides = this.jsonSelectedSubstringToOverrides(jsonObject)
+        const animationStyle = this.getAnimationStyle()
+
         return {
             ...jsonObject,
+            font: jsonObject.font === 'monospace' ? animationStyle.monospaceFont : (jsonObject.font ?? animationStyle.formattedTextFont),
             value: jsonObject.value ? createHighlightedTextValueSegmentType(jsonObject.value, this.getAnimationStyle()).flatMap(f => this.splitTextValueSegmentType(f)) : undefined,
             colorOverrides: overrides.colorOverrides,
             backgroundColorOverrides: overrides.backgroundColorOverrides,

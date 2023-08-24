@@ -1,5 +1,5 @@
 import p5Types, {THE_STYLE} from 'p5'
-import AnimationStyle, {getFontColor, WebSafeFontsType} from '../../../AnimationStyles'
+import AnimationStyle, {getFont, getFontColor, WebSafeFontsType} from '../../../AnimationStyles'
 import {
     calculateBackgroundColor,
     createHighlightedTextValueSegmentType,
@@ -56,8 +56,7 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
     ): rectParams {
         const segments = this.splitSegmentsAccordingToSelections(createHighlightedTextValueSegmentType(o.value, animationStyle), o)
         const fontSize = o.fontSize ?? animationStyle.fontSize
-        const font = o.font ?? 'monospace'
-        const textFont = font === 'monospace' ? animationStyle.monospaceFont : (font ?? animationStyle.font)
+        const textFont = o.font
 
         let rowNumWidth = 0
         if (o.numberOfLines > 0 && o.numberedLines) {
@@ -101,6 +100,7 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
 
         for (let i = 0; i < segments.length; i++) {
             const part = segments[i]
+            let partFont = textFont
             if (part === 'newline') {
                 y += fontSize * o.lineSpacing
                 width = Math.max(width, x)
@@ -116,7 +116,7 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
                         {
                             textColor: o.numberingColor,
                             backgroundColor,
-                            font: textFont,
+                            font: partFont,
                             size: fontSize
                         }
                     )
@@ -133,28 +133,52 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
                 backgroundTextColor,
                 strikethrough,
                 underlined,
-                type
+                type,
+                font
             } = part
+            if (font === 'monospace') {
+                partFont = animationStyle.monospaceFont
+            } else if (font) {
+                partFont = font
+            } else if (type === 'codeSpec' || type === 'codeSpecExample' || type === 'codeSpecLink') {
+                partFont = animationStyle.monospaceFont
+            }
+            if (!backgroundTextColor) {
+                if (type === 'codeSpec' || type === 'codeSpecLink') {
+                    backgroundTextColor = animationStyle.codeSpecBackgroundColor
+                }
+                if (type === 'codeSpecExample') {
+                    backgroundTextColor = animationStyle.codeSpecExampleBackgroundColor
+                }
+            }
 
             value = value.replaceAll('\t', '    ')
             textStyle = textStyle ?? (type === 'paragraphTitle' ? 'bold' : textStyle)
-            textColor = textColor ?? (type === 'paragraphTitle' ? 'secondary' : type === 'link' ? 'link' : type)
+            const partFontSize = type === 'paragraphTitle' ? fontSize * 1.5 : fontSize
+
+            if (!textColor) {
+                if (type === 'paragraphTitle') {
+                    textColor = 'secondary'
+                } else if (type === 'link' || type === 'codeSpecLink') {
+                    textColor = 'link'
+                }
+            }
             textColor = getFontColor(animationStyle, textColor)
-            underlined = underlined ?? (type === 'link' ? true : underlined)
+            underlined = underlined ?? (type === 'link' || type === 'codeSpecLink')
             const textWidth = this.textWidth(
                 p5,
                 value,
                 animationStyle,
                 {
                     style: textStyle,
-                    font: textFont,
-                    size: fontSize
+                    font: partFont,
+                    size: partFontSize
                 }
             )
             if (!dry) {
                 let backgroundColor = calculateBackgroundColor(o, animationStyle)
                 if (backgroundTextColor) {
-                    this.rect(p5, x, y - fontSize + 4, textWidth, fontSize + 5, backgroundTextColor, backgroundTextColor)
+                    this.rect(p5, x, y - partFontSize + 4, textWidth, partFontSize + 5, backgroundTextColor, backgroundTextColor)
                     backgroundColor = backgroundTextColor
                 }
                 this.text(
@@ -166,16 +190,17 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
                     {
                         textColor,
                         backgroundColor,
-                        font: textFont,
-                        size: fontSize,
-                        weight: textWeight
+                        font: partFont,
+                        size: partFontSize,
+                        weight: textWeight,
+                        style: textStyle
                     }
                 )
                 if (strikethrough) {
-                    this.line(p5, x - 1, y - fontSize / 4, x + textWidth, y - fontSize / 4, textColor, fontSize / 10)
+                    this.line(p5, x - 1, y - partFontSize / 4, x + textWidth, y - partFontSize / 4, textColor, partFontSize / 10)
                 }
                 if (underlined) {
-                    this.line(p5, x - 1, y + 3, x + textWidth, y + 3, textColor, fontSize / 10)
+                    this.line(p5, x - 1, y + 3, x + textWidth, y + 3, textColor, partFontSize / 10)
                 }
             }
             x += textWidth
@@ -205,10 +230,12 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
             weight?: number
         }
     ): void {
+        const textFont = getFont(animationStyle, textParams?.font ?? animationStyle.formattedTextFont)
+
         p5.fill(textParams?.textColor ?? animationStyle.fontColor)
             .stroke(textParams?.backgroundColor ?? animationStyle.backgroundColor)
             .textStyle(textParams?.style ?? animationStyle.textStyle)
-            .textFont(textParams?.font ?? animationStyle.font)
+            .textFont(textFont)
             .textSize(textParams?.size ?? animationStyle.fontSize)
             .strokeWeight(textParams?.weight ?? animationStyle.fontWeight)
             .text(text, x, y)
@@ -225,8 +252,10 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
             weight?: number
         }
     ): number {
+        const textFont = getFont(animationStyle, textParams?.font ?? animationStyle.formattedTextFont)
+
         return p5.textStyle(textParams?.style ?? animationStyle.textStyle)
-            .textFont(textParams?.font ?? animationStyle.font)
+            .textFont(textFont)
             .textSize(textParams?.size ?? animationStyle.fontSize)
             .strokeWeight(textParams?.weight ?? animationStyle.fontWeight)
             .textWidth(text)
@@ -357,7 +386,6 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
         const backgroundColorOverridesMap = new Map<number, string>()
         const colorOverridesMap = new Map<number, string>()
         const strikeTroughOverridesMap = new Map<number, boolean>()
-
         o.backgroundColorOverrides.forEach(o => {
             for (let i = o.from; i < o.to; i++) {
                 backgroundColorOverridesMap.set(i, o.backgroundColor)

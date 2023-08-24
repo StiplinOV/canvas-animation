@@ -225,6 +225,7 @@ export default interface AnimationStyle {
     highlightedTextStrokeWeight: number
     highlightedTextStrokeColor: string
     font: WebSafeFontsType
+    formattedTextFont: WebSafeFontsType
     fontSize: number
     titleFontSize: number
     fontWeight: number
@@ -252,12 +253,13 @@ const defaultAnimationStyle: AnimationStyle = {
     fillColor: '#FFFFFF',
     strokeColor: '#000000',
     primaryColor: '#637899',
-    secondaryColor: '#ff4d00',
+    secondaryColor: '#ff0000',
     selectedColor: '#FF0000',
     backgroundSelectedColor: '#FFFF00',
     highlightedTextStrokeColor: '#485460',
     highlightedTextStrokeWeight: 5,
     font: 'Verdana',
+    formattedTextFont: 'Arial',
     fontSize: 14,
     titleFontSize: 40,
     fontWeight: 0.5,
@@ -335,4 +337,11 @@ export const getFontColor = (animationStyle: AnimationStyle, color?: ColorType):
         return animationStyle.textLinkColor
     }
     return color ?? animationStyle.fontColor
+}
+
+export const getFont = (animationStyle: AnimationStyle, font?: WebSafeFontsType | 'monospace'): string => {
+    if (font === 'monospace') {
+        return animationStyle.monospaceFont
+    }
+    return font ?? animationStyle.font
 }
