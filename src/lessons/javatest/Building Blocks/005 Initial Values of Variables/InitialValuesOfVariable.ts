@@ -1,8 +1,8 @@
 import {LessonJsonType} from '../../../../AnimationsJsonType'
 import {animationStyle} from '../../../../Animations'
 
-export const VarCompileInAMethod: LessonJsonType = {
-    sound: require('./без названия 3.mp3'),
+export const InitialValuesOfVariable: LessonJsonType = {
+    sound: require('./без названия 4.mp3'),
     canvasDimensions: {
         width: 1280,
         height: 720
@@ -21,7 +21,7 @@ export const VarCompileInAMethod: LessonJsonType = {
                 x: 1280,
                 y: 0
             },
-            startTime: 10000,
+            startTime: 9000,
             transformDuration: 1000
         },
         {
@@ -37,11 +37,11 @@ export const VarCompileInAMethod: LessonJsonType = {
         codeQuestionnaire: [
             {
                 presenceParameters: [{
-                    appearTime: 12000,
-                    appearDuration: 5000
+                    appearTime: 11000,
+                    appearDuration: 3000
                 }],
                 object: {
-                    title: 'Which of the following code snippets about var compile without issue when used in a method? (Choose all that apply.)',
+                    title: 'Which of the following are correct? (Choose all that apply.)',
                     titleFontSize: 50,
                     origin: {
                         x: 1280,
@@ -49,23 +49,22 @@ export const VarCompileInAMethod: LessonJsonType = {
                     },
                     width: 1280,
                     height: 720,
-                    questionParamsFontSize: 35
+                    questionParamsFontSize: 30
                 },
                 transformations: [
                     {
-                        appearTime: 21000,
+                        appearTime: 15000,
                         appearDuration: 2000,
                         object: {
                             questionNumberingType: 'letters',
                             questionParamsOptions: [
-                                'var spring = null;',
-                                'var fall = "leaves";',
-                                'var evening = 2; evening = null;',
-                                'var night = Integer.valueOf(3);',
-                                'var day = 1/0;',
-                                'var winter = 12, cold;',
-                                'var fall = 2, autumn = 2;',
-                                'var morning = ""; morning = null;'
+                                'An instance variable of type float defaults to 0.',
+                                'An instance variable of type chart defaults to null.',
+                                'A local variable of type double defaults to 0.0.',
+                                'A local variable of type int defaults to null.',
+                                'A class variable of type String defaults to null.',
+                                'A class variable of type String defaults to the empty String "".',
+                                'None of the above.',
                             ],
                             questionParamsPosition: 'down',
                             questionParamsLineSpacing: 1.8

@@ -1,6 +1,6 @@
 import {THE_STYLE} from 'p5'
 import {AppearAlgorithm} from './animation/CanvasAnimationParams'
-import {HighlightedStyleName} from './animation/simple/highligtedtext/HighlightedTextCanvasAnimationParams'
+import {FormattedTextStyleName} from './animation/simple/formattedtext/FormattedTextCanvasAnimationParams'
 
 export const COURIER_NEW_FONT = 'Courier New'
 export type ColorType = string | 'primary' | 'secondary' | 'background' | 'link'
@@ -16,7 +16,7 @@ export type WebSafeFontsType =
     | typeof COURIER_NEW_FONT
     | 'Brush Script MT'
 
-export type SupportedHighlightedLanguages =
+export type SupportedFormattedLanguages =
     '1c'
     | 'abnf'
     | 'accesslog'
@@ -222,15 +222,15 @@ export default interface AnimationStyle {
     codeSpecBackgroundColor: string
     codeSpecExampleBackgroundColor: string
     backgroundSelectedColor: string
-    highlightedTextStrokeWeight: number
-    highlightedTextStrokeColor: string
+    formattedTextStrokeWeight: number
+    formattedTextStrokeColor: string
     font: WebSafeFontsType
     formattedTextFont: WebSafeFontsType
     fontSize: number
     titleFontSize: number
     fontWeight: number
     monospaceFont: typeof COURIER_NEW_FONT
-    highlightTextStyle: HighlightedStyleName
+    formattedTextStyle: FormattedTextStyleName
     vertexFontSize: number
     vertexDiameter: number
     edgeFontSize: number
@@ -256,15 +256,15 @@ const defaultAnimationStyle: AnimationStyle = {
     secondaryColor: '#ff0000',
     selectedColor: '#FF0000',
     backgroundSelectedColor: '#FFFF00',
-    highlightedTextStrokeColor: '#485460',
-    highlightedTextStrokeWeight: 5,
+    formattedTextStrokeColor: '#485460',
+    formattedTextStrokeWeight: 5,
     font: 'Verdana',
     formattedTextFont: 'Arial',
     fontSize: 14,
     titleFontSize: 40,
     fontWeight: 0.5,
     monospaceFont: COURIER_NEW_FONT,
-    highlightTextStyle: 'qtcreatorDark',
+    formattedTextStyle: 'qtcreatorDark',
     strokeWeight: 1,
     strokeBoldWeight: 3,
     cornerRadius: 0,

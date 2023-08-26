@@ -101,7 +101,7 @@ export const ValidJavaIdentifiers: LessonJsonType = {
                 ]
             }
         ],
-        highlightedText: [
+        formattedText: [
             {
                 presenceParameters: [{
                     appearTime: 0,
@@ -854,7 +854,7 @@ export const ValidJavaIdentifiers: LessonJsonType = {
                 object: {
                     value: {
                         text: 'Produced by\n\nOleg Stiplin',
-                        highlightStyle: animationStyle.highlightTextStyle
+                        formattedTextStyle: animationStyle.formattedTextStyle
                     },
                     origin: {
                         x: 0, y: 720
@@ -874,7 +874,7 @@ export const ValidJavaIdentifiers: LessonJsonType = {
                     weight: 0,
                     value: {
                         text: '\t\t\t\t\t\t\t\t\tsubscribe...',
-                        highlightStyle: animationStyle.highlightTextStyle
+                        formattedTextStyle: animationStyle.formattedTextStyle
                     },
                     origin: {
                         x: 0, y: 1300

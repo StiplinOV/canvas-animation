@@ -4,9 +4,9 @@ import {CircleJsonParamsType} from './animation/simple/circle/CircleCanvasAnimat
 import {EllipseJsonParamsType} from './animation/simple/ellipse/EllipseCanvasAnimationParams'
 import {Params, SelectionType, TransformationOptions} from './animation/CanvasAnimationParams'
 import {
-    HighlightedTextCanvasAnimationSelection,
-    HighlightedTextJsonParamsType
-} from './animation/simple/highligtedtext/HighlightedTextCanvasAnimationParams'
+    FormattedTextCanvasAnimationSelection,
+    FormattedTextJsonParamsType
+} from './animation/simple/formattedtext/FormattedTextCanvasAnimationParams'
 import {LineJsonParamsType} from './animation/simple/line/LineCanvasAnimationParams'
 import {ArrowJsonParamsType} from './animation/complex/arrow/ArrowCanvasAnimationParams'
 import {RectangleJsonParamsType} from './animation/simple/rectangle/RectangleCanvasAnimationParams'
@@ -32,7 +32,7 @@ export type SimpleObjectTypeToGenericTypes = {
     circle: [CircleJsonParamsType, TransformationOptions, SelectionType]
     ellipse: [EllipseJsonParamsType, TransformationOptions, SelectionType]
     bezier: [BezierJsonParamsType, TransformationOptions, SelectionType]
-    highlightedText: [HighlightedTextJsonParamsType, TransformationOptions, HighlightedTextCanvasAnimationSelection]
+    formattedText: [FormattedTextJsonParamsType, TransformationOptions, FormattedTextCanvasAnimationSelection]
     line: [LineJsonParamsType, TransformationOptions, SelectionType]
     rectangle: [RectangleJsonParamsType, TransformationOptions, SelectionType]
     text: [TextJsonParamsType, TransformationOptions, SelectionType]

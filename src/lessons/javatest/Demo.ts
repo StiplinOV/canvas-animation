@@ -95,7 +95,7 @@ export const Demo: LessonJsonType = {
                     width: 1280,
                     height: 720,
                     codeFontSize: 25,
-                    codeHighlightStyle: 'darcula',
+                    codeFormattedTextStyle: 'darcula',
                     codeText: 'final int score1 = 8, score2 = 3;\n' +
                         'char myScore = 7;\n' +
                         'var goal = switch (myScore) {\n' +

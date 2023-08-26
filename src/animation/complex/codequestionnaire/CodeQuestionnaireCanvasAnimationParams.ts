@@ -6,15 +6,15 @@ import {
 } from '../../CanvasAnimationParams'
 import ComplexCanvasAnimationParams, {CanvasAnimationParamsType} from '../ComplexCanvasAnimationParams'
 import {
-    HighlightedStyleName,
-    HighlightedTextValueSegmentType
-} from '../../simple/highligtedtext/HighlightedTextCanvasAnimationParams'
+    FormattedTextStyleName,
+    FormattedTextValueSegmentType
+} from '../../simple/formattedtext/FormattedTextCanvasAnimationParams'
 import {addPoints} from '../../../common/Utils'
 import {animationStyle} from '../../../Animations'
 import {Point} from '../../../common/Point'
 import {ObjectParamsObject} from '../../ObjectParamsObject'
 import {uniqueArray} from '../../../common/Alghoritm'
-import {SupportedHighlightedLanguages} from '../../../AnimationStyles'
+import {SupportedFormattedLanguages} from '../../../AnimationStyles'
 
 export interface OnlyCodeQuestionnaireParams {
     width: number
@@ -23,8 +23,8 @@ export interface OnlyCodeQuestionnaireParams {
 
 export interface CodeQuestionnaireJsonParams extends JsonObjectParams, OnlyCodeQuestionnaireParams {
     codeText?: string
-    language?: SupportedHighlightedLanguages
-    codeHighlightStyle?: HighlightedStyleName
+    language?: SupportedFormattedLanguages
+    codeFormattedTextStyle?: FormattedTextStyleName
     codeSelectedSubstrings?: {
         from: number
         to: number
@@ -35,7 +35,7 @@ export interface CodeQuestionnaireJsonParams extends JsonObjectParams, OnlyCodeQ
     codePartHeight?: number
     codeLinesNumbered?: boolean
     questionParamsPosition?: 'right' | 'center' | 'down'
-    questionParamsOptions?: string[]
+    questionParamsOptions?: string[] //TODO
     questionNumberingType?: 'letters' | 'numbers'
     questionParamsFontSize?: number
     questionParamsStrikethroughOptions?: number[]
@@ -46,8 +46,8 @@ export interface CodeQuestionnaireJsonParams extends JsonObjectParams, OnlyCodeQ
 
 export interface CodeQuestionnaireAnimationObjectParams extends AnimationObjectParams, OnlyCodeQuestionnaireParams {
     codeText: string
-    language: SupportedHighlightedLanguages | null
-    codeHighlightStyle: HighlightedStyleName | null
+    language: SupportedFormattedLanguages | null
+    codeFormattedTextStyle: FormattedTextStyleName | null
     codeSelectedSubstrings: {
         from: number
         to: number
@@ -91,7 +91,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
             ...jsonObject,
             codeText: jsonObject.codeText ?? '',
             language: jsonObject.language ?? null,
-            codeHighlightStyle: jsonObject.codeHighlightStyle ?? animationStyle.highlightTextStyle,
+            codeFormattedTextStyle: jsonObject.codeFormattedTextStyle ?? animationStyle.formattedTextStyle,
             codeSelectedSubstrings: jsonObject.codeSelectedSubstrings ?? [],
             questionnaireSelectedLines: jsonObject.questionnaireSelectedLines ?? [],
             codeFontSize: jsonObject.codeFontSize ?? animationStyle.fontSize,
@@ -145,13 +145,13 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         }
         if (object.codeText) {
             result.set('codePart', {
-                type: 'highlightedText',
+                type: 'formattedText',
                 objectParams: {
                     font: 'monospace',
                     origin: this.getCodePartOrigin(object),
                     value: {
                         text: object.codeText,
-                        highlightStyle: object.codeHighlightStyle ?? undefined,
+                        formattedTextStyle: object.codeFormattedTextStyle ?? undefined,
                         language: object.language ?? undefined
                     },
                     selectedSubstrings: object.codeSelectedSubstrings.map(s => ({
@@ -168,8 +168,8 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
             })
         }
         if (object.questionParamsOptions && object.questionParamsOptions.length > 0) {
-            const value: HighlightedTextValueSegmentType[] = object.questionParamsOptions.flatMap((o, i) => {
-                const result: HighlightedTextValueSegmentType[] = []
+            const value: FormattedTextValueSegmentType[] = object.questionParamsOptions.flatMap((o, i) => {
+                const result: FormattedTextValueSegmentType[] = []
                 if (object.questionNumberingType === 'numbers') {
                     result.push({
                         textStyle: 'bold',
@@ -230,7 +230,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
             }
 
             result.set('questionPart', {
-                type: 'highlightedText',
+                type: 'formattedText',
                 objectParams: {
                     font: 'monospace',
                     origin: this.getQuestionPartOrigin(object),
@@ -319,7 +319,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
             questionParamsOptions: [],
             questionParamsStrikethroughOptions: [],
             codeText: '',
-            codeHighlightStyle: animationStyle.highlightTextStyle,
+            codeFormattedTextStyle: animationStyle.formattedTextStyle,
             codeSelectedSubstrings: [],
             questionnaireSelectedLines: [],
             questionParamsPosition: 'down',
@@ -341,7 +341,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
     protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<CodeQuestionnaireAnimationObjectParams>): void {
         params.codeText !== undefined && objectParamsObject.setStringParam('codeText', params.codeText)
         params.language !== undefined && objectParamsObject.setStringLiteralParam('language', params.language)
-        params.codeHighlightStyle !== undefined && objectParamsObject.setStringLiteralParam('codeHighlightStyle', params.codeHighlightStyle ?? '')
+        params.codeFormattedTextStyle !== undefined && objectParamsObject.setStringLiteralParam('codeHighlightStyle', params.codeFormattedTextStyle ?? '')
         params.codeSelectedSubstrings && objectParamsObject.setArrayParam('codeSelectedSubstrings', params.codeSelectedSubstrings)
         params.questionnaireSelectedLines && objectParamsObject.setSetParam('questionnaireSelectedLines', params.questionnaireSelectedLines)
         params.codeFontSize && objectParamsObject.setNumberParam('codeFontSize', params.codeFontSize)
@@ -364,8 +364,8 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         return {
             ...initialDefaultParams,
             codeText: objectParamsObject.getStringParam('codeText'),
-            language: objectParamsObject.getStringLiteralParam<SupportedHighlightedLanguages>('language'),
-            codeHighlightStyle: objectParamsObject.getStringLiteralParam<HighlightedStyleName>('codeHighlightStyle'),
+            language: objectParamsObject.getStringLiteralParam<SupportedFormattedLanguages>('language'),
+            codeFormattedTextStyle: objectParamsObject.getStringLiteralParam<FormattedTextStyleName>('codeHighlightStyle'),
             codeSelectedSubstrings: objectParamsObject.getArrayParam('codeSelectedSubstrings'),
             questionnaireSelectedLines: Array.from(objectParamsObject.getSetParam<number>('questionnaireSelectedLines').values()),
             codeFontSize: objectParamsObject.getNumberParam('codeFontSize'),

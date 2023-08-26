@@ -12,7 +12,7 @@ import {RectangleJsonParamsType} from '../simple/rectangle/RectangleCanvasAnimat
 import {CircleJsonParamsType} from '../simple/circle/CircleCanvasAnimationParams'
 import {EllipseJsonParamsType} from '../simple/ellipse/EllipseCanvasAnimationParams'
 import {BezierJsonParamsType} from '../simple/bezier/BezierCanvasAnimationParams'
-import {HighlightedTextJsonParamsType} from '../simple/highligtedtext/HighlightedTextCanvasAnimationParams'
+import {FormattedTextJsonParamsType} from '../simple/formattedtext/FormattedTextCanvasAnimationParams'
 import {LineJsonParamsType} from '../simple/line/LineCanvasAnimationParams'
 import {TypeToSimpleParamsConstructorMapping} from '../../Animations'
 
@@ -28,7 +28,7 @@ export type TypeToObjectMapping = {
     circle: CircleJsonParamsType
     ellipse: EllipseJsonParamsType
     bezier: BezierJsonParamsType
-    highlightedText: HighlightedTextJsonParamsType
+    formattedText: FormattedTextJsonParamsType
     line: LineJsonParamsType
     rectangle: RectangleJsonParamsType
     text: TextJsonParamsType

@@ -2,10 +2,10 @@ import p5Types, {THE_STYLE} from 'p5'
 import AnimationStyle, {getFont, getFontColor, WebSafeFontsType} from '../../../AnimationStyles'
 import {
     calculateBackgroundColor,
-    createHighlightedTextValueSegmentType,
-    HighlightedTextAnimationParamsType,
-    HighlightedTextValueSegmentType
-} from './HighlightedTextCanvasAnimationParams'
+    createFormattedTextValueSegmentType,
+    FormattedTextAnimationParamsType,
+    FormattedTextValueSegmentType
+} from './FormattedTextCanvasAnimationParams'
 import CanvasAnimation from '../../CanvasAnimation'
 import {weightToNumber} from '../../CanvasAnimationParams'
 import {uniqueArray} from '../../../common/Alghoritm'
@@ -25,9 +25,9 @@ type SelectedSubstring = {
     strikethrough?: boolean
 }
 
-export default class HighlightedTextCanvasAnimation extends CanvasAnimation<HighlightedTextAnimationParamsType> {
+export default class FormattedTextCanvasAnimation extends CanvasAnimation<FormattedTextAnimationParamsType> {
 
-    public drawObject(p5: p5Types, o: HighlightedTextAnimationParamsType, animationStyle: AnimationStyle): void {
+    public drawObject(p5: p5Types, o: FormattedTextAnimationParamsType, animationStyle: AnimationStyle): void {
         const fontSize = o.fontSize ?? animationStyle.fontSize
         const widthParam = o.width ?? 0
         const heightParam = (o.height ?? 0)
@@ -48,13 +48,13 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
 
     public process(
         p5: p5Types,
-        o: HighlightedTextAnimationParamsType,
+        o: FormattedTextAnimationParamsType,
         animationStyle: AnimationStyle,
         borderX: number,
         borderY: number,
         dry?: boolean
     ): rectParams {
-        const segments = this.splitSegmentsAccordingToSelections(createHighlightedTextValueSegmentType(o.value, animationStyle), o)
+        const segments = this.splitSegmentsAccordingToSelections(createFormattedTextValueSegmentType(o.value, animationStyle), o)
         const fontSize = o.fontSize ?? animationStyle.fontSize
         const textFont = o.font
 
@@ -274,17 +274,17 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
     }
 
     private splitSegmentsAccordingToSelections(
-        segments: HighlightedTextValueSegmentType[],
-        o: HighlightedTextAnimationParamsType
-    ): HighlightedTextValueSegmentType[] {
-        const result: HighlightedTextValueSegmentType[] = []
+        segments: FormattedTextValueSegmentType[],
+        o: FormattedTextAnimationParamsType
+    ): FormattedTextValueSegmentType[] {
+        const result: FormattedTextValueSegmentType[] = []
         const selectionIntervals = this.toSelectedIntervals(o)
 
         if (selectionIntervals.length === 0) {
             return segments
         }
 
-        const splitSegments: HighlightedTextValueSegmentType[] = []
+        const splitSegments: FormattedTextValueSegmentType[] = []
 
         let currentSelectionIntervalIndex = 0
         let currentSelectionInterval = selectionIntervals[currentSelectionIntervalIndex]
@@ -382,7 +382,7 @@ export default class HighlightedTextCanvasAnimation extends CanvasAnimation<High
         return result
     }
 
-    private toSelectedIntervals(o: HighlightedTextAnimationParamsType): SelectedSubstring[] {
+    private toSelectedIntervals(o: FormattedTextAnimationParamsType): SelectedSubstring[] {
         const backgroundColorOverridesMap = new Map<number, string>()
         const colorOverridesMap = new Map<number, string>()
         const strikeTroughOverridesMap = new Map<number, boolean>()

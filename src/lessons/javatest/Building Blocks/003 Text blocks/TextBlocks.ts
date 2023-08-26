@@ -138,7 +138,7 @@ export const TextBlocks: LessonJsonType = {
                 ]
             }
         ],
-        highlightedText: [
+        formattedText: [
             {
                 presenceParameters: [{
                     appearTime: 0,
@@ -324,7 +324,7 @@ export const TextBlocks: LessonJsonType = {
                     weight: 0,
                     value: {
                         text: '\t\t\t\t\t\t\t\t\tsubscribe...',
-                        highlightStyle: animationStyle.highlightTextStyle
+                        formattedTextStyle: animationStyle.formattedTextStyle
                     },
                     origin: {
                         x: 0, y: 1300

@@ -52,7 +52,7 @@ export const FourSum: LessonJsonType = {
                 }
             ]
         }],
-        highlightedText: [
+        formattedText: [
             {
                 presenceParameters: [{appearTime: 11000, appearDuration: 500}],
                 object: {

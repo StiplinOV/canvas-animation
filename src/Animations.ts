@@ -14,8 +14,8 @@ import {
 import CircleCanvasAnimationParams from './animation/simple/circle/CircleCanvasAnimationParams'
 import ArrowCanvasAnimationParams from './animation/complex/arrow/ArrowCanvasAnimationParams'
 import EllipseCanvasAnimationParams from './animation/simple/ellipse/EllipseCanvasAnimationParams'
-import HighlightedTextCanvasAnimationParams
-    from './animation/simple/highligtedtext/HighlightedTextCanvasAnimationParams'
+import FormattedTextCanvasAnimationParams
+    from './animation/simple/formattedtext/FormattedTextCanvasAnimationParams'
 import LineCanvasAnimationParams from './animation/simple/line/LineCanvasAnimationParams'
 import RectangleCanvasAnimationParams from './animation/simple/rectangle/RectangleCanvasAnimationParams'
 import GraphDataStructureParams from './animation/complex/datastructure/graph/GraphDataStructureParams'
@@ -36,7 +36,7 @@ export const TypeToSimpleParamsConstructorMapping: {
     circle: (p, p5, animationStyle) => new CircleCanvasAnimationParams(p, p5, animationStyle),
     ellipse: (p, p5, animationStyle) => new EllipseCanvasAnimationParams(p, p5, animationStyle),
     bezier: (p, p5, animationStyle) => new BezierCanvasAnimationParams(p, p5, animationStyle),
-    highlightedText: (p, p5, animationStyle) => new HighlightedTextCanvasAnimationParams(p, p5, animationStyle),
+    formattedText: (p, p5, animationStyle) => new FormattedTextCanvasAnimationParams(p, p5, animationStyle),
     line: (p, p5, animationStyle) => new LineCanvasAnimationParams(p, p5, animationStyle),
     rectangle: (p, p5, animationStyle) => new RectangleCanvasAnimationParams(p, p5, animationStyle),
     text: (p, p5, animationStyle) => new TextCanvasAnimationParams(p, p5, animationStyle)

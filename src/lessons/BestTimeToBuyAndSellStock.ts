@@ -831,7 +831,7 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
             ]
         }
         ],
-        highlightedText: [
+        formattedText: [
             {
                 presenceParameters: [{appearTime: 191000, appearDuration: 10000}],
                 object: {

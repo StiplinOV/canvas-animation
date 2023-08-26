@@ -943,7 +943,7 @@ export const ContainerWithMostWater: LessonJsonType = {
                 }
             }]
         }],
-        highlightedText: [
+        formattedText: [
             {
                 presenceParameters: [{appearTime: 73000, appearDuration: 10000}],
                 object: {

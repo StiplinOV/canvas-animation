@@ -8,10 +8,10 @@ import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle, {
     ColorType,
     getFontColor,
-    SupportedHighlightedLanguages,
+    SupportedFormattedLanguages,
     WebSafeFontsType
 } from '../../../AnimationStyles'
-import HighlightedTextCanvasAnimation from './HighlightedTextCanvasAnimation'
+import FormattedTextCanvasAnimation from './FormattedTextCanvasAnimation'
 import {THE_STYLE} from 'p5'
 import hljs from 'highlight.js'
 import {
@@ -212,7 +212,7 @@ const styles = {
     zenburn
 }
 
-export const createHighlightedTextValueSegmentType = (object: HighlightedTextValueType, animationStyle: AnimationStyle): HighlightedTextValueSegmentType[] => {
+export const createFormattedTextValueSegmentType = (object: FormattedTextValueType, animationStyle: AnimationStyle): FormattedTextValueSegmentType[] => {
     type NodeType = string | {
         children: NodeType[]
         scope: string
@@ -226,7 +226,7 @@ export const createHighlightedTextValueSegmentType = (object: HighlightedTextVal
         return object
     }
     const {text} = object
-    const style = styles[object.highlightStyle ?? animationStyle.highlightTextStyle]
+    const style = styles[object.formattedTextStyle ?? animationStyle.formattedTextStyle]
     const emitter = hljs.highlight(text, {language: object.language ?? 'java'})._emitter as any
     const rootNode = emitter.rootNode as {
         children: NodeType[]
@@ -280,7 +280,7 @@ export const createHighlightedTextValueSegmentType = (object: HighlightedTextVal
         if (buffer.length !== 0) {
             texts.push(buffer)
         }
-        return texts.map((t): HighlightedTextValueSegmentType => {
+        return texts.map((t): FormattedTextValueSegmentType => {
             if (t === '\n') {
                 return 'newline'
             }
@@ -307,22 +307,22 @@ const cssPropToTextWeight = (fontWeightParam?: Property.FontWeight): number | un
     return typeof fontWeightParam === 'number' ? fontWeightParam : undefined
 }
 
-export const calculateBackgroundColor = (params: HighlightedTextJsonParamsType, animationStyle: AnimationStyle): string => {
+export const calculateBackgroundColor = (params: FormattedTextJsonParamsType, animationStyle: AnimationStyle): string => {
     if (Array.isArray(params.value)) {
         return params.backgroundColor ?? animationStyle.backgroundColor
     }
-    if (params.value.highlightStyle) {
-        return String(styles[params.value.highlightStyle].hljs.background)
+    if (params.value.formattedTextStyle) {
+        return String(styles[params.value.formattedTextStyle].hljs.background)
     }
     if (params.backgroundColor) {
         return params.backgroundColor
     }
-    return String(styles[animationStyle.highlightTextStyle].hljs.background)
+    return String(styles[animationStyle.formattedTextStyle].hljs.background)
 }
 
-export type HighlightedStyleName = keyof typeof styles
+export type FormattedTextStyleName = keyof typeof styles
 
-export type HighlightedTextValueSegmentType = {
+export type FormattedTextValueSegmentType = {
     value: string
     textStyle?: THE_STYLE
     textWeight?: number
@@ -334,16 +334,16 @@ export type HighlightedTextValueSegmentType = {
     font?: WebSafeFontsType | 'monospace'
 } | 'newline'
 
-export type HighlightedSyntaxValueType = {
+export type FormattedSyntaxValueType = {
     text: string
-    language?: SupportedHighlightedLanguages
-    highlightStyle?: HighlightedStyleName
+    language?: SupportedFormattedLanguages
+    formattedTextStyle?: FormattedTextStyleName
 }
 
-export type HighlightedTextValueType = HighlightedSyntaxValueType | HighlightedTextValueSegmentType[]
+export type FormattedTextValueType = FormattedSyntaxValueType | FormattedTextValueSegmentType[]
 
-export interface HighlightedTextJsonParamsType extends JsonObjectParams {
-    value: HighlightedTextValueType
+export interface FormattedTextJsonParamsType extends JsonObjectParams {
+    value: FormattedTextValueType
     fontSize?: number
     font?: WebSafeFontsType | 'monospace'
     backgroundColor?: string
@@ -379,8 +379,8 @@ type StrikeTroughOverride = {
     strikethrough: boolean
 }
 
-export interface HighlightedTextAnimationParamsType extends AnimationObjectParams {
-    value: HighlightedTextValueSegmentType[]
+export interface FormattedTextAnimationParamsType extends AnimationObjectParams {
+    value: FormattedTextValueSegmentType[]
     fontSize: number
     font: WebSafeFontsType
     backgroundColor: string
@@ -395,7 +395,7 @@ export interface HighlightedTextAnimationParamsType extends AnimationObjectParam
     height: number
 }
 
-export interface HighlightedTextCanvasAnimationSelection extends SelectionType {
+export interface FormattedTextCanvasAnimationSelection extends SelectionType {
     substrings?: {
         from: number
         to: number
@@ -404,21 +404,21 @@ export interface HighlightedTextCanvasAnimationSelection extends SelectionType {
     }[]
 }
 
-export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAnimationParams<HighlightedTextJsonParamsType, HighlightedTextAnimationParamsType, HighlightedTextCanvasAnimationSelection> {
+export default class FormattedTextCanvasAnimationParams extends SimpleCanvasAnimationParams<FormattedTextJsonParamsType, FormattedTextAnimationParamsType, FormattedTextCanvasAnimationSelection> {
 
-    protected getZeroParams(): Omit<Partial<HighlightedTextAnimationParamsType>, keyof AnimationObjectParams> {
+    protected getZeroParams(): Omit<Partial<FormattedTextAnimationParamsType>, keyof AnimationObjectParams> {
         return {
             value: [],
             backgroundColor: calculateBackgroundColor(this.getObject(), this.getAnimationStyle())
         }
     }
 
-    protected toCanvasAnimation(animationStyle: AnimationStyle): HighlightedTextCanvasAnimation {
-        return new HighlightedTextCanvasAnimation(this, animationStyle)
+    protected toCanvasAnimation(animationStyle: AnimationStyle): FormattedTextCanvasAnimation {
+        return new FormattedTextCanvasAnimation(this, animationStyle)
     }
 
-    private splitTextValueSegmentType(param: HighlightedTextValueSegmentType): HighlightedTextValueSegmentType[] {
-        const result: HighlightedTextValueSegmentType[] = []
+    private splitTextValueSegmentType(param: FormattedTextValueSegmentType): FormattedTextValueSegmentType[] {
+        const result: FormattedTextValueSegmentType[] = []
         if (param === 'newline') {
             return [param]
         }
@@ -432,7 +432,7 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
         return result
     }
 
-    protected convertSelectionToTransformObjectParams(selection: HighlightedTextCanvasAnimationSelection): TransformObjectParams<HighlightedTextAnimationParamsType>[] {
+    protected convertSelectionToTransformObjectParams(selection: FormattedTextCanvasAnimationSelection): TransformObjectParams<FormattedTextAnimationParamsType>[] {
         const colorOverrides: ColorOverride[] = []
         const backgroundColorOverrides: BackgroundColorOverride[] = []
         selection.substrings?.forEach(s => {
@@ -461,7 +461,7 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
         }]
     }
 
-    protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<HighlightedTextAnimationParamsType>): void {
+    protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<FormattedTextAnimationParamsType>): void {
         params.value !== undefined && objectParamsObject.setArrayParam('value', params.value)
         params.fontSize !== undefined && objectParamsObject.setNumberParam('fontSize', params.fontSize)
         params.font !== undefined && objectParamsObject.setStringLiteralParam('font', params.font)
@@ -477,25 +477,25 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
         params.height !== undefined && objectParamsObject.setNumberParam('height', params.height)
     }
 
-    protected convertJsonObjectToAnimationObject(jsonObject: HighlightedTextJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): HighlightedTextAnimationParamsType {
+    protected convertJsonObjectToAnimationObject(jsonObject: FormattedTextJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): FormattedTextAnimationParamsType {
         const animationStyle = this.getAnimationStyle()
         const overrides = this.jsonSelectedSubstringToOverrides(jsonObject)
-        const value = createHighlightedTextValueSegmentType(jsonObject.value, this.getAnimationStyle()).flatMap(f => this.splitTextValueSegmentType(f))
+        const value = createFormattedTextValueSegmentType(jsonObject.value, this.getAnimationStyle()).flatMap(f => this.splitTextValueSegmentType(f))
         let numberOfLines = 0
         if (value.length > 0) {
             numberOfLines = value.filter(v => v === 'newline').length + 1
         }
-        let highlightStyle = animationStyle.highlightTextStyle
+        let highlightStyle = animationStyle.formattedTextStyle
         if (!Array.isArray(jsonObject.value)) {
-            highlightStyle = jsonObject.value.highlightStyle ?? highlightStyle
+            highlightStyle = jsonObject.value.formattedTextStyle ?? highlightStyle
         }
         const defaultNumberingColor = getFontColor(animationStyle, styles[highlightStyle].hljs.color)
 
         return {
             ...animationObjectDefaultParams,
             ...jsonObject,
-            strokeColor: jsonObject.strokeColor ?? animationStyle.highlightedTextStrokeColor,
-            weight: jsonObject.weight ?? animationStyle.highlightedTextStrokeWeight,
+            strokeColor: jsonObject.strokeColor ?? animationStyle.formattedTextStrokeColor,
+            weight: jsonObject.weight ?? animationStyle.formattedTextStrokeWeight,
             value,
             fontSize: jsonObject.fontSize ?? animationStyle.fontSize,
             font: jsonObject.font === 'monospace' ? animationStyle.monospaceFont : (jsonObject.font ?? animationStyle.formattedTextFont),
@@ -512,8 +512,8 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
         }
     }
 
-    protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): HighlightedTextAnimationParamsType {
-        const value: HighlightedTextValueSegmentType[] = objectParamsObject.getArrayParam('value')
+    protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): FormattedTextAnimationParamsType {
+        const value: FormattedTextValueSegmentType[] = objectParamsObject.getArrayParam('value')
 
         return {
             ...initialDefaultParams,
@@ -533,21 +533,21 @@ export default class HighlightedTextCanvasAnimationParams extends SimpleCanvasAn
         }
     }
 
-    protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<HighlightedTextJsonParamsType>): Partial<HighlightedTextAnimationParamsType> {
+    protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<FormattedTextJsonParamsType>): Partial<FormattedTextAnimationParamsType> {
         const overrides = this.jsonSelectedSubstringToOverrides(jsonObject)
         const animationStyle = this.getAnimationStyle()
 
         return {
             ...jsonObject,
             font: jsonObject.font === 'monospace' ? animationStyle.monospaceFont : (jsonObject.font ?? animationStyle.formattedTextFont),
-            value: jsonObject.value ? createHighlightedTextValueSegmentType(jsonObject.value, this.getAnimationStyle()).flatMap(f => this.splitTextValueSegmentType(f)) : undefined,
+            value: jsonObject.value ? createFormattedTextValueSegmentType(jsonObject.value, this.getAnimationStyle()).flatMap(f => this.splitTextValueSegmentType(f)) : undefined,
             colorOverrides: overrides.colorOverrides,
             backgroundColorOverrides: overrides.backgroundColorOverrides,
             strikeTroughOverrides: overrides.strikeTroughOverrides
         }
     }
 
-    private jsonSelectedSubstringToOverrides(jsonObject: Partial<HighlightedTextJsonParamsType>): {
+    private jsonSelectedSubstringToOverrides(jsonObject: Partial<FormattedTextJsonParamsType>): {
         colorOverrides?: ColorOverride[]
         backgroundColorOverrides?: BackgroundColorOverride[]
         strikeTroughOverrides?: StrikeTroughOverride[]
