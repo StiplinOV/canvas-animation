@@ -95,9 +95,30 @@ export const TextBlocks: LessonJsonType = {
                                 '}',
                             codeFontSize: 24,
                             questionParamsOptions: [
-                                'The output includes: # forks = 0.',
-                                'The output includes: # knives = 0.',
-                                'The output includes: # cups = 0.',
+                                [
+                                    'The output includes: ',
+                                    {
+                                        value: '# forks = 0',
+                                        font: 'monospace'
+                                    },
+                                    '.'
+                                ],
+                                [
+                                    'The output includes: ',
+                                    {
+                                        value: '# knives = 0',
+                                        font: 'monospace'
+                                    },
+                                    '.'
+                                ],
+                                [
+                                    'The output includes: ',
+                                    {
+                                        value: '# cups = 0',
+                                        font: 'monospace'
+                                    },
+                                    '.'
+                                ],
                                 'The output includes a blank line.',
                                 'The output includes one or more lines that begin with whitespace.',
                                 'The code does not compile.'

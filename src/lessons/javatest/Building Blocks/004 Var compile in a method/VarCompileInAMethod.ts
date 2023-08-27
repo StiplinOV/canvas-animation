@@ -67,6 +67,7 @@ export const VarCompileInAMethod: LessonJsonType = {
                                 'var fall = 2, autumn = 2;',
                                 'var morning = ""; morning = null;'
                             ],
+                            questionParamsFont: 'monospace',
                             questionParamsPosition: 'down',
                             questionParamsLineSpacing: 1.8
                         }

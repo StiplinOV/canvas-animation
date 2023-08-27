@@ -102,6 +102,7 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                                 'public static void main(String[] args)',
                                 'public static main(String[] args)'
                             ],
+                            questionParamsFont: 'monospace',
                             questionNumberingType: 'letters',
                             questionParamsPosition: 'down',
                             questionParamsLineSpacing: 2

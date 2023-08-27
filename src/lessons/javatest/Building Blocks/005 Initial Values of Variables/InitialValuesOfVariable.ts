@@ -7,7 +7,7 @@ export const InitialValuesOfVariable: LessonJsonType = {
         width: 1280,
         height: 720
     },
-    endTime: 251000,
+    endTime: 155000,
     cameras: [
         {
             camera: {
@@ -29,7 +29,7 @@ export const InitialValuesOfVariable: LessonJsonType = {
                 x: 0,
                 y: 720
             },
-            startTime: 240000,
+            startTime: 143000,
             transformDuration: 1000
         }
     ],
@@ -58,37 +58,127 @@ export const InitialValuesOfVariable: LessonJsonType = {
                         object: {
                             questionNumberingType: 'letters',
                             questionParamsOptions: [
-                                'An instance variable of type float defaults to 0.',
-                                'An instance variable of type chart defaults to null.',
-                                'A local variable of type double defaults to 0.0.',
-                                'A local variable of type int defaults to null.',
-                                'A class variable of type String defaults to null.',
-                                'A class variable of type String defaults to the empty String "".',
-                                'None of the above.',
+                                [
+                                    'An instance variable of type ',
+                                    {
+                                        value: 'float',
+                                        font: 'monospace'
+                                    },
+                                    ' defaults to ',
+                                    {
+                                        value: '0',
+                                        font: 'monospace'
+                                    },
+                                    '.'],
+                                [
+                                    'An instance variable of type ',
+                                    {
+                                        value: 'char',
+                                        font: 'monospace'
+                                    },
+                                    ' defaults to ',
+                                    {
+                                        value: 'null',
+                                        font: 'monospace'
+                                    },
+                                    '.'],
+                                [
+                                    'A local variable of type ',
+                                    {
+                                        value: 'double',
+                                        font: 'monospace'
+                                    },
+                                    ' defaults to ',
+                                    {
+                                        value: '0.0',
+                                        font: 'monospace'
+                                    },
+                                    '.'
+                                ],
+                                [
+                                    'A local variable of type ',
+                                    {
+                                        value: 'int',
+                                        font: 'monospace'
+                                    },
+                                    ' defaults to ',
+                                    {
+                                        value: 'null',
+                                        font: 'monospace'
+                                    },
+                                    '.'
+                                ],
+                                [
+                                    'A class variable of type ',
+                                    {
+                                        value: 'String',
+                                        font: 'monospace'
+                                    },
+                                    ' defaults to ',
+                                    {
+                                        value: 'null',
+                                        font: 'monospace'
+                                    },
+                                    '.'],
+                                [
+                                    'A class variable of type ',
+                                    {
+                                        value: 'String',
+                                        font: 'monospace'
+                                    },
+                                    ' defaults to the empty string ',
+                                    {
+                                        value: '""',
+                                        font: 'monospace'
+                                    },
+                                    '.'
+                                ],
+                                'None of the above.'
                             ],
                             questionParamsPosition: 'down',
                             questionParamsLineSpacing: 1.8
                         }
                     },
                     {
-                        appearTime: 127000,
-                        appearDuration: 0,
+                        appearTime: 98000,
+                        appearDuration: 1000,
                         object: {
-                            questionParamsStrikethroughOptions: [0]
+                            questionParamsStrikethroughOptions: [2, 3]
                         }
                     },
                     {
-                        appearTime: 152000,
-                        appearDuration: 0,
+                        appearTime: 114000,
+                        appearDuration: 2000,
                         object: {
-                            questionParamsStrikethroughOptions: [0, 2]
+                            height: 520
                         }
                     },
                     {
-                        appearTime: 172000,
+                        appearTime: 119000,
                         appearDuration: 0,
                         object: {
-                            questionParamsStrikethroughOptions: [0, 2, 5, 6]
+                            questionParamsStrikethroughOptions: [0, 2, 3]
+                        }
+                    },
+                    {
+                        appearTime: 128000,
+                        appearDuration: 0,
+                        object: {
+                            questionParamsStrikethroughOptions: [0, 1, 2, 3]
+                        }
+                    },
+                    {
+                        appearTime: 136000,
+                        appearDuration: 0,
+                        object: {
+                            questionParamsStrikethroughOptions: [0, 1, 2, 3, 5]
+                        }
+                    },
+                    {
+                        appearTime: 140000,
+                        appearDuration: 0,
+                        object: {
+                            questionParamsStrikethroughOptions: [0, 1, 2, 3, 5, 6]
                         }
                     }
                 ]
@@ -115,153 +205,288 @@ export const InitialValuesOfVariable: LessonJsonType = {
             },
             {
                 presenceParameters: [{
-                    appearTime: 49000,
+                    appearTime: 78000,
                     appearDuration: 5000,
-                    disappearTime: 107000,
+                    disappearTime: 197000,
                     disappearDuration: 2000
                 }],
                 object: {
                     origin: {
-                        x: 1320, y: 185
+                        x: 1290, y: 10
                     },
-                    width: 1200,
-                    height: 350,
+                    width: 1260,
+                    height: 700,
                     fontSize: 18,
                     zIndex: 1,
                     value: [
                         {
-                            value: '14.4. Local Variable Declarations',
+                            value: '4.12.5. Initial Values of Variables',
                             type: 'paragraphTitle'
                         },
                         'newline',
                         'newline',
                         {
-                            value: '\tA '
+                            value: '\tEvery variable in a program must have a value before its value is used:'
+                        },
+                        'newline',
+                        'newline',
+                        {
+                            value: '\t\t● Each class variable, instance variable, or array component is initialized with a '
                         },
                         {
-                            value: 'local variable declaration',
+                            value: 'default value',
                             textStyle: 'italic'
                         },
                         {
-                            value: ' declares and optionally initializes one or more local variables ('
+                            value: ' when it is created ('
                         },
                         {
-                            value: '§4.12.3',
+                            value: '§15.9',
+                            type: 'link'
+                        },
+                        {
+                            value: ', '
+                        },
+                        {
+                            value: '§15.10.2',
+                            type: 'link'
+                        },
+                        {
+                            value: '):'
+                        },
+                        'newline',
+                        'newline',
+                        {
+                            value: '\t\t\t○ For type '
+                        },
+                        {
+                            value: 'byte',
+                            font: 'monospace'
+                        },
+                        {
+                            value: ', the default value is zero, that is, the value of '
+                        },
+                        {
+                            value: '(byte)0',
+                            font: 'monospace'
+                        },
+                        {
+                            value: '.'
+                        },
+                        'newline',
+                        'newline',
+                        {
+                            value: '\t\t\t○ For type '
+                        },
+                        {
+                            value: 'short',
+                            font: 'monospace'
+                        },
+                        {
+                            value: ', the default value is zero, that is, the value of '
+                        },
+                        {
+                            value: '(short)0',
+                            font: 'monospace'
+                        },
+                        {
+                            value: '.'
+                        },
+                        'newline',
+                        'newline',
+                        {
+                            value: '\t\t\t○ For type '
+                        },
+                        {
+                            value: 'int',
+                            font: 'monospace'
+                        },
+                        {
+                            value: ', the default value is zero, that is, '
+                        },
+                        {
+                            value: '0',
+                            font: 'monospace'
+                        },
+                        {
+                            value: '.'
+                        },
+                        'newline',
+                        'newline',
+                        {
+                            value: '\t\t\t○ For type '
+                        },
+                        {
+                            value: 'long',
+                            font: 'monospace'
+                        },
+                        {
+                            value: ', the default value is zero, that is, '
+                        },
+                        {
+                            value: '0L',
+                            font: 'monospace'
+                        },
+                        {
+                            value: '.'
+                        },
+                        'newline',
+                        'newline',
+                        {
+                            value: '\t\t\t○ For type '
+                        },
+                        {
+                            value: 'float',
+                            font: 'monospace'
+                        },
+                        {
+                            value: ', the default value is positive zero, that is, '
+                        },
+                        {
+                            value: '0.0f',
+                            font: 'monospace'
+                        },
+                        {
+                            value: '.'
+                        },
+                        'newline',
+                        'newline',
+                        {
+                            value: '\t\t\t○ For type '
+                        },
+                        {
+                            value: 'double',
+                            font: 'monospace'
+                        },
+                        {
+                            value: ', the default value is positive zero, that is, '
+                        },
+                        {
+                            value: '0.0d',
+                            font: 'monospace'
+                        },
+                        {
+                            value: '.'
+                        },
+                        'newline',
+                        'newline',
+                        {
+                            value: '\t\t\t○ For type '
+                        },
+                        {
+                            value: 'char',
+                            font: 'monospace'
+                        },
+                        {
+                            value: ', the default value is the null character, that is, '
+                        },
+                        {
+                            value: '\'\\u0000\'',
+                            font: 'monospace'
+                        },
+                        {
+                            value: '.'
+                        },
+                        'newline',
+                        'newline',
+                        {
+                            value: '\t\t\t○ For type '
+                        },
+                        {
+                            value: 'boolean',
+                            font: 'monospace'
+                        },
+                        {
+                            value: ', the default value is '
+                        },
+                        {
+                            value: 'false',
+                            font: 'monospace'
+                        },
+                        {
+                            value: '.'
+                        },
+                        'newline',
+                        'newline',
+                        {
+                            value: '\t\t\t○ For all reference types ('
+                        },
+                        {
+                            value: '§4.3',
+                            type: 'link'
+                        },
+                        {
+                            value: '), the default value is '
+                        },
+                        {
+                            value: 'null',
+                            font: 'monospace'
+                        },
+                        {
+                            value: '.'
+                        },
+                        'newline',
+                        'newline',
+                        {
+                            value: '\t...'
+                        },
+                        'newline',
+                        'newline',
+                        {
+                            value: '\t\t● A local variable declared by a statement ('
+                        },
+                        {
+                            value: '§14.4.2',
+                            type: 'link'
+                        },
+                        {
+                            value: ', '
+                        },
+                        {
+                            value: '§14.14.1',
+                            type: 'link'
+                        },
+                        {
+                            value: ', '
+                        },
+                        {
+                            value: '§14.14.2',
+                            type: 'link'
+                        },
+                        {
+                            value: ', '
+                        },
+                        {
+                            value: '§14.20.3',
+                            type: 'link'
+                        },
+                        {
+                            value: ') must be explicitly given a value before it is used, by either'
+                        },
+                        'newline',
+                        {
+                            value: '\t\t   initialization ('
+                        },
+                        {
+                            value: '§14.4',
+                            type: 'link'
+                        },
+                        {
+                            value: ') or assignment ('
+                        },
+                        {
+                            value: '§15.26',
+                            type: 'link'
+                        },
+                        {
+                            value: '), in a way that can be verified using the rules for definite assignment ('
+                        },
+                        {
+                            value: '§16 (Definite Assignment)',
                             type: 'link'
                         },
                         {
                             value: ').'
-                        },
-                        'newline',
-                        'newline',
-                        {
-                            value: '\t'
-                        },
-                        {
-                            value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   ',
-                            textStyle: 'italic',
-                            type: 'codeSpec'
-                        },
-                        'newline',
-                        {
-                            value: '\t'
-                        },
-                        {
-                            value: '\tLocalVariableDeclaration:\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  ',
-                            textStyle: 'italic',
-                            type: 'codeSpec'
-                        },
-                        'newline',
-                        {
-                            value: '\t'
-                        },
-                        {
-                            value: '\t\t',
-                            type: 'codeSpec'
-                        },
-                        {
-                            value: '{',
-                            textStyle: 'italic',
-                            type: 'codeSpec'
-                        },
-                        {
-                            value: 'VariableModifier',
-                            textStyle: 'italic',
-                            type: 'codeSpecLink'
-                        },
-                        {
-                            value: '} ',
-                            textStyle: 'italic',
-                            type: 'codeSpec'
-                        },
-                        {
-                            value: 'LocalVariableType',
-                            textStyle: 'italic',
-                            type: 'codeSpecLink'
-                        },
-                        {
-                            value: ' ',
-                            textStyle: 'italic',
-                            type: 'codeSpec'
-                        },
-                        {
-                            value: 'VariableDeclaratorList',
-                            textStyle: 'italic',
-                            type: 'codeSpecLink'
-                        },
-                        {
-                            value: '\t\t\t\t\t\t\t\t\t',
-                            type: 'codeSpec'
-                        },
-                        'newline',
-                        {
-                            value: '\t'
-                        },
-                        {
-                            value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   ',
-                            type: 'codeSpec'
-                        },
-                        'newline',
-                        {
-                            value: '\t'
-                        },
-                        {
-                            value: '\tLocalVariableType:\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t ',
-                            textStyle: 'italic',
-                            type: 'codeSpec'
-                        },
-                        'newline',
-                        {
-                            value: '\t'
-                        },
-                        {
-                            value: '\t\t',
-                            type: 'codeSpec'
-                        },
-                        {
-                            value: 'UnannType',
-                            textStyle: 'italic',
-                            type: 'codeSpecLink'
-                        },
-                        {
-                            value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  ',
-                            type: 'codeSpec'
-                        },
-                        'newline',
-                        {
-                            value: '\t'
-                        },
-                        {
-                            value: '\t\tvar\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t',
-                            type: 'codeSpec'
-                        },
-                        'newline',
-                        {
-                            value: '\t'
-                        },
-                        {
-                            value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   ',
-                            type: 'codeSpec'
                         },
                         'newline',
                         'newline',
@@ -272,395 +497,100 @@ export const InitialValuesOfVariable: LessonJsonType = {
                 },
                 transformations: [
                     {
-                        appearTime: 64000,
-                        appearDuration: 2000,
+                        appearTime: 97000,
+                        appearDuration: 0,
                         object: {
-                            origin: {
-                                x: 1320, y: 85
-                            },
-                            width: 1200,
-                            height: 550,
-                            value: [
-                                {
-                                    value: '14.4. Local Variable Declarations',
-                                    type: 'paragraphTitle'
-                                },
-                                'newline',
-                                'newline',
-                                {
-                                    value: '\tA '
-                                },
-                                {
-                                    value: 'local variable declaration',
-                                    textStyle: 'italic'
-                                },
-                                {
-                                    value: ' declares and optionally initializes one or more local variables ('
-                                },
-                                {
-                                    value: '§4.12.3',
-                                    type: 'link'
-                                },
-                                {
-                                    value: ').'
-                                },
-                                'newline',
-                                'newline',
-                                {
-                                    value: '\t'
-                                },
-                                {
-                                    value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   ',
-                                    textStyle: 'italic',
-                                    type: 'codeSpec'
-                                },
-                                'newline',
-                                {
-                                    value: '\t'
-                                },
-                                {
-                                    value: '\tLocalVariableDeclaration:\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  ',
-                                    textStyle: 'italic',
-                                    type: 'codeSpec'
-                                },
-                                'newline',
-                                {
-                                    value: '\t'
-                                },
-                                {
-                                    value: '\t\t',
-                                    type: 'codeSpec'
-                                },
-                                {
-                                    value: '{',
-                                    textStyle: 'italic',
-                                    type: 'codeSpec'
-                                },
-                                {
-                                    value: 'VariableModifier',
-                                    textStyle: 'italic',
-                                    type: 'codeSpecLink'
-                                },
-                                {
-                                    value: '} ',
-                                    textStyle: 'italic',
-                                    type: 'codeSpec'
-                                },
-                                {
-                                    value: 'LocalVariableType',
-                                    textStyle: 'italic',
-                                    type: 'codeSpecLink'
-                                },
-                                {
-                                    value: ' ',
-                                    textStyle: 'italic',
-                                    type: 'codeSpec'
-                                },
-                                {
-                                    value: 'VariableDeclaratorList',
-                                    textStyle: 'italic',
-                                    type: 'codeSpecLink'
-                                },
-                                {
-                                    value: '\t\t\t\t\t\t\t\t\t',
-                                    type: 'codeSpec'
-                                },
-                                'newline',
-                                {
-                                    value: '\t'
-                                },
-                                {
-                                    value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   ',
-                                    type: 'codeSpec'
-                                },
-                                'newline',
-                                {
-                                    value: '\t'
-                                },
-                                {
-                                    value: '\tLocalVariableType:\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t ',
-                                    textStyle: 'italic',
-                                    type: 'codeSpec'
-                                },
-                                'newline',
-                                {
-                                    value: '\t'
-                                },
-                                {
-                                    value: '\t\t',
-                                    type: 'codeSpec'
-                                },
-                                {
-                                    value: 'UnannType',
-                                    textStyle: 'italic',
-                                    type: 'codeSpecLink'
-                                },
-                                {
-                                    value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  ',
-                                    type: 'codeSpec'
-                                },
-                                'newline',
-                                {
-                                    value: '\t'
-                                },
-                                {
-                                    value: '\t\tvar\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t',
-                                    type: 'codeSpec'
-                                },
-                                'newline',
-                                {
-                                    value: '\t'
-                                },
-                                {
-                                    value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   ',
-                                    type: 'codeSpec'
-                                },
-                                'newline',
-                                'newline',
-                                {
-                                    value: '\t...'
-                                },
-                                'newline',
-                                'newline',
-                                {
-                                    value: '14.4.1. Local Variable Declarators and Types',
-                                    type: 'paragraphTitle'
-                                },
-                                'newline',
-                                'newline',
-                                {
-                                    value: '\t...'
-                                },
-                                'newline',
-                                'newline',
-                                {
-                                    value: '\t● If the '
-                                },
-                                {
-                                    value: 'LocalVariableType',
-                                    textStyle: 'italic'
-                                },
-                                {
-                                    value: ' is var, then let T be the type of the initializer expression when treated '
-                                },
-                                {
-                                    value: 'as if it did not appear in an assignment context,'
-                                },
-                                'newline',
-                                {
-                                    value: '\tand were thus a standalone expression...'
-                                },
-                                'newline',
-                                'newline',
-                                {
-                                    value: '\t...'
-                                }
-                            ]
+                            zIndex: -1
                         }
                     },
                     {
-                        appearTime: 78000,
+                        appearTime: 100000,
+                        appearDuration: 0,
+                        object: {
+                            zIndex: 2
+                        }
+                    },
+                    {
+                        appearTime: 114000,
                         appearDuration: 2000,
                         object: {
+                            height: 200,
+                            width: 1280,
                             origin: {
-                                x: 1320, y: 10
+                                x: 1280,
+                                y: 520
                             },
-                            width: 1200,
-                            height: 700,
                             value: [
                                 {
-                                    value: '14.4. Local Variable Declarations',
+                                    value: '4.12.5. Initial Values of Variables',
                                     type: 'paragraphTitle'
                                 },
                                 'newline',
+                                {
+                                    value: '\t...'
+                                },
                                 'newline',
                                 {
-                                    value: '\tA '
+                                    value: '\t\t\t○ For type '
                                 },
                                 {
-                                    value: 'local variable declaration',
-                                    textStyle: 'italic'
+                                    value: 'float',
+                                    font: 'monospace'
                                 },
                                 {
-                                    value: ' declares and optionally initializes one or more local variables ('
+                                    value: ', the default value is positive zero, that is, '
                                 },
                                 {
-                                    value: '§4.12.3',
+                                    value: '0.0f',
+                                    font: 'monospace'
+                                },
+                                {
+                                    value: '.'
+                                },
+                                'newline',
+                                {
+                                    value: '\t...'
+                                },
+                                'newline',
+                                {
+                                    value: '\t\t\t○ For type '
+                                },
+                                {
+                                    value: 'char',
+                                    font: 'monospace'
+                                },
+                                {
+                                    value: ', the default value is the null character, that is, '
+                                },
+                                {
+                                    value: '\'\\u0000\'',
+                                    font: 'monospace'
+                                },
+                                {
+                                    value: '.'
+                                },
+                                'newline',
+                                {
+                                    value: '\t...'
+                                },
+                                'newline',
+                                {
+                                    value: '\t\t\t○ For all reference types ('
+                                },
+                                {
+                                    value: '§4.3',
                                     type: 'link'
                                 },
                                 {
-                                    value: ').'
-                                },
-                                'newline',
-                                'newline',
-                                {
-                                    value: '\t'
+                                    value: '), the default value is '
                                 },
                                 {
-                                    value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   ',
-                                    textStyle: 'italic',
-                                    type: 'codeSpec'
-                                },
-                                'newline',
-                                {
-                                    value: '\t'
+                                    value: 'null',
+                                    font: 'monospace'
                                 },
                                 {
-                                    value: '\tLocalVariableDeclaration:\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  ',
-                                    textStyle: 'italic',
-                                    type: 'codeSpec'
+                                    value: '.'
                                 },
-                                'newline',
-                                {
-                                    value: '\t'
-                                },
-                                {
-                                    value: '\t\t',
-                                    type: 'codeSpec'
-                                },
-                                {
-                                    value: '{',
-                                    textStyle: 'italic',
-                                    type: 'codeSpec'
-                                },
-                                {
-                                    value: 'VariableModifier',
-                                    textStyle: 'italic',
-                                    type: 'codeSpecLink'
-                                },
-                                {
-                                    value: '} ',
-                                    textStyle: 'italic',
-                                    type: 'codeSpec'
-                                },
-                                {
-                                    value: 'LocalVariableType',
-                                    textStyle: 'italic',
-                                    type: 'codeSpecLink'
-                                },
-                                {
-                                    value: ' ',
-                                    textStyle: 'italic',
-                                    type: 'codeSpec'
-                                },
-                                {
-                                    value: 'VariableDeclaratorList',
-                                    textStyle: 'italic',
-                                    type: 'codeSpecLink'
-                                },
-                                {
-                                    value: '\t\t\t\t\t\t\t\t\t',
-                                    type: 'codeSpec'
-                                },
-                                'newline',
-                                {
-                                    value: '\t'
-                                },
-                                {
-                                    value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   ',
-                                    type: 'codeSpec'
-                                },
-                                'newline',
-                                {
-                                    value: '\t'
-                                },
-                                {
-                                    value: '\tLocalVariableType:\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t ',
-                                    textStyle: 'italic',
-                                    type: 'codeSpec'
-                                },
-                                'newline',
-                                {
-                                    value: '\t'
-                                },
-                                {
-                                    value: '\t\t',
-                                    type: 'codeSpec'
-                                },
-                                {
-                                    value: 'UnannType',
-                                    textStyle: 'italic',
-                                    type: 'codeSpecLink'
-                                },
-                                {
-                                    value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  ',
-                                    type: 'codeSpec'
-                                },
-                                'newline',
-                                {
-                                    value: '\t'
-                                },
-                                {
-                                    value: '\t\tvar\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t',
-                                    type: 'codeSpec'
-                                },
-                                'newline',
-                                {
-                                    value: '\t'
-                                },
-                                {
-                                    value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   ',
-                                    type: 'codeSpec'
-                                },
-                                'newline',
-                                'newline',
-                                {
-                                    value: '\t...'
-                                },
-                                'newline',
-                                'newline',
-                                {
-                                    value: '14.4.1. Local Variable Declarators and Types',
-                                    type: 'paragraphTitle'
-                                },
-                                'newline',
-                                'newline',
-                                {
-                                    value: '\t...'
-                                },
-                                'newline',
-                                'newline',
-                                {
-                                    value: '\t● If the '
-                                },
-                                {
-                                    value: 'LocalVariableType',
-                                    textStyle: 'italic'
-                                },
-                                {
-                                    value: ' is var, then let T be the type of the initializer expression when treated '
-                                },
-                                {
-                                    value: 'as if it did not appear in an assignment context,'
-                                },
-                                'newline',
-                                {
-                                    value: '\tand were thus a standalone expression...'
-                                },
-                                'newline',
-                                'newline',
-                                {
-                                    value: '\t...'
-                                },
-                                'newline',
-                                'newline',
-                                {
-                                    value: '15.3. Type of an Expression',
-                                    type: 'paragraphTitle'
-                                },
-                                'newline',
-                                'newline',
-                                {
-                                    value: '\tIf an expression denotes a variable or a value, then the expression has a '
-                                },
-                                {
-                                    value: 'type known at compile time. The type of a standalone expression can'
-                                },
-                                'newline',
-                                {
-                                    value: '\tbe determined entirely from the contents of the expression; ...'
-                                },
-                                'newline',
                                 'newline',
                                 {
                                     value: '\t...'
@@ -668,361 +598,12 @@ export const InitialValuesOfVariable: LessonJsonType = {
                             ]
                         }
                     }
+
                 ]
             },
             {
                 presenceParameters: [{
-                    appearTime: 119000,
-                    appearDuration: 2000,
-                    disappearTime: 127000,
-                    disappearDuration: 1000
-                }],
-                object: {
-                    value: [
-                        {
-                            value: '14.4.1. Local Variable Declarators and Types',
-                            type: 'paragraphTitle'
-                        },
-                        'newline',
-                        'newline',
-                        {
-                            value: '...'
-                        },
-                        'newline',
-                        'newline',
-                        {
-                            value: '\tIt is a compile-time error if T is the null type.',
-                            textStyle: 'bold'
-                        },
-                        'newline',
-                        'newline',
-                        {
-                            value: '...'
-                        }
-                    ],
-                    origin: {
-                        x: 1605, y: 260
-                    },
-                    width: 630,
-                    height: 200,
-                    fontSize: 18,
-                    zIndex: 1
-                }
-            },
-            {
-                presenceParameters: [{
-                    appearTime: 162000,
-                    appearDuration: 2000,
-                    disappearTime: 171000,
-                    disappearDuration: 1000
-                }],
-                object: {
-                    value: [
-                        {
-                            value: '14.4. Local Variable Declarations',
-                            type: 'paragraphTitle'
-                        },
-                        'newline',
-                        'newline',
-                        {
-                            value: '\tIt is a compile-time error if the LocalVariableType is var and any of the following are true.',
-                            textStyle: 'bold'
-                        },
-                        'newline',
-                        'newline',
-                        {
-                            value: '\t ● More than one ',
-                            textStyle: 'bold'
-                        },
-                        {
-                            value: 'VariableDeclarator',
-                            textStyle: 'bolditalic'
-                        },
-                        {
-                            value: ' is listed.',
-                            textStyle: 'bold'
-                        },
-                        'newline',
-                        'newline',
-                        {
-                            value: '\t ● The ',
-                            textStyle: 'bold'
-                        },
-                        {
-                            value: 'VariableDeclaratorId',
-                            textStyle: 'bolditalic'
-                        },
-                        {
-                            value: ' has one or more bracket pairs.',
-                            textStyle: 'bold'
-                        },
-                        'newline',
-                        'newline',
-                        {
-                            value: '\t ● The ',
-                            textStyle: 'bold'
-                        },
-                        {
-                            value: 'VariableDeclarator',
-                            textStyle: 'bolditalic'
-                        },
-                        {
-                            value: ' lacks an initializer.',
-                            textStyle: 'bold'
-                        },
-                        'newline',
-                        'newline',
-                        {
-                            value: '\t ● The initializer of the ',
-                            textStyle: 'bold'
-                        },
-                        {
-                            value: 'VariableDeclarator',
-                            textStyle: 'bolditalic'
-                        },
-                        {
-                            value: ' is an ',
-                            textStyle: 'bold'
-                        },
-                        {
-                            value: 'ArrayInitializer.',
-                            textStyle: 'bolditalic'
-                        },
-                        'newline',
-                        'newline',
-                        {
-                            value: '\t ● The initializer of the ',
-                            textStyle: 'bold'
-                        },
-                        {
-                            value: 'VariableDeclarator',
-                            textStyle: 'bolditalic'
-                        },
-                        {
-                            value: ' contains a reference to the variable.',
-                            textStyle: 'bold'
-                        },
-                        'newline',
-                        'newline',
-                        {
-                            value: '\t\t'
-                        },
-                        {
-                            value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t ',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        'newline',
-                        {
-                            value: '\t\t'
-                        },
-                        {
-                            value: '\tExample 14.4-1. Local Variables Declared With var',
-                            textStyle: 'bold',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        {
-                            value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   ',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        'newline',
-                        {
-                            value: '\t\t'
-                        },
-                        {
-                            value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t ',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        'newline',
-                        {
-                            value: '\t\t'
-                        },
-                        {
-                            value: '\tThe following code illustrates these rules restricting the use of var: ',
-                            textStyle: 'italic',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        {
-                            value: '\t\t\t\t\t\t\t\t\t\t\t\t   ',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        'newline',
-                        {
-                            value: '\t\t'
-                        },
-                        {
-                            value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t ',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        'newline',
-                        {
-                            value: '\t\t'
-                        },
-                        {
-                            value: '\t',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        {
-                            value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   ',
-                            type: 'codeSpecExample'
-                        },
-                        {
-                            value: '\t',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        'newline',
-                        {
-                            value: '\t\t'
-                        },
-                        {
-                            value: '\t',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        {
-                            value: '\tvar a = 1;            // Legal\t\t\t\t\t\t\t\t\t ',
-                            type: 'codeSpecExample'
-                        },
-                        {
-                            value: '\t',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        'newline',
-                        {
-                            value: '\t\t'
-                        },
-                        {
-                            value: '\t',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        {
-                            value: '\tvar b = 2, c = 3.0;   // Illegal: multiple declarators\t\t\t ',
-                            type: 'codeSpecExample'
-                        },
-                        {
-                            value: '\t',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        'newline',
-                        {
-                            value: '\t\t'
-                        },
-                        {
-                            value: '\t',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        {
-                            value: '\tvar d[] = new int[4]; // Illegal: extra bracket pairs\t\t\t  ',
-                            type: 'codeSpecExample'
-                        },
-                        {
-                            value: '\t',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        'newline',
-                        {
-                            value: '\t\t'
-                        },
-                        {
-                            value: '\t',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        {
-                            value: '\tvar e;                // Illegal: no initializer\t\t\t\t   ',
-                            type: 'codeSpecExample'
-                        },
-                        {
-                            value: '\t',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        'newline',
-                        {
-                            value: '\t\t'
-                        },
-                        {
-                            value: '\t',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        {
-                            value: '\tvar f = { 6 };        // Illegal: array initializer\t\t\t\t',
-                            type: 'codeSpecExample'
-                        },
-                        {
-                            value: '\t',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        'newline',
-                        {
-                            value: '\t\t'
-                        },
-                        {
-                            value: '\t',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        {
-                            value: '\tvar g = (g = 7);      // Illegal: self reference in initializer\t',
-                            type: 'codeSpecExample'
-                        },
-                        {
-                            value: '\t',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        'newline',
-                        {
-                            value: '\t\t'
-                        },
-                        {
-                            value: '\t',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        {
-                            value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   ',
-                            type: 'codeSpecExample'
-                        },
-                        {
-                            value: '\t',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        'newline',
-                        {
-                            value: '\t\t'
-                        },
-                        {
-                            value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t ',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        'newline',
-                        {
-                            value: '\t\t'
-                        },
-                        {
-                            value: '\tThese restrictions help to avoid confusion about the type being represented by var.',
-                            textStyle: 'italic',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        {
-                            value: '\t\t\t\t\t\t ',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        },
-                        'newline',
-                        {
-                            value: '\t\t'
-                        },
-                        {
-                            value: '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t ',
-                            backgroundTextColor: animationStyle.codeSpecBackgroundColor
-                        }
-                    ],
-                    origin: {
-                        x: 1440, y: 5
-                    },
-                    width: 960,
-                    height: 710,
-                    fontSize: 18,
-                    zIndex: 1
-                }
-            },
-            {
-                presenceParameters: [{
-                    appearTime: 240000,
+                    appearTime: 143000,
                     appearDuration: 6000
                 }],
                 object: {
@@ -1041,7 +622,7 @@ export const InitialValuesOfVariable: LessonJsonType = {
             },
             {
                 presenceParameters: [{
-                    appearTime: 218000,
+                    appearTime: 149000,
                     appearDuration: 3000
                 }],
                 object: {

@@ -65,6 +65,7 @@ export const ValidJavaIdentifiers: LessonJsonType = {
                                 '1980_s',
                                 '_Q2_'
                             ],
+                            questionParamsFont: 'monospace',
                             questionNumberingType: 'letters',
                             questionParamsPosition: 'down',
                             questionParamsLineSpacing: 2
