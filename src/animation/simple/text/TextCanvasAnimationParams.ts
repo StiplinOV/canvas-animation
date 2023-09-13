@@ -31,26 +31,11 @@ export interface TextAnimationParamsType extends AnimationObjectParams, OnlyText
 
 export default class TextCanvasAnimationParams extends SimpleCanvasAnimationParams<TextJsonParamsType, TextAnimationParamsType> {
 
-    // mergeWithTransformation(obj: TextJsonParamsType, trans: Partial<TextJsonParamsType>, perc: number, style: AnimationStyle): OnlyTextParamsType {
-    //     let {fontSize, boxWidth, boxHeight} = obj
-    //     fontSize ??= style.fontSize
-    //     boxHeight = boxHeight && trans.boxHeight ? calculatePercentValue(boxHeight, trans.boxHeight, perc) : boxHeight
-    //     return {
-    //         value: typeof trans.value === 'string' ? calculateTextPercentValue(obj.value, trans.value, perc) : obj.value,
-    //         fontSize: trans.fontSize ? calculatePercentValue(fontSize, trans.fontSize, perc) : fontSize,
-    //         boxWidth: boxWidth && trans.boxWidth ? calculatePercentValue(boxWidth, trans.boxWidth, perc) : boxWidth,
-    //         boxHeight,
-    //         horizontalAlign: (trans.horizontalAlign && perc >= 0.5) ? trans.horizontalAlign : obj.horizontalAlign,
-    //         verticalAlign: (trans.verticalAlign && perc >= 0.5) ? trans.verticalAlign : obj.verticalAlign,
-    //         font: (trans.font && perc >= 0.5) ? trans.font : obj.font
-    //     }
-    // }
-
     protected toCanvasAnimation(animationStyle: AnimationStyle): TextCanvasAnimation {
         return new TextCanvasAnimation(this, animationStyle)
     }
 
-    getZeroParams(): Partial<TextAnimationParamsType> {
+    getZeroParams(obj: TextAnimationParamsType): Partial<TextAnimationParamsType> {
         return {
             value: ''
         }

@@ -221,7 +221,9 @@ export default interface AnimationStyle {
     selectedColor: string
     codeSpecBackgroundColor: string
     codeSpecExampleBackgroundColor: string
-    backgroundSelectedColor: string
+    successColor: string
+    warningColor: string
+    failColor: string
     formattedTextStrokeWeight: number
     formattedTextStrokeColor: string
     font: WebSafeFontsType
@@ -255,7 +257,9 @@ const defaultAnimationStyle: AnimationStyle = {
     primaryColor: '#637899',
     secondaryColor: '#ff0000',
     selectedColor: '#FF0000',
-    backgroundSelectedColor: '#FFFF00',
+    successColor: '#00FF00',
+    warningColor: '#FFFF00',
+    failColor: '#FF0000',
     formattedTextStrokeColor: '#485460',
     formattedTextStrokeWeight: 5,
     font: 'Verdana',

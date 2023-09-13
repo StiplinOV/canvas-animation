@@ -6,17 +6,22 @@ import {
 } from '../../CanvasAnimationParams'
 import ComplexCanvasAnimationParams, {CanvasAnimationParamsType} from '../ComplexCanvasAnimationParams'
 import {
+    createFormattedTextValueSegmentType,
     FormattedTextStyleName,
-    FormattedTextValueSegmentType
+    FormattedTextValueSegmentType, SelectedSubstringJsonType
 } from '../../simple/formattedtext/FormattedTextCanvasAnimationParams'
-import {addPoints} from '../../../common/Utils'
+import {addPoints, requireValueFromMap} from '../../../common/Utils'
 import {animationStyle} from '../../../Animations'
 import {Point} from '../../../common/Point'
 import {ObjectParamsObject} from '../../ObjectParamsObject'
-import {uniqueArray} from '../../../common/Alghoritm'
 import {SupportedFormattedLanguages, WebSafeFontsType} from '../../../AnimationStyles'
 
 type QuestionParamsOptionsJsonType = (string | (FormattedTextValueSegmentType | string)[])[]
+
+type SelectedLineType = {
+    type: 'success' | 'fail' | 'warning'
+    num: number
+}
 
 export interface OnlyCodeQuestionnaireParams {
     width: number
@@ -27,11 +32,9 @@ export interface CodeQuestionnaireJsonParams extends JsonObjectParams, OnlyCodeQ
     codeText?: string
     language?: SupportedFormattedLanguages
     codeFormattedTextStyle?: FormattedTextStyleName
-    codeSelectedSubstrings?: {
-        from: number
-        to: number
-    }[]
-    questionnaireSelectedLines?: number[]
+    codeSelectedSubstrings?: SelectedSubstringJsonType[]
+    codeSelectedLines?: (SelectedLineType | number)[]
+    questionnaireSelectedLines?: (SelectedLineType | number)[]
     codeFontSize?: number
     codePartWidth?: number
     codePartHeight?: number
@@ -51,11 +54,9 @@ export interface CodeQuestionnaireAnimationObjectParams extends AnimationObjectP
     codeText: string
     language: SupportedFormattedLanguages | null
     codeFormattedTextStyle: FormattedTextStyleName | null
-    codeSelectedSubstrings: {
-        from: number
-        to: number
-    }[]
-    questionnaireSelectedLines: number[]
+    codeSelectedSubstrings: SelectedSubstringJsonType[]
+    codeSelectedLines: SelectedLineType[]
+    questionnaireSelectedLines: SelectedLineType[]
     codeFontSize: number
     codePartWidth: number
     codePartHeight: number
@@ -73,13 +74,14 @@ export interface CodeQuestionnaireAnimationObjectParams extends AnimationObjectP
 
 export interface CodeQuestionnaireCanvasAnimationSelection {
     code?: {
-        substrings: {
+        substrings?: {
             from: number
             to: number
         }[]
+        lines?: (SelectedLineType | number)[]
     }
     questionnaire?: {
-        lines: number[]
+        lines: (SelectedLineType | number)[]
     }
 }
 
@@ -100,7 +102,8 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
             language: jsonObject.language ?? null,
             codeFormattedTextStyle: jsonObject.codeFormattedTextStyle ?? animationStyle.formattedTextStyle,
             codeSelectedSubstrings: jsonObject.codeSelectedSubstrings ?? [],
-            questionnaireSelectedLines: jsonObject.questionnaireSelectedLines ?? [],
+            codeSelectedLines: this.convertJsonToAnimationSelectedLines(jsonObject.codeSelectedLines),
+            questionnaireSelectedLines: this.convertJsonToAnimationSelectedLines(jsonObject.questionnaireSelectedLines),
             codeFontSize: jsonObject.codeFontSize ?? animationStyle.fontSize,
             codePartWidth: jsonObject.codePartWidth ?? 0,
             codePartHeight: jsonObject.codePartHeight ?? 0,
@@ -117,11 +120,34 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         }
     }
 
+    private convertJsonToAnimationSelectedLines(jsonParam?: (SelectedLineType | number)[]): SelectedLineType[] {
+        return jsonParam?.map(l => {
+            if (typeof l === 'number') {
+                return {
+                    type: 'warning',
+                    num: l
+                }
+            }
+            return l
+        }) ?? []
+    }
+
     protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<CodeQuestionnaireJsonParams>): Partial<CodeQuestionnaireAnimationObjectParams> {
         const questionParamsOptions = jsonObject.questionParamsOptions === undefined ? undefined : this.convertJsonToAnimationQuestionParamOptions(jsonObject.questionParamsOptions)
+        let codeSelectedLines: SelectedLineType[] | undefined
+        let questionnaireSelectedLines: SelectedLineType[] | undefined
+        if (jsonObject.codeSelectedLines) {
+            codeSelectedLines = this.convertJsonToAnimationSelectedLines(jsonObject.codeSelectedLines)
+        }
+        if (jsonObject.questionnaireSelectedLines) {
+            questionnaireSelectedLines = this.convertJsonToAnimationSelectedLines(jsonObject.questionnaireSelectedLines)
+        }
+
         return {
             ...jsonObject,
-            questionParamsOptions
+            codeSelectedLines,
+            questionParamsOptions,
+            questionnaireSelectedLines
         }
     }
 
@@ -168,21 +194,29 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
             })
         }
         if (object.codeText) {
+            const value = {
+                text: object.codeText,
+                formattedTextStyle: object.codeFormattedTextStyle ?? undefined,
+                language: object.language ?? undefined
+            }
+            const selectedSubstrings: SelectedSubstringJsonType[] = [
+                ...object.codeSelectedSubstrings.map(s => ({
+                    from: s.from,
+                    to: s.to,
+                    backgroundColor: animationStyle.selectedColor
+                })),
+                ...this.convertSelectedLinesToSelectedSubstrings(
+                    createFormattedTextValueSegmentType(value, this.getAnimationStyle()),
+                    object.codeSelectedLines
+                )
+            ]
             result.set('codePart', {
                 type: 'formattedText',
                 objectParams: {
                     font: 'monospace',
                     origin: this.getCodePartOrigin(object),
-                    value: {
-                        text: object.codeText,
-                        formattedTextStyle: object.codeFormattedTextStyle ?? undefined,
-                        language: object.language ?? undefined
-                    },
-                    selectedSubstrings: object.codeSelectedSubstrings.map(s => ({
-                        from: s.from,
-                        to: s.to,
-                        backgroundColor: animationStyle.selectedColor
-                    })) ?? [],
+                    value,
+                    selectedSubstrings,
                     fontSize: object.codeFontSize,
                     numberedLines: object.codeLinesNumbered,
                     width: this.getCodePartWidth(object),
@@ -213,42 +247,6 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
             if (value.length > 0) {
                 value.splice(value.length - 1, 1)
             }
-            const selectedSubstrings: {
-                from: number
-                to: number
-                color?: string
-                backgroundColor?: string
-                strikethrough?: boolean
-            }[] = []
-            const selectedLines = uniqueArray([...object.questionParamsStrikethroughOptions, ...object.questionnaireSelectedLines])
-            let lineNumber = 0
-            for (let i = 0; i < value.length; i++) {
-                const valueSegment = value[i]
-                if (valueSegment === 'newline') {
-                    lineNumber++
-                    continue
-                }
-                if (!selectedLines.includes(lineNumber)) {
-                    continue
-                }
-                let curSubstringPosition = 0
-                for (let j = 0; j < i; j++) {
-                    const seg = value[j]
-                    if (seg === 'newline') {
-                        curSubstringPosition++
-                    } else {
-                        curSubstringPosition += seg.value.length
-                    }
-                }
-
-                selectedSubstrings.push({
-                    from: curSubstringPosition,
-                    to: curSubstringPosition + valueSegment.value.length,
-                    color: animationStyle.fontColor,
-                    strikethrough: object.questionParamsStrikethroughOptions.includes(lineNumber),
-                    backgroundColor: object.questionnaireSelectedLines.includes(lineNumber) ? animationStyle.backgroundSelectedColor : animationStyle.backgroundColor
-                })
-            }
 
             result.set('questionPart', {
                 type: 'formattedText',
@@ -260,9 +258,68 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
                     zIndex: 1,
                     width: this.getQuestionPartWidth(object),
                     height: this.getQuestionPartHeight(object),
-                    selectedSubstrings: selectedSubstrings.length > 0 ? selectedSubstrings : undefined,
+                    selectedSubstrings: this.convertSelectedLinesToSelectedSubstrings(
+                        value,
+                        object.questionnaireSelectedLines,
+                        object.questionParamsStrikethroughOptions
+                    ),
                     lineSpacing: object.questionParamsLineSpacing ?? animationStyle.lineSpacing
                 }
+            })
+        }
+        return result
+    }
+
+    private convertSelectedLinesToSelectedSubstrings (
+        value: FormattedTextValueSegmentType[],
+        selectedLines: SelectedLineType[],
+        strikethroughLinesParam?: number[]
+    ): SelectedSubstringJsonType[] {
+        const result: SelectedSubstringJsonType[] = []
+        const questionnaireSelectedLines = new Map<number, SelectedLineType>()
+        const strikethroughLines = strikethroughLinesParam ?? []
+        selectedLines.forEach(l => {
+            questionnaireSelectedLines.set(l.num, l)
+        })
+        let lineNumber = 0
+        for (let i = 0; i < value.length; i++) {
+            const valueSegment = value[i]
+            if (valueSegment === 'newline') {
+                lineNumber++
+                continue
+            }
+            if (!strikethroughLines.includes(lineNumber) && !questionnaireSelectedLines.has(lineNumber)) {
+                continue
+            }
+            let curSubstringPosition = 0
+            for (let j = 0; j < i; j++) {
+                const seg = value[j]
+                if (seg === 'newline') {
+                    curSubstringPosition++
+                } else {
+                    curSubstringPosition += seg.value.length
+                }
+            }
+
+            let backgroundColor = animationStyle.backgroundColor
+
+            if (questionnaireSelectedLines.has(lineNumber)) {
+                const backgroundColorType = requireValueFromMap(questionnaireSelectedLines, lineNumber).type
+                if (backgroundColorType === 'success') {
+                    backgroundColor = animationStyle.successColor
+                } else if (backgroundColorType === 'fail') {
+                    backgroundColor = animationStyle.failColor
+                } else {
+                    backgroundColor = animationStyle.warningColor
+                }
+            }
+
+            result.push({
+                from: curSubstringPosition,
+                to: curSubstringPosition + valueSegment.value.length,
+                color: animationStyle.fontColor,
+                strikethrough: strikethroughLines.includes(lineNumber),
+                backgroundColor
             })
         }
         return result
@@ -279,7 +336,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         let result = object.height - this.getTitleHeight(object)
 
         if (object.questionParamsPosition === 'down') {
-            const numberOfCodeLines = object.codeText ? object.codeText.split('\n').length : 0
+            const numberOfCodeLines = object.codeText ? object.codeText.split('\n').length + 2 : 0
             const numberOfQuestionLines = object.questionParamsOptions?.length ?? 0
             result = (result * (numberOfCodeLines)) / (numberOfCodeLines + (numberOfQuestionLines * object.questionParamsLineSpacing))
         }
@@ -342,6 +399,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
             codeText: '',
             codeFormattedTextStyle: animationStyle.formattedTextStyle,
             codeSelectedSubstrings: [],
+            codeSelectedLines: [],
             questionnaireSelectedLines: [],
             questionParamsPosition: 'down',
             questionParamsFontSize: animationStyle.fontSize
@@ -349,10 +407,21 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
     }
 
     protected convertSelectionToTransformObjectParams(selection: SelectionType<CodeQuestionnaireCanvasAnimationSelection>): TransformObjectParams<CodeQuestionnaireAnimationObjectParams>[] {
+        const questionnaireSelectionLines = selection.type?.questionnaire?.lines
+        const codeSelectionLines = selection.type?.code?.lines
+        let questionnaireSelectedLines: SelectedLineType[] | undefined
+        let codeSelectedLines: SelectedLineType[] | undefined
+        if (questionnaireSelectionLines) {
+            questionnaireSelectedLines = this.convertJsonToAnimationSelectedLines(questionnaireSelectionLines)
+        }
+        if (codeSelectionLines) {
+            codeSelectedLines = this.convertJsonToAnimationSelectedLines(codeSelectionLines)
+        }
         return [{
             transformObject: {
+                codeSelectedLines,
                 codeSelectedSubstrings: selection.type?.code?.substrings,
-                questionnaireSelectedLines: selection.type?.questionnaire?.lines
+                questionnaireSelectedLines
             },
             appearType: 'immediate',
             disappearType: 'immediateAtTheEnd'
@@ -364,6 +433,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
         params.language !== undefined && objectParamsObject.setStringLiteralParam('language', params.language)
         params.codeFormattedTextStyle !== undefined && objectParamsObject.setStringLiteralParam('codeHighlightStyle', params.codeFormattedTextStyle ?? '')
         params.codeSelectedSubstrings !== undefined && objectParamsObject.setArrayParam('codeSelectedSubstrings', params.codeSelectedSubstrings)
+        params.codeSelectedLines !== undefined && objectParamsObject.setSetParam('codeSelectedLines', params.codeSelectedLines)
         params.questionnaireSelectedLines !== undefined && objectParamsObject.setSetParam('questionnaireSelectedLines', params.questionnaireSelectedLines)
         params.codeFontSize !== undefined && objectParamsObject.setNumberParam('codeFontSize', params.codeFontSize)
         params.width !== undefined && objectParamsObject.setNumberParam('width', params.width)
@@ -389,7 +459,8 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
             language: objectParamsObject.getStringLiteralParam<SupportedFormattedLanguages>('language'),
             codeFormattedTextStyle: objectParamsObject.getStringLiteralParam<FormattedTextStyleName>('codeHighlightStyle'),
             codeSelectedSubstrings: objectParamsObject.getArrayParam('codeSelectedSubstrings'),
-            questionnaireSelectedLines: Array.from(objectParamsObject.getSetParam<number>('questionnaireSelectedLines').values()),
+            codeSelectedLines: Array.from(objectParamsObject.getSetParam<SelectedLineType>('codeSelectedLines').values()),
+            questionnaireSelectedLines: Array.from(objectParamsObject.getSetParam<SelectedLineType>('questionnaireSelectedLines').values()),
             codeFontSize: objectParamsObject.getNumberParam('codeFontSize'),
             width: objectParamsObject.getNumberParam('width'),
             height: objectParamsObject.getNumberParam('height'),

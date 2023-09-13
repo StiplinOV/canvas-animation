@@ -240,6 +240,9 @@ export const toAppearancePercent = (time: number, appearanceParams: PresencePara
     if (time < appearTime) {
         return 0
     }
+    if (appearDuration === 0) {
+        return 1
+    }
     if (appearDuration >= (time - appearTime)) {
         return (time - appearTime) / appearDuration
     } else if ((time > disappearTime) && (disappearDuration >= (time - disappearTime))) {

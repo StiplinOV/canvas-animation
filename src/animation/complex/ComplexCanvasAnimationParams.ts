@@ -56,7 +56,6 @@ export default abstract class ComplexCanvasAnimationParams<
         }
 
         const initialObjectParams = objectParamsWithTime[0]
-
         const result = new Map<string, SimpleCanvasAnimationParams>()
         const includedAnimationParams = this.getIncludedAnimationParamsByParameter(initialObjectParams.objectParams)
         includedAnimationParams.forEach((params, key) => {

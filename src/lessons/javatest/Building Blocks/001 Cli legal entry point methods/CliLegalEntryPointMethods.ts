@@ -69,26 +69,6 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                     height: 720,
                     questionParamsFontSize: 35
                 },
-                selections: [
-                    {
-                        time: 93000,
-                        duration: 25000,
-                        type: {
-                            questionnaire: {
-                                lines: [4]
-                            }
-                        }
-                    },
-                    {
-                        time: 161000,
-                        duration: 25000,
-                        type: {
-                            questionnaire: {
-                                lines: [3, 4]
-                            }
-                        }
-                    }
-                ],
                 transformations: [
                     {
                         appearTime: 22000,
@@ -127,6 +107,32 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                         appearDuration: 0,
                         object: {
                             questionParamsStrikethroughOptions: [0, 1, 2, 5]
+                        }
+                    },
+                    {
+                        appearTime: 93000,
+                        appearDuration: 0,
+                        object: {
+                            questionnaireSelectedLines: [{
+                                type: 'success',
+                                num: 4
+                            }]
+                        }
+                    },
+                    {
+                        appearTime: 161000,
+                        appearDuration: 0,
+                        object: {
+                            questionnaireSelectedLines: [
+                                {
+                                    type: 'success',
+                                    num: 3
+                                },
+                                {
+                                    type: 'success',
+                                    num: 4
+                                }
+                            ]
                         }
                     }
                 ]

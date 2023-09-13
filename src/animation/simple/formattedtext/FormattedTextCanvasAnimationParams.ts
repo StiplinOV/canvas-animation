@@ -212,6 +212,21 @@ const styles = {
     zenburn
 }
 
+const splitTextValueSegmentType = (param: FormattedTextValueSegmentType): FormattedTextValueSegmentType[] => {
+    const result: FormattedTextValueSegmentType[] = []
+    if (param === 'newline') {
+        return [param]
+    }
+    for (let i = 0; i < param.value.length; i++) {
+        const char = param.value.charAt(i)
+        result.push({
+            ...param,
+            value: char
+        })
+    }
+    return result
+}
+
 export const createFormattedTextValueSegmentType = (object: FormattedTextValueType, animationStyle: AnimationStyle): FormattedTextValueSegmentType[] => {
     type NodeType = string | {
         children: NodeType[]
@@ -223,7 +238,7 @@ export const createFormattedTextValueSegmentType = (object: FormattedTextValueTy
     }
 
     if (Array.isArray(object)) {
-        return object
+        return object.flatMap(f => splitTextValueSegmentType(f))
     }
     const {text} = object
     const style = styles[object.formattedTextStyle ?? animationStyle.formattedTextStyle]
@@ -293,7 +308,7 @@ export const createFormattedTextValueSegmentType = (object: FormattedTextValueTy
                 backgroundTextColor: properties.backgroundColor
             }
         })
-    })
+    }).flatMap(f => splitTextValueSegmentType(f))
 }
 
 const cssPropToFontStyle = (style: React.CSSProperties): THE_STYLE => {
@@ -342,18 +357,20 @@ export type FormattedSyntaxValueType = {
 
 export type FormattedTextValueType = FormattedSyntaxValueType | FormattedTextValueSegmentType[]
 
+export type SelectedSubstringJsonType = {
+    from: number
+    to: number
+    color?: string
+    backgroundColor?: string
+    strikethrough?: boolean
+}
+
 export interface FormattedTextJsonParamsType extends JsonObjectParams {
     value: FormattedTextValueType
     fontSize?: number
     font?: WebSafeFontsType | 'monospace'
     backgroundColor?: string
-    selectedSubstrings?: {
-        from: number
-        to: number
-        color?: string
-        backgroundColor?: string
-        strikethrough?: boolean
-    }[]
+    selectedSubstrings?: SelectedSubstringJsonType[]
     lineSpacing?: number
     numberedLines?: boolean
     numberingColor?: string
@@ -417,21 +434,6 @@ export default class FormattedTextCanvasAnimationParams extends SimpleCanvasAnim
         return new FormattedTextCanvasAnimation(this, animationStyle)
     }
 
-    private splitTextValueSegmentType(param: FormattedTextValueSegmentType): FormattedTextValueSegmentType[] {
-        const result: FormattedTextValueSegmentType[] = []
-        if (param === 'newline') {
-            return [param]
-        }
-        for (let i = 0; i < param.value.length; i++) {
-            const char = param.value.charAt(i)
-            result.push({
-                ...param,
-                value: char
-            })
-        }
-        return result
-    }
-
     protected convertSelectionToTransformObjectParams(selection: FormattedTextCanvasAnimationSelection): TransformObjectParams<FormattedTextAnimationParamsType>[] {
         const colorOverrides: ColorOverride[] = []
         const backgroundColorOverrides: BackgroundColorOverride[] = []
@@ -480,7 +482,7 @@ export default class FormattedTextCanvasAnimationParams extends SimpleCanvasAnim
     protected convertJsonObjectToAnimationObject(jsonObject: FormattedTextJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): FormattedTextAnimationParamsType {
         const animationStyle = this.getAnimationStyle()
         const overrides = this.jsonSelectedSubstringToOverrides(jsonObject)
-        const value = createFormattedTextValueSegmentType(jsonObject.value, this.getAnimationStyle()).flatMap(f => this.splitTextValueSegmentType(f))
+        const value = createFormattedTextValueSegmentType(jsonObject.value, this.getAnimationStyle())
         let numberOfLines = 0
         if (value.length > 0) {
             numberOfLines = value.filter(v => v === 'newline').length + 1
@@ -540,7 +542,7 @@ export default class FormattedTextCanvasAnimationParams extends SimpleCanvasAnim
         return {
             ...jsonObject,
             font: jsonObject.font === 'monospace' ? animationStyle.monospaceFont : (jsonObject.font ?? animationStyle.formattedTextFont),
-            value: jsonObject.value ? createFormattedTextValueSegmentType(jsonObject.value, this.getAnimationStyle()).flatMap(f => this.splitTextValueSegmentType(f)) : undefined,
+            value: jsonObject.value ? createFormattedTextValueSegmentType(jsonObject.value, this.getAnimationStyle()) : undefined,
             colorOverrides: overrides.colorOverrides,
             backgroundColorOverrides: overrides.backgroundColorOverrides,
             strikeTroughOverrides: overrides.strikeTroughOverrides
@@ -556,7 +558,11 @@ export default class FormattedTextCanvasAnimationParams extends SimpleCanvasAnim
         const backgroundColorOverrides: BackgroundColorOverride[] = []
         const strikeTroughOverrides: StrikeTroughOverride[] = []
 
-        jsonObject.selectedSubstrings?.forEach(s => {
+        if (jsonObject.selectedSubstrings === undefined) {
+            return {}
+        }
+
+        jsonObject.selectedSubstrings.forEach(s => {
             s.color && colorOverrides.push({
                 from: s.from,
                 to: s.to,
@@ -575,9 +581,9 @@ export default class FormattedTextCanvasAnimationParams extends SimpleCanvasAnim
         })
 
         return {
-            colorOverrides: colorOverrides.length > 0 ? colorOverrides : undefined,
-            backgroundColorOverrides: backgroundColorOverrides.length > 0 ? backgroundColorOverrides : undefined,
-            strikeTroughOverrides: strikeTroughOverrides.length > 0 ? strikeTroughOverrides : undefined
+            colorOverrides,
+            backgroundColorOverrides,
+            strikeTroughOverrides
         }
     }
 

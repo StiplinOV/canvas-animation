@@ -283,7 +283,7 @@ export default abstract class CanvasAnimationParams<
 
     public getZeroObject(time?: number): U {
         let object = this.getObject()
-        if (time !== undefined) {
+        if (time !== undefined && time !== Infinity) {
             object = this.calculateObjectParamsInTime(time, true)
         }
         return {
