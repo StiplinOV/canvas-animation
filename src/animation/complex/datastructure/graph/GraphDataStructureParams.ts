@@ -1,13 +1,13 @@
 import dagre from 'dagre'
 import {AnimationObjectParams, JsonObjectParams} from '../../../CanvasAnimationParams'
 import ComplexCanvasAnimationParams, {CanvasAnimationParamsType} from '../../ComplexCanvasAnimationParams'
-import { addPoints, getVectorAngle, mergeValueToMap, requireValueFromMap, swapPointXY } from '../../../../common/Utils'
-import { THE_STYLE } from 'p5'
-import AnimationStyle, { ColorType, WebSafeFontsType } from '../../../../AnimationStyles'
-import ArrowCanvasAnimationParams, { ArrowJsonParamsType, ArrowType } from '../../arrow/ArrowCanvasAnimationParams'
-import { v4 } from 'uuid'
-import { Point } from '../../../../common/Point'
-import { ObjectParamsObject } from '../../../ObjectParamsObject'
+import {addPoints, getVectorAngle, mergeValueToMap, requireValueFromMap, swapPointXY} from '../../../../common/Utils'
+import {THE_STYLE} from 'p5'
+import AnimationStyle, {ColorType, WebSafeFontsType} from '../../../../AnimationStyles'
+import ArrowCanvasAnimationParams, {ArrowJsonParamsType, ArrowType} from '../../arrow/ArrowCanvasAnimationParams'
+import {v4} from 'uuid'
+import {Point} from '../../../../common/Point'
+import {ObjectParamsObject} from '../../../ObjectParamsObject'
 
 type VerticesEdges = {
     vertices: VertexType[]
@@ -53,6 +53,9 @@ export interface GraphDataStructureJsonParamsType extends JsonObjectParams {
     vertexStyle?: VertexStyle
     edgeStyle?: EdgeStyle
     transpose?: boolean
+    frame?: {
+        padding?: number
+    } | null
 }
 
 export interface GraphDataStructureAnimationParamsType extends AnimationObjectParams {
@@ -61,6 +64,8 @@ export interface GraphDataStructureAnimationParamsType extends AnimationObjectPa
     vertexStyle: VertexStyle
     edgeStyle: EdgeStyle
     transpose: boolean
+    frame: boolean
+    framePadding: number
 }
 
 export default class GraphDataStructureParams extends ComplexCanvasAnimationParams<GraphDataStructureJsonParamsType, GraphDataStructureAnimationParamsType> {
@@ -69,18 +74,36 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
         jsonObject: GraphDataStructureJsonParamsType,
         animationObjectDefaultParams: AnimationObjectParams
     ): GraphDataStructureAnimationParamsType {
+        let framePadding = 0
+
+        if (jsonObject.frame) {
+            framePadding = jsonObject.frame.padding ?? jsonObject
+                .vertices
+                .map(v => v.style?.diameter ?? jsonObject.vertexStyle?.diameter ?? this.getAnimationStyle().vertexDiameter)
+                .reduce((v1, v2) => {
+                    return v1 > v2 ? v1 : v2
+                })
+        }
+
         return {
             vertexStyle: {},
             edgeStyle: {},
             ...animationObjectDefaultParams,
             ...jsonObject,
-            transpose: Boolean(jsonObject.transpose)
+            transpose: Boolean(jsonObject.transpose),
+            frame: Boolean(jsonObject.frame),
+            framePadding
         }
     }
 
     protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<GraphDataStructureJsonParamsType>): Partial<GraphDataStructureAnimationParamsType> {
+        let frame: boolean | undefined
+        if (jsonObject.frame !== undefined) {
+            frame = Boolean(jsonObject.frame)
+        }
         return {
-            ...jsonObject
+            ...jsonObject,
+            frame
         }
     }
 
@@ -90,6 +113,8 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
         params.transpose !== undefined && objectParamsObject.setBooleanParam('transpose', params.transpose)
         params.edgeStyle !== undefined && objectParamsObject.setObjectParam('edgeStyle', params.edgeStyle)
         params.vertexStyle !== undefined && objectParamsObject.setObjectParam('vertexStyle', params.vertexStyle)
+        params.frame !== undefined && objectParamsObject.setBooleanParam('frame', params.frame)
+        params.framePadding !== undefined && objectParamsObject.setNumberParam('framePadding', params.framePadding)
     }
 
     protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): GraphDataStructureAnimationParamsType {
@@ -99,21 +124,25 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
             vertices: objectParamsObject.getSetParam('vertices'),
             transpose: objectParamsObject.getBooleanParam('transpose'),
             edgeStyle: objectParamsObject.getObjectParam('edgeStyle'),
-            vertexStyle: objectParamsObject.getObjectParam('vertexStyle')
+            vertexStyle: objectParamsObject.getObjectParam('vertexStyle'),
+            frame: objectParamsObject.getBooleanParam('frame'),
+            framePadding: objectParamsObject.getNumberParam('framePadding')
         }
     }
 
-    protected getZeroParams (): Omit<GraphDataStructureAnimationParamsType, keyof JsonObjectParams> {
+    protected getZeroParams(): Omit<GraphDataStructureAnimationParamsType, keyof JsonObjectParams> {
         return {
             edges: [],
             vertices: [],
             transpose: false,
             edgeStyle: {},
-            vertexStyle: {}
+            vertexStyle: {},
+            frame: false,
+            framePadding: 0
         }
     }
 
-    protected getIncludedAnimationParamsByParameter (object: GraphDataStructureAnimationParamsType): Map<string, CanvasAnimationParamsType> {
+    protected getIncludedAnimationParamsByParameter(object: GraphDataStructureAnimationParamsType): Map<string, CanvasAnimationParamsType> {
         const {
             vertexStyle,
             edgeStyle,
@@ -125,9 +154,10 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
         const vertexIdMap = this.createVertexIdMap(object)
         const edgeIdMap = this.createEdgeIdMap(object)
         const pointedToItselfVertexIdEdgeMap = new Map<string, EdgeType>()
-        const { transpose } = object
+        const {transpose} = object
         let maxX = 0
         let maxY = 0
+        const framePadding = object.framePadding
 
         this.getVertexEdgeSet(vertexIdMap, object.edges).forEach((set, index) => {
             const prevMaxX = maxX
@@ -153,30 +183,29 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
                 if (transpose) {
                     dagreNode = swapPointXY(dagreNode)
                 }
-                maxX = Math.max(maxX, prevMaxX + dagreNode.x)
-                maxY = Math.max(maxY, prevMaxY + dagreNode.y)
                 const vertex = requireValueFromMap(vertexIdMap, id)
                 const style = this.calculateVertexStyle(animationStyle, vertexStyle, vertex.style)
-
+                maxX = Math.max(maxX, prevMaxX + dagreNode.x + style.diameter / 2)
+                maxY = Math.max(maxY, prevMaxY + dagreNode.y + style.diameter / 2)
                 result.set(`vertexCircle ${id}`, {
                     type: 'circle',
                     objectParams: {
                         origin: addPoints(origin, offset, {
-                            x: dagreNode.x,
-                            y: dagreNode.y
+                            x: dagreNode.x + framePadding,
+                            y: dagreNode.y + framePadding
                         }),
                         diameter: style.diameter,
                         strokeColor: style.strokeColor,
                         fillColor: style.fillColor,
-                        zIndex: object.zIndex
+                        zIndex: object.zIndex + 1
                     }
                 })
                 vertex.label && result.set(`vertexValue ${id}`, {
                     type: 'text',
                     objectParams: {
                         origin: addPoints(origin, offset, {
-                            x: dagreNode.x,
-                            y: dagreNode.y
+                            x: dagreNode.x + framePadding,
+                            y: dagreNode.y + framePadding
                         }),
                         value: vertex.label,
                         fontSize: style.fontSize,
@@ -185,7 +214,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
                         font: style.font,
                         textStyle: style.textStyle,
                         fillColor: style.fontColor,
-                        zIndex: object.zIndex + 1
+                        zIndex: object.zIndex + 2
                     }
                 })
             })
@@ -211,15 +240,24 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
                     y: wNode.y - vNode.y
                 }) % (2 * Math.PI)
                 const endVertexAngle = (startVertexAngle + Math.PI) % (2 * Math.PI)
-                const edgeStartPoint = this.calculateEdgePoint(vVertexDiameter, addPoints(origin, offset, vNode), startVertexAngle)
-                const edgeEndPoint = this.calculateEdgePoint(wVertexDiameter, addPoints(origin, offset, wNode), endVertexAngle)
+                const edgeStartPoint = this.calculateEdgePoint(
+                    vVertexDiameter,
+                    addPoints(origin, offset, vNode, {x: framePadding, y: framePadding}),
+                    startVertexAngle
+                )
+                const edgeEndPoint = this.calculateEdgePoint(
+                    wVertexDiameter,
+                    addPoints(origin, offset, wNode, {x: framePadding, y: framePadding}),
+                    endVertexAngle
+                )
                 mergeValueToMap(vertexEdgeAnglesMap, edge.sourceId, startVertexAngle, () => new Set<number>())
                 mergeValueToMap(vertexEdgeAnglesMap, edge.targetId, endVertexAngle, () => new Set<number>())
                 new ArrowCanvasAnimationParams({
                     object: {
                         ...this.calculateArrowParams(animationStyle, edge, edgeStyle),
                         origin: edgeStartPoint,
-                        endPoint: edgeEndPoint
+                        endPoint: edgeEndPoint,
+                        zIndex: object.zIndex + 2
                     }
                 }, this.getP5(), animationStyle).getIncludedAnimationParams().forEach((value, key) => {
                     result.set(`edgeLine ${e.v}-${e.w} ${key}`, value)
@@ -237,12 +275,13 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
                 new ArrowCanvasAnimationParams({
                     object: {
                         ...this.calculateArrowParams(animationStyle, edge, edgeStyle),
-                        origin: addPoints(object.origin, offset, dagreNode, points[0]),
-                        endPoint: addPoints(object.origin, offset, dagreNode, points[3]),
+                        origin: addPoints(object.origin, offset, dagreNode, points[0], {x: framePadding, y: framePadding}),
+                        endPoint: addPoints(object.origin, offset, dagreNode, points[3], {x: framePadding, y: framePadding}),
                         bezierParams: {
-                            point2: addPoints(object.origin, offset, dagreNode, points[1]),
-                            point3: addPoints(object.origin, offset, dagreNode, points[2])
-                        }
+                            point2: addPoints(object.origin, offset, dagreNode, points[1], {x: framePadding, y: framePadding}),
+                            point3: addPoints(object.origin, offset, dagreNode, points[2], {x: framePadding, y: framePadding})
+                        },
+                        zIndex: object.zIndex + 2
                     }
                 }, this.getP5(), animationStyle).getIncludedAnimationParams().forEach((value, key) => {
                     result.set(`edgeLine ${vertexId}-${vertexId} ${key}`, value)
@@ -251,10 +290,24 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
             //
         })
 
+        if (object.frame) {
+            result.set('frameRect', {
+                type: 'rectangle',
+                objectParams: {
+                    origin: object.origin,
+                    width: maxX + framePadding * 2,
+                    height: maxY + framePadding * 2,
+                    zIndex: object.zIndex,
+                    strokeColor: 'primary',
+                    weight: 'bold'
+                }
+            })
+        }
+
         return result
     }
 
-    private getVertexEdgeSet (vertexIdMap: Map<string, VertexType>, edges: EdgeType[]): VerticesEdges[] {
+    private getVertexEdgeSet(vertexIdMap: Map<string, VertexType>, edges: EdgeType[]): VerticesEdges[] {
         const result: VerticesEdges[] = []
         const vertexGroupMap = new Map<string, number>()
         const edgeMap = new Map<string, Set<string>>()
@@ -303,7 +356,9 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
         return result
     }
 
-    private calculateVertexStyle (animationStyle: AnimationStyle, globalStyle: VertexStyle, style?: VertexStyle): VertexStyle & { diameter: number } {
+    private calculateVertexStyle(animationStyle: AnimationStyle, globalStyle: VertexStyle, style?: VertexStyle): VertexStyle & {
+        diameter: number
+    } {
         return {
             diameter: animationStyle.vertexDiameter,
             fontSize: animationStyle.vertexFontSize,
@@ -312,7 +367,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
         }
     }
 
-    private calculateArrowParams (animationStyle: AnimationStyle, edge: EdgeType, globalStyle: EdgeStyle): Partial<ArrowJsonParamsType> {
+    private calculateArrowParams(animationStyle: AnimationStyle, edge: EdgeType, globalStyle: EdgeStyle): Partial<ArrowJsonParamsType> {
         const edgeStyle: EdgeStyle = {
             fontSize: animationStyle.edgeFontSize,
             ...globalStyle,
@@ -332,7 +387,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
         }
     }
 
-    private createDagreGraph (): dagre.graphlib.Graph {
+    private createDagreGraph(): dagre.graphlib.Graph {
         const dagreGraph = new dagre.graphlib.Graph()
         dagreGraph.setGraph({})
         dagreGraph.setDefaultEdgeLabel(() => ({}))
@@ -340,7 +395,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
         return dagreGraph
     }
 
-    private createVertexIdMap (object: GraphDataStructureAnimationParamsType): Map<string, VertexType> {
+    private createVertexIdMap(object: GraphDataStructureAnimationParamsType): Map<string, VertexType> {
         const result = new Map<string, VertexType>()
 
         object.vertices.forEach(v => {
@@ -351,7 +406,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
         return result
     }
 
-    private createEdgeIdMap (object: GraphDataStructureAnimationParamsType): Map<string, EdgeType> {
+    private createEdgeIdMap(object: GraphDataStructureAnimationParamsType): Map<string, EdgeType> {
         const result = new Map<string, EdgeType>()
 
         object.edges.forEach(e => result.set(JSON.stringify({
@@ -362,7 +417,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
         return result
     }
 
-    private calculateEdgePoint (vertexDiameter: number, vertexCenter: Point, edgeAngle: number): Point {
+    private calculateEdgePoint(vertexDiameter: number, vertexCenter: Point, edgeAngle: number): Point {
         return addPoints(
             {
                 x: vertexCenter.x,
@@ -375,7 +430,7 @@ export default class GraphDataStructureParams extends ComplexCanvasAnimationPara
         )
     }
 
-    private calculateBezierPoints (edgePointAngles: Set<number>, vertexDiameter: number): [Point, Point, Point, Point] {
+    private calculateBezierPoints(edgePointAngles: Set<number>, vertexDiameter: number): [Point, Point, Point, Point] {
         if (edgePointAngles.size) {
             edgePointAngles.add(Math.PI / 2)
         }
