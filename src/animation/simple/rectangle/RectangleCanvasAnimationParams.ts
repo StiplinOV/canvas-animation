@@ -1,4 +1,4 @@
-import {addPoints} from '../../../common/Utils'
+import {addPoints, removeUndefinedKeys} from '../../../common/Utils'
 import {AnimationObjectParams, JsonObjectParams} from '../../CanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
@@ -24,7 +24,7 @@ export default class RectangleCanvasAnimationParams extends SimpleCanvasAnimatio
     protected convertJsonObjectToAnimationObject(jsonObject: RectangleJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): RectangleAnimationParamsType {
         return {
             ...animationObjectDefaultParams,
-            ...jsonObject,
+            ...removeUndefinedKeys(jsonObject),
             cornerRadius: jsonObject.cornerRadius ?? 0
         }
     }

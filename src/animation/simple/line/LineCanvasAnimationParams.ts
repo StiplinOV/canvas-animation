@@ -1,42 +1,42 @@
-import {calculatePointPercentValue} from '../../../common/Utils'
 import {Point} from '../../../common/Point'
 import {AnimationObjectParams, JsonObjectParams} from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
 import LineCanvasAnimation from './LineCanvasAnimation'
 import { ObjectParamsObject } from '../../ObjectParamsObject'
+import {removeUndefinedKeys} from '../../../common/Utils'
 
-export interface OnlyLineParamsType {
+export interface LineJsonParamsType extends JsonObjectParams {
     endPoint: Point
 }
 
-export interface LineJsonParamsType extends JsonObjectParams, OnlyLineParamsType {
-}
-
-export interface LineAnimationParamsType extends AnimationObjectParams, OnlyLineParamsType {
+export interface LineAnimationParamsType extends AnimationObjectParams {
+    endPoint: Point
 }
 
 export default class LineCanvasAnimationParams extends SimpleCanvasAnimationParams<LineJsonParamsType, LineAnimationParamsType> {
 
     protected convertJsonObjectToAnimationObject(jsonObject: LineJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): LineAnimationParamsType {
-        throw new Error('Method not implemented.')
+        return {
+            ...animationObjectDefaultParams,
+            ...removeUndefinedKeys(jsonObject)
+        }
     }
 
     protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<LineJsonParamsType>): Partial<LineAnimationParamsType> {
-        throw new Error('Method not implemented.')
+        return {
+            ...jsonObject
+        }
     }
 
     protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<LineAnimationParamsType>): void {
-        throw new Error('Method not implemented.')
+        params.endPoint !== undefined && objectParamsObject.setPointParam('endPoint', params.endPoint)
     }
 
     protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): LineAnimationParamsType {
-        throw new Error('Method not implemented.')
-    }
-
-    mergeWithTransformation(obj: LineJsonParamsType, trans: Partial<LineJsonParamsType>, perc: number): OnlyLineParamsType {
         return {
-            endPoint: trans.endPoint ? calculatePointPercentValue(obj.endPoint, trans.endPoint, perc) : obj.endPoint
+            ...initialDefaultParams,
+            endPoint: objectParamsObject.getPointParam('endPoint')
         }
     }
 

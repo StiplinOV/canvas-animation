@@ -346,3 +346,16 @@ export const mergeValueToMap = <K, V, C extends V[] | Set<V>>(m: Map<K, C>, k: K
         collection.add(v)
     }
 }
+export const removeUndefinedKeys = <T extends object>(obj: T): T => {
+    let key: keyof typeof obj
+    const result: T = {
+        ...obj
+    }
+    for (key in obj) {
+        const value = obj[key]
+        if (value === undefined) {
+            delete result[key]
+        }
+    }
+    return result
+}

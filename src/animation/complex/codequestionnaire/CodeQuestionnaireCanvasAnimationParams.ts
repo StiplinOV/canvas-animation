@@ -10,16 +10,17 @@ import {
     FormattedTextStyleName,
     FormattedTextValueSegmentType, SelectedSubstringJsonType
 } from '../../simple/formattedtext/FormattedTextCanvasAnimationParams'
-import {addPoints, requireValueFromMap} from '../../../common/Utils'
+import {addPoints} from '../../../common/Utils'
 import {animationStyle} from '../../../Animations'
 import {Point} from '../../../common/Point'
 import {ObjectParamsObject} from '../../ObjectParamsObject'
-import {SupportedFormattedLanguages, WebSafeFontsType} from '../../../AnimationStyles'
+import {ColorType, getColor, getFontColor, SupportedFormattedLanguages, WebSafeFontsType} from '../../../AnimationStyles'
 
 type QuestionParamsOptionsJsonType = (string | (FormattedTextValueSegmentType | string)[])[]
 
 type SelectedLineType = {
-    type: 'success' | 'fail' | 'warning'
+    backgroundColor?: ColorType
+    textColor?: ColorType
     num: number
 }
 
@@ -301,23 +302,19 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
                 }
             }
 
-            let backgroundColor = animationStyle.backgroundColor
-
-            if (questionnaireSelectedLines.has(lineNumber)) {
-                const backgroundColorType = requireValueFromMap(questionnaireSelectedLines, lineNumber).type
-                if (backgroundColorType === 'success') {
-                    backgroundColor = animationStyle.successColor
-                } else if (backgroundColorType === 'fail') {
-                    backgroundColor = animationStyle.failColor
-                } else {
-                    backgroundColor = animationStyle.warningColor
-                }
+            let backgroundColor = questionnaireSelectedLines.get(lineNumber)?.backgroundColor
+            if (backgroundColor) {
+                backgroundColor = getColor(animationStyle, backgroundColor)
+            }
+            let fontColor = questionnaireSelectedLines.get(lineNumber)?.textColor
+            if (fontColor) {
+                fontColor = getFontColor(animationStyle, fontColor)
             }
 
             result.push({
                 from: curSubstringPosition,
                 to: curSubstringPosition + valueSegment.value.length,
-                color: animationStyle.fontColor,
+                color: fontColor,
                 strikethrough: strikethroughLines.includes(lineNumber),
                 backgroundColor
             })

@@ -1,47 +1,47 @@
-import {calculatePercentValue} from '../../../common/Utils'
 import {AnimationObjectParams, JsonObjectParams} from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
 import CircleCanvasAnimation from './CircleCanvasAnimation'
-import { ObjectParamsObject } from '../../ObjectParamsObject'
+import {ObjectParamsObject} from '../../ObjectParamsObject'
+import {removeUndefinedKeys} from '../../../common/Utils'
 
-interface onlyCircleParamsType {
+export interface CircleJsonParamsType extends JsonObjectParams {
     diameter: number
 }
 
-export interface CircleJsonParamsType extends onlyCircleParamsType, JsonObjectParams {
-}
-
-export interface CircleAnimationParamsType extends onlyCircleParamsType, AnimationObjectParams {
+export interface CircleAnimationParamsType extends AnimationObjectParams {
+    diameter: number
 }
 
 export default class CircleCanvasAnimationParams extends SimpleCanvasAnimationParams<CircleJsonParamsType, CircleAnimationParamsType> {
 
     protected convertJsonObjectToAnimationObject(jsonObject: CircleJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): CircleAnimationParamsType {
-        throw new Error('Method not implemented.')
-    }
-
-    protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<CircleJsonParamsType>): Partial<CircleAnimationParamsType> {
-        throw new Error('Method not implemented.')
-    }
-
-    protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<CircleAnimationParamsType>): void {
-        throw new Error('Method not implemented.')
-    }
-
-    protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): CircleAnimationParamsType {
-        throw new Error('Method not implemented.')
-    }
-
-    protected getZeroParams (): Omit<CircleJsonParamsType, keyof JsonObjectParams> {
         return {
-            diameter: 0
+            ...animationObjectDefaultParams,
+            ...removeUndefinedKeys(jsonObject)
         }
     }
 
-    mergeWithTransformation(obj: CircleJsonParamsType, trans: CircleJsonParamsType, perc: number): onlyCircleParamsType {
+    protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<CircleJsonParamsType>): Partial<CircleAnimationParamsType> {
         return {
-            diameter: trans.diameter ? calculatePercentValue(obj.diameter, trans.diameter, perc) : obj.diameter
+            ...jsonObject
+        }
+    }
+
+    protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<CircleAnimationParamsType>): void {
+        params.diameter !== undefined && objectParamsObject.setNumberParam('diameter', params.diameter)
+    }
+
+    protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): CircleAnimationParamsType {
+        return {
+            ...initialDefaultParams,
+            diameter: objectParamsObject.getNumberParam('diameter')
+        }
+    }
+
+    protected getZeroParams(): Omit<CircleJsonParamsType, keyof JsonObjectParams> {
+        return {
+            diameter: 0
         }
     }
 

@@ -114,7 +114,7 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                         appearDuration: 0,
                         object: {
                             questionnaireSelectedLines: [{
-                                type: 'success',
+                                backgroundColor: 'success',
                                 num: 4
                             }]
                         }
@@ -125,11 +125,11 @@ export const CliLegalEntryPointMethods: LessonJsonType = {
                         object: {
                             questionnaireSelectedLines: [
                                 {
-                                    type: 'success',
+                                    backgroundColor: 'success',
                                     num: 3
                                 },
                                 {
-                                    type: 'success',
+                                    backgroundColor: 'success',
                                     num: 4
                                 }
                             ]

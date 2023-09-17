@@ -44,8 +44,8 @@ export default class TextCanvasAnimationParams extends SimpleCanvasAnimationPara
     protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<TextAnimationParamsType>): void {
         params.value !== undefined && objectParamsObject.setStringParam('value', params.value)
         params.fontSize !== undefined && objectParamsObject.setNumberParam('fontSize', params.fontSize)
-        params.boxWidth !== undefined && objectParamsObject.setNumberParam('boxWidth', params.boxWidth ?? 0)
-        params.boxHeight !== undefined && objectParamsObject.setNumberParam('boxHeight', params.boxHeight ?? 0)
+        params.boxWidth !== undefined && objectParamsObject.setNullableNumberParam('boxWidth', params.boxWidth)
+        params.boxHeight !== undefined && objectParamsObject.setNullableNumberParam('boxHeight', params.boxHeight)
         params.textStyle !== undefined && objectParamsObject.setStringLiteralParam('textStyle', params.textStyle)
         params.font !== undefined && objectParamsObject.setStringLiteralParam('font', params.font)
         params.horizontalAlign !== undefined && objectParamsObject.setStringLiteralParam('horizontalAlign', params.horizontalAlign)
@@ -73,8 +73,8 @@ export default class TextCanvasAnimationParams extends SimpleCanvasAnimationPara
             ...initialDefaultParams,
             value: objectParamsObject.getStringParam('value'),
             fontSize: objectParamsObject.getNumberParam('fontSize'),
-            boxWidth: objectParamsObject.getNumberParam('boxWidth'),
-            boxHeight: objectParamsObject.getNumberParam('boxHeight'),
+            boxWidth: objectParamsObject.getNullableNumberParam('boxWidth'),
+            boxHeight: objectParamsObject.getNullableNumberParam('boxHeight'),
             textStyle: objectParamsObject.getStringLiteralParam('textStyle'),
             font: objectParamsObject.getStringLiteralParam('font'),
             horizontalAlign: objectParamsObject.getStringLiteralParam('horizontalAlign'),

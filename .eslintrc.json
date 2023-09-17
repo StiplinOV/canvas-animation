@@ -43,6 +43,7 @@
     ],
     "@typescript-eslint/array-type": ["error", { "default": "array" }],
     "@typescript-eslint/consistent-type-definitions": "off",
+    "@typescript-eslint/no-dynamic-delete": "off",
     "@typescript-eslint/object-curly-spacing": "off",
     "@typescript-eslint/space-before-function-paren": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",

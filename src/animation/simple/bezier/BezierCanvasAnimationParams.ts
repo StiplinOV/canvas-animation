@@ -1,4 +1,4 @@
-import { calculatePointsPercentValue } from '../../../common/Utils'
+import {removeUndefinedKeys} from '../../../common/Utils'
 import {AnimationObjectParams, JsonObjectParams} from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
@@ -6,32 +6,38 @@ import BezierCanvasAnimation from './BezierCanvasAnimation'
 import { Point } from '../../../common/Point'
 import { ObjectParamsObject } from '../../ObjectParamsObject'
 
-interface OnlyBezierParamsType {
+export interface BezierJsonParamsType extends JsonObjectParams {
     originRelativePoints: [Point, Point, Point, Point]
 }
 
-export interface BezierJsonParamsType extends OnlyBezierParamsType, JsonObjectParams {
-}
-
-export interface BezierAnimationParamsType extends OnlyBezierParamsType, AnimationObjectParams {
+export interface BezierAnimationParamsType extends AnimationObjectParams {
+    originRelativePoints: [Point, Point, Point, Point]
 }
 
 export default class BezierCanvasAnimationParams extends SimpleCanvasAnimationParams<BezierJsonParamsType, BezierAnimationParamsType> {
 
     protected convertJsonObjectToAnimationObject(jsonObject: BezierJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): BezierAnimationParamsType {
-        throw new Error('Method not implemented.')
+        return {
+            ...animationObjectDefaultParams,
+            ...removeUndefinedKeys(jsonObject)
+        }
     }
 
     protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<BezierJsonParamsType>): Partial<BezierAnimationParamsType> {
-        throw new Error('Method not implemented.')
+        return {
+            ...jsonObject
+        }
     }
 
     protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<BezierAnimationParamsType>): void {
-        throw new Error('Method not implemented.')
+        params.originRelativePoints !== undefined && objectParamsObject.setPointArrayParam('originRelativePoints', params.originRelativePoints)
     }
 
     protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): BezierAnimationParamsType {
-        throw new Error('Method not implemented.')
+        return {
+            ...initialDefaultParams,
+            originRelativePoints: objectParamsObject.getPointArrayParam('originRelativePoints')
+        }
     }
 
     protected getZeroParams (): Omit<BezierJsonParamsType, keyof JsonObjectParams> {
@@ -49,16 +55,6 @@ export default class BezierCanvasAnimationParams extends SimpleCanvasAnimationPa
                 x: 0,
                 y: 0
             }]
-        }
-    }
-
-    mergeWithTransformation (obj: BezierJsonParamsType, trans: BezierJsonParamsType, perc: number): OnlyBezierParamsType {
-        const objPoints = obj.originRelativePoints
-        const transPoints = trans.originRelativePoints
-        const originRelativePoints = transPoints ? calculatePointsPercentValue(objPoints, transPoints, perc) : objPoints
-
-        return {
-            originRelativePoints: [originRelativePoints[0], originRelativePoints[1], originRelativePoints[2], originRelativePoints[3]]
         }
     }
 

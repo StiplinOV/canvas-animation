@@ -18,6 +18,7 @@ import {
 import {FindCompileErrors} from "./lessons/javatest/Building Blocks/008 FindCompileErrors/FindCompileErrors";
 import {ValidJavaIdentifiers} from "./lessons/javatest/Building Blocks/002 Valid java identifiers/ValidJavaIdentifiers";
 import {VarCompileInAMethod} from "./lessons/javatest/Building Blocks/004 Var compile in a method/VarCompileInAMethod";
+import {ValidLiterals} from "./lessons/javatest/Building Blocks/009 ValidLiterals/ValidLiterals";
 
 const App = (): ReactElement => {
     const lesson = [
@@ -28,8 +29,9 @@ const App = (): ReactElement => {
         InitialValuesOfVariable,
         DecimalIntegerLiterals,
         NumberOfRemovedImports,
-        FindCompileErrors
-    ][7]
+        FindCompileErrors,
+        ValidLiterals
+    ][8]
     const canvasTop = 50
     const left = (useWindowDimensions().width - lesson.canvasDimensions.width) / 2
 

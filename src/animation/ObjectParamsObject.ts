@@ -3,6 +3,7 @@ import {
     calculateColorPercentValue,
     calculatePercentValue,
     calculatePointPercentValue,
+    calculatePointsPercentValue,
     calculateRotationsPercentValue,
     calculateSetPercentValue,
     calculateTextPercentValue,
@@ -30,7 +31,11 @@ export class ObjectParamsObject {
 
     private readonly numberParams: Map<string, number> = new Map<string, number>()
 
+    private readonly nullableNumberParams: Map<string, number | null> = new Map<string, number | null>()
+
     private readonly arrayParams: Map<string, unknown[]> = new Map<string, unknown[]>()
+
+    private readonly pointArrayParams: Map<string, Point[]> = new Map<string, Point[]>()
 
     private readonly setParams: Map<string, Set<unknown>> = new Map<string, Set<unknown>>()
 
@@ -61,8 +66,14 @@ export class ObjectParamsObject {
             other.numberParams.forEach((v, k) => {
                 this.numberParams.set(k, v)
             })
+            other.nullableNumberParams.forEach((v, k) => {
+                this.nullableNumberParams.set(k, v)
+            })
             other.arrayParams.forEach((v, k) => {
                 this.arrayParams.set(k, v)
+            })
+            other.pointArrayParams.forEach((v, k) => {
+                this.pointArrayParams.set(k, v)
             })
             other.setParams.forEach((v, k) => {
                 this.setSetParam(k, other.getSetParam(k))
@@ -97,6 +108,10 @@ export class ObjectParamsObject {
         this.numberParams.set(key, param)
     }
 
+    public setNullableNumberParam(key: string, param: number | null): void {
+        this.nullableNumberParams.set(key, param)
+    }
+
     public setStringLiteralParam(key: string, param: string | null): void {
         this.stringLiteralParams.set(key, param)
     }
@@ -107,6 +122,10 @@ export class ObjectParamsObject {
 
     public setArrayParam(key: string, param: unknown[]): void {
         this.arrayParams.set(key, param)
+    }
+
+    public setPointArrayParam(key: string, param: Point[]): void {
+        this.pointArrayParams.set(key, param)
     }
 
     public setSetParam<T>(key: string, param: T[]): void {
@@ -151,6 +170,10 @@ export class ObjectParamsObject {
         return requireValueFromMap(this.numberParams, key)
     }
 
+    public getNullableNumberParam(key: string): number | null {
+        return requireValueFromMap(this.nullableNumberParams, key)
+    }
+
     public getStringLiteralParam<T extends string | null>(key: string): T {
         return requireValueFromMap(this.stringLiteralParams, key) as T
     }
@@ -161,6 +184,10 @@ export class ObjectParamsObject {
 
     public getArrayParam<T>(key: string): T[] {
         return requireValueFromMap(this.arrayParams, key) as T[]
+    }
+
+    public getPointArrayParam<T extends Point[]>(key: string): T {
+        return requireValueFromMap(this.pointArrayParams, key) as T
     }
 
     public getSetParam<T>(key: string): T[] {
@@ -215,10 +242,29 @@ export class ObjectParamsObject {
             const desireValue = other.getNumberParam(key)
             this.setNumberParam(key, calculatePercentValue(currentValue, desireValue, percent))
         })
+        other.nullableNumberParams.forEach((value, key) => {
+            let currentValue = this.nullableNumberParams.get(key) ?? null
+            let desireValue = other.getNullableNumberParam(key)
+            if (currentValue === null) {
+                currentValue = desireValue
+            }
+            if (currentValue === null) {
+                currentValue = 0
+            }
+            if (desireValue === null) {
+                desireValue = currentValue
+            }
+            this.setNumberParam(key, calculatePercentValue(currentValue, desireValue, percent))
+        })
         other.arrayParams.forEach((value, key) => {
             const currentValue = this.arrayParams.get(key) ?? []
             const desireValue = other.getArrayParam(key)
             this.setArrayParam(key, calculateArrayPercentValue(currentValue, desireValue, percent))
+        })
+        other.pointArrayParams.forEach((value, key) => {
+            const currentValue = this.pointArrayParams.get(key) ?? []
+            const desireValue = other.getPointArrayParam(key)
+            this.setPointArrayParam(key, calculatePointsPercentValue(currentValue, desireValue, percent))
         })
         other.setParams.forEach((value, key) => {
             const currentValue = this.getSetParam(key) ?? []

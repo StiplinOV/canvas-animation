@@ -3,7 +3,7 @@ import {AppearAlgorithm} from './animation/CanvasAnimationParams'
 import {FormattedTextStyleName} from './animation/simple/formattedtext/FormattedTextCanvasAnimationParams'
 
 export const COURIER_NEW_FONT = 'Courier New'
-export type ColorType = string | 'primary' | 'secondary' | 'background' | 'link'
+export type ColorType = string | 'primary' | 'secondary' | 'background' | 'link' | 'success' | 'fail' | 'warning'
 
 export type WebSafeFontsType =
     'Arial'
@@ -302,32 +302,18 @@ export const getAnimationStyle = (key: keyof typeof animationStyles): AnimationS
 }
 
 export const getStrokeColor = (animationStyle: AnimationStyle, color?: ColorType): string => {
-    if (color === 'primary') {
-        return animationStyle.primaryColor
-    }
-    if (color === 'secondary') {
-        return animationStyle.secondaryColor
-    }
-    if (color === 'background') {
-        return animationStyle.backgroundColor
-    }
-    return color ?? animationStyle.strokeColor
+    return getColor(animationStyle, color ?? animationStyle.strokeColor)
 }
 
 export const getFillColor = (animationStyle: AnimationStyle, color?: ColorType): string => {
-    if (color === 'primary') {
-        return animationStyle.primaryColor
-    }
-    if (color === 'secondary') {
-        return animationStyle.secondaryColor
-    }
-    if (color === 'background') {
-        return animationStyle.backgroundColor
-    }
-    return color ?? animationStyle.fillColor
+    return getColor(animationStyle, color ?? animationStyle.fillColor)
 }
 
 export const getFontColor = (animationStyle: AnimationStyle, color?: ColorType): string => {
+    return getColor(animationStyle, color ?? animationStyle.fontColor)
+}
+
+export const getColor = (animationStyle: AnimationStyle, color: ColorType): string => {
     if (color === 'primary') {
         return animationStyle.primaryColor
     }
@@ -340,7 +326,16 @@ export const getFontColor = (animationStyle: AnimationStyle, color?: ColorType):
     if (color === 'link') {
         return animationStyle.textLinkColor
     }
-    return color ?? animationStyle.fontColor
+    if (color === 'success') {
+        return animationStyle.successColor
+    }
+    if (color === 'fail') {
+        return animationStyle.failColor
+    }
+    if (color === 'warning') {
+        return animationStyle.warningColor
+    }
+    return color
 }
 
 export const getFont = (animationStyle: AnimationStyle, font?: WebSafeFontsType | 'monospace'): string => {
