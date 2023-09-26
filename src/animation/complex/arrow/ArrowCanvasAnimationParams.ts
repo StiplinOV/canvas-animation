@@ -121,7 +121,7 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
         }
     }
 
-    protected getZeroParams(): Omit<ArrowAnimationParamsType, keyof JsonObjectParams> {
+    protected getZeroParams(obj: ArrowAnimationParamsType): Omit<ArrowAnimationParamsType, keyof AnimationObjectParams> {
         const animationStyle = this.getAnimationStyle()
         return {
             startType: 'None',
@@ -130,7 +130,7 @@ export default class ArrowCanvasAnimationParams extends ComplexCanvasAnimationPa
             labelFontSize: animationStyle.fontSize,
             labelTextStyle: animationStyle.textStyle,
             labelFont: animationStyle.font,
-            endPoint: this.getObject().origin,
+            endPoint: obj.endPoint,
             labelValue: '',
             bezier: false,
             point2: ZeroPoint,

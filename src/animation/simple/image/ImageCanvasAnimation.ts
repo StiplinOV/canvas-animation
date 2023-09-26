@@ -6,7 +6,7 @@ import CanvasAnimation from '../../CanvasAnimation'
 export default class ImageCanvasAnimation extends CanvasAnimation<ImageAnimationParamsType> {
 
     public drawObject(p5: p5Types, o: ImageAnimationParamsType, style: AnimationStyle): void {
-        o.image && p5.image(o.image, o.origin.x, o.origin.y)
+        o.image && p5.image(o.image, 0, 0)
     }
 
 }

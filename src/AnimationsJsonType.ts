@@ -17,7 +17,10 @@ import {
 } from './animation/complex/table/TableCanvasAnimationParams'
 import {XyChartJsonParamsType, XyChartSelectorType} from './animation/complex/xychart/XYChartCanvasAnimationParams'
 import {CameraParams} from './camera/CameraParams'
-import {GraphDataStructureJsonParamsType} from './animation/complex/datastructure/graph/GraphDataStructureParams'
+import {
+    GraphDataStructureCanvasAnimationSelection,
+    GraphDataStructureJsonParamsType
+} from './animation/complex/datastructure/graph/GraphDataStructureParams'
 import {BezierJsonParamsType} from './animation/simple/bezier/BezierCanvasAnimationParams'
 import {MatrixJsonParamsType, MatrixSelectorType} from './animation/complex/array/MatrixCanvasAnimationParams'
 import {NumberLineJsonParamsType} from './animation/complex/numberline/NumberLineParams'
@@ -45,7 +48,7 @@ export type ObjectTypeToGenericTypes = SimpleObjectTypeToGenericTypes & {
     codeQuestionnaire: [CodeQuestionnaireJsonParams, TransformationOptions, SelectionType<CodeQuestionnaireCanvasAnimationSelection>]
     table: [TableJsonParamsType, TableTransformOptionsType, SelectionType<TableSelectorType>]
     xyChart: [XyChartJsonParamsType, TransformationOptions, SelectionType<XyChartSelectorType>]
-    graphDataStructure: [GraphDataStructureJsonParamsType, TransformationOptions, SelectionType]
+    graphDataStructure: [GraphDataStructureJsonParamsType, TransformationOptions, SelectionType<GraphDataStructureCanvasAnimationSelection>]
     numberLine: [NumberLineJsonParamsType, TransformationOptions, SelectionType]
 }
 

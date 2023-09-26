@@ -1,10 +1,10 @@
 import React from 'react'
 import Sketch from 'react-p5'
 import p5Types from 'p5'
-import { animationStyle, canvasAnimations } from './Animations'
-import { Camera, CameraParams } from './camera/CameraParams'
+import {animationStyle, canvasAnimations} from './Animations'
+import {Camera, CameraParams} from './camera/CameraParams'
 import CanvasAnimation from './animation/CanvasAnimation'
-import { LessonJsonType } from './AnimationsJsonType'
+import {LessonJsonType} from './AnimationsJsonType'
 
 interface Props {
     top: number
@@ -22,7 +22,7 @@ export const P5Component: React.FC<Props> = (props: Props) => {
     const [cameras, setCameras] = React.useState<CameraParams[]>([])
     const [millisSinceLastPlay, setMillisSinceLastPlay] = React.useState<number>(0)
     const [playedBefore, setPlayedBefore] = React.useState<boolean>(false)
-    const { lesson } = props
+    const {lesson} = props
     // let vid: p5Types.Element
 
     const preload = (p5: p5Types): void => {
@@ -47,7 +47,7 @@ export const P5Component: React.FC<Props> = (props: Props) => {
 
     const draw = (p5: p5Types): void => {
         const millis = p5.millis()
-        let { time } = props
+        let {time} = props
         if (props.play) {
             if (playedBefore) {
                 time += props.timeMultiplier * (millis - millisSinceLastPlay)

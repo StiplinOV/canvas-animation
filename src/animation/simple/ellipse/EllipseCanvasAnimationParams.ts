@@ -1,4 +1,4 @@
-import {calculatePercentValue} from '../../../common/Utils'
+import {calculatePercentValue, removeUndefinedKeys} from '../../../common/Utils'
 import {AnimationObjectParams, JsonObjectParams} from '../../CanvasAnimationParams'
 import SimpleCanvasAnimationParams from '../SimpleCanvasAnimationParams'
 import AnimationStyle from '../../../AnimationStyles'
@@ -10,28 +10,43 @@ interface OnlyEllipseParamsType {
     height: number
 }
 
-export interface EllipseJsonParamsType extends OnlyEllipseParamsType, JsonObjectParams {
+export interface EllipseJsonParamsType extends JsonObjectParams {
+    width: number
+    height: number
 }
 
-export interface EllipseAnimationParamsType extends OnlyEllipseParamsType, AnimationObjectParams {
+export interface EllipseAnimationParamsType extends AnimationObjectParams {
+    width: number
+    height: number
 }
 
 export default class EllipseCanvasAnimationParams extends SimpleCanvasAnimationParams<EllipseJsonParamsType, EllipseAnimationParamsType> {
 
     protected convertJsonObjectToAnimationObject(jsonObject: EllipseJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): EllipseAnimationParamsType {
-        throw new Error('Method not implemented.')
+        return {
+            ...animationObjectDefaultParams,
+            ...removeUndefinedKeys(jsonObject)
+        }
+
     }
 
     protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<EllipseJsonParamsType>): Partial<EllipseAnimationParamsType> {
-        throw new Error('Method not implemented.')
+        return {
+            ...jsonObject
+        }
     }
 
     protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<EllipseAnimationParamsType>): void {
-        throw new Error('Method not implemented.')
+        params.width !== undefined && objectParamsObject.setNumberParam('width', params.width)
+        params.height !== undefined && objectParamsObject.setNumberParam('height', params.height)
     }
 
     protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): EllipseAnimationParamsType {
-        throw new Error('Method not implemented.')
+        return {
+            ...initialDefaultParams,
+            width: objectParamsObject.getNumberParam('width'),
+            height: objectParamsObject.getNumberParam('height')
+        }
     }
 
     protected getZeroParams(): Omit<EllipseJsonParamsType, keyof JsonObjectParams> {

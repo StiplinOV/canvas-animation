@@ -346,6 +346,7 @@ export const mergeValueToMap = <K, V, C extends V[] | Set<V>>(m: Map<K, C>, k: K
         collection.add(v)
     }
 }
+
 export const removeUndefinedKeys = <T extends object>(obj: T): T => {
     let key: keyof typeof obj
     const result: T = {
@@ -358,4 +359,16 @@ export const removeUndefinedKeys = <T extends object>(obj: T): T => {
         }
     }
     return result
+}
+
+export const convertStringColorToTriplet = (color: string): [number, number, number] => {
+    const regexpString = '^#[0-9A-F]{6}$'
+    if (!color.match(/^#[0-9ABCDEFabcdef]{6}$/)) {
+        throw new Error(`Wrong color ${color}. Should math regexp format ${regexpString}`)
+    }
+    const r = Number(`0x${color.substring(1, 3)}`)
+    const g = Number(`0x${color.substring(3, 5)}`)
+    const b = Number(`0x${color.substring(5, 7)}`)
+
+    return [r, g, b]
 }

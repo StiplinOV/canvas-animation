@@ -312,6 +312,7 @@ export class ObjectParamsObject {
 
     setAnimationObjectParams(params: Partial<AnimationObjectParams>, animationStyle: AnimationStyle): void {
         params.fillColor && this.setColorParam('fillColor', getFillColor(animationStyle, params.fillColor))
+        params.fillColorOpacity !== undefined && this.setNumberParam('fillColorOpacity', params.fillColorOpacity)
         params.strokeColor && this.setColorParam('strokeColor', getStrokeColor(animationStyle, params.strokeColor))
         params.origin && this.setPointParam('origin', params.origin)
         params.zIndex !== undefined && this.setNumberParam('zIndex', params.zIndex)
@@ -327,6 +328,7 @@ export class ObjectParamsObject {
             dashed: this.getDashedParam('dashed'),
             strokeColor: this.getColorParam('strokeColor'),
             fillColor: this.getColorParam('fillColor'),
+            fillColorOpacity: this.getNumberParam('fillColorOpacity'),
             origin: this.getPointParam('origin'),
             rotations: this.getRotationsParam('rotations')
         }

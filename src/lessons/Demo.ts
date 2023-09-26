@@ -1,5 +1,6 @@
 import {LessonJsonType} from '../AnimationsJsonType'
 import imgg from './94132137-7d4fc100-fe7c-11ea-8512-69f90cb65e48.gif'
+import imgg1 from './1.png'
 
 export const Demo: LessonJsonType = {
     sound: require('./Lofi_Jazz_Cafe_Cozy_Evening.mp3'),
@@ -32,7 +33,8 @@ export const Demo: LessonJsonType = {
                         origin: {
                             x: 0,
                             y: 0
-                        }
+                        },
+                        img: imgg1
                     }
                 }, {
                     appearTime: 5000,

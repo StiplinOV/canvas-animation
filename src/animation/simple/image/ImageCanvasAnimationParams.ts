@@ -25,7 +25,8 @@ export default class ImageCanvasAnimationParams extends SimpleCanvasAnimationPar
 
     protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<ImageJsonParamsType>): Partial<ImageAnimationParamsType> {
         return {
-            ...jsonObject
+            ...jsonObject,
+            image: jsonObject.img ? this.getP5().loadImage(jsonObject.img) : null
         }
     }
 

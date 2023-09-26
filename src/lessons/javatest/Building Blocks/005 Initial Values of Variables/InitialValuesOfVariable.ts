@@ -69,7 +69,8 @@ export const InitialValuesOfVariable: LessonJsonType = {
                                         value: '0',
                                         font: 'monospace'
                                     },
-                                    '.'],
+                                    '.'
+                                ],
                                 [
                                     'An instance variable of type ',
                                     {

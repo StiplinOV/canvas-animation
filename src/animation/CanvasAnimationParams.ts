@@ -34,6 +34,7 @@ export interface JsonObjectParams {
     dashed?: number[]
     strokeColor?: ColorType
     fillColor?: ColorType
+    fillColorOpacity?: number
     origin: Point
     rotations?: RotationType[]
 }
@@ -44,6 +45,7 @@ export interface AnimationObjectParams {
     dashed: number[]
     strokeColor: ColorType
     fillColor: ColorType
+    fillColorOpacity: number
     origin: Point
     rotations: RotationType[]
 }
@@ -169,6 +171,7 @@ export default abstract class CanvasAnimationParams<
             dashed: jsonObject.dashed ?? [],
             strokeColor: jsonObject.strokeColor ?? animationStyle.strokeColor,
             fillColor: jsonObject.fillColor ?? animationStyle.fillColor,
+            fillColorOpacity: jsonObject.fillColorOpacity ?? 1,
             origin: jsonObject.origin,
             rotations: jsonObject.rotations ?? []
         }

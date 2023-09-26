@@ -44,9 +44,9 @@ export default class LineCanvasAnimationParams extends SimpleCanvasAnimationPara
         return new LineCanvasAnimation(this, animationStyle)
     }
 
-    getZeroParams(): Omit<LineJsonParamsType, keyof JsonObjectParams> {
+    getZeroParams(obj: LineAnimationParamsType): Omit<LineAnimationParamsType, keyof JsonObjectParams> {
         return {
-            endPoint: this.getObject().origin
+            endPoint: obj.origin
         }
     }
 
