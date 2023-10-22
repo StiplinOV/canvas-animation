@@ -1,9 +1,11 @@
 import {AnimationObjectParams, JsonObjectParams} from '../../CanvasAnimationParams'
-import { addPoints } from '../../../common/Utils'
+import {addPoints} from '../../../common/Utils'
 import ComplexCanvasAnimationParams, {CanvasAnimationParamsType} from '../ComplexCanvasAnimationParams'
-import { ColorType } from '../../../AnimationStyles'
-import { THE_STYLE } from 'p5'
-import { ObjectParamsObject } from '../../ObjectParamsObject'
+import {ColorType} from '../../../AnimationStyles'
+import {THE_STYLE} from 'p5'
+import {ObjectParamsObject} from '../../ObjectParamsObject'
+
+type ArrayElementValueType = string | boolean | number
 
 export type ElementStyle = {
     backgroundColor?: ColorType
@@ -14,101 +16,172 @@ export type ElementStyle = {
 }
 
 export type ElementType = {
-    label?: string
+    id?: string
+    value?: ArrayElementValueType
     style?: ElementStyle
 }
 
-export interface OnlyArrayElementParamsType {
-    value: ElementType | string | boolean | number
+export interface ArrayElementJsonParamsType extends JsonObjectParams {
+    value: ElementType | ArrayElementValueType
     height: number
     width?: number
 }
 
-export interface ArrayElementJsonParamsType extends JsonObjectParams, OnlyArrayElementParamsType {
-}
-
-export interface ArrayElementAnimationParamsType extends AnimationObjectParams, OnlyArrayElementParamsType {
+export interface ArrayElementAnimationParamsType extends AnimationObjectParams {
+    id: string | null
+    backgroundColor: ColorType,
+    strokeColor: ColorType,
+    fontColor: ColorType,
+    fontSize: number,
+    textStyle: THE_STYLE,
+    value: string,
+    type: "boolean" | "text"
+    height: number
+    width: number
 }
 
 export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElementJsonParamsType, ArrayElementAnimationParamsType> {
 
     protected convertJsonObjectToAnimationObject(jsonObject: ArrayElementJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): ArrayElementAnimationParamsType {
-        throw new Error('Method not implemented.')
+        const animationStyle = this.getAnimationStyle()
+        let id: string | null = null
+        if (typeof jsonObject.value === "object") {
+            id = jsonObject.value.id ?? null
+        }
+        let backgroundColor: ColorType | undefined
+        let strokeColor = animationStyle.strokeColor
+        let fontColor = animationStyle.fontColor
+        let fontSize = jsonObject.height / 2
+        let textStyle: THE_STYLE = "normal"
+        let value: ArrayElementValueType | undefined
+        if (typeof jsonObject.value === 'object') {
+            value = jsonObject.value.value
+            backgroundColor = jsonObject.value.style?.backgroundColor
+            strokeColor = jsonObject.value.style?.strokeColor ?? strokeColor
+            fontColor = jsonObject.value.style?.fontColor ?? fontColor
+            fontSize = jsonObject.value.style?.fontSize ?? fontSize
+            textStyle = jsonObject.value.style?.textStyle ?? textStyle
+        } else {
+            value = jsonObject.value
+        }
+        if (typeof value === "boolean" && value && backgroundColor === undefined) {
+            backgroundColor = "primary"
+        }
+
+        return {
+            ...animationObjectDefaultParams,
+            id,
+            backgroundColor: backgroundColor ?? animationStyle.backgroundColor,
+            strokeColor,
+            fontColor,
+            fontSize,
+            textStyle,
+            value: String(value),
+            type: typeof value === "boolean" ? "boolean" : "text",
+            height: jsonObject.height,
+            width: jsonObject.width ?? jsonObject.height
+        }
     }
 
     protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<ArrayElementJsonParamsType>): Partial<ArrayElementAnimationParamsType> {
-        throw new Error('Method not implemented.')
+        let id = undefined
+        let backgroundColor = undefined
+        let strokeColor = undefined
+        let fontColor = undefined
+        let fontSize = undefined
+        let textStyle = undefined
+        let value
+        if (typeof jsonObject.value === "object") {
+            id = jsonObject.value.id
+            backgroundColor = jsonObject.value.style?.backgroundColor
+            strokeColor = jsonObject.value.style?.strokeColor
+            fontColor = jsonObject.value.style?.fontColor
+            fontSize = jsonObject.value.style?.fontSize
+            textStyle = jsonObject.value.style?.textStyle
+            value = jsonObject.value.value
+        } else {
+            value = jsonObject.value
+        }
+
+        return {
+            id,
+            backgroundColor,
+            strokeColor,
+            fontColor,
+            fontSize,
+            textStyle,
+            value: value === undefined ? undefined : String(value),
+            type: typeof value === "boolean" ? "boolean" : "text",
+            height: jsonObject.height,
+            width: jsonObject.width ?? jsonObject.height
+        }
     }
 
     protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<ArrayElementAnimationParamsType>): void {
-        throw new Error('Method not implemented.')
+        params.id !== undefined && objectParamsObject.setObjectParam('id', params.id)
+        params.backgroundColor !== undefined && objectParamsObject.setColorParam('backgroundColor', params.backgroundColor)
+        params.strokeColor !== undefined && objectParamsObject.setColorParam('strokeColor', params.strokeColor)
+        params.fontColor !== undefined && objectParamsObject.setColorParam('fontColor', params.fontColor)
+        params.fontSize !== undefined && objectParamsObject.setNumberParam('fontSize', params.fontSize)
+        params.textStyle !== undefined && objectParamsObject.setStringLiteralParam('textStyle', params.textStyle)
+        params.value !== undefined && objectParamsObject.setStringParam('value', params.value)
+        params.type !== undefined && objectParamsObject.setStringLiteralParam('type', params.type)
+        params.height !== undefined && objectParamsObject.setNumberParam('height', params.height)
+        params.width !== undefined && objectParamsObject.setNumberParam('width', params.width)
     }
 
     protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): ArrayElementAnimationParamsType {
-        throw new Error('Method not implemented.')
-    }
-
-    protected getZeroParams (): Omit<ArrayElementJsonParamsType, keyof JsonObjectParams> {
         return {
-            value: '',
-            height: 0
+            ...initialDefaultParams,
+            id: objectParamsObject.getObjectParam('id'),
+            backgroundColor: objectParamsObject.getColorParam('backgroundColor'),
+            strokeColor: objectParamsObject.getColorParam('strokeColor'),
+            fontColor: objectParamsObject.getColorParam('fontColor'),
+            fontSize: objectParamsObject.getNumberParam('fontSize'),
+            textStyle: objectParamsObject.getStringLiteralParam('textStyle'),
+            value: objectParamsObject.getStringParam('value'),
+            type: objectParamsObject.getStringLiteralParam('type'),
+            height: objectParamsObject.getNumberParam('height'),
+            width: objectParamsObject.getNumberParam('width'),
         }
     }
 
-    protected getIncludedAnimationParamsByParameter (object: ArrayElementJsonParamsType): Map<string, CanvasAnimationParamsType> {
+    protected getZeroParams(obj: ArrayElementAnimationParamsType): Omit<ArrayElementAnimationParamsType, keyof AnimationObjectParams> {
+        return {
+            ...obj,
+            value: '',
+            height: 0,
+            width: 0,
+            id: obj.id,
+        }
+    }
+
+    protected getIncludedAnimationParamsByParameter(object: ArrayElementAnimationParamsType): Map<string, CanvasAnimationParamsType> {
         const result = new Map<string, CanvasAnimationParamsType>()
-        const {
-            origin,
-            height,
-            value
-        } = object
-        const width = object.width ?? height
-        const animationStyle = this.getAnimationStyle()
-        const fontSize = height / 2
-        let style: ElementStyle = {
-            backgroundColor: animationStyle.backgroundColor,
-            strokeColor: animationStyle.strokeColor,
-            fontColor: animationStyle.fontColor
-        }
-        let label = ''
-        if (typeof value === 'string') {
-            label = value
-        } else if (typeof value === 'boolean') {
-            if (value) {
-                style.backgroundColor = 'primary'
-            }
-        } else if (typeof value === 'number') {
-            label = String(value)
-        } else {
-            label = value.label ?? label
-            style = {
-                ...style,
-                ...value.style
-            }
-        }
         result.set('square', {
             type: 'rectangle',
             objectParams: {
-                origin,
-                width,
-                height,
-                fillColor: style.backgroundColor,
-                strokeColor: style.strokeColor
+                origin: object.origin,
+                width: object.width,
+                height: object.height,
+                fillColor: object.backgroundColor,
+                strokeColor: object.strokeColor,
+                weight: object.weight
             }
         })
-        label && result.set('label', {
+        object.type === "text" && result.set('label', {
             type: 'text',
             objectParams: {
-                origin: addPoints(origin, {
-                    x: width / 2,
-                    y: height / 2
+                origin: addPoints(object.origin, {
+                    x: object.width / 2,
+                    y: object.height / 2
                 }),
                 horizontalAlign: 'center',
                 verticalAlign: 'center',
-                fontSize: style.fontSize ?? fontSize,
-                fillColor: style.fontColor,
-                textStyle: style.textStyle,
-                value: label
+                fontSize: object.fontSize,
+                fillColor: object.fontColor,
+                textStyle: object.textStyle,
+                value: object.value
             }
         })
 

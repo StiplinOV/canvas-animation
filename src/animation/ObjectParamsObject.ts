@@ -21,7 +21,11 @@ export class ObjectParamsObject {
 
     private readonly stringParams: Map<string, string> = new Map<string, string>()
 
+    private readonly nullableStringParams: Map<string, string | null> = new Map<string, string | null>()
+
     private readonly colorParams: Map<string, string> = new Map<string, string>()
+
+    private readonly nullableColorParams: Map<string, string | null> = new Map<string, string | null>();
 
     private readonly pointParams: Map<string, Point> = new Map<string, Point>()
 
@@ -96,8 +100,16 @@ export class ObjectParamsObject {
         this.stringParams.set(key, param)
     }
 
+    public setNullableStringParam(key: string, param: string | null): void {
+        this.nullableStringParams.set(key, param)
+    }
+
     public setColorParam(key: string, param: string): void {
         this.colorParams.set(key, param)
+    }
+
+    public setNullableColorParam(key: string, param: string | null): void {
+        this.nullableColorParams.set(key, param)
     }
 
     public setPointParam(key: string, param: Point): void {
@@ -158,8 +170,16 @@ export class ObjectParamsObject {
         return requireValueFromMap(this.stringParams, key)
     }
 
+    public getNullableStringParam(key: string): string | null {
+        return requireValueFromMap(this.nullableStringParams, key)
+    }
+
     public getColorParam(key: string): string {
         return requireValueFromMap(this.colorParams, key)
+    }
+
+    public getNullableColorParam(key: string): string | null {
+        return requireValueFromMap(this.nullableColorParams, key)
     }
 
     public getPointParam(key: string): Point {
