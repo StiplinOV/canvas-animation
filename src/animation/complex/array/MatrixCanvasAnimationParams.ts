@@ -99,7 +99,7 @@ export default class MatrixCanvasAnimationParams extends ComplexCanvasAnimationP
                     if (element) {
                         value = {
                             style: element.style,
-                            label: element.label ?? ''
+                            value: element.value ?? ''
                         }
                     }
                 }
