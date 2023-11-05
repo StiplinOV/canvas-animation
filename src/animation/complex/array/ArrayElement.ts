@@ -76,7 +76,7 @@ export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElem
             fontColor,
             fontSize,
             textStyle,
-            value: String(value),
+            value: value === undefined ? '' : String(value),
             type: typeof value === "boolean" ? "boolean" : "text",
             height: jsonObject.height,
             width: jsonObject.width ?? jsonObject.height
@@ -102,7 +102,6 @@ export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElem
         } else {
             value = jsonObject.value
         }
-
         return {
             id,
             backgroundColor,

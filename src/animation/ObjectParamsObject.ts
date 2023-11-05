@@ -73,6 +73,12 @@ export class ObjectParamsObject {
             other.nullableNumberParams.forEach((v, k) => {
                 this.nullableNumberParams.set(k, v)
             })
+            other.nullableStringParams.forEach((v, k) => {
+                this.nullableStringParams.set(k, v)
+            })
+            other.nullableColorParams.forEach((v, k) => {
+                this.nullableColorParams.set(k, v)
+            })
             other.arrayParams.forEach((v, k) => {
                 this.arrayParams.set(k, v)
             })
@@ -269,12 +275,43 @@ export class ObjectParamsObject {
                 currentValue = desireValue
             }
             if (currentValue === null) {
-                currentValue = 0
+                this.setNullableNumberParam(key, null)
+                return
             }
             if (desireValue === null) {
                 desireValue = currentValue
             }
-            this.setNumberParam(key, calculatePercentValue(currentValue, desireValue, percent))
+            this.setNullableNumberParam(key, calculatePercentValue(currentValue, desireValue, percent))
+        })
+        other.nullableStringParams.forEach((value, key) => {
+            let currentValue = this.nullableStringParams.get(key) ?? null
+            let desireValue = other.getNullableStringParam(key)
+            if (currentValue === null) {
+                currentValue = desireValue
+            }
+            if (currentValue === null) {
+                this.setNullableStringParam(key, null)
+                return
+            }
+            if (desireValue === null) {
+                desireValue = currentValue
+            }
+            this.setNullableStringParam(key, calculateTextPercentValue(currentValue, desireValue, percent))
+        })
+        other.nullableColorParams.forEach((value, key) => {
+            let currentValue = this.nullableColorParams.get(key) ?? null
+            let desireValue = other.getNullableColorParam(key)
+            if (currentValue === null) {
+                currentValue = desireValue
+            }
+            if (currentValue === null) {
+                this.setNullableColorParam(key, null)
+                return
+            }
+            if (desireValue === null) {
+                desireValue = currentValue
+            }
+            this.setNullableColorParam(key, calculateColorPercentValue(currentValue, desireValue, percent))
         })
         other.arrayParams.forEach((value, key) => {
             const currentValue = this.arrayParams.get(key) ?? []

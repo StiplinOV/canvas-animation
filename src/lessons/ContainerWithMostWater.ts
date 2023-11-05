@@ -308,12 +308,14 @@ export const ContainerWithMostWater: LessonJsonType = {
                         // },
                         object: {
                             chartXRanges: [{
-                                coords: [4, 8],
-                                value: ''
+                                from: 4,
+                                to: 8,
+                                title: ''
                             }],
                             chartYRanges: [{
-                                coords: [0, 2],
-                                value: ''
+                                from: 0,
+                                to: 2,
+                                title: ''
                             }],
                             bars: [
                                 {
@@ -481,12 +483,14 @@ export const ContainerWithMostWater: LessonJsonType = {
                         appearDuration: 500,
                         object: {
                             chartXRanges: [{
-                                coords: [1, 9],
-                                value: '8'
+                                from: 1,
+                                to: 9,
+                                title: '8'
                             }],
                             chartYRanges: [{
-                                coords: [0, 1],
-                                value: '1'
+                                from: 0,
+                                to: 1,
+                                title: '1'
                             }]
                         }
                     },
@@ -613,12 +617,14 @@ export const ContainerWithMostWater: LessonJsonType = {
                         appearDuration: 500,
                         object: {
                             chartXRanges: [{
-                                coords: [2, 9],
-                                value: '7'
+                                from: 2,
+                                to: 9,
+                                title: '7'
                             }],
                             chartYRanges: [{
-                                coords: [0, 7],
-                                value: '7'
+                                from: 0,
+                                to: 7,
+                                title: '7'
                             }]
                         }
                     },
@@ -782,12 +788,14 @@ export const ContainerWithMostWater: LessonJsonType = {
                                 }
                             ],
                             chartXRanges: [{
-                                coords: [2, 7],
-                                value: '5'
+                                from: 2,
+                                to: 7,
+                                title: '5'
                             }],
                             chartYRanges: [{
-                                coords: [0, 8],
-                                value: '8'
+                                from: 0,
+                                to: 8,
+                                title: '8'
                             }],
                             backgroundSelectedRectangleAreas: [
                                 {

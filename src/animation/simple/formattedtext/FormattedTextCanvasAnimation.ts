@@ -154,7 +154,10 @@ export default class FormattedTextCanvasAnimation extends CanvasAnimation<Format
 
             value = value.replaceAll('\t', '    ')
             textStyle = textStyle ?? (type === 'paragraphTitle' ? 'bold' : textStyle)
-            const partFontSize = type === 'paragraphTitle' ? fontSize * 1.5 : fontSize
+            let partFontSize = type === 'paragraphTitle' ? fontSize * 1.5 : fontSize
+            if (typeof part.fontSize === "number") {
+                partFontSize = part.fontSize
+            }
 
             if (!textColor) {
                 if (type === 'paragraphTitle') {
@@ -178,6 +181,7 @@ export default class FormattedTextCanvasAnimation extends CanvasAnimation<Format
             if (!dry) {
                 let backgroundColor = calculateBackgroundColor(o, animationStyle)
                 if (backgroundTextColor) {
+                    backgroundTextColor = getFontColor(animationStyle, backgroundTextColor)
                     this.rect(p5, x, y - partFontSize + 4, textWidth, partFontSize + 5, backgroundTextColor, backgroundTextColor)
                     backgroundColor = backgroundTextColor
                 }

@@ -19,6 +19,9 @@ import {FindCompileErrors} from "./lessons/javatest/Building Blocks/008 FindComp
 import {ValidJavaIdentifiers} from "./lessons/javatest/Building Blocks/002 Valid java identifiers/ValidJavaIdentifiers";
 import {VarCompileInAMethod} from "./lessons/javatest/Building Blocks/004 Var compile in a method/VarCompileInAMethod";
 import {ValidLiterals} from "./lessons/javatest/Building Blocks/009 ValidLiterals/ValidLiterals";
+import {Demo} from "./lessons/Demo";
+import {GarbageCollection} from "./lessons/javatest/Building Blocks/010 Garbage collection/GarbageCollection";
+import {calculateArrayPercentValue} from "./common/Utils";
 
 const App = (): ReactElement => {
     const lesson = [
@@ -30,8 +33,10 @@ const App = (): ReactElement => {
         DecimalIntegerLiterals,
         NumberOfRemovedImports,
         FindCompileErrors,
-        ValidLiterals
-    ][8]
+        ValidLiterals,
+        GarbageCollection,
+        Demo
+    ][9]
     const canvasTop = 50
     const left = (useWindowDimensions().width - lesson.canvasDimensions.width) / 2
 

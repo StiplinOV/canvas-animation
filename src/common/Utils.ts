@@ -1,48 +1,6 @@
 import {Point, ZeroPoint} from './Point'
 import p5Types from 'p5'
 
-/*
-        TreeMap<Integer, Integer> inMap = new TreeMap<>();
-        for (int[] interval : intervals) {
-            int left = interval[0];
-            int right = interval[1];
-            if (inMap.containsKey(left)) {
-                inMap.put(left, Math.max(right, inMap.get(left)));
-            } else {
-                inMap.put(left, right);
-            }
-        }
-        TreeMap<Integer, Integer> outMap = new TreeMap<>();
-        Integer curLeft = inMap.firstKey();
-        int curRight = inMap.get(curLeft);
-
-        Integer nextLeft = inMap.higherKey(curLeft);
-        while (nextLeft != null) {
-            Integer nextRight = inMap.get(nextLeft);
-            if (curRight >= nextLeft) {
-                curRight = Math.max(curRight, nextRight);
-                inMap.remove(nextLeft);
-                nextLeft = inMap.higherKey(curLeft);
-                continue;
-            } else {
-                outMap.put(curLeft, curRight);
-            }
-            curRight = nextRight;
-            curLeft = nextLeft;
-            nextLeft = inMap.higherKey(curLeft);
-        }
-        outMap.put(curLeft, curRight);
-        int[][] result = new int[outMap.size()][2];
-        int i = 0;
-        for (Map.Entry<Integer, Integer> entry : outMap.entrySet()) {
-            result[i][0] = entry.getKey();
-            result[i][1] = entry.getValue();
-            i++;
-        }
-        return result;
-    }
- */
-
 interface Coordinates {
     x?: number
     y?: number
@@ -64,6 +22,28 @@ export type render2DArrayType = 'leftToRight' | 'upToDown'
 export type RotationType = {
     axis: Point
     angle: number
+}
+export type RangeTitleType = {
+    from: number,
+    to: number,
+    title: string
+}
+export const RangeTitlesComparator = (l: RangeTitleType, r: RangeTitleType): number => {
+    const [firstLeft, firstRight] = [l.from, l.to].sort()
+    const [secondLeft, secondRight] = [r.from, r.to].sort()
+    if (firstLeft <= secondLeft && firstRight >= secondRight) {
+        return 1
+    }
+    if (secondLeft <= firstLeft && secondRight >= firstRight) {
+        return -1
+    }
+    if (firstRight < secondLeft) {
+        return 1
+    }
+    if (secondRight < firstRight) {
+        return -1
+    }
+    return 0
 }
 
 export const calculatePercentValue = (from: number, to: number, percent: number): number => from + (to - from) * percent
@@ -90,40 +70,37 @@ export const calculateSetPercentValue = <T>(from: T[], to: T[], percent: number)
 }
 
 export const calculateArrayPercentValue = <T>(from: T[], to: T[], percent: number): T[] => {
-    if (JSON.stringify(from) === JSON.stringify(to)) {
-        return from
-    }
-    let toStartsWithFrom = true
-    let fromStartsWithTo = true
-    for (let i = 0; i < Math.min(from.length, to.length); i++) {
-        if (JSON.stringify(from[i]) !== JSON.stringify(to[i])) {
-            toStartsWithFrom = false
-            fromStartsWithTo = false
-            break
+    const lengthDiff = Math.abs(from.length - to.length)
+    let numberOfStates = lengthDiff + 1
+    const minLen = Math.min(from.length, to.length)
+    for (let i = 0; i < minLen; i++) {
+        if (from[i] !== to[i]) {
+            numberOfStates++
         }
     }
-    if (toStartsWithFrom) {
-        toStartsWithFrom = to.length >= from.length
-        fromStartsWithTo = from.length >= to.length
+
+    const currentState = Math.round(calculatePercentValue(0, numberOfStates - 1, percent))
+    if (from.length > to.length) {
+        const temp = from
+        from = to;
+        to = temp
     }
-    if (toStartsWithFrom) {
-        const numberOfStates = to.length - from.length + 1
-        const currentState = Math.round(calculatePercentValue(1, numberOfStates, percent))
-        return to.slice(0, from.length + currentState - 1)
-    } else if (fromStartsWithTo) {
-        const numberOfStates = from.length - to.length + 1
-        const currentState = Math.round(calculatePercentValue(1, numberOfStates, percent))
-        return from.slice(0, from.length - currentState + 1)
-    } else {
-        const numberOfStates = from.length + to.length
-        const currentState = Math.round(calculatePercentValue(1, numberOfStates, percent))
-        if (currentState >= 0 && currentState <= from.length) {
-            return from.slice(0, from.length - currentState + 1)
-        } else {
-            return to.slice(0, currentState - from.length)
+
+    if (currentState <= lengthDiff) {
+        return [...from, ...to.slice(from.length, from.length + currentState)]
+    }
+    const result =  [...from, ...to.slice(from.length, to.length)]
+    for (let i = 0; i < currentState - lengthDiff; i++) {
+        for (let j = 0; j < to.length; j++) {
+            if (to[j] !== result[j]) {
+                result[j] = to[j]
+                break
+            }
         }
     }
+    return result
 }
+
 export const calculatePointsPercentValue = (from: Point[], to: Point[], percent: number): Point[] => {
     const result: Point[] = []
     const fromPoint = from.length ? from[from.length - 1] : ZeroPoint
@@ -141,7 +118,29 @@ export const calculatePointsPercentValue = (from: Point[], to: Point[], percent:
 }
 
 export const calculateTextPercentValue = (from: string, to: string, percent: number): string => {
-    return calculateArrayPercentValue(from.split(''), to.split(''), percent).join('')
+    if (from === to) {
+        return from
+    }
+
+    let toStartsWithFrom = to.startsWith(from)
+    let fromStartsWithTo = from.startsWith(to)
+
+    if (toStartsWithFrom) {
+        const numberOfStates = to.length - from.length + 1
+        const currentState = Math.round(calculatePercentValue(1, numberOfStates, percent))
+        return to.substring(0, from.length + currentState - 1)
+    }
+    if (fromStartsWithTo) {
+        const numberOfStates = from.length - to.length + 1
+        const currentState = Math.round(calculatePercentValue(1, numberOfStates, percent))
+        return from.substring(0, from.length - currentState + 1)
+    }
+    const numberOfStates = from.length + to.length
+    const currentState = Math.round(calculatePercentValue(1, numberOfStates, percent))
+    if (currentState >= 0 && currentState <= from.length) {
+        return from.substring(0, from.length - currentState + 1)
+    }
+    return to.substring(0, currentState - from.length)
 }
 
 export const calculateColorPercentValue = (fromParam: string, toParam: string, percent: number): string => {

@@ -347,6 +347,7 @@ export type FormattedTextValueSegmentType = {
     underlined?: boolean
     type?: 'paragraphTitle' | 'link' | 'codeSpec' | 'codeSpecLink' | 'codeSpecExample'
     font?: WebSafeFontsType | 'monospace'
+    fontSize?: number
 } | 'newline'
 
 export type FormattedSyntaxValueType = {

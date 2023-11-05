@@ -158,7 +158,7 @@ export default class CodeQuestionnaireCanvasAnimationParams extends ComplexCanva
                 return [{value: o}]
             }
             return o.map(s => {
-                if (typeof s === 'string') {
+                if (typeof s === 'string' && s !== 'newline') {
                     return {value: s}
                 }
                 return s

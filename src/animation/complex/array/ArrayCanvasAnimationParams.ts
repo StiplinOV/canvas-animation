@@ -1,5 +1,5 @@
 import {AnimationObjectParams, JsonObjectParams} from '../../CanvasAnimationParams'
-import {addPoints} from '../../../common/Utils'
+import {addPoints, RangeTitleType} from '../../../common/Utils'
 import ComplexCanvasAnimationParams, {CanvasAnimationParamsType} from '../ComplexCanvasAnimationParams'
 import ArrayElement, {ElementStyle, ElementType} from './ArrayElement'
 import ArrowCanvasAnimationParams from '../arrow/ArrowCanvasAnimationParams'
@@ -10,6 +10,7 @@ import {Point} from "../../../common/Point";
 
 export interface ArrayJsonParamsType extends JsonObjectParams {
     values: (ElementType | string | boolean | number)[]
+    overrideValueIds?: (string | null)[]
     height: number
     width?: number | null
     title?: string
@@ -20,10 +21,12 @@ export interface ArrayJsonParamsType extends JsonObjectParams {
     elementStyle?: ElementStyle
     valueStyle?: Map<number, ElementType>
     pointers?: number[]
+    diapasonTitles?: RangeTitleType[]
 }
 
 export interface ArrayAnimationParamsType extends AnimationObjectParams {
     values: (ElementType | string | boolean | number)[]
+    overrideValueIds: (string | null)[]
     height: number
     width: number | null
     title: string | null
@@ -32,12 +35,12 @@ export interface ArrayAnimationParamsType extends AnimationObjectParams {
     hideIndices: boolean
     valueStyle: Map<number, ElementType>
     pointers: number[]
-    elementsInterval: number | null
     elementBackgroundColor: ColorType | null
     elementStrokeColor: ColorType
     elementFontColor: ColorType,
     elementFontSize: number,
     elementTextStyle: THE_STYLE,
+    diapasonTitles: RangeTitleType[]
 }
 
 export type ArraySelectorType = {
@@ -52,6 +55,8 @@ type ArrayDimensionsParamsType = {
     hasIndexTitle: boolean
     numberOfElements: number
     origin: Point
+    hideIndices: boolean
+    diapasonTitleRanges: [number, number][]
 }
 
 class ArrayDimensions {
@@ -61,9 +66,16 @@ class ArrayDimensions {
     private readonly partHeight: number
 
     constructor(params: ArrayDimensionsParamsType) {
-        let numberOfParts = 5
+        let numberOfParts = 0
         if (params.hasArrayTitle) {
             numberOfParts += 3
+        }
+        if (params.diapasonTitleRanges) {
+            numberOfParts += 2
+        }
+        numberOfParts += 5
+        if (!params.hideIndices) {
+            numberOfParts += 2
         }
         if (params.hasIndexTitle) {
             numberOfParts += 2
@@ -91,16 +103,19 @@ class ArrayDimensions {
     }
 
     getElementHeight(): number {
-        return this.partHeight * 3
+        return this.partHeight * 5
     }
 
     getElementSpacing(): number {
         return (this.getArrayWidth() - (this.params.numberOfElements * this.getElementWidth())) / (this.params.numberOfElements - 1)
     }
 
-
     hasArrayTitle(): boolean {
         return this.params.hasArrayTitle
+    }
+
+    hasDiapasonTitle(): boolean {
+        return this.params.diapasonTitleRanges.length > 0
     }
 
     hasArrayIndexTitle(): boolean {
@@ -108,7 +123,7 @@ class ArrayDimensions {
     }
 
     getTitleFontSize(): number {
-        return this.partHeight
+        return this.partHeight * 2
     }
 
     getTitleOrigin(): Point {
@@ -118,10 +133,28 @@ class ArrayDimensions {
         })
     }
 
+    getDiapasonTitleOrigin(from: number, to: number): Point {
+        let y = 0
+        if (this.hasArrayTitle()) {
+            y += this.partHeight * 3
+        }
+
+        return addPoints(this.params.origin, {
+            x: this.getElementWidth() / 2 + (from + to) * (this.getElementWidth() + this.getElementSpacing())/2,
+            y
+        })
+    }
+
+    getDiapasonTitleFontSize(): number {
+        return this.partHeight
+    }
 
     getArrayElementOrigin(index: number): Point {
         let y = 0
         if (this.hasArrayTitle()) {
+            y += this.partHeight * 3
+        }
+        if (this.hasDiapasonTitle()) {
             y += this.partHeight * 2
         }
 
@@ -132,35 +165,41 @@ class ArrayDimensions {
     }
 
     getArrayElementIndexOrigin(index: number): Point {
-        let partShift = this.partHeight * 4
+        let y = this.partHeight * 6
         if (this.hasArrayTitle()) {
-            partShift += this.partHeight * 2
+            y += this.partHeight * 3
+        }
+        if (this.hasDiapasonTitle()) {
+            y += this.partHeight * 2
         }
         return addPoints(this.params.origin, {
             x: index * (this.getElementWidth() + this.getElementSpacing()) + this.getElementWidth() / 2,
-            y: partShift
+            y: y
         })
     }
 
     getArrayElementIndexFontSize(): number {
-        return this.partHeight * 2 / 3
+        return this.partHeight
     }
 
     getArrayElementIndexTitleFontSize(): number {
-        return this.partHeight * 2 / 3
+        return this.partHeight
     }
 
     getPointerOrigin(index: number): Point {
-        let partShift = this.partHeight * 5
+        let y = this.partHeight * 5
         if (this.hasArrayTitle()) {
-            partShift += this.partHeight * 2
+            y += this.partHeight * 3
+        }
+        if (this.hasDiapasonTitle()) {
+            y += this.partHeight * 2
         }
         if (this.hasArrayIndexTitle()) {
-            partShift += this.partHeight
+            y += this.partHeight * 2
         }
         return addPoints(this.params.origin, {
             x: index * (this.getElementWidth() + this.partHeight) + this.getElementWidth() / 2,
-            y: partShift
+            y: y
         })
     }
 
@@ -171,13 +210,19 @@ class ArrayDimensions {
     }
 
     getIndexTitleOrigin(): Point {
-        let partShift = this.partHeight * 5
+        let y = this.partHeight * 6
         if (this.hasArrayTitle()) {
-            partShift += this.partHeight * 2
+            y += this.partHeight * 3
+        }
+        if (this.hasDiapasonTitle()) {
+            y += this.partHeight * 2
+        }
+        if (!this.params.hideIndices) {
+            y += this.partHeight * 2
         }
         return addPoints(this.params.origin, {
-            x: this.getArrayWidth(),
-            y: partShift
+            x: this.getArrayWidth()/2,
+            y: y
         })
     }
 
@@ -200,6 +245,7 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
         return {
             ...animationObjectDefaultParams,
             values: jsonObject.values,
+            overrideValueIds: jsonObject.overrideValueIds ?? [],
             height: jsonObject.height,
             width: jsonObject.width ?? null,
             title,
@@ -208,18 +254,19 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
             hideIndices: Boolean(jsonObject.hideIndices),
             valueStyle: jsonObject.valueStyle ?? new Map<number, ElementType>(),
             pointers: jsonObject.pointers ?? [],
-            elementsInterval: jsonObject.elementsInterval ?? null,
             elementBackgroundColor: jsonObject.elementStyle?.backgroundColor ?? null,
             elementStrokeColor: jsonObject.elementStyle?.strokeColor ?? animationStyle.strokeColor,
             elementFontColor: jsonObject.elementStyle?.fontColor ?? animationStyle.fontColor,
             elementFontSize: jsonObject.elementStyle?.fontSize ?? jsonObject.height / 3,
-            elementTextStyle: jsonObject.elementStyle?.textStyle ?? "normal"
+            elementTextStyle: jsonObject.elementStyle?.textStyle ?? "normal",
+            diapasonTitles: jsonObject.diapasonTitles ?? []
         }
     }
 
     protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<ArrayJsonParamsType>): Partial<ArrayAnimationParamsType> {
         return {
             values: jsonObject.values,
+            overrideValueIds: jsonObject.overrideValueIds,
             height: jsonObject.height,
             width: jsonObject.width,
             title: jsonObject.title,
@@ -228,17 +275,18 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
             hideIndices: jsonObject.hideIndices,
             valueStyle: jsonObject.valueStyle,
             pointers: jsonObject.pointers,
-            elementsInterval: jsonObject.elementsInterval,
             elementBackgroundColor: jsonObject.elementStyle?.backgroundColor,
             elementStrokeColor: jsonObject.elementStyle?.strokeColor,
             elementFontColor: jsonObject.elementStyle?.fontColor,
             elementFontSize: jsonObject.elementStyle?.fontSize,
-            elementTextStyle: jsonObject.elementStyle?.textStyle
+            elementTextStyle: jsonObject.elementStyle?.textStyle,
+            diapasonTitles: jsonObject.diapasonTitles
         }
     }
 
     protected appendParamsToObjectParamsObject(objectParamsObject: ObjectParamsObject, params: Partial<ArrayAnimationParamsType>): void {
         params.values !== undefined && objectParamsObject.setArrayParam('values', params.values)
+        params.overrideValueIds !== undefined && objectParamsObject.setObjectParam('overrideValueIds', params.overrideValueIds)
         params.height !== undefined && objectParamsObject.setNumberParam('height', params.height)
         params.width !== undefined && objectParamsObject.setNullableNumberParam('width', params.width)
         params.title !== undefined && objectParamsObject.setNullableStringParam('title', params.title)
@@ -247,12 +295,12 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
         params.hideIndices !== undefined && objectParamsObject.setBooleanParam('hideIndices', params.hideIndices)
         params.valueStyle !== undefined && objectParamsObject.setObjectParam('valueStyle', params.valueStyle)
         params.pointers !== undefined && objectParamsObject.setArrayParam('pointers', params.pointers)
-        params.elementsInterval !== undefined && objectParamsObject.setNullableNumberParam('elementsInterval', params.elementsInterval)
         params.elementBackgroundColor !== undefined && objectParamsObject.setNullableColorParam('elementBackgroundColor', params.elementBackgroundColor)
         params.elementStrokeColor !== undefined && objectParamsObject.setColorParam('elementStrokeColor', params.elementStrokeColor)
         params.elementFontColor !== undefined && objectParamsObject.setColorParam('elementFontColor', params.elementFontColor)
         params.elementFontSize !== undefined && objectParamsObject.setNumberParam('elementFontSize', params.elementFontSize)
         params.elementTextStyle !== undefined && objectParamsObject.setStringLiteralParam('elementTextStyle', params.elementTextStyle)
+        params.diapasonTitles !== undefined && objectParamsObject.setSetParam('diapasonTitles', params.diapasonTitles)
     }
 
     protected convertObjectParamsObjectToAnimationParams(objectParamsObject: ObjectParamsObject, initialDefaultParams: AnimationObjectParams): ArrayAnimationParamsType {
@@ -260,6 +308,7 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
         return {
             ...initialDefaultParams,
             values: objectParamsObject.getArrayParam('values'),
+            overrideValueIds: objectParamsObject.getObjectParam('overrideValueIds'),
             height: objectParamsObject.getNumberParam('height'),
             width: objectParamsObject.getNullableNumberParam('width'),
             title: objectParamsObject.getNullableStringParam('title'),
@@ -268,12 +317,12 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
             hideIndices: objectParamsObject.getBooleanParam('hideIndices'),
             valueStyle: objectParamsObject.getObjectParam('valueStyle'),
             pointers: objectParamsObject.getArrayParam('pointers'),
-            elementsInterval: objectParamsObject.getNullableNumberParam('elementsInterval'),
             elementBackgroundColor: objectParamsObject.getNullableColorParam('elementBackgroundColor'),
             elementStrokeColor: objectParamsObject.getColorParam('elementStrokeColor'),
             elementFontColor: objectParamsObject.getColorParam('elementFontColor'),
             elementFontSize: objectParamsObject.getNumberParam('elementFontSize'),
             elementTextStyle: objectParamsObject.getStringLiteralParam('elementTextStyle'),
+            diapasonTitles: objectParamsObject.getSetParam('diapasonTitles')
         }
     }
 
@@ -292,7 +341,9 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
             hasArrayTitle: typeof object.title === "string",
             hasIndexTitle: typeof object.indexTitle === "string",
             numberOfElements: object.values.length,
-            origin: object.origin
+            origin: object.origin,
+            hideIndices: object.hideIndices,
+            diapasonTitleRanges: object.diapasonTitles.map(t => [t.from, t.to])
         })
         let {
             title,
@@ -302,6 +353,7 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
             rotations,
             hideIndices,
             pointers,
+            overrideValueIds
         } = object
         const arrayElementWidth = arrayDimensions.getElementWidth()
 
@@ -318,7 +370,18 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
                 }
             })
         }
-        //console.log(values)
+        object.diapasonTitles.forEach(rangeTitle => {
+            result.set(`range title ${rangeTitle.from} ${rangeTitle.to}`, {
+                type: "text",
+                objectParams: {
+                    value: rangeTitle.title,
+                    origin: arrayDimensions.getDiapasonTitleOrigin(rangeTitle.from, rangeTitle.to),
+                    fontSize: arrayDimensions.getDiapasonTitleFontSize(),
+                    horizontalAlign: "center",
+                    verticalAlign: "top"
+                }
+            })
+        })
         values.forEach((valueParam, index) => {
             let value = valueParam
             let elementStyle: ElementStyle = {
@@ -365,8 +428,16 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
                 }
             }, this.getP5(), this.getAnimationStyle()).getIncludedAnimationParams().forEach((v, k) => {
                 let indexParam = String(index)
-                if (typeof value === "object" && value.id !== undefined) {
-                    indexParam = `id_${value.id}`
+                if (typeof value === "object") {
+                    if (index < overrideValueIds.length) {
+                        const overrideId = overrideValueIds[index]
+                        if (typeof overrideId === "string") {
+                            value.id = overrideId
+                        }
+                    }
+                    if (value.id !== undefined) {
+                        indexParam = `id_${value.id}`
+                    }
                 }
                 result.set(`${k} ${indexParam}`, v)
             })
@@ -380,6 +451,7 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
                         origin: arrayDimensions.getArrayElementIndexOrigin(index),
                         fontSize: arrayDimensions.getArrayElementIndexFontSize(),
                         horizontalAlign: 'center',
+                        verticalAlign: "top",
                         rotations
                     }
                 })
@@ -393,6 +465,7 @@ export default class ArrayCanvasAnimationParams extends ComplexCanvasAnimationPa
                     origin: arrayDimensions.getIndexTitleOrigin(),
                     fontSize: arrayDimensions.getArrayElementIndexTitleFontSize(),
                     horizontalAlign: 'center',
+                    verticalAlign: "top",
                     rotations
                 }
             })

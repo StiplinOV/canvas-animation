@@ -383,8 +383,9 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                         appearDuration: 2000,
                         object: {
                             chartYRanges: [{
-                                coords: [1, 5],
-                                value: 'Profit is 4'
+                                from: 1,
+                                to: 5,
+                                title: 'Profit is 4'
                             }]
                         }
                     },
@@ -393,8 +394,9 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                         appearDuration: 2000,
                         object: {
                             chartYRanges: [{
-                                coords: [3, 6],
-                                value: 'Profit is 3'
+                                from: 3,
+                                to: 6,
+                                title: 'Profit is 3'
                             }]
                         }
                     },
@@ -403,8 +405,9 @@ export const BestTimeToBuyAndSellStock: LessonJsonType = {
                         appearDuration: 2000,
                         object: {
                             chartYRanges: [{
-                                coords: [1, 6],
-                                value: 'Profit is 7'
+                                from: 1,
+                                to: 6,
+                                title: 'Profit is 7'
                             }]
                         }
                     },

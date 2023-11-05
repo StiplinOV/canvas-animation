@@ -1,5 +1,5 @@
 import { Point } from '../../../common/Point'
-import { addPoints } from '../../../common/Utils'
+import {addPoints, RangeTitlesComparator, RangeTitleType} from '../../../common/Utils'
 import {AnimationObjectParams, JsonObjectParams} from '../../CanvasAnimationParams'
 import ComplexCanvasAnimationParams, {
     CanvasAnimationParamsType
@@ -27,27 +27,9 @@ const toChartPointType = (value: ChartPointType | Point): ChartPointType => {
         text: ''
     }
 }
-const chartRangesCoordsComparator = (l: ChartRangeType, r: ChartRangeType): number => {
-    const [firstLeft, firstRight] = l.coords.sort()
-    const [secondLeft, secondRight] = r.coords.sort()
-    if (firstLeft <= secondLeft && firstRight >= secondRight) {
-        return 1
-    }
-    if (secondLeft <= firstLeft && secondRight >= firstRight) {
-        return -1
-    }
-    if (firstRight < secondLeft) {
-        return 1
-    }
-    if (secondRight < firstRight) {
-        return -1
-    }
-    return 0
-}
 
 type scaleType = { position: number, value: string }
 type ChartPointType = { point: Point, text: string }
-type ChartRangeType = { coords: [number, number], value: string }
 type Bar = {
     x: number
     y: number
@@ -68,8 +50,8 @@ export interface OnlyXyChartParamsType {
     yAxisName?: string
     chartPoints?: (ChartPointType | Point)[]
     chartLines?: [Point, Point][]
-    chartYRanges?: ChartRangeType[]
-    chartXRanges?: ChartRangeType[]
+    chartYRanges?: RangeTitleType[]
+    chartXRanges?: RangeTitleType[]
     bars?: Bar[]
     barWidth?: number
     barColor?: ColorType
@@ -431,14 +413,14 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
             origin
         } = object
         const rotations = object.rotations ?? []
-        let objChartYRanges: ChartRangeType[] = []
+        let objChartYRanges: RangeTitleType[] = []
         if (object.xScale && object.yScale) {
             objChartYRanges = object.chartYRanges ?? []
         }
 
-        objChartYRanges.sort(chartRangesCoordsComparator).forEach((objChartRange, index) => {
-            const firstPointY = this.getYForValue(object, objChartRange.coords[0])
-            const secondPointY = this.getYForValue(object, objChartRange.coords[1])
+        objChartYRanges.sort(RangeTitlesComparator).forEach((objChartRange, index) => {
+            const firstPointY = this.getYForValue(object, objChartRange.from)
+            const secondPointY = this.getYForValue(object, objChartRange.to)
             const endXCoord = width + index * 20 + origin.x + 60
             result.set(`objectChartYRangeFirstLine ${index}`, {
                 type: 'line',
@@ -497,7 +479,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                 type: 'text',
                 objectParams: {
                     origin: objChartRangeValueOrigin,
-                    value: objChartRange.value,
+                    value: objChartRange.title,
                     horizontalAlign: 'center',
                     fontSize: 20,
                     rotations: [...rotations, {
@@ -515,14 +497,14 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
         const result = new Map<string, CanvasAnimationParamsType>()
         const { origin } = object
         const rotations = object.rotations ?? []
-        let objChartXRanges: ChartRangeType[] = []
+        let objChartXRanges: RangeTitleType[] = []
         if (object.xScale && object.yScale) {
             objChartXRanges = object.chartXRanges ?? []
         }
 
-        objChartXRanges.sort(chartRangesCoordsComparator).forEach((objChartRange, index) => {
-            const firstPointX = this.getXForValue(object, objChartRange.coords[0])
-            const secondPointX = this.getXForValue(object, objChartRange.coords[1])
+        objChartXRanges.sort(RangeTitlesComparator).forEach((objChartRange, index) => {
+            const firstPointX = this.getXForValue(object, objChartRange.from)
+            const secondPointX = this.getXForValue(object, objChartRange.to)
             const startYCoord = index * 20 + origin.y + 60
             result.set(`objectChartXRangeFirstLine ${index}`, {
                 type: 'line',
@@ -581,7 +563,7 @@ export default class XYChartCanvasAnimationParams extends ComplexCanvasAnimation
                 type: 'text',
                 objectParams: {
                     origin: objChartRangeValueOrigin,
-                    value: objChartRange.value,
+                    value: objChartRange.title,
                     horizontalAlign: 'center',
                     fontSize: 20,
                     rotations
