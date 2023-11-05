@@ -24,13 +24,13 @@ export type RotationType = {
     angle: number
 }
 export type RangeTitleType = {
-    from: number,
-    to: number,
+    from: number
+    to: number
     title: string
 }
 export const RangeTitlesComparator = (l: RangeTitleType, r: RangeTitleType): number => {
-    const [firstLeft, firstRight] = [l.from, l.to].sort()
-    const [secondLeft, secondRight] = [r.from, r.to].sort()
+    const [firstLeft, firstRight] = [l.from, l.to].sort((a, b) => a - b)
+    const [secondLeft, secondRight] = [r.from, r.to].sort((a, b) => a - b)
     if (firstLeft <= secondLeft && firstRight >= secondRight) {
         return 1
     }
@@ -82,14 +82,14 @@ export const calculateArrayPercentValue = <T>(from: T[], to: T[], percent: numbe
     const currentState = Math.round(calculatePercentValue(0, numberOfStates - 1, percent))
     if (from.length > to.length) {
         const temp = from
-        from = to;
+        from = to
         to = temp
     }
 
     if (currentState <= lengthDiff) {
         return [...from, ...to.slice(from.length, from.length + currentState)]
     }
-    const result =  [...from, ...to.slice(from.length, to.length)]
+    const result = [...from, ...to.slice(from.length, to.length)]
     for (let i = 0; i < currentState - lengthDiff; i++) {
         for (let j = 0; j < to.length; j++) {
             if (to[j] !== result[j]) {
@@ -122,8 +122,8 @@ export const calculateTextPercentValue = (from: string, to: string, percent: num
         return from
     }
 
-    let toStartsWithFrom = to.startsWith(from)
-    let fromStartsWithTo = from.startsWith(to)
+    const toStartsWithFrom = to.startsWith(from)
+    const fromStartsWithTo = from.startsWith(to)
 
     if (toStartsWithFrom) {
         const numberOfStates = to.length - from.length + 1

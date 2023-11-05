@@ -2,7 +2,7 @@ import {LessonJsonType} from '../../../../AnimationsJsonType'
 import {animationStyle} from '../../../../Animations'
 import javase17docs from './javase17docs.png'
 import img_1 from './img_1.png'
-import {ElementType} from "../../../../animation/complex/array/ArrayElement";
+import {ElementType} from '../../../../animation/complex/array/ArrayElement'
 
 export const GarbageCollection: LessonJsonType = {
     sound: require('./без названия 9_1.mp3'),
@@ -10,7 +10,7 @@ export const GarbageCollection: LessonJsonType = {
         width: 1280,
         height: 720
     },
-    endTime: 458000,
+    endTime: 459000,
     cameras: [
         {
             camera: {
@@ -124,7 +124,6 @@ export const GarbageCollection: LessonJsonType = {
             startTime: 309000,
             transformDuration: 1000
         },
-        //
         {
             camera: {
                 x: 0,
@@ -197,7 +196,6 @@ export const GarbageCollection: LessonJsonType = {
             startTime: 419000,
             transformDuration: 1000
         },
-        //
         {
             camera: {
                 x: 0,
@@ -245,7 +243,7 @@ export const GarbageCollection: LessonJsonType = {
                         object: {
                             origin: {x: 1600, y: 2525},
                             width: 400,
-                            height: 650,
+                            height: 650
                         }
                     }
                 ]
@@ -294,7 +292,7 @@ export const GarbageCollection: LessonJsonType = {
                                     'Calling ',
                                     {
                                         value: 'System.gc()',
-                                        font: "monospace"
+                                        font: 'monospace'
                                     },
                                     ' is guaranteed to free up memory by destroying objects eligible for garbage collection.'
                                 ],
@@ -307,7 +305,7 @@ export const GarbageCollection: LessonJsonType = {
                                     'Making a variable ',
                                     {
                                         value: 'final',
-                                        font: "monospace"
+                                        font: 'monospace'
                                     },
                                     ' means its associated object will never be garbage collected.'
                                 ]
@@ -323,7 +321,7 @@ export const GarbageCollection: LessonJsonType = {
                             questionnaireSelectedLines: [
                                 {
                                     num: 0,
-                                    backgroundColor: "warning",
+                                    backgroundColor: 'warning'
                                 }
                             ]
                         }
@@ -335,7 +333,7 @@ export const GarbageCollection: LessonJsonType = {
                             questionnaireSelectedLines: [
                                 {
                                     num: 0,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 }
                             ]
                         }
@@ -347,11 +345,11 @@ export const GarbageCollection: LessonJsonType = {
                             questionnaireSelectedLines: [
                                 {
                                     num: 0,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 1,
-                                    backgroundColor: "warning",
+                                    backgroundColor: 'warning'
                                 }
                             ]
                         }
@@ -363,11 +361,11 @@ export const GarbageCollection: LessonJsonType = {
                             questionnaireSelectedLines: [
                                 {
                                     num: 0,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 1,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 }
                             ]
                         }
@@ -379,15 +377,15 @@ export const GarbageCollection: LessonJsonType = {
                             questionnaireSelectedLines: [
                                 {
                                     num: 0,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 1,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 2,
-                                    backgroundColor: "warning",
+                                    backgroundColor: 'warning'
                                 }
                             ]
                         }
@@ -399,15 +397,15 @@ export const GarbageCollection: LessonJsonType = {
                             questionnaireSelectedLines: [
                                 {
                                     num: 0,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 1,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 2,
-                                    backgroundColor: "success",
+                                    backgroundColor: 'success'
                                 }
                             ]
                         }
@@ -419,19 +417,19 @@ export const GarbageCollection: LessonJsonType = {
                             questionnaireSelectedLines: [
                                 {
                                     num: 0,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 1,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 2,
-                                    backgroundColor: "success",
+                                    backgroundColor: 'success'
                                 },
                                 {
                                     num: 3,
-                                    backgroundColor: "warning",
+                                    backgroundColor: 'warning'
                                 }
                             ]
                         }
@@ -443,20 +441,20 @@ export const GarbageCollection: LessonJsonType = {
                             questionnaireSelectedLines: [
                                 {
                                     num: 0,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 1,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 2,
-                                    backgroundColor: "success",
+                                    backgroundColor: 'success'
                                 },
                                 {
                                     num: 3,
-                                    backgroundColor: "fail",
-                                },
+                                    backgroundColor: 'fail'
+                                }
                             ]
                         }
                     },
@@ -467,23 +465,23 @@ export const GarbageCollection: LessonJsonType = {
                             questionnaireSelectedLines: [
                                 {
                                     num: 0,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 1,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 2,
-                                    backgroundColor: "success",
+                                    backgroundColor: 'success'
                                 },
                                 {
                                     num: 3,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 4,
-                                    backgroundColor: "warning"
+                                    backgroundColor: 'warning'
                                 }
                             ]
                         }
@@ -495,23 +493,23 @@ export const GarbageCollection: LessonJsonType = {
                             questionnaireSelectedLines: [
                                 {
                                     num: 0,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 1,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 2,
-                                    backgroundColor: "success",
+                                    backgroundColor: 'success'
                                 },
                                 {
                                     num: 3,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 4,
-                                    backgroundColor: "success"
+                                    backgroundColor: 'success'
                                 }
                             ]
                         }
@@ -523,27 +521,27 @@ export const GarbageCollection: LessonJsonType = {
                             questionnaireSelectedLines: [
                                 {
                                     num: 0,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 1,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 2,
-                                    backgroundColor: "success",
+                                    backgroundColor: 'success'
                                 },
                                 {
                                     num: 3,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 4,
-                                    backgroundColor: "success"
+                                    backgroundColor: 'success'
                                 },
                                 {
                                     num: 5,
-                                    backgroundColor: "warning"
+                                    backgroundColor: 'warning'
                                 }
                             ]
                         }
@@ -555,27 +553,27 @@ export const GarbageCollection: LessonJsonType = {
                             questionnaireSelectedLines: [
                                 {
                                     num: 0,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 1,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 2,
-                                    backgroundColor: "success",
+                                    backgroundColor: 'success'
                                 },
                                 {
                                     num: 3,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 4,
-                                    backgroundColor: "success"
+                                    backgroundColor: 'success'
                                 },
                                 {
                                     num: 5,
-                                    backgroundColor: "success"
+                                    backgroundColor: 'success'
                                 }
                             ]
                         }
@@ -587,31 +585,31 @@ export const GarbageCollection: LessonJsonType = {
                             questionnaireSelectedLines: [
                                 {
                                     num: 0,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 1,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 2,
-                                    backgroundColor: "success",
+                                    backgroundColor: 'success'
                                 },
                                 {
                                     num: 3,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 4,
-                                    backgroundColor: "success"
+                                    backgroundColor: 'success'
                                 },
                                 {
                                     num: 5,
-                                    backgroundColor: "success"
+                                    backgroundColor: 'success'
                                 },
                                 {
                                     num: 6,
-                                    backgroundColor: "warning"
+                                    backgroundColor: 'warning'
                                 }
                             ]
                         }
@@ -623,31 +621,31 @@ export const GarbageCollection: LessonJsonType = {
                             questionnaireSelectedLines: [
                                 {
                                     num: 0,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 1,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 2,
-                                    backgroundColor: "success",
+                                    backgroundColor: 'success'
                                 },
                                 {
                                     num: 3,
-                                    backgroundColor: "fail",
+                                    backgroundColor: 'fail'
                                 },
                                 {
                                     num: 4,
-                                    backgroundColor: "success"
+                                    backgroundColor: 'success'
                                 },
                                 {
                                     num: 5,
-                                    backgroundColor: "success"
+                                    backgroundColor: 'success'
                                 },
                                 {
                                     num: 6,
-                                    backgroundColor: "fail"
+                                    backgroundColor: 'fail'
                                 }
                             ]
                         }
@@ -671,12 +669,12 @@ export const GarbageCollection: LessonJsonType = {
             {
                 presenceParameters: [{
                     appearTime: 200000,
-                    appearDuration: 0,
+                    appearDuration: 0
                 }],
                 object: {
                     origin: {
                         x: 1280,
-                        y: 2160,
+                        y: 2160
                     },
                     img: img_1
                 }
@@ -704,7 +702,7 @@ export const GarbageCollection: LessonJsonType = {
             {
                 presenceParameters: [{
                     appearTime: 107000,
-                    appearDuration: 2000,
+                    appearDuration: 2000
                 }],
                 object: {
                     origin: {
@@ -718,7 +716,7 @@ export const GarbageCollection: LessonJsonType = {
                     value: [
                         {
                             value: '1 Introduction to Garbage Collection Tuning',
-                            fontSize: 54,
+                            fontSize: 54
                         },
                         'newline',
                         'newline',
@@ -730,35 +728,35 @@ export const GarbageCollection: LessonJsonType = {
                         'newline',
                         {
                             value: 'What Is a Garbage Collector?',
-                            fontSize: 36,
+                            fontSize: 36
                         },
                         'newline',
                         'newline',
                         {
-                            value: 'The garbage collector (GC) automatically manages the application\'s dynamic memory allocation requests.',
+                            value: 'The garbage collector (GC) automatically manages the application\'s dynamic memory allocation requests.'
                         },
                         'newline',
                         'newline',
                         {
-                            value: 'A garbage collector performs automatic dynamic memory management through the following operations:',
+                            value: 'A garbage collector performs automatic dynamic memory management through the following operations:'
                         },
                         'newline',
                         'newline',
                         {
-                            value: '● Allocates from and gives back memory to the operating system.',
+                            value: '● Allocates from and gives back memory to the operating system.'
                         },
                         'newline',
                         {
-                            value: '● Hands out that memory to the application as it requests it.',
+                            value: '● Hands out that memory to the application as it requests it.'
                         },
                         'newline',
                         {
-                            value: '● Determines which parts of that memory is still in use by the application.',
+                            value: '● Determines which parts of that memory is still in use by the application.'
                         },
                         'newline',
                         {
-                            value: '● Reclaims the unused memory for reuse by the application.',
-                        },
+                            value: '● Reclaims the unused memory for reuse by the application.'
+                        }
                     ]
                 },
                 transformations: [
@@ -769,7 +767,7 @@ export const GarbageCollection: LessonJsonType = {
                             value: [
                                 {
                                     value: '1 Introduction to Garbage Collection Tuning',
-                                    fontSize: 54,
+                                    fontSize: 54
                                 },
                                 'newline',
                                 'newline',
@@ -781,36 +779,36 @@ export const GarbageCollection: LessonJsonType = {
                                 'newline',
                                 {
                                     value: 'What Is a Garbage Collector?',
-                                    fontSize: 36,
+                                    fontSize: 36
                                 },
                                 'newline',
                                 'newline',
                                 {
-                                    value: 'The garbage collector (GC) automatically manages the application\'s dynamic memory allocation requests.',
+                                    value: 'The garbage collector (GC) automatically manages the application\'s dynamic memory allocation requests.'
                                 },
                                 'newline',
                                 'newline',
                                 {
-                                    value: 'A garbage collector performs automatic dynamic memory management through the following operations:',
+                                    value: 'A garbage collector performs automatic dynamic memory management through the following operations:'
                                 },
                                 'newline',
                                 'newline',
                                 {
-                                    value: '● Allocates from and gives back memory to the operating system.',
+                                    value: '● Allocates from and gives back memory to the operating system.'
                                 },
                                 'newline',
                                 {
-                                    value: '● Hands out that memory to the application as it requests it.',
+                                    value: '● Hands out that memory to the application as it requests it.'
                                 },
                                 'newline',
                                 {
-                                    value: '● Determines which parts of that memory is still in use by the application.',
+                                    value: '● Determines which parts of that memory is still in use by the application.'
                                 },
                                 'newline',
                                 {
                                     value: '● Reclaims the unused memory for reuse by the application.',
-                                    backgroundTextColor: "success"
-                                },
+                                    backgroundTextColor: 'success'
+                                }
                             ]
                         }
                     }
@@ -819,7 +817,7 @@ export const GarbageCollection: LessonJsonType = {
             {
                 presenceParameters: [{
                     appearTime: 140000,
-                    appearDuration: 2000,
+                    appearDuration: 2000
                 }],
                 object: {
                     origin: {
@@ -833,7 +831,7 @@ export const GarbageCollection: LessonJsonType = {
                     value: [
                         {
                             value: '3 Garbage Collector Implementation',
-                            fontSize: 54,
+                            fontSize: 54
                         },
                         'newline',
                         'newline',
@@ -845,7 +843,7 @@ export const GarbageCollection: LessonJsonType = {
                         'newline',
                         {
                             value: 'Generational Garbage Collection',
-                            fontSize: 36,
+                            fontSize: 36
                         },
                         'newline',
                         'newline',
@@ -854,7 +852,7 @@ export const GarbageCollection: LessonJsonType = {
                         },
                         'newline',
                         {
-                            value: 'any reference of any other live object in the running program.',
+                            value: 'any reference of any other live object in the running program.'
                         },
                         'newline',
                         'newline',
@@ -863,11 +861,11 @@ export const GarbageCollection: LessonJsonType = {
                         },
                         'newline',
                         {
-                            value: 'runs. Any leftover objects are considered garbage. The time this approach takes is proportional to the number of',
+                            value: 'runs. Any leftover objects are considered garbage. The time this approach takes is proportional to the number of'
                         },
                         'newline',
                         {
-                            value: 'live objects, which is prohibitive for large applications maintaining lots of live data.',
+                            value: 'live objects, which is prohibitive for large applications maintaining lots of live data.'
                         },
                         'newline',
                         'newline',
@@ -876,19 +874,19 @@ export const GarbageCollection: LessonJsonType = {
                         },
                         'newline',
                         {
-                            value: 'technique called generational collection. While naive garbage collection examines every live object in the heap',
+                            value: 'technique called generational collection. While naive garbage collection examines every live object in the heap'
                         },
                         'newline',
                         {
-                            value: 'every time, generational collection exploits several empirically observed properties of most applications to minimize',
+                            value: 'every time, generational collection exploits several empirically observed properties of most applications to minimize'
                         },
                         'newline',
                         {
-                            value: 'the work required to reclaim unused (garbage) objects. The most important of these observed properties is the',
+                            value: 'the work required to reclaim unused (garbage) objects. The most important of these observed properties is the'
                         },
                         'newline',
                         {
-                            value: 'weak generational hypothesis, which states that most objects survive for only a short period of time.',
+                            value: 'weak generational hypothesis, which states that most objects survive for only a short period of time.'
                         }
                     ]
                 },
@@ -900,7 +898,7 @@ export const GarbageCollection: LessonJsonType = {
                             value: [
                                 {
                                     value: '3 Garbage Collector Implementation',
-                                    fontSize: 54,
+                                    fontSize: 54
                                 },
                                 'newline',
                                 'newline',
@@ -912,18 +910,18 @@ export const GarbageCollection: LessonJsonType = {
                                 'newline',
                                 {
                                     value: 'Generational Garbage Collection',
-                                    fontSize: 36,
+                                    fontSize: 36
                                 },
                                 'newline',
                                 'newline',
                                 {
                                     value: 'An object is considered garbage and its memory can be reused by the VM when it can no longer be reached from',
-                                    backgroundTextColor: "success"
+                                    backgroundTextColor: 'success'
                                 },
                                 'newline',
                                 {
                                     value: 'any reference of any other live object in the running program.',
-                                    backgroundTextColor: "success"
+                                    backgroundTextColor: 'success'
                                 },
                                 'newline',
                                 'newline',
@@ -932,11 +930,11 @@ export const GarbageCollection: LessonJsonType = {
                                 },
                                 'newline',
                                 {
-                                    value: 'runs. Any leftover objects are considered garbage. The time this approach takes is proportional to the number of',
+                                    value: 'runs. Any leftover objects are considered garbage. The time this approach takes is proportional to the number of'
                                 },
                                 'newline',
                                 {
-                                    value: 'live objects, which is prohibitive for large applications maintaining lots of live data.',
+                                    value: 'live objects, which is prohibitive for large applications maintaining lots of live data.'
                                 },
                                 'newline',
                                 'newline',
@@ -945,19 +943,19 @@ export const GarbageCollection: LessonJsonType = {
                                 },
                                 'newline',
                                 {
-                                    value: 'technique called generational collection. While naive garbage collection examines every live object in the heap',
+                                    value: 'technique called generational collection. While naive garbage collection examines every live object in the heap'
                                 },
                                 'newline',
                                 {
-                                    value: 'every time, generational collection exploits several empirically observed properties of most applications to minimize',
+                                    value: 'every time, generational collection exploits several empirically observed properties of most applications to minimize'
                                 },
                                 'newline',
                                 {
-                                    value: 'the work required to reclaim unused (garbage) objects. The most important of these observed properties is the',
+                                    value: 'the work required to reclaim unused (garbage) objects. The most important of these observed properties is the'
                                 },
                                 'newline',
                                 {
-                                    value: 'weak generational hypothesis, which states that most objects survive for only a short period of time.',
+                                    value: 'weak generational hypothesis, which states that most objects survive for only a short period of time.'
                                 }
                             ]
                         }
@@ -967,7 +965,7 @@ export const GarbageCollection: LessonJsonType = {
             {
                 presenceParameters: [{
                     appearTime: 272000,
-                    appearDuration: 2000,
+                    appearDuration: 2000
                 }],
                 object: {
                     origin: {
@@ -981,7 +979,7 @@ export const GarbageCollection: LessonJsonType = {
                     value: [
                         {
                             value: '4 Factors Affecting Garbage Collection Performance',
-                            fontSize: 50,
+                            fontSize: 50
                         },
                         'newline',
                         'newline',
@@ -993,7 +991,7 @@ export const GarbageCollection: LessonJsonType = {
                         'newline',
                         {
                             value: 'Heap Options Affecting Generation Size',
-                            fontSize: 36,
+                            fontSize: 36
                         },
                         'newline',
                         'newline',
@@ -1009,11 +1007,11 @@ export const GarbageCollection: LessonJsonType = {
                         'newline',
                         {
                             value: '–XX:NewRatio',
-                            font: "monospace"
+                            font: 'monospace'
                         },
                         {
-                            value: ' denotes the relative size of the old generation to the young generation.',
-                        },
+                            value: ' denotes the relative size of the old generation to the young generation.'
+                        }
                     ]
                 },
                 transformations: [
@@ -1024,7 +1022,7 @@ export const GarbageCollection: LessonJsonType = {
                             value: [
                                 {
                                     value: '4 Factors Affecting Garbage Collection Performance',
-                                    fontSize: 50,
+                                    fontSize: 50
                                 },
                                 'newline',
                                 'newline',
@@ -1036,7 +1034,7 @@ export const GarbageCollection: LessonJsonType = {
                                 'newline',
                                 {
                                     value: 'Heap Options Affecting Generation Size',
-                                    fontSize: 36,
+                                    fontSize: 36
                                 },
                                 'newline',
                                 'newline',
@@ -1052,12 +1050,12 @@ export const GarbageCollection: LessonJsonType = {
                                 'newline',
                                 {
                                     value: '–XX:NewRatio',
-                                    font: "monospace",
-                                    backgroundTextColor: "success"
+                                    font: 'monospace',
+                                    backgroundTextColor: 'success'
                                 },
                                 {
-                                    value: ' denotes the relative size of the old generation to the young generation.',
-                                },
+                                    value: ' denotes the relative size of the old generation to the young generation.'
+                                }
                             ]
                         }
                     }
@@ -1066,7 +1064,7 @@ export const GarbageCollection: LessonJsonType = {
             {
                 presenceParameters: [{
                     appearTime: 289000,
-                    appearDuration: 2000,
+                    appearDuration: 2000
                 }],
                 object: {
                     origin: {
@@ -1080,7 +1078,7 @@ export const GarbageCollection: LessonJsonType = {
                     value: [
                         {
                             value: '10 Other Considerations',
-                            fontSize: 50,
+                            fontSize: 50
                         },
                         'newline',
                         'newline',
@@ -1092,7 +1090,7 @@ export const GarbageCollection: LessonJsonType = {
                         'newline',
                         {
                             value: 'Explicit Garbage Collection',
-                            fontSize: 36,
+                            fontSize: 36
                         },
                         'newline',
                         'newline',
@@ -1105,10 +1103,10 @@ export const GarbageCollection: LessonJsonType = {
                         },
                         {
                             value: 'System.gc()',
-                            font: "monospace"
+                            font: 'monospace'
                         },
                         {
-                            value: '.',
+                            value: '.'
                         },
                         'newline',
                         'newline',
@@ -1125,22 +1123,22 @@ export const GarbageCollection: LessonJsonType = {
                         },
                         {
                             value: '-XX:+DisableExplicitGC',
-                            font: "monospace"
+                            font: 'monospace'
                         },
                         {
-                            value: ', which causes the VM to ignore calls',
+                            value: ', which causes the VM to ignore calls'
                         },
                         'newline',
                         {
-                            value: 'to ',
+                            value: 'to '
                         },
                         {
                             value: 'System.gc()',
-                            font: "monospace"
+                            font: 'monospace'
                         },
                         {
-                            value: '.',
-                        },
+                            value: '.'
+                        }
                     ]
                 },
                 transformations: [
@@ -1151,7 +1149,7 @@ export const GarbageCollection: LessonJsonType = {
                             value: [
                                 {
                                     value: '10 Other Considerations',
-                                    fontSize: 50,
+                                    fontSize: 50
                                 },
                                 'newline',
                                 'newline',
@@ -1163,7 +1161,7 @@ export const GarbageCollection: LessonJsonType = {
                                 'newline',
                                 {
                                     value: 'Explicit Garbage Collection',
-                                    fontSize: 36,
+                                    fontSize: 36
                                 },
                                 'newline',
                                 'newline',
@@ -1176,10 +1174,10 @@ export const GarbageCollection: LessonJsonType = {
                                 },
                                 {
                                     value: 'System.gc()',
-                                    font: "monospace"
+                                    font: 'monospace'
                                 },
                                 {
-                                    value: '.',
+                                    value: '.'
                                 },
                                 'newline',
                                 'newline',
@@ -1196,23 +1194,23 @@ export const GarbageCollection: LessonJsonType = {
                                 },
                                 {
                                     value: '-XX:+DisableExplicitGC',
-                                    font: "monospace",
-                                    backgroundTextColor: "success"
+                                    font: 'monospace',
+                                    backgroundTextColor: 'success'
                                 },
                                 {
-                                    value: ', which causes the VM to ignore calls',
+                                    value: ', which causes the VM to ignore calls'
                                 },
                                 'newline',
                                 {
-                                    value: 'to ',
+                                    value: 'to '
                                 },
                                 {
                                     value: 'System.gc()',
-                                    font: "monospace"
+                                    font: 'monospace'
                                 },
                                 {
-                                    value: '.',
-                                },
+                                    value: '.'
+                                }
                             ]
                         }
                     }
@@ -1262,7 +1260,7 @@ export const GarbageCollection: LessonJsonType = {
             {
                 presenceParameters: [{
                     appearTime: 240000,
-                    appearDuration: 1000,
+                    appearDuration: 1000
                 }],
                 object: {
                     origin: {x: 2610, y: 2370},
@@ -1270,13 +1268,13 @@ export const GarbageCollection: LessonJsonType = {
                         {
                             from: 0,
                             to: 24,
-                            title: "Young"
+                            title: 'Young'
                         },
                         {
                             from: 25,
                             to: 49,
-                            title: "Old"
-                        },
+                            title: 'Old'
+                        }
                     ],
                     hideIndices: true,
                     values: [
@@ -1284,25 +1282,25 @@ export const GarbageCollection: LessonJsonType = {
                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                         0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2
                     ],
                     height: 300,
                     width: 1180,
-                    indexTitle: " ",
+                    indexTitle: ' ',
                     valueStyle: new Map<number, ElementType>([
                         [
                             0,
                             {
                                 style: {
-                                    backgroundColor: "#f3b9b9"
+                                    backgroundColor: '#f3b9b9'
                                 }
-                            },
+                            }
                         ],
                         [
                             1,
                             {
                                 style: {
-                                    backgroundColor: "#54a624"
+                                    backgroundColor: '#54a624'
                                 }
                             }
                         ],
@@ -1310,7 +1308,7 @@ export const GarbageCollection: LessonJsonType = {
                             2,
                             {
                                 style: {
-                                    backgroundColor: "#ecdd92"
+                                    backgroundColor: '#ecdd92'
                                 }
                             }
                         ],
@@ -1318,14 +1316,14 @@ export const GarbageCollection: LessonJsonType = {
                             3,
                             {
                                 style: {
-                                    backgroundColor: "#ffb200"
+                                    backgroundColor: '#ffb200'
                                 }
                             }
-                        ],
+                        ]
                     ]),
                     elementStyle: {
                         strokeColor: animationStyle.backgroundColor
-                    },
+                    }
                 },
                 transformations: [
                     {
@@ -1337,8 +1335,8 @@ export const GarbageCollection: LessonJsonType = {
                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
                                 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                            ],
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+                            ]
                         }
                     },
                     {
@@ -1350,8 +1348,8 @@ export const GarbageCollection: LessonJsonType = {
                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
                                 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                            ],
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+                            ]
                         }
                     },
                     {
@@ -1363,8 +1361,8 @@ export const GarbageCollection: LessonJsonType = {
                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
                                 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                            ],
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+                            ]
                         }
                     },
                     {
@@ -1376,8 +1374,8 @@ export const GarbageCollection: LessonJsonType = {
                                 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
                                 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                            ],
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+                            ]
                         }
                     },
                     {
@@ -1389,8 +1387,8 @@ export const GarbageCollection: LessonJsonType = {
                                 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                 1, 1, 1, 1, 1, 3, 3, 3, 3, 3,
                                 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                            ],
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+                            ]
                         }
                     },
                     {
@@ -1402,12 +1400,12 @@ export const GarbageCollection: LessonJsonType = {
                                 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
                                 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
                                 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
                             ],
-                            indexTitle: "Minor Collection",
+                            indexTitle: 'Minor Collection',
                             overrideValueIds: [
                                 'a', 'b', 'c', 'd', 'e', null, null, null, null, null,
-                                'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                                'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm'
                             ]
                         }
                     },
@@ -1420,12 +1418,12 @@ export const GarbageCollection: LessonJsonType = {
                                 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
                                 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
                             ],
-                            indexTitle: " ",
+                            indexTitle: ' ',
                             overrideValueIds: [
                                 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
-                                'k', 'l', 'm',
+                                'k', 'l', 'm'
                             ]
                         }
                     },
@@ -1438,8 +1436,8 @@ export const GarbageCollection: LessonJsonType = {
                                 1, 1, 1, 1, 0, 0, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
                                 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                            ],
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+                            ]
                         }
                     },
                     {
@@ -1451,8 +1449,8 @@ export const GarbageCollection: LessonJsonType = {
                                 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
                                 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                            ],
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+                            ]
                         }
                     },
                     {
@@ -1464,8 +1462,8 @@ export const GarbageCollection: LessonJsonType = {
                                 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
                                 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                            ],
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+                            ]
                         }
                     },
                     {
@@ -1477,8 +1475,8 @@ export const GarbageCollection: LessonJsonType = {
                                 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                 1, 1, 1, 1, 1, 3, 3, 3, 3, 3,
                                 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                            ],
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+                            ]
                         }
                     },
                     {
@@ -1490,9 +1488,9 @@ export const GarbageCollection: LessonJsonType = {
                                 0, 0, 0, 0, 1, 1, 0, 0, 0, 0,
                                 0, 0, 1, 1, 1, 3, 3, 3, 3, 3,
                                 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
                             ],
-                            indexTitle: "Minor Collection",
+                            indexTitle: 'Minor Collection',
                             overrideValueIds: [
                                 'a', 'b', 'c', 'd', 'e', 'f', 'g', null, 'i', null,
                                 null, null, null, null, 'n', 'o', null, null, null, null,
@@ -1509,9 +1507,9 @@ export const GarbageCollection: LessonJsonType = {
                                 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
                                 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
                             ],
-                            indexTitle: " ",
+                            indexTitle: ' ',
                             overrideValueIds: [
                                 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'i', 'n', 'o',
                                 'p', 'q', 'r'
@@ -1527,8 +1525,8 @@ export const GarbageCollection: LessonJsonType = {
                                 1, 1, 1, 1, 0, 0, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
                                 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                            ],
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+                            ]
                         }
                     },
                     {
@@ -1540,8 +1538,8 @@ export const GarbageCollection: LessonJsonType = {
                                 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
                                 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                            ],
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+                            ]
                         }
                     },
                     {
@@ -1553,8 +1551,8 @@ export const GarbageCollection: LessonJsonType = {
                                 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
                                 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                            ],
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+                            ]
                         }
                     },
                     {
@@ -1566,8 +1564,8 @@ export const GarbageCollection: LessonJsonType = {
                                 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                 1, 1, 1, 1, 1, 3, 3, 3, 3, 3,
                                 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                            ],
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+                            ]
                         }
                     },
                     {
@@ -1579,9 +1577,9 @@ export const GarbageCollection: LessonJsonType = {
                                 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
                                 0, 0, 1, 1, 1, 3, 3, 3, 3, 3,
                                 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
                             ],
-                            indexTitle: "Minor Collection",
+                            indexTitle: 'Minor Collection',
                             overrideValueIds: [
                                 'a', 'b', 'c', 'd', 'e', 'f', null, null, null, null,
                                 null, null, null, null, 's', null, null, null, null, null,
@@ -1598,9 +1596,9 @@ export const GarbageCollection: LessonJsonType = {
                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
                                 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
                             ],
-                            indexTitle: " ",
+                            indexTitle: ' ',
                             overrideValueIds: [
                                 'a', 'b', 'c', 'd', 'e', 'f', 's', 't', 'u', 'w'
                             ]
@@ -1615,7 +1613,7 @@ export const GarbageCollection: LessonJsonType = {
                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
                                 3, 3, 3, 3, 3, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
                             ],
                             overrideValueIds: [
                                 'a', 'b', 'c', 'd', 'e', null, null, null, null, null,
@@ -1634,8 +1632,8 @@ export const GarbageCollection: LessonJsonType = {
                                 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                 1, 1, 1, 1, 1, 3, 3, 3, 3, 3,
                                 3, 3, 3, 3, 3, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                            ],
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+                            ]
                         }
                     },
                     {
@@ -1647,9 +1645,9 @@ export const GarbageCollection: LessonJsonType = {
                                 1, 0, 1, 1, 0, 1, 1, 0, 1, 1,
                                 0, 0, 1, 0, 0, 3, 3, 3, 3, 3,
                                 3, 3, 3, 3, 3, 2, 2, 2, 2, 2,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
                             ],
-                            indexTitle: "Minor Collection",
+                            indexTitle: 'Minor Collection',
                             overrideValueIds: [
                                 'a', 'b', 'c', null, 'e', 'x', 'y', 'z', '9', '!',
                                 '@', null, '#', '$', null, '%', '^', null, '&', '*',
@@ -1667,14 +1665,14 @@ export const GarbageCollection: LessonJsonType = {
                                 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
                                 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
                             ],
-                            indexTitle: " ",
+                            indexTitle: ' ',
                             overrideValueIds: [
                                 'a', 'b', 'c', 'e', 'x', 'y', 'z', '9', '!', '@',
                                 '#', '$', null, null, null, null, null, null, null, null,
                                 null, null, null, null, null, '4', '5', '6', '7', '8',
-                                'f', 's', 't', 'u', 'w', '%', '^', '&', '*', '1',
+                                'f', 's', 't', 'u', 'w', '%', '^', '&', '*', '1'
                             ]
                         }
                     },
@@ -1687,8 +1685,8 @@ export const GarbageCollection: LessonJsonType = {
                                 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                 1, 1, 1, 1, 1, 3, 3, 3, 3, 3,
                                 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                            ],
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+                            ]
                         }
                     },
                     {
@@ -1700,14 +1698,14 @@ export const GarbageCollection: LessonJsonType = {
                                 1, 1, 0, 1, 0, 1, 1, 0, 1, 1,
                                 0, 0, 0, 0, 1, 3, 3, 3, 3, 3,
                                 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
                             ],
-                            indexTitle: "Minor Collection",
+                            indexTitle: 'Minor Collection',
                             overrideValueIds: [
                                 'a', 'b', 'c', null, null, 'y', null, '9', '!', '@',
                                 '#', '$', null, '(', null, ')', ':', null, ';', '"',
                                 null, null, null, null, '<', '4', '5', '6', '7', '8',
-                                'f', 's', 't', 'u', 'w', '%', '^', '&', '*', '1',
+                                'f', 's', 't', 'u', 'w', '%', '^', '&', '*', '1'
                             ]
                         }
                     },
@@ -1720,15 +1718,15 @@ export const GarbageCollection: LessonJsonType = {
                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
                                 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-                                3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+                                3, 3, 3, 3, 3, 3, 3, 3, 3, 3
                             ],
-                            indexTitle: " ",
+                            indexTitle: ' ',
                             overrideValueIds: [
                                 'a', 'b', 'c', 'y', '9', null, null, null, null, null,
                                 null, null, null, null, null, null, null, null, null, null,
                                 null, null, null, null, null, '4', '5', '6', '7', '8',
                                 'f', 's', 't', 'u', 'w', '%', '^', '&', '*', '1',
-                                '!', '@', '#', '$', '(', ')', ':', ';', '"', '<',
+                                '!', '@', '#', '$', '(', ')', ':', ';', '"', '<'
                             ]
                         }
                     },
@@ -1741,15 +1739,15 @@ export const GarbageCollection: LessonJsonType = {
                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 3, 2, 3, 2, 3,
                                 3, 3, 2, 2, 2, 3, 3, 2, 3, 3,
-                                3, 3, 3, 2, 2, 2, 3, 3, 2, 3,
+                                3, 3, 3, 2, 2, 2, 3, 3, 2, 3
                             ],
-                            indexTitle: "Major Collection",
+                            indexTitle: 'Major Collection',
                             overrideValueIds: [
                                 'a', 'b', null, 'y', null, null, null, null, null, null,
                                 null, null, null, null, null, null, null, null, null, null,
                                 null, null, null, null, null, '4', null, '6', null, '8',
                                 'f', 's', null, null, null, '%', '^', null, '*', '1',
-                                '!', '@', '#', null, null, null, ':', ';', null, '<',
+                                '!', '@', '#', null, null, null, ':', ';', null, '<'
                             ]
                         }
                     },
@@ -1762,14 +1760,14 @@ export const GarbageCollection: LessonJsonType = {
                                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
                                 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                2, 2, 2, 2, 2, 2, 2, 2, 2, 2
                             ],
-                            indexTitle: " ",
+                            indexTitle: ' ',
                             overrideValueIds: [
                                 'a', 'b', 'y', null, null, null, null, null, null, null,
                                 null, null, null, null, null, null, null, null, null, null,
                                 null, null, null, null, null, '4', '6', '8', 'f', 's',
-                                '%', '^', '*', '1', '!', '@', '#', ':', ';', '<',
+                                '%', '^', '*', '1', '!', '@', '#', ':', ';', '<'
                             ]
                         }
                     },
@@ -1777,11 +1775,11 @@ export const GarbageCollection: LessonJsonType = {
                         appearTime: 268000,
                         appearDuration: 500,
                         object: {
-                            indexTitle: " "
+                            indexTitle: ' '
                         }
-                    },
+                    }
                 ]
-            },
+            }
         ]
     }
 }

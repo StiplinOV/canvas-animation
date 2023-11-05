@@ -155,7 +155,7 @@ export default class FormattedTextCanvasAnimation extends CanvasAnimation<Format
             value = value.replaceAll('\t', '    ')
             textStyle = textStyle ?? (type === 'paragraphTitle' ? 'bold' : textStyle)
             let partFontSize = type === 'paragraphTitle' ? fontSize * 1.5 : fontSize
-            if (typeof part.fontSize === "number") {
+            if (typeof part.fontSize === 'number') {
                 partFontSize = part.fontSize
             }
 

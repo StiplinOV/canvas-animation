@@ -25,7 +25,7 @@ export class ObjectParamsObject {
 
     private readonly colorParams: Map<string, string> = new Map<string, string>()
 
-    private readonly nullableColorParams: Map<string, string | null> = new Map<string, string | null>();
+    private readonly nullableColorParams: Map<string, string | null> = new Map<string, string | null>()
 
     private readonly pointParams: Map<string, Point> = new Map<string, Point>()
 

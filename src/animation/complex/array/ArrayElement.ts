@@ -29,13 +29,13 @@ export interface ArrayElementJsonParamsType extends JsonObjectParams {
 
 export interface ArrayElementAnimationParamsType extends AnimationObjectParams {
     id: string | null
-    backgroundColor: ColorType,
-    strokeColor: ColorType,
-    fontColor: ColorType,
-    fontSize: number,
-    textStyle: THE_STYLE,
-    value: string,
-    type: "boolean" | "text"
+    backgroundColor: ColorType
+    strokeColor: ColorType
+    fontColor: ColorType
+    fontSize: number
+    textStyle: THE_STYLE
+    value: string
+    type: 'boolean' | 'text'
     height: number
     width: number
 }
@@ -45,14 +45,14 @@ export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElem
     protected convertJsonObjectToAnimationObject(jsonObject: ArrayElementJsonParamsType, animationObjectDefaultParams: AnimationObjectParams): ArrayElementAnimationParamsType {
         const animationStyle = this.getAnimationStyle()
         let id: string | null = null
-        if (typeof jsonObject.value === "object") {
+        if (typeof jsonObject.value === 'object') {
             id = jsonObject.value.id ?? null
         }
         let backgroundColor: ColorType | undefined
         let strokeColor = animationStyle.strokeColor
         let fontColor = animationStyle.fontColor
         let fontSize = jsonObject.height / 2
-        let textStyle: THE_STYLE = "normal"
+        let textStyle: THE_STYLE = 'normal'
         let value: ArrayElementValueType | undefined
         if (typeof jsonObject.value === 'object') {
             value = jsonObject.value.value
@@ -64,8 +64,8 @@ export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElem
         } else {
             value = jsonObject.value
         }
-        if (typeof value === "boolean" && value && backgroundColor === undefined) {
-            backgroundColor = "primary"
+        if (typeof value === 'boolean' && value && backgroundColor === undefined) {
+            backgroundColor = 'primary'
         }
 
         return {
@@ -77,21 +77,21 @@ export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElem
             fontSize,
             textStyle,
             value: value === undefined ? '' : String(value),
-            type: typeof value === "boolean" ? "boolean" : "text",
+            type: typeof value === 'boolean' ? 'boolean' : 'text',
             height: jsonObject.height,
             width: jsonObject.width ?? jsonObject.height
         }
     }
 
     protected convertTransformJsonObjectToTransformAnimationObject(jsonObject: Partial<ArrayElementJsonParamsType>): Partial<ArrayElementAnimationParamsType> {
-        let id = undefined
-        let backgroundColor = undefined
-        let strokeColor = undefined
-        let fontColor = undefined
-        let fontSize = undefined
-        let textStyle = undefined
+        let id
+        let backgroundColor
+        let strokeColor
+        let fontColor
+        let fontSize
+        let textStyle
         let value
-        if (typeof jsonObject.value === "object") {
+        if (typeof jsonObject.value === 'object') {
             id = jsonObject.value.id
             backgroundColor = jsonObject.value.style?.backgroundColor
             strokeColor = jsonObject.value.style?.strokeColor
@@ -110,7 +110,7 @@ export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElem
             fontSize,
             textStyle,
             value: value === undefined ? undefined : String(value),
-            type: typeof value === "boolean" ? "boolean" : "text",
+            type: typeof value === 'boolean' ? 'boolean' : 'text',
             height: jsonObject.height,
             width: jsonObject.width ?? jsonObject.height
         }
@@ -141,7 +141,7 @@ export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElem
             value: objectParamsObject.getStringParam('value'),
             type: objectParamsObject.getStringLiteralParam('type'),
             height: objectParamsObject.getNumberParam('height'),
-            width: objectParamsObject.getNumberParam('width'),
+            width: objectParamsObject.getNumberParam('width')
         }
     }
 
@@ -151,7 +151,7 @@ export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElem
             value: '',
             height: 0,
             width: 0,
-            id: obj.id,
+            id: obj.id
         }
     }
 
@@ -168,7 +168,7 @@ export default class ArrayElement extends ComplexCanvasAnimationParams<ArrayElem
                 weight: object.weight
             }
         })
-        object.type === "text" && result.set('label', {
+        object.type === 'text' && result.set('label', {
             type: 'text',
             objectParams: {
                 origin: addPoints(object.origin, {
